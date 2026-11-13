@@ -1,0 +1,1560 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Physics Ball Arena</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto+Mono:wght@400;600&display=swap');
+    
+    body {
+      font-family: 'Roboto Mono', monospace;
+      background-color: #030712;
+      color: #f3f4f6;
+      user-select: none;
+    }
+    
+    .font-orbitron {
+      font-family: 'Orbitron', sans-serif;
+    }
+    
+    canvas {
+      box-shadow: 0 0 25px rgba(0, 0, 0, 0.8), 0 0 10px rgba(59, 130, 246, 0.2);
+    }
+
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #0f172a;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 2px;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center p-2 sm:p-4">
+
+  <!-- Header -->
+  <header class="text-center mb-3">
+    <h1 class="text-2xl sm:text-3xl font-black font-orbitron tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-fuchsia-500 to-amber-400 drop-shadow-md">
+      BALL BATTLE ARENA
+    </h1>
+    <p class="text-xs text-slate-400 mt-1">Mô phỏng Đấu Vật Lý & Nội Tại Độc Quyền</p>
+  </header>
+
+  <!-- Main Container -->
+  <div class="flex flex-col lg:flex-row gap-4 items-center lg:items-start justify-center max-w-6xl w-full">
+    
+    <!-- Left Panel: Controls & Info -->
+    <div class="w-full lg:w-72 flex flex-col gap-3 order-2 lg:order-1">
+      <!-- Selector Box -->
+      <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-4 shadow-xl backdrop-blur-md">
+        <h2 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3 font-orbitron">Chọn Đội Hình</h2>
+        
+        <div class="space-y-3">
+          <div>
+            <label class="block text-xs font-semibold text-cyan-400 mb-1">BALL 1 (Bên Trái)</label>
+            <select id="p1-select" class="w-full bg-slate-950 border border-cyan-500/30 rounded-lg px-3 py-2 text-sm text-cyan-200 focus:outline-none focus:border-cyan-400">
+              <option value="fire">🔥 Fire Ball</option>
+              <option value="ghost">👻 Ghost Ball</option>
+              <option value="assassin">🗡️ Assassin Ball</option>
+              <option value="bear">🐻 Bear Ball</option>
+              <option value="storm">⚡ Storm Ball</option>
+              <option value="wanderer">⚔️ Wanderer Ball</option>
+              <option value="soul">🔮 Soul Ball</option>
+              <option value="marksman">🎯 Marksman Ball</option>
+              <option value="reaper" selected>🥷 Reaper Ball</option>
+              <option value="sound">🔊 Sound Ball</option>
+              <option value="angel">👼 Angel Ball</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-rose-400 mb-1">BALL 2 (Bên Phải)</label>
+            <select id="p2-select" class="w-full bg-slate-950 border border-rose-500/30 rounded-lg px-3 py-2 text-sm text-rose-200 focus:outline-none focus:border-rose-400">
+              <option value="fire">🔥 Fire Ball</option>
+              <option value="ghost">👻 Ghost Ball</option>
+              <option value="assassin">🗡️ Assassin Ball</option>
+              <option value="bear">🐻 Bear Ball</option>
+              <option value="storm">⚡ Storm Ball</option>
+              <option value="wanderer">⚔️ Wanderer Ball</option>
+              <option value="soul">🔮 Soul Ball</option>
+              <option value="marksman" selected>🎯 Marksman Ball</option>
+              <option value="reaper">🥷 Reaper Ball</option>
+              <option value="sound">🔊 Sound Ball</option>
+              <option value="angel">👼 Angel Ball</option>
+            </select>
+          </div>
+
+          <button id="btn-start" class="w-full mt-2 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold py-2.5 px-4 rounded-lg font-orbitron tracking-wider text-sm shadow-lg shadow-cyan-500/20 transition-all active:scale-95">
+            ▶ BẮT ĐẦU ĐẤU
+          </button>
+        </div>
+      </div>
+
+      <!-- Skill Guide Info -->
+      <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-3 text-xs space-y-2 max-h-[300px] overflow-y-auto custom-scrollbar">
+        <div class="font-bold text-amber-400 font-orbitron">CHI TIẾT CHỈ SỐ:</div>
+        <div class="text-slate-300"><span class="text-amber-500 font-bold">🔥 Fire Ball:</span> HP 100 | Dmg 5 | Tốc độ X. Vệt lửa 4s gây 2 dmg/0.5s (Max 3 tầng).</div>
+        <div class="text-slate-300"><span class="text-purple-400 font-bold">👻 Ghost Ball:</span> HP 105 | Dmg 15 | Tốc độ 1.5X. Xuất hồn 5s/lần xuyên đòn gây 21 dmg + Slow 30%. Thu hồn khi xác gốc bị tông trực diện.</div>
+        <div class="text-slate-300"><span class="text-emerald-400 font-bold">🗡️ Assassin Ball:</span> HP 80 | Dmg 5 | Tốc độ X. Ném Shuriken (5 dmg) mỗi 2.2s. Thu hồi đủ 3 cái ghim tường, trượt địch phóng bù ngay.</div>
+        <div class="text-slate-300"><span class="text-amber-600 font-bold">🐻 Bear Ball:</span> HP 120 | Dmg 6 | Tốc độ X. Hồi 1 HP/0.5s (1 HP/0.25s khi dưới 50 HP). Tích lũy HP hồi làm sát thương cộng dồn khi va chạm.</div>
+        <div class="text-slate-300"><span class="text-sky-400 font-bold">⚡ Storm Ball:</span> HP 100 | Dmg 4 | Tốc độ 1.6X. Tạo vùng sét sau 0.42s di chuyển. Sét đánh xuống sau 1.5s gây 14 dmg + Slow 30% (2s). Đánh trượt bồi lần 2 sau 2s.</div>
+        <div class="text-slate-300"><span class="text-indigo-400 font-bold">⚔️ Wanderer Ball:</span> HP 100 | Dmg 5 | Tốc độ X. Có Khiên hồi chiêu 8s. Xoay chém 360 độ (CD 1s): Đòn 1 & 2 gây 15 dmg; Đòn 3 tăng 25% phạm vi, gây 20 dmg + hất văng đẩy lùi hướng tâm ra và reset.</div>
+        <div class="text-slate-300"><span class="text-pink-400 font-bold">🔮 Soul Ball:</span> HP 100 | Dmg 5 | Tốc độ 1.1X. Tạo đốm linh hồn mỗi 1.15s. Nhặt linh hồn: +1 Max HP, hồi 3 HP, +30% tốc độ (2s). Mỗi 2s phóng chùm sáng hình quạt quét dài hết sân (rộng 30° + 1.5°/linh hồn) gây 5 dmg (+ 2 dmg/linh hồn).</div>
+        <div class="text-slate-300"><span class="text-lime-400 font-bold">🎯 Marksman Ball:</span> HP 90 | Dmg 1 | Tốc độ X. Bắn 1 đạn khóa mục tiêu mỗi 1s (2 dmg). Mỗi 2s di chuyển đặt 1 Bẫy vĩnh viễn: Địch giẫm trúng bị Choáng 1s và nhận ngay 1 phát bắn chí mạng 25 dmg (độc lập chu kỳ).</div>
+        <div class="text-slate-300"><span class="text-slate-200 font-bold">🥷 Reaper Ball:</span> HP 100 (4 thanh 25HP độc lập) | Dmg va chạm: 0 | Tốc độ 1.25X. Chạm ảo ảnh -> Tăng tốc bám đuổi -> Chém 12 dmg + 40% HP đã mất, sau đó random hướng chạy.</div>
+        <div class="text-slate-300"><span class="text-teal-400 font-bold">🔊 Sound Ball:</span> HP 100 | Dmg va chạm: 0 | Tốc độ X (+0.4% tốc độ mỗi 1% HP mất). Va chạm đối thủ tăng 40% tốc độ (2s). Va tường tạo Sóng Âm (gây 30 dmg sát tâm, giảm dần tới 3 dmg ở biên đối diện).</div>
+        <div class="text-slate-300"><span class="text-yellow-200 font-bold">👼 Angel Ball:</span> HP 100 | Dmg va chạm: 0 | Tốc độ 0.9X. Hồi máu đôi bên khi tông nhau, cứ 1s hồi 2 HP cho địch. Bất tử 1 lần khi về 0 HP. Tích Dấu Ấn Phước Thần trên người địch từ HP dư để kết liễu!</div>
+      </div>
+    </div>
+
+    <!-- Center Panel: Game Arena -->
+    <div class="flex flex-col items-center order-1 lg:order-2">
+      <!-- HUD Healthbars -->
+      <div class="w-[440px] max-w-full flex justify-between items-center mb-2 px-1 gap-2">
+        <!-- P1 HUD -->
+        <div class="flex-1 bg-slate-900/90 border border-slate-800 rounded-lg p-2 relative overflow-hidden">
+          <div class="flex justify-between items-center mb-1">
+            <span id="p1-name" class="text-xs font-bold font-orbitron text-cyan-400 truncate">P1</span>
+            <span id="p1-hp-text" class="text-xs font-mono font-bold text-slate-300">100/100</span>
+          </div>
+          <div id="p1-hp-container" class="w-full bg-slate-950 h-2.5 rounded-full overflow-hidden border border-slate-800 flex gap-0.5">
+            <div id="p1-hp-seg1" class="h-full bg-gradient-to-r from-cyan-500 to-emerald-400 transition-all duration-150 flex-1"></div>
+            <div id="p1-hp-seg2" class="h-full bg-gradient-to-r from-cyan-500 to-emerald-400 transition-all duration-150 flex-1"></div>
+            <div id="p1-hp-seg3" class="h-full bg-gradient-to-r from-cyan-500 to-emerald-400 transition-all duration-150 flex-1"></div>
+            <div id="p1-hp-seg4" class="h-full bg-gradient-to-r from-cyan-500 to-emerald-400 transition-all duration-150 flex-1"></div>
+          </div>
+          <div id="p1-badges" class="flex flex-wrap gap-1 mt-1 min-h-[16px] text-[10px]"></div>
+        </div>
+
+        <div class="text-xs font-black font-orbitron text-slate-600 px-1">VS</div>
+
+        <!-- P2 HUD -->
+        <div class="flex-1 bg-slate-900/90 border border-slate-800 rounded-lg p-2 relative overflow-hidden">
+          <div class="flex justify-between items-center mb-1">
+            <span id="p2-hp-text" class="text-xs font-mono font-bold text-slate-300">100/100</span>
+            <span id="p2-name" class="text-xs font-bold font-orbitron text-rose-400 truncate">P2</span>
+          </div>
+          <div id="p2-hp-container" class="w-full bg-slate-950 h-2.5 rounded-full overflow-hidden border border-slate-800 flex gap-0.5">
+            <div id="p2-hp-seg1" class="h-full bg-gradient-to-r from-rose-500 to-amber-400 transition-all duration-150 flex-1"></div>
+            <div id="p2-hp-seg2" class="h-full bg-gradient-to-r from-rose-500 to-amber-400 transition-all duration-150 flex-1"></div>
+            <div id="p2-hp-seg3" class="h-full bg-gradient-to-r from-rose-500 to-amber-400 transition-all duration-150 flex-1"></div>
+            <div id="p2-hp-seg4" class="h-full bg-gradient-to-r from-rose-500 to-amber-400 transition-all duration-150 flex-1"></div>
+          </div>
+          <div id="p2-badges" class="flex flex-wrap gap-1 mt-1 justify-end min-h-[16px] text-[10px]"></div>
+        </div>
+      </div>
+
+      <!-- Canvas -->
+      <div class="relative">
+        <canvas id="gameCanvas" width="440" height="440" class="bg-slate-950 border-2 border-slate-800 rounded-2xl block"></canvas>
+        <div id="winner-overlay" class="absolute inset-0 bg-slate-950/80 backdrop-blur-sm rounded-2xl flex flex-col items-center justify-center gap-3 hidden">
+          <div id="winner-text" class="text-2xl font-black font-orbitron text-amber-400 tracking-wider text-center px-4"></div>
+          <button id="btn-restart" class="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-black py-2 px-6 rounded-lg font-orbitron text-sm shadow-lg shadow-amber-500/20 active:scale-95">
+            REMATCH
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Panel: Battle Logs -->
+    <div class="w-full lg:w-64 order-3">
+      <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-3 shadow-xl backdrop-blur-md h-[495px] flex flex-col">
+        <h2 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 font-orbitron flex justify-between items-center">
+          <span>NHẬT KÝ TRẬN ĐẤU</span>
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+        </h2>
+        <div id="battle-log" class="flex-1 overflow-y-auto space-y-1.5 text-[11px] pr-1 custom-scrollbar font-mono">
+          <div class="text-slate-500 italic">Nhấn "BẮT ĐẦU ĐẤU" để giao tranh...</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+
+    const BASE_SPEED = 3.5;
+
+    // =========================================================================
+    // KHU VỰC CẤU HÌNH STAT CƠ BẢN
+    // =========================================================================
+    const BALL_TYPES = {
+      fire: {
+        name: 'Fire Ball', color: '#f97316', secondaryColor: '#ef4444',
+        hp: 100, maxHp: 100, radius: 18, speed: BASE_SPEED, contactDmg: 5, icon: '🔥'
+      },
+      ghost: {
+        name: 'Ghost Ball', color: '#c084fc', secondaryColor: '#a855f7',
+        hp: 105, maxHp: 105, radius: 18, speed: BASE_SPEED * 1.5, contactDmg: 15, icon: '👻'
+      },
+      assassin: {
+        name: 'Assassin Ball', color: '#10b981', secondaryColor: '#059669',
+        hp: 80, maxHp: 80, radius: 18, speed: BASE_SPEED, contactDmg: 5, icon: '🗡️'
+      },
+      bear: {
+        name: 'Bear Ball', color: '#d97706', secondaryColor: '#78350f',
+        hp: 120, maxHp: 120, radius: 19, speed: BASE_SPEED, contactDmg: 6, icon: '🐻'
+      },
+      storm: {
+        name: 'Storm Ball', color: '#38bdf8', secondaryColor: '#0284c7',
+        hp: 100, maxHp: 100, radius: 18, speed: BASE_SPEED * 1.6, contactDmg: 4, icon: '⚡'
+      },
+      wanderer: {
+        name: 'Wanderer Ball', color: '#818cf8', secondaryColor: '#4f46e5',
+        hp: 100, maxHp: 100, radius: 18, speed: BASE_SPEED, contactDmg: 5, icon: '⚔️'
+      },
+      soul: {
+        name: 'Soul Ball', color: '#f472b6', secondaryColor: '#db2777',
+        hp: 100, maxHp: 100, radius: 18, speed: BASE_SPEED * 1.1, contactDmg: 5, icon: '🔮'
+      },
+      marksman: {
+        name: 'Marksman Ball', color: '#84cc16', secondaryColor: '#4d7c0f',
+        hp: 90, maxHp: 90, radius: 18, speed: BASE_SPEED, contactDmg: 1, icon: '🎯'
+      },
+      reaper: {
+        name: 'Reaper Ball', color: '#e2e8f0', secondaryColor: '#475569',
+        hp: 100, maxHp: 100, radius: 18, speed: BASE_SPEED * 1.25, contactDmg: 0, icon: '🥷'
+      },
+      sound: {
+        name: 'Sound Ball', color: '#2dd4bf', secondaryColor: '#0f766e',
+        hp: 100, maxHp: 100, radius: 18, speed: BASE_SPEED, contactDmg: 0, icon: '🔊'
+      },
+      angel: {
+        name: 'Angel Ball', color: '#fef08a', secondaryColor: '#eab308',
+        hp: 100, maxHp: 100, radius: 18, speed: BASE_SPEED * 0.9, contactDmg: 0, icon: '👼'
+      }
+    };
+
+    let p1, p2;
+    let fireTrails = [];
+    let shurikens = [];
+    let lightningZones = [];
+    let soulOrbs = [];
+    let activeSoulBeams = [];
+    let marksmanTraps = [];
+    let marksmanBullets = [];
+    let reaperIllusions = [];
+    let activeReaperSlashes = [];
+    let soundWaves = [];
+    let particles = [];
+    let gameOver = false;
+    let animationFrameId = null;
+
+    const p1Select = document.getElementById('p1-select');
+    const p2Select = document.getElementById('p2-select');
+    const btnStart = document.getElementById('btn-start');
+    const btnRestart = document.getElementById('btn-restart');
+    const winnerOverlay = document.getElementById('winner-overlay');
+    const winnerText = document.getElementById('winner-text');
+    const battleLog = document.getElementById('battle-log');
+
+    function logMessage(msg, type = 'normal') {
+      const entry = document.createElement('div');
+      entry.className = 'py-0.5 border-b border-slate-800/50 leading-tight';
+      const time = new Date().toLocaleTimeString('vi-VN', { minute: '2-digit', second: '2-digit' });
+      
+      let colorClass = 'text-slate-300';
+      if (type === 'fire') colorClass = 'text-amber-400';
+      if (type === 'ghost') colorClass = 'text-purple-400';
+      if (type === 'assassin') colorClass = 'text-emerald-400';
+      if (type === 'bear') colorClass = 'text-amber-500';
+      if (type === 'storm') colorClass = 'text-sky-400';
+      if (type === 'wanderer') colorClass = 'text-indigo-400';
+      if (type === 'soul') colorClass = 'text-pink-400';
+      if (type === 'marksman') colorClass = 'text-lime-400';
+      if (type === 'reaper') colorClass = 'text-slate-200';
+      if (type === 'sound') colorClass = 'text-teal-400';
+      if (type === 'angel') colorClass = 'text-yellow-300';
+      if (type === 'p1') colorClass = 'text-cyan-400';
+      if (type === 'p2') colorClass = 'text-rose-400';
+      
+      entry.innerHTML = `<span class="text-slate-600">[${time}]</span> <span class="${colorClass}">${msg}</span>`;
+      battleLog.appendChild(entry);
+      battleLog.scrollTop = battleLog.scrollHeight;
+    }
+
+    class Ball {
+      constructor(id, typeKey, startX, startY, side) {
+        const config = BALL_TYPES[typeKey];
+        this.id = id;
+        this.side = side;
+        this.typeKey = typeKey;
+        this.name = config.name;
+        this.color = config.color;
+        this.secondaryColor = config.secondaryColor;
+        this.icon = config.icon;
+        
+        this.x = startX; this.y = startY;
+        this.radius = config.radius;
+        this.maxHp = config.maxHp;
+        this.hp = config.hp;
+        this.baseSpeed = config.speed;
+        this.contactDmg = config.contactDmg;
+        
+        const angle = (Math.random() * Math.PI / 2) - Math.PI / 4 + (side === 'p2' ? Math.PI : 0);
+        this.vx = Math.cos(angle) * this.baseSpeed;
+        this.vy = Math.sin(angle) * this.baseSpeed;
+        
+        this.burnStacks = 0;
+        this.burnTimer = 0;
+        this.lastBurnDmgTime = 0;
+        
+        this.slowTimer = 0;
+        this.slowFactor = 1;
+        this.stunTimer = 0;
+        this.cooldownTimer = 0;
+        this.hitCooldown = 0;
+        
+        // --- GHOST BALL ---
+        this.isGhosting = false;
+        this.ghostX = 0; this.ghostY = 0; this.ghostVx = 0; this.ghostVy = 0;
+        this.ghostReturning = false; this.ghostHitCooldown = 0; this.ghostReturnHit = false;
+
+        // --- BEAR BALL ---
+        this.effectiveHealStored = 0;
+        this.healTimer = 0;
+
+        // --- STORM BALL ---
+        this.moveTimer = 0;
+
+        // --- WANDERER BALL ---
+        this.shieldActive = true;
+        this.shieldTimer = 0;
+        this.slashCooldown = 0;
+        this.slashCount = 0;
+        this.activeSlash = null;
+
+        // --- SOUL BALL ---
+        this.soulSpawnTimer = 0;
+        this.soulBeamTimer = 0;
+        this.collectedSoulsCount = 0;
+        this.soulSpeedBoostTimer = 0;
+
+        // --- MARKSMAN BALL ---
+        this.marksmanShootTimer = 0;
+        this.marksmanTrapTimer = 0;
+
+        // --- REAPER BALL ---
+        this.reaperSpeedBoostTimer = 0;
+        this.illusionSpawnTimer = 0;
+
+        // --- SOUND BALL ---
+        this.soundSpeedBoostTimer = 0;
+
+        // --- ANGEL BALL ---
+        this.angelReviveUsed = false;
+        this.blessingMarks = 0;
+        this.angelHealTimer = 0;
+      }
+
+      get currentSpeed() {
+        if (this.stunTimer > 0) return 0;
+        let speed = this.baseSpeed;
+        
+        if (this.typeKey === 'sound') {
+          const missingHpPercent = Math.max(0, this.maxHp - this.hp);
+          speed *= (1 + missingHpPercent * 0.004);
+          if (this.soundSpeedBoostTimer > 0) {
+            speed *= 1.4;
+          }
+        }
+
+        speed *= this.slowFactor;
+
+        if (this.typeKey === 'soul' && this.soulSpeedBoostTimer > 0) {
+          speed *= 1.3;
+        }
+        if (this.typeKey === 'reaper' && this.reaperSpeedBoostTimer > 0) {
+          speed *= 1.5;
+        }
+        return speed;
+      }
+
+      update(enemy) {
+        if (this.stunTimer > 0) {
+          this.stunTimer -= 1 / 60;
+          if (this.stunTimer <= 0) {
+            this.stunTimer = 0;
+            updateHUD();
+          }
+        }
+
+        if (this.slowTimer > 0) {
+          this.slowTimer -= 1 / 60;
+          this.slowFactor = 0.7;
+          if (this.slowTimer <= 0) { this.slowFactor = 1; this.slowTimer = 0; }
+        }
+
+        if (this.typeKey === 'soul' && this.soulSpeedBoostTimer > 0) {
+          this.soulSpeedBoostTimer -= 1 / 60;
+        }
+
+        if (this.typeKey === 'reaper' && this.reaperSpeedBoostTimer > 0) {
+          this.reaperSpeedBoostTimer -= 1 / 60;
+        }
+
+        if (this.typeKey === 'sound' && this.soundSpeedBoostTimer > 0) {
+          this.soundSpeedBoostTimer -= 1 / 60;
+        }
+
+        // Angel Ball định kỳ mỗi 1s hồi 2 HP cho địch
+        if (this.typeKey === 'angel' && enemy) {
+          this.angelHealTimer += 1 / 60;
+          if (this.angelHealTimer >= 1.0) {
+            this.angelHealTimer = 0;
+            enemy.receiveHealingFromAngel(2, this);
+          }
+        }
+
+        if (this.burnTimer > 0) {
+          this.burnTimer -= 1 / 60;
+          const now = Date.now();
+          if (now - this.lastBurnDmgTime >= 500) {
+            const dmg = 2 * this.burnStacks;
+            this.takeDamage(dmg, 'Cháy');
+            this.lastBurnDmgTime = now;
+            createParticles(this.x, this.y, '#f97316', 4);
+          }
+          if (this.burnTimer <= 0) { this.burnStacks = 0; }
+        }
+
+        if (this.hitCooldown > 0) this.hitCooldown--;
+        if (this.ghostHitCooldown > 0) this.ghostHitCooldown--;
+
+        // =========================================================================
+        // NỘI TAI ĐỘC LẬP TỪNG BALL
+        // =========================================================================
+        if (this.typeKey === 'fire') {
+          this.updateFireInternal();
+        } 
+        else if (this.typeKey === 'ghost') {
+          this.updateGhostInternal(enemy);
+        } 
+        else if (this.typeKey === 'assassin') {
+          this.updateAssassinInternal(enemy);
+        } 
+        else if (this.typeKey === 'bear') {
+          this.updateBearInternal();
+        } 
+        else if (this.typeKey === 'storm') {
+          this.updateStormInternal(enemy);
+        } 
+        else if (this.typeKey === 'wanderer') {
+          this.updateWandererInternal(enemy);
+        }
+        else if (this.typeKey === 'soul') {
+          this.updateSoulInternal(enemy);
+        }
+        else if (this.typeKey === 'marksman') {
+          this.updateMarksmanInternal(enemy);
+        }
+        else if (this.typeKey === 'reaper') {
+          this.updateReaperInternal(enemy);
+        }
+
+        if (!this.isGhosting && this.stunTimer <= 0) {
+          if (this.typeKey === 'reaper' && this.reaperSpeedBoostTimer > 0 && enemy) {
+            const targetAngle = Math.atan2(enemy.y - this.y, enemy.x - this.x);
+            const currentMoveAngle = Math.atan2(this.vy, this.vx);
+            let angleDiff = targetAngle - currentMoveAngle;
+            while (angleDiff < -Math.PI) angleDiff += Math.PI * 2;
+            while (angleDiff > Math.PI) angleDiff -= Math.PI * 2;
+            const newAngle = currentMoveAngle + angleDiff * 0.15;
+            
+            const spd = this.currentSpeed;
+            this.vx = Math.cos(newAngle) * spd;
+            this.vy = Math.sin(newAngle) * spd;
+          } else {
+            const currentMag = Math.hypot(this.vx, this.vy);
+            const targetSpd = this.currentSpeed;
+            if (currentMag > 0) {
+              this.vx = (this.vx / currentMag) * targetSpd;
+              this.vy = (this.vy / currentMag) * targetSpd;
+            }
+          }
+
+          this.x += this.vx;
+          this.y += this.vy;
+
+          let hitWall = false;
+          if (this.x - this.radius <= 0) { 
+            this.x = this.radius; this.vx = Math.abs(this.vx); hitWall = true; 
+          } else if (this.x + this.radius >= canvas.width) { 
+            this.x = canvas.width - this.radius; this.vx = -Math.abs(this.vx); hitWall = true; 
+          }
+          if (this.y - this.radius <= 0) { 
+            this.y = this.radius; this.vy = Math.abs(this.vy); hitWall = true; 
+          } else if (this.y + this.radius >= canvas.height) { 
+            this.y = canvas.height - this.radius; this.vy = -Math.abs(this.vy); hitWall = true; 
+          }
+
+          if (hitWall && this.typeKey === 'sound') {
+            triggerSoundWave(this);
+          }
+        }
+      }
+
+      // --- NỘI TAI FIRE ---
+      updateFireInternal() {
+        if (Math.random() < 0.4) {
+          fireTrails.push({ x: this.x, y: this.y, radius: 12, owner: this, createdAt: Date.now() });
+        }
+      }
+
+      // --- NỘI TAI GHOST ---
+      updateGhostInternal(enemy) {
+        if (!enemy) return;
+        if (!this.isGhosting) {
+          this.cooldownTimer += 1 / 60;
+          if (this.cooldownTimer >= 5) {
+            this.isGhosting = true;
+            this.cooldownTimer = 0;
+            this.ghostX = this.x; this.ghostY = this.y;
+            const angle = Math.atan2(enemy.y - this.y, enemy.x - this.x) + (Math.random() - 0.5) * 0.6;
+            const gSpeed = BASE_SPEED * 1.5;
+            this.ghostVx = Math.cos(angle) * gSpeed;
+            this.ghostVy = Math.sin(angle) * gSpeed;
+            this.ghostReturning = false; this.ghostReturnHit = false;
+            logMessage(`${this.name} (${this.side.toUpperCase()}) đứng yên xuất hồn!`, 'ghost');
+          }
+          return;
+        }
+
+        if (!this.ghostReturning) {
+          this.ghostX += this.ghostVx;
+          this.ghostY += this.ghostVy;
+          if (this.ghostX - this.radius <= 0 || this.ghostX + this.radius >= canvas.width) this.ghostVx *= -1;
+          if (this.ghostY - this.radius <= 0 || this.ghostY + this.radius >= canvas.height) this.ghostVy *= -1;
+
+          const dist = Math.hypot(this.ghostX - enemy.x, this.ghostY - enemy.y);
+          if (dist < this.radius + enemy.radius && this.ghostHitCooldown === 0) {
+            enemy.takeDamage(21, 'Hồn Lướt Qua');
+            enemy.applySlow(1.5);
+            this.ghostHitCooldown = 45;
+            createParticles(enemy.x, enemy.y, '#c084fc', 8);
+            logMessage(`Hồn ${this.name} lướt xuyên ${enemy.name} (-21 HP + Slow)`, 'ghost');
+          }
+        } else {
+          const angle = Math.atan2(this.y - this.ghostY, this.x - this.ghostX);
+          const returnSpeed = BASE_SPEED * 4;
+          this.ghostX += Math.cos(angle) * returnSpeed;
+          this.ghostY += Math.sin(angle) * returnSpeed;
+
+          const dist = Math.hypot(this.ghostX - enemy.x, this.ghostY - enemy.y);
+          if (dist < this.radius + enemy.radius && !this.ghostReturnHit) {
+            enemy.takeDamage(21, 'Hồn Bay Về');
+            enemy.applySlow(1.5);
+            this.ghostReturnHit = true;
+            createParticles(enemy.x, enemy.y, '#c084fc', 10);
+            logMessage(`Hồn ${this.name} lao về đâm trúng ${enemy.name} (-21 HP + Slow)`, 'ghost');
+          }
+
+          if (Math.hypot(this.x - this.ghostX, this.y - this.ghostY) <= 16) {
+            this.isGhosting = false;
+            this.ghostReturning = false;
+            this.cooldownTimer = 0;
+          }
+        }
+      }
+
+      // --- NỘI TAI ASSASSIN ---
+      updateAssassinInternal(enemy) {
+        if (!enemy) return;
+        this.cooldownTimer += 1 / 60;
+        if (this.cooldownTimer >= 2.2) {
+          this.cooldownTimer = 0;
+          spawnShuriken(this, enemy, 0);
+          logMessage(`${this.name} ném Phi Tiêu Shuriken!`, 'assassin');
+        }
+      }
+
+      // --- NỘI TAI BEAR ---
+      updateBearInternal() {
+        const interval = (this.hp < 50) ? 0.25 : 0.5;
+        this.healTimer += 1 / 60;
+        if (this.healTimer >= interval) {
+          this.healTimer -= interval;
+          if (this.hp < this.maxHp) {
+            const actualHeal = Math.min(1, this.maxHp - this.hp);
+            this.hp += actualHeal;
+            this.effectiveHealStored += actualHeal;
+            createParticles(this.x, this.y, '#4ade80', 3);
+            updateHUD();
+          }
+        }
+      }
+
+      // --- NỘI TAI STORM ---
+      updateStormInternal(enemy) {
+        if (!enemy) return;
+        this.moveTimer += 1 / 60;
+        if (this.moveTimer >= 0.42) {
+          this.moveTimer = 0;
+          const radiusZone = this.radius * 4.5;
+          lightningZones.push({
+            x: this.x, y: this.y, radius: radiusZone,
+            owner: this, strikeTimer: 1.5, struckCount: 0
+          });
+          logMessage(`⚡ ${this.name} tạo vùng sấm sét chuẩn bị đánh xuống!`, 'storm');
+        }
+      }
+
+      // --- NỘI TAI WANDERER ---
+      updateWandererInternal(enemy) {
+        if (!enemy) return;
+        if (!this.shieldActive) {
+          this.shieldTimer += 1 / 60;
+          if (this.shieldTimer >= 8) {
+            this.shieldActive = true;
+            this.shieldTimer = 0;
+            logMessage(`🛡️ ${this.name} tái tạo Khiên bảo vệ!`, 'wanderer');
+          }
+        }
+
+        if (this.slashCooldown > 0) this.slashCooldown -= 1 / 60;
+
+        const dist = Math.hypot(this.x - enemy.x, this.y - enemy.y);
+        const slashRange = this.radius * 3;
+
+        if (dist <= slashRange + enemy.radius && this.slashCooldown <= 0) {
+          this.slashCooldown = 1.0;
+          this.slashCount++;
+
+          let dmg = 15;
+          let rangeMultiplier = 1;
+          let isUltimate = (this.slashCount >= 3);
+
+          if (isUltimate) {
+            dmg = 20;
+            rangeMultiplier = 1.25;
+            this.slashCount = 0;
+            logMessage(`⚔️ ${this.name} tung Kiếm Khí Cực Hạn (Đòn thứ 3)!`, 'wanderer');
+          } else {
+            logMessage(`⚔️ ${this.name} chém vòng quanh trúng ${enemy.name} (Đòn ${this.slashCount})`, 'wanderer');
+          }
+
+          this.activeSlash = {
+            x: this.x, y: this.y,
+            radius: slashRange * rangeMultiplier,
+            timer: 0.25, isUlt: isUltimate
+          };
+
+          enemy.takeDamage(dmg, 'Kiếm Khí');
+          createParticles(enemy.x, enemy.y, '#818cf8', isUltimate ? 12 : 6);
+
+          if (isUltimate) {
+            const angleToEnemy = Math.atan2(enemy.y - this.y, enemy.x - this.x);
+            const knockbackSpeed = BASE_SPEED * 2.5;
+            enemy.vx = Math.cos(angleToEnemy) * knockbackSpeed;
+            enemy.vy = Math.sin(angleToEnemy) * knockbackSpeed;
+            logMessage(`💥 ${enemy.name} bị hất văng đổi hướng bởi Kiếm Khí!`, 'wanderer');
+          }
+        }
+      }
+
+      // --- NỘI TAI SOUL ---
+      updateSoulInternal(enemy) {
+        if (!enemy) return;
+        this.soulSpawnTimer += 1 / 60;
+        if (this.soulSpawnTimer >= 1.15) {
+          this.soulSpawnTimer = 0;
+          const padding = 30;
+          const orbX = padding + Math.random() * (canvas.width - padding * 2);
+          const orbY = padding + Math.random() * (canvas.height - padding * 2);
+          soulOrbs.push({ x: orbX, y: orbY, radius: 8 });
+        }
+
+        this.soulBeamTimer += 1 / 60;
+        if (this.soulBeamTimer >= 2.0) {
+          this.soulBeamTimer = 0;
+          const aimAngle = Math.atan2(enemy.y - this.y, enemy.x - this.x);
+          const baseAngleDeg = 30;
+          const totalAngleDeg = baseAngleDeg + (this.collectedSoulsCount * 1.5);
+          const totalAngleRad = (totalAngleDeg * Math.PI) / 180;
+
+          activeSoulBeams.push({
+            x: this.x, y: this.y,
+            angle: aimAngle,
+            spread: totalAngleRad,
+            maxRadius: Math.hypot(canvas.width, canvas.height),
+            timer: 0.35, owner: this
+          });
+
+          const beamDmg = 5 + (this.collectedSoulsCount * 2);
+          logMessage(`🔮 ${this.name} phóng Chùm Sáng Linh Hồn (Góc rộng ${totalAngleDeg.toFixed(1)}°, ${beamDmg} dmg)!`, 'soul');
+        }
+      }
+
+      // --- NỘI TAI MARKSMAN ---
+      updateMarksmanInternal(enemy) {
+        if (!enemy) return;
+        this.marksmanShootTimer += 1 / 60;
+        if (this.marksmanShootTimer >= 1.0) {
+          this.marksmanShootTimer = 0;
+          spawnMarksmanBullet(this, enemy, 2, false);
+        }
+
+        if (this.stunTimer <= 0) {
+          this.marksmanTrapTimer += 1 / 60;
+          if (this.marksmanTrapTimer >= 2.0) {
+            this.marksmanTrapTimer = 0;
+            marksmanTraps.push({
+              x: this.x, y: this.y, radius: 13, owner: this
+            });
+            logMessage(`🎯 ${this.name} đặt 1 Bẫy cố định trên sân!`, 'marksman');
+          }
+        }
+      }
+
+      // --- NỘI TAI REAPER ---
+      updateReaperInternal(enemy) {
+        if (!enemy) return;
+        this.illusionSpawnTimer += 1 / 60;
+        if (this.illusionSpawnTimer >= 0.35) {
+          this.illusionSpawnTimer = 0;
+          reaperIllusions.push({
+            x: enemy.x, y: enemy.y,
+            createdAt: Date.now(), radius: enemy.radius
+          });
+        }
+
+        const now = Date.now();
+        for (let i = reaperIllusions.length - 1; i >= 0; i--) {
+          const illusion = reaperIllusions[i];
+          if (now - illusion.createdAt >= 2000) {
+            reaperIllusions.splice(i, 1);
+            continue;
+          }
+
+          const distToIllusion = Math.hypot(this.x - illusion.x, this.y - illusion.y);
+          if (distToIllusion < this.radius + illusion.radius) {
+            this.reaperSpeedBoostTimer = 2.0;
+            logMessage(`🥷 ${this.name} chạm Linh Hồn Ảo Ảnh! Tăng tốc bám đuổi địch!`, 'reaper');
+            createParticles(illusion.x, illusion.y, '#e2e8f0', 8);
+            reaperIllusions.splice(i, 1);
+            break;
+          }
+        }
+
+        const distToEnemy = Math.hypot(this.x - enemy.x, this.y - enemy.y);
+        const triggerDist = (this.radius * 2) * 1.1;
+
+        if (this.reaperSpeedBoostTimer > 0 && distToEnemy <= triggerDist) {
+          const missingHp = enemy.maxHp - enemy.hp;
+          const slashDmg = 12 + Math.floor(missingHp * 0.4);
+
+          enemy.takeDamage(slashDmg, 'Nhát Chém Tử Thần (Reaper)');
+          
+          const slashAngle = Math.atan2(enemy.y - this.y, enemy.x - this.x);
+          activeReaperSlashes.push({
+            x: this.x, y: this.y,
+            angle: slashAngle, spread: (120 * Math.PI) / 180,
+            radius: (this.radius * 2) * 1.2, timer: 0.3
+          });
+
+          createParticles(enemy.x, enemy.y, '#f43f5e', 15);
+          logMessage(`🥷 Reaper Ball áp sát chém quạt ${enemy.name}! (-${slashDmg} HP)`, 'reaper');
+
+          this.reaperSpeedBoostTimer = 0;
+          const randomAngle = Math.random() * Math.PI * 2;
+          const randSpeed = this.baseSpeed * 1.25;
+          this.vx = Math.cos(randomAngle) * randSpeed;
+          this.vy = Math.sin(randomAngle) * randSpeed;
+        }
+      }
+
+      applyBurn() {
+        this.burnStacks = Math.min(this.burnStacks + 1, 3);
+        this.burnTimer = 2;
+      }
+
+      applySlow(duration) {
+        this.slowTimer = duration;
+      }
+
+      applyStun(duration) {
+        this.stunTimer = Math.max(this.stunTimer, duration);
+        updateHUD();
+      }
+
+      takeDamage(amount, source) {
+        if (this.typeKey === 'wanderer' && this.shieldActive) {
+          this.shieldActive = false;
+          this.shieldTimer = 0;
+          logMessage(`🛡️ Khiên của ${this.name} đã chặn hoàn toàn ${amount} dmg (${source})!`, 'wanderer');
+          createParticles(this.x, this.y, '#818cf8', 10);
+          updateHUD();
+          return;
+        }
+
+        // ANGEL BALL: Bất tử 1 lần khi HP về 0
+        if (this.typeKey === 'angel' && !this.angelReviveUsed && this.hp - amount <= 0) {
+          this.angelReviveUsed = true;
+          this.hp = 1;
+          logMessage(`👼 Angel Ball kích hoạt Phước Thần Bất Tử! Giữ lại 1 HP!`, 'angel');
+          createParticles(this.x, this.y, '#fef08a', 20);
+          
+          const enemy = (this === p1) ? p2 : p1;
+          if (enemy) {
+            enemy.receiveHealingFromAngel(18, this);
+          }
+          updateHUD();
+          return;
+        }
+
+        // Reaper Ball: 4 thanh 25HP độc quyền
+        if (this.typeKey === 'reaper') {
+          this.hp = Math.max(0, this.hp - amount);
+          logMessage(`🥷 Reaper Ball nhận ${amount} dmg (${source}) -> Còn ${this.hp} HP`, 'reaper');
+          createParticles(this.x, this.y, '#e2e8f0', 10);
+          updateHUD();
+          if (this.hp <= 0 && !gameOver) {
+            endGame(this);
+          }
+          return;
+        }
+
+        // Các Ball khác nhận sát thương tiêu chuẩn
+        this.hp = Math.max(0, this.hp - amount);
+        updateHUD();
+        if (this.hp <= 0 && !gameOver) {
+          endGame(this);
+        }
+      }
+
+      receiveHealingFromAngel(amount, healer) {
+        const missingHealerHp = healer ? (healer.maxHp - healer.hp) : 0;
+        const multiplier = 1 + (Math.floor(missingHealerHp / 3) * 0.05);
+        const actualHeal = amount * multiplier;
+
+        const oldHp = this.hp;
+        this.hp = Math.min(this.maxHp, this.hp + actualHeal);
+        updateHUD();
+
+        const excess = (oldHp + actualHeal) - this.maxHp;
+        if (excess > 0) {
+          this.blessingMarks += excess;
+          logMessage(`👼 Angel Ball ban phước lên ${this.name}! Dư ${Math.round(excess)} HP -> Tích lũy Dấu Ấn Phước Thần (${Math.round(this.blessingMarks)}/${Math.round(this.hp)})`, 'angel');
+          
+          // Kiểm tra kết liễu địch khi số ấn Phước Thần = HP hiện tại của địch
+          if (this.blessingMarks >= this.hp && !gameOver) {
+            logMessage(`✨ Dấu Ấn Phước Thần trên người ${this.name} đã đủ mốc! Lập tức phán quyết kết liễu!`, 'angel');
+            createParticles(this.x, this.y, '#eab308', 30);
+            this.hp = 0;
+            updateHUD();
+            endGame(this);
+          }
+
+          // Angel Ball nhận lại 50% lượng HP dư ra
+          if (healer && healer.hp > 0) {
+            healer.hp = Math.min(healer.maxHp, healer.hp + excess * 0.5);
+            logMessage(`👼 Angel Ball nhận lại 50% HP dư từ phước lành (+${Math.round(excess * 0.5)} HP)!`, 'angel');
+            updateHUD();
+          }
+        } else {
+          logMessage(`💚 ${this.name} nhận ${Math.round(actualHeal)} HP hồi từ Angel Ball!`, 'angel');
+        }
+        createParticles(this.x, this.y, '#eab308', 8);
+      }
+
+      draw() {
+        ctx.save();
+
+        if (this.typeKey === 'wanderer' && this.shieldActive) {
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.radius + 6, 0, Math.PI * 2);
+          ctx.strokeStyle = '#818cf8';
+          ctx.lineWidth = 2.5;
+          ctx.setLineDash([4, 2]);
+          ctx.stroke();
+          ctx.setLineDash([]);
+        }
+
+        if (this.activeSlash) {
+          this.activeSlash.timer -= 1 / 60;
+          ctx.beginPath();
+          ctx.arc(this.activeSlash.x, this.activeSlash.y, this.activeSlash.radius, 0, Math.PI * 2);
+          ctx.strokeStyle = this.activeSlash.isUlt ? 'rgba(244, 63, 94, 0.8)' : 'rgba(129, 140, 248, 0.6)';
+          ctx.lineWidth = this.activeSlash.isUlt ? 3.5 : 2;
+          ctx.stroke();
+          if (this.activeSlash.timer <= 0) this.activeSlash = null;
+        }
+
+        if (this.typeKey === 'bear' && this.effectiveHealStored > 0) {
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.radius + 3 + Math.min(6, this.effectiveHealStored * 0.3), 0, Math.PI * 2);
+          ctx.strokeStyle = 'rgba(74, 222, 128, 0.55)';
+          ctx.lineWidth = 2;
+          ctx.stroke();
+        }
+
+        if (this.slowTimer > 0) {
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.radius + 4, 0, Math.PI * 2);
+          ctx.fillStyle = 'rgba(56, 189, 248, 0.3)';
+          ctx.fill();
+        }
+
+        if (this.stunTimer > 0) {
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.radius + 6, 0, Math.PI * 2);
+          ctx.strokeStyle = '#facc15';
+          ctx.lineWidth = 3;
+          ctx.setLineDash([3, 3]);
+          ctx.stroke();
+          ctx.setLineDash([]);
+        }
+
+        if (this.typeKey === 'ghost' && this.isGhosting) {
+          ctx.beginPath();
+          ctx.moveTo(this.x, this.y);
+          ctx.lineTo(this.ghostX, this.ghostY);
+          ctx.strokeStyle = this.ghostReturning ? '#f43f5e' : 'rgba(192, 132, 252, 0.75)';
+          ctx.lineWidth = this.ghostReturning ? 3.5 : 2.5;
+          ctx.setLineDash(this.ghostReturning ? [] : [5, 5]);
+          ctx.stroke();
+          ctx.setLineDash([]);
+
+          ctx.beginPath();
+          ctx.arc(this.ghostX, this.ghostY, this.radius, 0, Math.PI * 2);
+          ctx.fillStyle = 'rgba(168, 85, 247, 0.55)';
+          ctx.shadowColor = '#c084fc'; ctx.shadowBlur = 16;
+          ctx.fill();
+          ctx.strokeStyle = '#f3e8ff'; ctx.lineWidth = 2; ctx.stroke();
+
+          ctx.shadowBlur = 0; ctx.font = '14px sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+          ctx.fillText('👻', this.ghostX, this.ghostY);
+        }
+
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        
+        const gradient = ctx.createRadialGradient(this.x - 5, this.y - 5, 2, this.x, this.y, this.radius);
+        gradient.addColorStop(0, '#ffffff');
+        gradient.addColorStop(0.4, this.color);
+        gradient.addColorStop(1, this.secondaryColor);
+
+        ctx.fillStyle = gradient;
+        ctx.shadowColor = this.color;
+        ctx.shadowBlur = this.isGhosting ? 4 : 12;
+        ctx.fill();
+
+        ctx.strokeStyle = 'rgba(255,255,255,0.6)';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+
+        ctx.shadowBlur = 0; ctx.font = '14px sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.fillText(this.icon, this.x, this.y);
+
+        ctx.restore();
+      }
+    }
+
+    function checkBallCollision(b1, b2) {
+      const dx = b2.x - b1.x;
+      const dy = b2.y - b1.y;
+      const distance = Math.hypot(dx, dy);
+
+      if (distance < b1.radius + b2.radius) {
+        const overlap = (b1.radius + b2.radius) - distance;
+        const nx = dx / (distance || 1);
+        const ny = dy / (distance || 1);
+
+        if (!b1.isGhosting) {
+          b1.x = Math.max(b1.radius, Math.min(canvas.width - b1.radius, b1.x - nx * overlap / 2));
+          b1.y = Math.max(b1.radius, Math.min(canvas.height - b1.radius, b1.y - ny * overlap / 2));
+        }
+        if (!b2.isGhosting) {
+          b2.x = Math.max(b2.radius, Math.min(canvas.width - b2.radius, b2.x + nx * overlap / 2));
+          b2.y = Math.max(b2.radius, Math.min(canvas.height - b2.radius, b2.y + ny * overlap / 2));
+        }
+
+        const kx = b1.vx - b2.vx;
+        const ky = b1.vy - b2.vy;
+        const p = 2 * (nx * kx + ny * ky) / 2;
+
+        if (!b1.isGhosting) { b1.vx -= p * nx; b1.vy -= p * ny; }
+        if (!b2.isGhosting) { b2.vx += p * nx; b2.vy += p * ny; }
+
+        // Sound Ball va chạm trực diện đối thủ -> Tăng 40% tốc độ trong 2s
+        if (b1.typeKey === 'sound' && b1.hitCooldown === 0) {
+          b1.soundSpeedBoostTimer = 2.0;
+          logMessage(`🔊 ${b1.name} va chạm đối thủ, bứt phá +40% tốc độ!`, 'sound');
+        }
+        if (b2.typeKey === 'sound' && b2.hitCooldown === 0) {
+          b2.soundSpeedBoostTimer = 2.0;
+          logMessage(`🔊 ${b2.name} va chạm đối thủ, bứt phá +40% tốc độ!`, 'sound');
+        }
+
+        // Angel Ball va chạm đối thủ -> Hồi HP cho đôi bên
+        if ((b1.typeKey === 'angel' || b2.typeKey === 'angel') && b1.hitCooldown === 0 && b2.hitCooldown === 0) {
+          const angel = (b1.typeKey === 'angel') ? b1 : b2;
+          const target = (b1.typeKey === 'angel') ? b2 : b1;
+
+          angel.receiveHealingFromAngel(18, angel);
+          target.receiveHealingFromAngel(20, angel);
+          b1.hitCooldown = 20;
+          b2.hitCooldown = 20;
+          logMessage(`👼 Angel Ball va chạm thánh thiện! Hồi máu đôi bên.`, 'angel');
+        }
+
+        if (b1.hitCooldown === 0) {
+          let totalDmg1 = b1.contactDmg;
+          let bonusInfo1 = '';
+          if (b1.typeKey === 'bear' && b1.effectiveHealStored > 0) {
+            totalDmg1 += b1.effectiveHealStored;
+            bonusInfo1 = ` (+${b1.effectiveHealStored} dmg hồi)`;
+            b1.effectiveHealStored = 0;
+            updateHUD();
+          }
+          if (totalDmg1 > 0) {
+            b2.takeDamage(totalDmg1, 'Va Chạm');
+            if (b1.typeKey === 'ghost') b2.applySlow(1.5);
+            b1.hitCooldown = 15;
+            logMessage(`${b1.name} tông ${b2.name} (-${totalDmg1} HP${bonusInfo1})`, b1.side);
+          }
+        }
+        
+        if (b2.hitCooldown === 0) {
+          let totalDmg2 = b2.contactDmg;
+          let bonusInfo2 = '';
+          if (b2.typeKey === 'bear' && b2.effectiveHealStored > 0) {
+            totalDmg2 += b2.effectiveHealStored;
+            bonusInfo2 = ` (+${b2.effectiveHealStored} dmg hồi)`;
+            b2.effectiveHealStored = 0;
+            updateHUD();
+          }
+          if (totalDmg2 > 0) {
+            b1.takeDamage(totalDmg2, 'Va Chạm');
+            if (b2.typeKey === 'ghost') b1.applySlow(1.5);
+            b2.hitCooldown = 15;
+            logMessage(`${b2.name} tông ${b1.name} (-${totalDmg2} HP${bonusInfo2})`, b2.side);
+          }
+        }
+
+        if (b1.typeKey === 'ghost' && b1.isGhosting && !b1.ghostReturning) {
+          b1.ghostReturning = true;
+          logMessage(`⚡ ${b2.name} tông trúng xác ${b1.name}! Hồn kéo về!`, 'ghost');
+        }
+        if (b2.typeKey === 'ghost' && b2.isGhosting && !b2.ghostReturning) {
+          b2.ghostReturning = true;
+          logMessage(`⚡ ${b1.name} tông trúng xác ${b2.name}! Hồn kéo về!`, 'ghost');
+        }
+
+        createParticles((b1.x + b2.x) / 2, (b1.y + b2.y) / 2, '#ffffff', 6);
+      }
+    }
+
+    function triggerSoundWave(soundBall) {
+      soundWaves.push({
+        x: soundBall.x, y: soundBall.y,
+        currentRadius: 0, maxRadius: Math.hypot(canvas.width, canvas.height),
+        owner: soundBall, hitEnemy: false
+      });
+      createParticles(soundBall.x, soundBall.y, '#2dd4bf', 12);
+      logMessage(`🔊 ${soundBall.name} va tường phát ra Sóng Âm lan tỏa!`, 'sound');
+    }
+
+    function updateSoundWaves() {
+      const maxPossibleDist = Math.hypot(canvas.width, canvas.height);
+
+      for (let i = soundWaves.length - 1; i >= 0; i--) {
+        const wave = soundWaves[i];
+        wave.currentRadius += 5;
+
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(wave.x, wave.y, wave.currentRadius, 0, Math.PI * 2);
+        ctx.strokeStyle = 'rgba(45, 212, 191, 0.45)';
+        ctx.lineWidth = 2.5;
+        ctx.stroke();
+        ctx.restore();
+
+        const enemy = (wave.owner === p1) ? p2 : p1;
+        if (enemy && !wave.hitEnemy) {
+          const distToEnemy = Math.hypot(enemy.x - wave.x, enemy.y - wave.y);
+          if (wave.currentRadius >= distToEnemy - enemy.radius) {
+            wave.hitEnemy = true;
+            const clampedDist = Math.min(distToEnemy, maxPossibleDist);
+            const dmg = Math.max(3, 30 - (clampedDist / maxPossibleDist) * 27);
+            const finalDmg = Math.round(dmg);
+
+            enemy.takeDamage(finalDmg, 'Sóng Âm');
+            createParticles(enemy.x, enemy.y, '#2dd4bf', 10);
+            logMessage(`🔊 Sóng âm trúng ${enemy.name} tại khoảng cách ${Math.round(distToEnemy)}px! (-${finalDmg} HP)`, 'sound');
+          }
+        }
+
+        if (wave.currentRadius >= wave.maxRadius) {
+          soundWaves.splice(i, 1);
+        }
+      }
+    }
+
+    function updateReaperIllusionsAndSlashes() {
+      const now = Date.now();
+      for (let i = reaperIllusions.length - 1; i >= 0; i--) {
+        const ill = reaperIllusions[i];
+        const age = now - ill.createdAt;
+        if (age >= 2000) {
+          reaperIllusions.splice(i, 1);
+          continue;
+        }
+
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(ill.x, ill.y, ill.radius * 0.8, 0, Math.PI * 2);
+        const alpha = Math.max(0, 1 - age / 2000);
+        ctx.fillStyle = `rgba(148, 163, 184, ${alpha * 0.35})`;
+        ctx.fill();
+        ctx.strokeStyle = `rgba(226, 232, 240, ${alpha * 0.6})`;
+        ctx.lineWidth = 1.5;
+        ctx.setLineDash([2, 2]);
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      for (let i = activeReaperSlashes.length - 1; i >= 0; i--) {
+        const slash = activeReaperSlashes[i];
+        slash.timer -= 1 / 60;
+
+        ctx.save();
+        ctx.beginPath();
+        ctx.moveTo(slash.x, slash.y);
+        ctx.arc(slash.x, slash.y, slash.radius, slash.angle - slash.spread / 2, slash.angle + slash.spread / 2);
+        ctx.closePath();
+        ctx.fillStyle = 'rgba(244, 63, 94, 0.35)';
+        ctx.fill();
+        ctx.strokeStyle = 'rgba(244, 63, 94, 0.8)';
+        ctx.lineWidth = 2.5;
+        ctx.stroke();
+        ctx.restore();
+
+        if (slash.timer <= 0) {
+          activeReaperSlashes.splice(i, 1);
+        }
+      }
+    }
+
+    function updateMarksmanTrapsAndBullets() {
+      for (let i = marksmanTraps.length - 1; i >= 0; i--) {
+        const trap = marksmanTraps[i];
+        
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(trap.x, trap.y, trap.radius, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(132, 204, 22, 0.2)';
+        ctx.fill();
+        ctx.strokeStyle = '#84cc16';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.moveTo(trap.x - 5, trap.y); ctx.lineTo(trap.x + 5, trap.y);
+        ctx.moveTo(trap.x, trap.y - 5); ctx.lineTo(trap.x, trap.y + 5);
+        ctx.strokeStyle = '#facc15';
+        ctx.stroke();
+        ctx.restore();
+
+        const enemy = (trap.owner === p1) ? p2 : p1;
+        if (enemy && !enemy.isGhosting) {
+          const dist = Math.hypot(enemy.x - trap.x, enemy.y - trap.y);
+          if (dist < enemy.radius + trap.radius) {
+            enemy.applyStun(1.0);
+            createParticles(trap.x, trap.y, '#facc15', 14);
+            logMessage(`💥 ${enemy.name} giẫm Bẫy của ${trap.owner.name}! Bị Choáng 1s & nhận đạn chí mạng 25 dmg!`, 'marksman');
+            spawnMarksmanBullet(trap.owner, enemy, 25, true);
+            marksmanTraps.splice(i, 1);
+          }
+        }
+      }
+
+      for (let i = marksmanBullets.length - 1; i >= 0; i--) {
+        const b = marksmanBullets[i];
+        const angle = Math.atan2(b.target.y - b.y, b.target.x - b.x);
+        b.x += Math.cos(angle) * b.speed;
+        b.y += Math.sin(angle) * b.speed;
+
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(b.x, b.y, b.isTrapCrit ? 6 : 3.5, 0, Math.PI * 2);
+        ctx.fillStyle = b.isTrapCrit ? '#ef4444' : '#a3e635';
+        ctx.shadowColor = b.isTrapCrit ? '#ef4444' : '#84cc16';
+        ctx.shadowBlur = b.isTrapCrit ? 12 : 6;
+        ctx.fill();
+        ctx.restore();
+
+        const dist = Math.hypot(b.target.x - b.x, b.target.y - b.y);
+        if (dist <= b.target.radius + 6) {
+          b.target.takeDamage(b.damage, b.isTrapCrit ? 'Đạn Chí Mạng (Bẫy)' : 'Đạn Bắn Tỉa');
+          createParticles(b.target.x, b.target.y, b.isTrapCrit ? '#ef4444' : '#a3e635', b.isTrapCrit ? 12 : 4);
+          if (b.isTrapCrit) {
+            logMessage(`🎯 Phát bắn chí mạng trúng ${b.target.name} (-${b.damage} HP)!`, 'marksman');
+          }
+          marksmanBullets.splice(i, 1);
+        }
+      }
+    }
+
+    function updateSoulOrbsAndBeams() {
+      for (let i = soulOrbs.length - 1; i >= 0; i--) {
+        const orb = soulOrbs[i];
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(orb.x, orb.y, orb.radius, 0, Math.PI * 2);
+        ctx.fillStyle = '#f472b6';
+        ctx.shadowColor = '#f472b6'; ctx.shadowBlur = 10;
+        ctx.fill();
+        ctx.restore();
+
+        [p1, p2].forEach(ball => {
+          if (ball && ball.typeKey === 'soul') {
+            const dist = Math.hypot(ball.x - orb.x, ball.y - orb.y);
+            if (dist < ball.radius + orb.radius) {
+              ball.collectedSoulsCount++;
+              ball.maxHp += 1;
+              ball.hp = Math.min(ball.maxHp, ball.hp + 3);
+              ball.soulSpeedBoostTimer = 2.0;
+              createParticles(orb.x, orb.y, '#f472b6', 10);
+              logMessage(`🔮 ${ball.name} hấp thụ đốm Linh Hồn! (+1 Max HP, +3 HP, +30% Tốc Độ)`, 'soul');
+              updateHUD();
+              soulOrbs.splice(i, 1);
+            }
+          }
+        });
+      }
+
+      for (let i = activeSoulBeams.length - 1; i >= 0; i--) {
+        const beam = activeSoulBeams[i];
+        beam.timer -= 1 / 60;
+
+        ctx.save();
+        ctx.beginPath();
+        ctx.moveTo(beam.x, beam.y);
+        ctx.arc(beam.x, beam.y, beam.maxRadius, beam.angle - beam.spread / 2, beam.angle + beam.spread / 2);
+        ctx.closePath();
+        ctx.fillStyle = 'rgba(244, 114, 182, 0.25)';
+        ctx.fill();
+        ctx.strokeStyle = 'rgba(244, 114, 182, 0.6)';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        ctx.restore();
+
+        const enemy = (beam.owner === p1) ? p2 : p1;
+        const dEnemy = Math.hypot(enemy.x - beam.x, enemy.y - beam.y);
+        if (dEnemy <= beam.maxRadius + enemy.radius && beam.timer > 0.3) {
+          const enemyAngle = Math.atan2(enemy.y - beam.y, enemy.x - beam.x);
+          let angleDiff = enemyAngle - beam.angle;
+          while (angleDiff < -Math.PI) angleDiff += Math.PI * 2;
+          while (angleDiff > Math.PI) angleDiff -= Math.PI * 2;
+
+          if (Math.abs(angleDiff) <= beam.spread / 2) {
+            const beamDmg = 5 + (beam.owner.collectedSoulsCount * 2);
+            enemy.takeDamage(beamDmg, 'Chùm Sáng Linh Hồn');
+            createParticles(enemy.x, enemy.y, '#f472b6', 8);
+            logMessage(`🔮 Chùm sáng Soul Ball quét trúng ${enemy.name}! (-${beamDmg} HP)`, 'soul');
+            beam.timer = 0;
+          }
+        }
+
+        if (beam.timer <= 0) {
+          activeSoulBeams.splice(i, 1);
+        }
+      }
+    }
+
+    function updateLightningZones() {
+      for (let i = lightningZones.length - 1; i >= 0; i--) {
+        const zone = lightningZones[i];
+        zone.strikeTimer -= 1 / 60;
+
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(zone.x, zone.y, zone.radius, 0, Math.PI * 2);
+        ctx.strokeStyle = 'rgba(56, 189, 248, 0.4)';
+        ctx.lineWidth = 1.5;
+        ctx.setLineDash([4, 4]);
+        ctx.stroke();
+        ctx.restore();
+
+        if (zone.strikeTimer <= 0) {
+          const enemy = (zone.owner === p1) ? p2 : p1;
+          const dist = Math.hypot(zone.x - enemy.x, zone.y - enemy.y);
+
+          createParticles(zone.x, zone.y, '#38bdf8', 15);
+
+          if (dist <= zone.radius + enemy.radius) {
+            enemy.takeDamage(14, 'Sấm Sét');
+            enemy.applySlow(2);
+            logMessage(`⚡ Sét đánh trúng ${enemy.name}! (-14 HP + Slow 2s)`, 'storm');
+            zone.struckCount++;
+          } else {
+            logMessage(`⚡ Vùng sét đánh trượt!`, 'storm');
+          }
+
+          if (zone.struckCount === 0 && zone.strikeTimer <= -2.0) {
+            zone.strikeTimer = 0.05;
+            zone.struckCount = 1;
+            logMessage(`⚡ Sét đánh bồi lần 2!`, 'storm');
+          } else if (zone.struckCount > 0 || zone.strikeTimer <= -0.1) {
+            lightningZones.splice(i, 1);
+          }
+        }
+      }
+    }
+
+    function updateFireTrails() {
+      const now = Date.now();
+      for (let i = fireTrails.length - 1; i >= 0; i--) {
+        const trail = fireTrails[i];
+        if (now - trail.createdAt >= 4000) { fireTrails.splice(i, 1); continue; }
+        const enemy = (trail.owner === p1) ? p2 : p1;
+        if (Math.hypot(enemy.x - trail.x, enemy.y - trail.y) < enemy.radius + trail.radius) {
+          enemy.applyBurn();
+        }
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(trail.x, trail.y, trail.radius, 0, Math.PI * 2);
+        const alpha = Math.max(0, 1 - (now - trail.createdAt) / 4000);
+        ctx.fillStyle = `rgba(249, 115, 22, ${alpha * 0.4})`;
+        ctx.shadowColor = '#f97316'; ctx.shadowBlur = 8;
+        ctx.fill();
+        ctx.restore();
+      }
+    }
+
+    function updateShurikens() {
+      let stuckCountByOwner = new Map();
+      let missedReturnCountByOwner = new Map();
+
+      for (let i = shurikens.length - 1; i >= 0; i--) {
+        const s = shurikens[i];
+        if (!s.isStuck) s.rotation += 0.35;
+        const enemy = (s.owner === p1) ? p2 : p1;
+
+        if (!s.isStuck && !s.isReturning) {
+          s.x += s.vx; s.y += s.vy;
+          if (Math.hypot(s.x - enemy.x, s.y - enemy.y) < enemy.radius + 10 && !s.hitOnThrow) {
+            enemy.takeDamage(5, 'Shuriken');
+            s.hitOnThrow = true;
+            createParticles(s.x, s.y, '#10b981', 6);
+            logMessage(`Shuriken xuyên trúng ${enemy.name} (-5 HP)`, 'assassin');
+          }
+          if (s.x <= 5 || s.x >= canvas.width - 5 || s.y <= 5 || s.y >= canvas.height - 5) {
+            s.isStuck = true;
+            s.x = Math.max(5, Math.min(canvas.width - 5, s.x));
+            s.y = Math.max(5, Math.min(canvas.height - 5, s.y));
+          }
+        }
+
+        if (s.isStuck) {
+          stuckCountByOwner.set(s.owner, (stuckCountByOwner.get(s.owner) || 0) + 1);
+        }
+
+        if (s.isReturning) {
+          const angle = Math.atan2(s.owner.y - s.y, s.owner.x - s.x);
+          s.x += Math.cos(angle) * BASE_SPEED * 4;
+          s.y += Math.sin(angle) * BASE_SPEED * 4;
+
+          if (Math.hypot(s.x - enemy.x, s.y - enemy.y) < enemy.radius + 10 && !s.hitOnReturn) {
+            enemy.takeDamage(5, 'Shuriken Thu Hồi');
+            s.hitOnReturn = true;
+            createParticles(s.x, s.y, '#10b981', 6);
+            logMessage(`Shuriken thu hồi đâm trúng ${enemy.name} (-5 HP)`, 'assassin');
+          }
+
+          if (Math.hypot(s.owner.x - s.x, s.owner.y - s.y) < 16) {
+            if (!s.hitOnReturn) {
+              missedReturnCountByOwner.set(s.owner, (missedReturnCountByOwner.get(s.owner) || 0) + 1);
+            }
+            shurikens.splice(i, 1);
+            continue;
+          }
+        }
+        drawShuriken(s);
+      }
+
+      missedReturnCountByOwner.forEach((missCount, owner) => {
+        if (missCount > 0 && !gameOver) {
+          const enemy = (owner === p1) ? p2 : p1;
+          for (let k = 0; k < missCount; k++) {
+            const baseAngle = Math.atan2(enemy.y - owner.y, enemy.x - owner.x) + ((missCount > 1) ? (k - (missCount - 1) / 2) * 0.14 : 0);
+            shurikens.push({
+              x: owner.x, y: owner.y,
+              vx: Math.cos(baseAngle) * BASE_SPEED * 4, vy: Math.sin(baseAngle) * BASE_SPEED * 4,
+              owner: owner, isStuck: false, isReturning: false, rotation: 0,
+              hitOnThrow: false, hitOnReturn: false
+            });
+          }
+          logMessage(`⚡ ${owner.name} phóng liên tiếp ${missCount} Shuriken bù đòn trượt!`, 'assassin');
+        }
+      });
+
+      stuckCountByOwner.forEach((count, owner) => {
+        if (count >= 3) {
+          logMessage(`${owner.name} THU HỒI TOÀN BỘ 3 SHURIKEN!`, 'assassin');
+          shurikens.forEach(s => {
+            if (s.owner === owner && s.isStuck) { s.isStuck = false; s.isReturning = true; }
+          });
+        }
+      });
+    }
+
+    function drawShuriken(s) {
+      ctx.save();
+      ctx.translate(s.x, s.y); ctx.rotate(s.rotation);
+      ctx.beginPath();
+      for (let i = 0; i < 4; i++) {
+        ctx.lineTo(Math.cos(i * Math.PI / 2) * 10, Math.sin(i * Math.PI / 2) * 10);
+        ctx.lineTo(Math.cos(i * Math.PI / 2 + Math.PI / 4) * 4, Math.sin(i * Math.PI / 2 + Math.PI / 4) * 4);
+      }
+      ctx.closePath();
+      ctx.fillStyle = s.isStuck ? '#f43f5e' : '#10b981';
+      ctx.shadowColor = s.isStuck ? '#f43f5e' : '#10b981'; ctx.shadowBlur = 10;
+      ctx.fill(); ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 1; ctx.stroke();
+      ctx.restore();
+    }
+
+    function createParticles(x, y, color, count) {
+      for (let i = 0; i < count; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const speed = Math.random() * 3 + 1;
+        particles.push({ x, y, vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed, color, life: 1 });
+      }
+    }
+
+    function updateParticles() {
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        p.x += p.vx; p.y += p.vy; p.life -= 0.04;
+        if (p.life <= 0) { particles.splice(i, 1); continue; }
+        ctx.save();
+        ctx.beginPath(); ctx.arc(p.x, p.y, 2.5, 0, Math.PI * 2);
+        ctx.fillStyle = p.color; ctx.globalAlpha = p.life; ctx.fill();
+        ctx.restore();
+      }
+    }
+
+    function spawnShuriken(owner, enemy, angleOffset = 0) {
+      const baseAngle = Math.atan2(enemy.y - owner.y, enemy.x - owner.x) + angleOffset;
+      const sSpeed = BASE_SPEED * 4;
+      shurikens.push({
+        x: owner.x, y: owner.y,
+        vx: Math.cos(baseAngle) * sSpeed, vy: Math.sin(baseAngle) * sSpeed,
+        owner: owner, isStuck: false, isReturning: false, rotation: 0,
+        hitOnThrow: false, hitOnReturn: false
+      });
+    }
+
+    function spawnMarksmanBullet(owner, enemy, damage, isTrapCrit) {
+      if (!enemy) return;
+      marksmanBullets.push({
+        x: owner.x, y: owner.y,
+        target: enemy, speed: BASE_SPEED * 3.5,
+        damage: damage, isTrapCrit: isTrapCrit
+      });
+    }
+
+    function updateHUDForPlayer(ball, prefix) {
+      document.getElementById(`${prefix}-name`).innerText = `${ball.icon} ${ball.name}`;
+      document.getElementById(`${prefix}-hp-text`).innerText = `${Math.ceil(ball.hp)}/${ball.maxHp}`;
+      
+      const container = document.getElementById(`${prefix}-hp-container`);
+      if (ball.typeKey === 'reaper') {
+        container.style.display = 'flex';
+        for (let s = 1; s <= 4; s++) {
+          const seg = document.getElementById(`${prefix}-hp-seg${s}`);
+          const threshold = (5 - s) * 25;
+          if (ball.hp >= threshold) {
+            seg.style.opacity = '1';
+          } else {
+            seg.style.opacity = '0.2';
+          }
+        }
+      } else {
+        container.style.display = 'block';
+        const pct = Math.max(0, (ball.hp / ball.maxHp) * 100);
+        container.innerHTML = `<div class="h-full bg-gradient-to-r ${prefix === 'p1' ? 'from-cyan-500 to-emerald-400' : 'from-rose-500 to-amber-400'} transition-all duration-150" style="width: ${pct}%;"></div>`;
+      }
+
+      const badges = document.getElementById(`${prefix}-badges`);
+      badges.innerHTML = '';
+      if (ball.stunTimer > 0) badges.innerHTML += `<span class="bg-yellow-950 text-yellow-400 border border-yellow-500/40 px-1 rounded">💫 Choáng</span>`;
+      if (ball.burnStacks > 0) badges.innerHTML += `<span class="bg-amber-950 text-amber-400 border border-amber-500/40 px-1 rounded">🔥 ${ball.burnStacks}</span>`;
+      if (ball.slowTimer > 0) badges.innerHTML += `<span class="bg-sky-950 text-sky-400 border border-sky-500/40 px-1 rounded">❄️ Chậm</span>`;
+      if (ball.typeKey === 'bear') badges.innerHTML += `<span class="bg-emerald-950 text-emerald-400 border border-emerald-500/40 px-1 rounded">💚 +${ball.effectiveHealStored} Dmg</span>`;
+      if (ball.typeKey === 'wanderer' && ball.shieldActive) badges.innerHTML += `<span class="bg-indigo-950 text-indigo-300 border border-indigo-500/40 px-1 rounded">🛡️ Khiên</span>`;
+      if (ball.typeKey === 'soul' && ball.collectedSoulsCount > 0) badges.innerHTML += `<span class="bg-pink-950 text-pink-300 border border-pink-500/40 px-1 rounded">🔮 x${ball.collectedSoulsCount} Linh Hồn</span>`;
+      if (ball.typeKey === 'sound') badges.innerHTML += `<span class="bg-teal-950 text-teal-300 border border-teal-500/40 px-1 rounded">🔊 +${(Math.max(0, ball.maxHp - ball.hp) * 0.4).toFixed(1)}% Tốc</span>`;
+      if (ball.blessingMarks > 0) badges.innerHTML += `<span class="bg-yellow-950 text-yellow-300 border border-yellow-500/40 px-1 rounded">✨ Ấn: ${Math.round(ball.blessingMarks)}</span>`;
+    }
+
+    function updateHUD() {
+      updateHUDForPlayer(p1, 'p1');
+      updateHUDForPlayer(p2, 'p2');
+    }
+
+    function initGame() {
+      if (animationFrameId) cancelAnimationFrame(animationFrameId);
+      p1 = new Ball('p1', p1Select.value, 80, canvas.height / 2, 'p1');
+      p2 = new Ball('p2', p2Select.value, canvas.width - 80, canvas.height / 2, 'p2');
+
+      fireTrails = []; shurikens = []; lightningZones = []; soulOrbs = []; activeSoulBeams = []; marksmanTraps = []; marksmanBullets = []; reaperIllusions = []; activeReaperSlashes = []; soundWaves = []; particles = [];
+      gameOver = false; winnerOverlay.classList.add('hidden');
+      battleLog.innerHTML = '';
+      logMessage(`Bắt đầu trận đấu: ${p1.name} VS ${p2.name}!`);
+      updateHUD();
+      gameLoop();
+    }
+
+    function endGame(loser) {
+      gameOver = true;
+      const winner = (loser === p1) ? p2 : p1;
+      winnerText.innerText = `🏆 ${winner.name.toUpperCase()} CHIẾN THẮNG!`;
+      winnerOverlay.classList.remove('hidden');
+      logMessage(`TRẬN ĐẤU KẾT THÚC! ${winner.name} giành chiến thắng!`, winner.side);
+    }
+
+    function gameLoop() {
+      ctx.fillStyle = '#030712';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.strokeStyle = 'rgba(30, 41, 59, 0.4)'; ctx.lineWidth = 1;
+      for (let x = 0; x < canvas.width; x += 40) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke(); }
+      for (let y = 0; y < canvas.height; y += 40) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke(); }
+
+      if (!gameOver && p1 && p2) {
+        p1.update(p2); p2.update(p1);
+        checkBallCollision(p1, p2);
+      }
+
+      updateReaperIllusionsAndSlashes();
+      updateMarksmanTrapsAndBullets();
+      updateSoulOrbsAndBeams();
+      updateSoundWaves();
+      updateFireTrails();
+      updateLightningZones();
+      updateShurikens();
+      updateParticles();
+
+      if (p1) p1.draw();
+      if (p2) p2.draw();
+
+      if (!gameOver) {
+        animationFrameId = requestAnimationFrame(gameLoop);
+      }
+    }
+
+    btnStart.addEventListener('click', initGame);
+    btnRestart.addEventListener('click', initGame);
+    initGame();
+  </script>
+</body>
+</html>
