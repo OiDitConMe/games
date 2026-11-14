@@ -276,7 +276,7 @@
       // =======================================================================
       angel: {
         name: 'Angel Ball', color: '#fef08a', secondaryColor: '#eab308',
-        hp: 100, maxHp: 100, radius: 18, speed: BASE_SPEED * 0.9, contactDmg: 0, icon: '👼'
+        hp: 80, maxHp: 80, radius: 18, speed: BASE_SPEED * 0.9, contactDmg: 0, icon: '👼'
       }
     };
 
@@ -857,7 +857,7 @@
           this.angelReviveUsed = true;
           this.hp = 1;
           logMessage(`👼 Angel Ball kích hoạt Phước Thần Bất Tử! Giữ lại 1 HP!`, 'angel');
-          createParticles(this.x, this.y, '#fef08a', 20);
+          createParticles(this.x, this.y, '#fef08a', 14);
           
           const enemy = (this === p1) ? p2 : p1;
           if (enemy) {
@@ -889,7 +889,7 @@
 
       receiveHealingFromAngel(amount, healer) {
         const missingHealerHp = healer ? (healer.maxHp - healer.hp) : 0;
-        const multiplier = 1 + (Math.floor(missingHealerHp / 3) * 0.05);
+        const multiplier = 1 + (Math.floor(missingHealerHp / 4) * 0.45);
         const actualHeal = amount * multiplier;
 
         const oldHp = this.hp;
@@ -910,7 +910,7 @@
           }
 
           if (healer && healer.hp > 0) {
-            healer.hp = Math.min(healer.maxHp, healer.hp + excess * 0.5);
+            healer.hp = Math.min(healer.maxHp, healer.hp + excess * 0.25);
             logMessage(`👼 Angel Ball nhận lại 50% HP dư từ phước lành (+${Math.round(excess * 0.5)} HP)!`, 'angel');
             updateHUD();
           }
