@@ -196,7 +196,7 @@
       // =======================================================================
       fire: {
         name: 'Fire Ball', color: '#f97316', secondaryColor: '#ef4444',
-        hp: 100, maxHp: 100, radius: 18, speed: BASE_SPEED, contactDmg: 5, icon: '🔥'
+        hp: 100, maxHp: 100, radius: 18, speed: BASE_SPEED, contactDmg: 3, icon: '🔥'
       },
 
       // =======================================================================
@@ -220,7 +220,7 @@
       // =======================================================================
       bear: {
         name: 'Bear Ball', color: '#d97706', secondaryColor: '#78350f',
-        hp: 120, maxHp: 120, radius: 19, speed: BASE_SPEED, contactDmg: 6, icon: '🐻'
+        hp: 120, maxHp: 120, radius: 19, speed: BASE_SPEED, contactDmg: 7, icon: '🐻'
       },
 
       // =======================================================================
@@ -236,7 +236,7 @@
       // =======================================================================
       wanderer: {
         name: 'Wanderer Ball', color: '#818cf8', secondaryColor: '#4f46e5',
-        hp: 100, maxHp: 100, radius: 18, speed: BASE_SPEED, contactDmg: 5, icon: '⚔️'
+        hp: 100, maxHp: 100, radius: 18, speed: BASE_SPEED, contactDmg: 6, icon: '⚔️'
       },
 
       // =======================================================================
@@ -260,7 +260,7 @@
       // =======================================================================
       reaper: {
         name: 'Reaper Ball', color: '#e2e8f0', secondaryColor: '#475569',
-        hp: 100, maxHp: 100, radius: 18, speed: BASE_SPEED * 1.25, contactDmg: 0, icon: '🥷'
+        hp: 100, maxHp: 100, radius: 18, speed: BASE_SPEED * 1.25, contactDmg: 1, icon: '🥷'
       },
 
       // =======================================================================
@@ -625,7 +625,7 @@
       updateAssassinInternal(enemy) {
         if (!enemy) return;
         this.cooldownTimer += 1 / 60;
-        if (this.cooldownTimer >= 2.2) {
+        if (this.cooldownTimer >= 1.8) {
           this.cooldownTimer = 0;
           spawnShuriken(this, enemy, 0);
           logMessage(`${this.name} ném Phi Tiêu Shuriken!`, 'assassin');
@@ -634,7 +634,7 @@
 
       // --- 4. BEAR BALL ---
       updateBearInternal() {
-        const interval = (this.hp < 50) ? 0.25 : 0.5;
+        const interval = (this.hp < 50) ? 0.21 : 0.5;
         this.healTimer += 1 / 60;
         if (this.healTimer >= interval) {
           this.healTimer -= interval;
@@ -668,7 +668,7 @@
         if (!enemy) return;
         if (!this.shieldActive) {
           this.shieldTimer += 1 / 60;
-          if (this.shieldTimer >= 8) {
+          if (this.shieldTimer >= 7.5) {
             this.shieldActive = true;
             this.shieldTimer = 0;
             logMessage(`🛡️ ${this.name} tái tạo Khiên bảo vệ!`, 'wanderer');
