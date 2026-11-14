@@ -66,10 +66,10 @@
               <option value="wanderer">⚔️ Wanderer Ball</option>
               <option value="soul">🔮 Soul Ball</option>
               <option value="marksman">🎯 Marksman Ball</option>
-              <option value="reaper">🥷 Reaper Ball</option>
+              <option value="ninja" selected>🥷 Ninja Ball</option>
               <option value="sound">🔊 Sound Ball</option>
               <option value="angel">👼 Angel Ball</option>
-              <option value="wukong" selected>🐵 Wukong Ball</option>
+              <option value="wukong">🐵 Wukong Ball</option>
             </select>
           </div>
 
@@ -84,7 +84,7 @@
               <option value="wanderer">⚔️ Wanderer Ball</option>
               <option value="soul" selected>🔮 Soul Ball</option>
               <option value="marksman">🎯 Marksman Ball</option>
-              <option value="reaper">🥷 Reaper Ball</option>
+              <option value="ninja">🥷 Ninja Ball</option>
               <option value="sound">🔊 Sound Ball</option>
               <option value="angel">👼 Angel Ball</option>
               <option value="wukong">🐵 Wukong Ball</option>
@@ -108,7 +108,7 @@
         <div class="text-slate-300"><span class="text-indigo-400 font-bold">⚔️ Wanderer Ball:</span> HP 100 | Dmg 6 | Tốc độ X. Có Khiên hồi chiêu 7.5s. Xoay chém 360 độ (CD 1s): Đòn 1 & 2 gây 15 dmg; Đòn 3 tăng 25% phạm vi, gây 20 dmg + hất văng đẩy lùi hướng tâm ra và reset.</div>
         <div class="text-slate-300"><span class="text-pink-400 font-bold">🔮 Soul Ball:</span> HP 100 | Dmg 5 | Tốc độ 1.1X. Tạo đốm linh hồn mỗi 1.15s. Nhặt linh hồn: +1 Max HP, hồi 3 HP, +30% tốc độ (2s). Mỗi 2s phóng chùm sáng hình quạt quét dài hết sân (rộng 30° + 1.5°/linh hồn) gây 1 dmg (+ 3 dmg/linh hồn).</div>
         <div class="text-slate-300"><span class="text-lime-400 font-bold">🎯 Marksman Ball:</span> HP 90 | Dmg 1 | Tốc độ X. Bắn 1 đạn khóa mục tiêu mỗi 1s (2 dmg). Mỗi 2s di chuyển đặt 1 Bẫy vĩnh viễn: Địch giẫm trúng bị Choáng 1s và nhận ngay 1 phát bắn chí mạng 25 dmg (độc lập chu kỳ).</div>
-        <div class="text-slate-300"><span class="text-slate-200 font-bold">🥷 Reaper Ball:</span> HP 100 (4 thanh 25HP độc lập) | Dmg va chạm: 1 | Tốc độ 1.25X. Chạm ảo ảnh -> Tăng tốc bám đuổi -> Chém 12 dmg + 40% HP đã mất, sau đó random hướng chạy.</div>
+        <div class="text-slate-300"><span class="text-slate-200 font-bold">🥷 Ninja Ball:</span> HP 90 | Dmg va chạm: 5 | Tốc độ X. Nội tại chuỗi combo mỗi 2s: (1) Ném phi tiêu găm địch 15 dmg (trượt phải lặp lại đến trúng); (2) Lao xuyên sau lưng địch bất tử, gây 20 dmg + Slow 30% (2s); (3) Lướt 5 đường kính bất tử gây 20 dmg + 40% HP mất của địch (trượt sẽ bắt buộc quay lại đánh đòn 1).</div>
         <div class="text-slate-300"><span class="text-teal-400 font-bold">🔊 Sound Ball:</span> HP 100 | Dmg va chạm: 0 | Tốc độ 0.9X (+0.3% tốc độ mỗi 1% HP mất). Va chạm đối thủ tăng 40% tốc độ (2s). Va tường tạo Sóng Âm (gây tối đa 20 dmg sát tâm, giảm dần tới 1 dmg ở biên đối diện).</div>
         <div class="text-slate-300"><span class="text-yellow-200 font-bold">👼 Angel Ball:</span> HP 80 | Dmg va chạm: 0 | Tốc độ 0.9X (+1.25% hiệu quả hồi máu mỗi 1 HP mất). Va chạm hồi 12 HP đôi bên, cứ 1s hồi 1 HP cho địch. Bất tử 1 lần khi về 0 HP (hồi 15 HP cho địch). Nhận lại 25% HP dư từ địch & tích Dấu Ấn Phước Thần để kết liễu!</div>
         <div class="text-slate-300"><span class="text-orange-400 font-bold">🐵 Wukong Ball:</span> HP 102 | Dmg 7 | Tốc độ 1.32X. Sau mỗi 2.05s di chuyển ngẫu nhiên (25%/chiêu): (1) Tạo 3 Phân Thân tương tác vật lý chuẩn; (2) Ăn Đào Tiên hồi 11 HP, xóa mọi hiệu ứng xấu & bất tử 2.05s; (3) Tăng 40% tốc độ trong 3s, áp sát quét gậy 150° gây 24 dmg; (4) Quăng gậy xoay trúng địch gây 10 dmg & hất đổi hướng.</div>
@@ -183,7 +183,7 @@
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
 
-    const BASE_SPEED = 3.5;
+    const BASE_SPEED = 3.99;
 
     const BALL_TYPES = {
       fire: {
@@ -218,9 +218,9 @@
         name: 'Marksman Ball', color: '#84cc16', secondaryColor: '#4d7c0f',
         hp: 90, maxHp: 90, radius: 18, speed: BASE_SPEED, contactDmg: 1, icon: '🎯'
       },
-      reaper: {
-        name: 'Reaper Ball', color: '#e2e8f0', secondaryColor: '#475569',
-        hp: 100, maxHp: 100, radius: 18, speed: BASE_SPEED * 1.25, contactDmg: 1, icon: '🥷'
+      ninja: {
+        name: 'Ninja Ball', color: '#e2e8f0', secondaryColor: '#334155',
+        hp: 90, maxHp: 90, radius: 18, speed: BASE_SPEED, contactDmg: 5, icon: '🥷'
       },
       sound: {
         name: 'Sound Ball', color: '#2dd4bf', secondaryColor: '#0f766e',
@@ -244,8 +244,7 @@
     let activeSoulBeams = [];
     let marksmanTraps = [];
     let marksmanBullets = [];
-    let reaperIllusions = [];
-    let activeReaperSlashes = [];
+    let ninjaProjectiles = [];
     let soundWaves = [];
     let wukongClones = [];
     let wukongStaffs = [];
@@ -276,7 +275,7 @@
       if (type === 'wanderer') colorClass = 'text-indigo-400';
       if (type === 'soul') colorClass = 'text-pink-400';
       if (type === 'marksman') colorClass = 'text-lime-400';
-      if (type === 'reaper') colorClass = 'text-slate-200';
+      if (type === 'ninja') colorClass = 'text-slate-200';
       if (type === 'sound') colorClass = 'text-teal-400';
       if (type === 'angel') colorClass = 'text-yellow-300';
       if (type === 'wukong') colorClass = 'text-orange-400';
@@ -343,8 +342,11 @@
         this.marksmanShootTimer = 0;
         this.marksmanTrapTimer = 0;
 
-        this.reaperSpeedBoostTimer = 0;
-        this.illusionSpawnTimer = 0;
+        // --- NINJA BALL ---
+        this.ninjaComboStep = 1;      // Bước combo hiện tại (1, 2, 3)
+        this.ninjaComboTimer = 0;     // Đếm thời gian kích hoạt combo mỗi 2s
+        this.ninjaWaitingHit = false; // Trạng thái chờ trúng đòn 1
+        this.ninjaInvulnerable = false; // Không thể bị chọn làm mục tiêu / không thể chết
 
         this.soundSpeedBoostTimer = 0;
 
@@ -375,9 +377,6 @@
         if (this.typeKey === 'soul' && this.soulSpeedBoostTimer > 0) {
           speed *= 1.3;
         }
-        if (this.typeKey === 'reaper' && this.reaperSpeedBoostTimer > 0) {
-          speed *= 1.5;
-        }
         if (this.typeKey === 'wukong' && this.wukongSweepTimer > 0) {
           speed *= 1.4;
         }
@@ -401,10 +400,6 @@
 
         if (this.typeKey === 'soul' && this.soulSpeedBoostTimer > 0) {
           this.soulSpeedBoostTimer -= 1 / 60;
-        }
-
-        if (this.typeKey === 'reaper' && this.reaperSpeedBoostTimer > 0) {
-          this.reaperSpeedBoostTimer -= 1 / 60;
         }
 
         if (this.typeKey === 'sound' && this.soundSpeedBoostTimer > 0) {
@@ -469,32 +464,19 @@
         else if (this.typeKey === 'marksman') {
           this.updateMarksmanInternal(enemy);
         }
-        else if (this.typeKey === 'reaper') {
-          this.updateReaperInternal(enemy);
+        else if (this.typeKey === 'ninja') {
+          this.updateNinjaInternal(enemy);
         }
         else if (this.typeKey === 'wukong') {
           this.updateWukongInternal(enemy);
         }
 
         if (!this.isGhosting && this.stunTimer <= 0) {
-          if (this.typeKey === 'reaper' && this.reaperSpeedBoostTimer > 0 && enemy) {
-            const targetAngle = Math.atan2(enemy.y - this.y, enemy.x - this.x);
-            const currentMoveAngle = Math.atan2(this.vy, this.vx);
-            let angleDiff = targetAngle - currentMoveAngle;
-            while (angleDiff < -Math.PI) angleDiff += Math.PI * 2;
-            while (angleDiff > Math.PI) angleDiff -= Math.PI * 2;
-            const newAngle = currentMoveAngle + angleDiff * 0.15;
-            
-            const spd = this.currentSpeed;
-            this.vx = Math.cos(newAngle) * spd;
-            this.vy = Math.sin(newAngle) * spd;
-          } else {
-            const currentMag = Math.hypot(this.vx, this.vy);
-            const targetSpd = this.currentSpeed;
-            if (currentMag > 0) {
-              this.vx = (this.vx / currentMag) * targetSpd;
-              this.vy = (this.vy / currentMag) * targetSpd;
-            }
+          const currentMag = Math.hypot(this.vx, this.vy);
+          const targetSpd = this.currentSpeed;
+          if (currentMag > 0) {
+            this.vx = (this.vx / currentMag) * targetSpd;
+            this.vy = (this.vy / currentMag) * targetSpd;
           }
 
           this.x += this.vx;
@@ -722,59 +704,83 @@
         }
       }
 
-      updateReaperInternal(enemy) {
+      // --- NINJA BALL NỘI TAI COMBO MỖI 2S ---
+      updateNinjaInternal(enemy) {
         if (!enemy) return;
-        this.illusionSpawnTimer += 1 / 60;
-        if (this.illusionSpawnTimer >= 0.35) {
-          this.illusionSpawnTimer = 0;
-          reaperIllusions.push({
-            x: enemy.x, y: enemy.y,
-            createdAt: Date.now(), radius: enemy.radius
-          });
-        }
+        if (this.stunTimer > 0) return;
 
-        const now = Date.now();
-        for (let i = reaperIllusions.length - 1; i >= 0; i--) {
-          const illusion = reaperIllusions[i];
-          if (now - illusion.createdAt >= 2000) {
-            reaperIllusions.splice(i, 1);
-            continue;
+        this.ninjaComboTimer += 1 / 60;
+        const interval = this.ninjaWaitingHit ? 2.0 : 2.0;
+
+        if (this.ninjaComboTimer >= interval) {
+          this.ninjaComboTimer = 0;
+
+          if (this.ninjaComboStep === 1) {
+            // Đòn 1: Ném phi tiêu găm vào địch gây 15 dmg (nếu trượt, 2s sau lặp lại đòn 1)
+            const angle = Math.atan2(enemy.y - this.y, enemy.x - this.x);
+            ninjaProjectiles.push({
+              x: this.x, y: this.y,
+              vx: Math.cos(angle) * (BASE_SPEED * 4.5),
+              vy: Math.sin(angle) * (BASE_SPEED * 4.5),
+              owner: this, target: enemy, type: 'dart'
+            });
+            logMessage(`🥷 ${this.name} ném Phi Tiêu (Đòn 1 Combo)!`, 'ninja');
+          } 
+          else if (this.ninjaComboStep === 2) {
+            // Đòn 2: Lao và đi xuyên ra sau lưng địch, bất tử trên đường lao, gây 20 dmg + chậm 30% (2s)
+            this.ninjaInvulnerable = true;
+            const enemyAngle = Math.atan2(enemy.y - this.y, enemy.x - this.x);
+            // Đứng phía sau lưng địch theo hướng góc
+            const behindX = enemy.x + Math.cos(enemyAngle) * (enemy.radius + this.radius + 10);
+            const behindY = enemy.y + Math.sin(enemyAngle) * (enemy.radius + this.radius + 10);
+            
+            this.x = Math.max(this.radius, Math.min(canvas.width - this.radius, behindX));
+            this.y = Math.max(this.radius, Math.min(canvas.height - this.radius, behindY));
+
+            enemy.takeDamage(20, 'Đột Kích (Ninja Đòn 2)');
+            enemy.applySlow(2.0);
+            createParticles(enemy.x, enemy.y, '#e2e8f0', 14);
+            logMessage(`🥷 ${this.name} đột kích sau lưng ${enemy.name} (-20 HP + Slow 2s, Đòn 2)!`, 'ninja');
+
+            this.ninjaInvulnerable = false;
+            this.ninjaComboStep = 3; // Chuyển sang đòn 3
+          } 
+          else if (this.ninjaComboStep === 3) {
+            // Đòn 3: Lướt (chiều dài = 5 đường kính Ball) về phía địch, bất tử trên đường lướt, gây 20 dmg + 40% HP mất của địch
+            this.ninjaInvulnerable = true;
+            const diameter = this.radius * 2;
+            const dashDistance = diameter * 5;
+            const angle = Math.atan2(enemy.y - this.y, enemy.x - this.x);
+
+            const destX = this.x + Math.cos(angle) * dashDistance;
+            const destY = this.y + Math.sin(angle) * dashDistance;
+
+            this.x = Math.max(this.radius, Math.min(canvas.width - this.radius, destX));
+            this.y = Math.max(this.radius, Math.min(canvas.height - this.radius, destY));
+
+            const distToEnemy = Math.hypot(this.x - enemy.x, this.y - enemy.y);
+            const hitSuccess = (distToEnemy <= this.radius + enemy.radius + 25);
+
+            if (hitSuccess) {
+              const missingHp = enemy.maxHp - enemy.hp;
+              const bonusDmg = Math.floor(missingHp * 0.4);
+              const totalDmg = 20 + bonusDmg;
+
+              enemy.takeDamage(totalDmg, 'Ảnh Trảm (Ninja Đòn 3)');
+              createParticles(enemy.x, enemy.y, '#e2e8f0', 20);
+              logMessage(`🥷 ${this.name} Ảnh Trảm cực mạnh trúng ${enemy.name}! (-${totalDmg} HP, Đòn 3)`, 'ninja');
+              
+              // Hoàn thành chuỗi combo, reset về 1
+              this.ninjaComboStep = 1;
+            } else {
+              // Lướt trượt -> Lập tức quay lại thi triển đòn thứ nhất trong chuỗi combo
+              logMessage(`🥷 ${this.name} lướt trượt Đòn 3! Lập tức reset về Đòn 1 ném phi tiêu!`, 'ninja');
+              this.ninjaComboStep = 1;
+              this.ninjaComboTimer = 2.0; // Kích hoạt ngay lập tức
+            }
+
+            this.ninjaInvulnerable = false;
           }
-
-          const distToIllusion = Math.hypot(this.x - illusion.x, this.y - illusion.y);
-          if (distToIllusion < this.radius + illusion.radius) {
-            this.reaperSpeedBoostTimer = 2.0;
-            logMessage(`🥷 ${this.name} chạm Linh Hồn Ảo Ảnh! Tăng tốc bám đuổi địch!`, 'reaper');
-            createParticles(illusion.x, illusion.y, '#e2e8f0', 8);
-            reaperIllusions.splice(i, 1);
-            break;
-          }
-        }
-
-        const distToEnemy = Math.hypot(this.x - enemy.x, this.y - enemy.y);
-        const triggerDist = (this.radius * 2) * 1.1;
-
-        if (this.reaperSpeedBoostTimer > 0 && distToEnemy <= triggerDist) {
-          const missingHp = enemy.maxHp - enemy.hp;
-          const slashDmg = 12 + Math.floor(missingHp * 0.4);
-
-          enemy.takeDamage(slashDmg, 'Nhát Chém Tử Thần (Reaper)');
-          
-          const slashAngle = Math.atan2(enemy.y - this.y, enemy.x - this.x);
-          activeReaperSlashes.push({
-            x: this.x, y: this.y,
-            angle: slashAngle, spread: (120 * Math.PI) / 180,
-            radius: (this.radius * 2) * 1.2, timer: 0.3
-          });
-
-          createParticles(enemy.x, enemy.y, '#f43f5e', 15);
-          logMessage(`🥷 Reaper Ball áp sát chém quạt ${enemy.name}! (-${slashDmg} HP)`, 'reaper');
-
-          this.reaperSpeedBoostTimer = 0;
-          const randomAngle = Math.random() * Math.PI * 2;
-          const randSpeed = this.baseSpeed * 1.25;
-          this.vx = Math.cos(randomAngle) * randSpeed;
-          this.vy = Math.sin(randomAngle) * randSpeed;
         }
       }
 
@@ -868,17 +874,20 @@
 
       applyBurn() {
         if (this.typeKey === 'wukong' && this.wukongImmortalTimer > 0) return;
+        if (this.typeKey === 'ninja' && this.ninjaInvulnerable) return;
         this.burnStacks = Math.min(this.burnStacks + 1, 3);
         this.burnTimer = 2;
       }
 
       applySlow(duration) {
         if (this.typeKey === 'wukong' && this.wukongImmortalTimer > 0) return;
+        if (this.typeKey === 'ninja' && this.ninjaInvulnerable) return;
         this.slowTimer = duration;
       }
 
       applyStun(duration) {
         if (this.typeKey === 'wukong' && this.wukongImmortalTimer > 0) return;
+        if (this.typeKey === 'ninja' && this.ninjaInvulnerable) return;
         this.stunTimer = Math.max(this.stunTimer, duration);
         updateHUD();
       }
@@ -886,6 +895,11 @@
       takeDamage(amount, source) {
         if (this.typeKey === 'wukong' && this.wukongImmortalTimer > 0) {
           createParticles(this.x, this.y, '#fef08a', 6);
+          return;
+        }
+
+        if (this.typeKey === 'ninja' && this.ninjaInvulnerable) {
+          createParticles(this.x, this.y, '#cbd5e1', 6);
           return;
         }
 
@@ -909,17 +923,6 @@
             enemy.receiveHealingFromAngel(15, this);
           }
           updateHUD();
-          return;
-        }
-
-        if (this.typeKey === 'reaper') {
-          this.hp = Math.max(0, this.hp - amount);
-          logMessage(`🥷 Reaper Ball nhận ${amount} dmg (${source}) -> Còn ${this.hp} HP`, 'reaper');
-          createParticles(this.x, this.y, '#e2e8f0', 10);
-          updateHUD();
-          if (this.hp <= 0 && !gameOver) {
-            endGame(this);
-          }
           return;
         }
 
@@ -974,6 +977,16 @@
           ctx.lineWidth = 3;
           ctx.shadowColor = '#facc15';
           ctx.shadowBlur = 14;
+          ctx.stroke();
+        }
+
+        if (this.typeKey === 'ninja' && this.ninjaInvulnerable) {
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.radius + 8, 0, Math.PI * 2);
+          ctx.strokeStyle = '#94a3b8';
+          ctx.lineWidth = 3;
+          ctx.shadowColor = '#cbd5e1';
+          ctx.shadowBlur = 12;
           ctx.stroke();
         }
 
@@ -1167,6 +1180,38 @@
         }
 
         createParticles((b1.x + b2.x) / 2, (b1.y + b2.y) / 2, '#ffffff', 6);
+      }
+    }
+
+    function updateNinjaProjectiles() {
+      for (let i = ninjaProjectiles.length - 1; i >= 0; i--) {
+        const p = ninjaProjectiles[i];
+        p.x += p.vx; p.y += p.vy;
+
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 4, 0, Math.PI * 2);
+        ctx.fillStyle = '#cbd5e1';
+        ctx.shadowColor = '#f8fafc'; ctx.shadowBlur = 8;
+        ctx.fill();
+        ctx.restore();
+
+        const dist = Math.hypot(p.target.x - p.x, p.target.y - p.y);
+        if (dist <= p.target.radius + 6) {
+          p.target.takeDamage(15, 'Phi Tiêu Ninja (Đòn 1)');
+          createParticles(p.target.x, p.target.y, '#e2e8f0', 10);
+          logMessage(`🥷 Phi Tiêu găm trúng ${p.target.name} (-15 HP)! Chuyển sang Đòn 2 Combo!`, 'ninja');
+          
+          // Trúng đòn -> Chuyển sang bước combo tiếp theo (bước 2)
+          p.owner.ninjaComboStep = 2;
+          ninjaProjectiles.splice(i, 1);
+        } else if (p.x <= 0 || p.x >= canvas.width || p.y <= 0 || p.y >= canvas.height) {
+          // Ném hụt -> 2s sau phải thực hiện lại đòn 1 cho đến khi trúng mới qua đòn 2
+          logMessage(`🥷 Phi Tiêu bay trượt! Phải lặp lại Đòn 1 sau 2s!`, 'ninja');
+          p.owner.ninjaComboStep = 1;
+          p.owner.ninjaComboTimer = 0; // Reset đếm 2s để thử lại đòn 1
+          ninjaProjectiles.splice(i, 1);
+        }
       }
     }
 
@@ -1386,51 +1431,6 @@
 
         if (wave.currentRadius >= wave.maxRadius) {
           soundWaves.splice(i, 1);
-        }
-      }
-    }
-
-    function updateReaperIllusionsAndSlashes() {
-      const now = Date.now();
-      for (let i = reaperIllusions.length - 1; i >= 0; i--) {
-        const ill = reaperIllusions[i];
-        const age = now - ill.createdAt;
-        if (age >= 2000) {
-          reaperIllusions.splice(i, 1);
-          continue;
-        }
-
-        ctx.save();
-        ctx.beginPath();
-        ctx.arc(ill.x, ill.y, ill.radius * 0.8, 0, Math.PI * 2);
-        const alpha = Math.max(0, 1 - age / 2000);
-        ctx.fillStyle = `rgba(148, 163, 184, ${alpha * 0.35})`;
-        ctx.fill();
-        ctx.strokeStyle = `rgba(226, 232, 240, ${alpha * 0.6})`;
-        ctx.lineWidth = 1.5;
-        ctx.setLineDash([2, 2]);
-        ctx.stroke();
-        ctx.restore();
-      }
-
-      for (let i = activeReaperSlashes.length - 1; i >= 0; i--) {
-        const slash = activeReaperSlashes[i];
-        slash.timer -= 1 / 60;
-
-        ctx.save();
-        ctx.beginPath();
-        ctx.moveTo(slash.x, slash.y);
-        ctx.arc(slash.x, slash.y, slash.radius, slash.angle - slash.spread / 2, slash.angle + slash.spread / 2);
-        ctx.closePath();
-        ctx.fillStyle = 'rgba(244, 63, 94, 0.35)';
-        ctx.fill();
-        ctx.strokeStyle = 'rgba(244, 63, 94, 0.8)';
-        ctx.lineWidth = 2.5;
-        ctx.stroke();
-        ctx.restore();
-
-        if (slash.timer <= 0) {
-          activeReaperSlashes.splice(i, 1);
         }
       }
     }
@@ -1759,22 +1759,9 @@
       document.getElementById(`${prefix}-hp-text`).innerText = `${Math.ceil(ball.hp)}/${ball.maxHp}`;
       
       const container = document.getElementById(`${prefix}-hp-container`);
-      if (ball.typeKey === 'reaper') {
-        container.style.display = 'flex';
-        for (let s = 1; s <= 4; s++) {
-          const seg = document.getElementById(`${prefix}-hp-seg${s}`);
-          const threshold = (5 - s) * 25;
-          if (ball.hp >= threshold) {
-            seg.style.opacity = '1';
-          } else {
-            seg.style.opacity = '0.2';
-          }
-        }
-      } else {
-        container.style.display = 'block';
-        const pct = Math.max(0, (ball.hp / ball.maxHp) * 100);
-        container.innerHTML = `<div class="h-full bg-gradient-to-r ${prefix === 'p1' ? 'from-cyan-500 to-emerald-400' : 'from-rose-500 to-amber-400'} transition-all duration-150" style="width: ${pct}%;"></div>`;
-      }
+      container.style.display = 'block';
+      const pct = Math.max(0, (ball.hp / ball.maxHp) * 100);
+      container.innerHTML = `<div class="h-full bg-gradient-to-r ${prefix === 'p1' ? 'from-cyan-500 to-emerald-400' : 'from-rose-500 to-amber-400'} transition-all duration-150" style="width: ${pct}%;"></div>`;
 
       const badges = document.getElementById(`${prefix}-badges`);
       badges.innerHTML = '';
@@ -1784,7 +1771,7 @@
       if (ball.typeKey === 'bear') badges.innerHTML += `<span class="bg-emerald-950 text-emerald-400 border border-emerald-500/40 px-1 rounded">💚 +${ball.effectiveHealStored} Dmg</span>`;
       if (ball.typeKey === 'wanderer' && ball.shieldActive) badges.innerHTML += `<span class="bg-indigo-950 text-indigo-300 border border-indigo-500/40 px-1 rounded">🛡️ Khiên</span>`;
       if (ball.typeKey === 'soul' && ball.collectedSoulsCount > 0) badges.innerHTML += `<span class="bg-pink-950 text-pink-300 border border-pink-500/40 px-1 rounded">🔮 x${ball.collectedSoulsCount} Linh Hồn</span>`;
-      if (ball.typeKey === 'sound') badges.innerHTML += `<span class="bg-teal-950 text-teal-300 border border-teal-500/40 px-1 rounded">🔊 +${(Math.max(0, ball.maxHp - ball.hp) * 0.3).toFixed(1)}% Tốc</span>`;
+      if (ball.typeKey === 'ninja') badges.innerHTML += `<span class="bg-slate-800 text-slate-200 border border-slate-600 px-1 rounded">🥷 Combo Đòn ${ball.ninjaComboStep}</span>`;
       if (ball.blessingMarks > 0) badges.innerHTML += `<span class="bg-yellow-950 text-yellow-300 border border-yellow-500/40 px-1 rounded">✨ Ấn: ${Math.round(ball.blessingMarks)}</span>`;
       if (ball.typeKey === 'wukong' && ball.wukongImmortalTimer > 0) badges.innerHTML += `<span class="bg-yellow-950 text-yellow-300 border border-yellow-500/40 px-1 rounded">🍑 Bất Tử</span>`;
       if (ball.typeKey === 'wukong' && ball.wukongSweepTimer > 0) badges.innerHTML += `<span class="bg-orange-950 text-orange-300 border border-orange-500/40 px-1 rounded">⚡ +40% Tốc</span>`;
@@ -1797,11 +1784,14 @@
 
     function initGame() {
       if (animationFrameId) cancelAnimationFrame(animationFrameId);
+      gameOver = false;
+      winnerOverlay.classList.add('hidden');
+
       p1 = new Ball('p1', p1Select.value, 80, canvas.height / 2, 'p1');
       p2 = new Ball('p2', p2Select.value, canvas.width - 80, canvas.height / 2, 'p2');
 
-      fireTrails = []; shurikens = []; lightningZones = []; soulOrbs = []; activeSoulBeams = []; marksmanTraps = []; marksmanBullets = []; reaperIllusions = []; activeReaperSlashes = []; soundWaves = []; wukongClones = []; wukongStaffs = []; activeWukongSweeps = []; particles = [];
-      gameOver = false; winnerOverlay.classList.add('hidden');
+      fireTrails = []; shurikens = []; lightningZones = []; soulOrbs = []; activeSoulBeams = []; marksmanTraps = []; marksmanBullets = []; ninjaProjectiles = []; soundWaves = []; wukongClones = []; wukongStaffs = []; activeWukongSweeps = []; particles = [];
+      
       battleLog.innerHTML = '';
       logMessage(`Bắt đầu trận đấu: ${p1.name} VS ${p2.name}!`);
       updateHUD();
@@ -1809,6 +1799,7 @@
     }
 
     function endGame(loser) {
+      if (gameOver) return;
       gameOver = true;
       const winner = (loser === p1) ? p2 : p1;
       winnerText.innerText = `🏆 ${winner.name.toUpperCase()} CHIẾN THẮNG!`;
@@ -1829,8 +1820,8 @@
         checkBallCollision(p1, p2);
       }
 
+      updateNinjaProjectiles();
       updateWukongSkills();
-      updateReaperIllusionsAndSlashes();
       updateMarksmanTrapsAndBullets();
       updateSoulOrbsAndBeams();
       updateSoundWaves();
