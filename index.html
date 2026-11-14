@@ -673,7 +673,7 @@
 
         this.soulBeamTimer += 1 / 60;
         if (this.soulBeamTimer >= 2.0) {
-          this.soulBeamTimer = 0.5;
+          this.soulBeamTimer = 0;
           const aimAngle = Math.atan2(enemy.y - this.y, enemy.x - this.x);
           const baseAngleDeg = 30;
           const totalAngleDeg = baseAngleDeg + (this.collectedSoulsCount * 1.5);
@@ -1342,7 +1342,7 @@
         if (!s.isStuck && !s.isReturning) {
           s.x += s.vx; s.y += s.vy;
           if (Math.hypot(s.x - enemy.x, s.y - enemy.y) < enemy.radius + 10 && !s.hitOnThrow) {
-            enemy.takeDamage(5, 'Shuriken');
+            enemy.takeDamage(6, 'Shuriken');
             s.hitOnThrow = true;
             createParticles(s.x, s.y, '#10b981', 6);
             logMessage(`Shuriken xuyên trúng ${enemy.name} (-5 HP)`, 'assassin');
