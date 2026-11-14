@@ -287,7 +287,7 @@
       // =======================================================================
       wukong: {
         name: 'Wukong Ball', color: '#fb923c', secondaryColor: '#b45309',
-        hp: 102, maxHp: 102, radius: 18, speed: BASE_SPEED * 1.12, contactDmg: 7, icon: '🐵'
+        hp: 102, maxHp: 102, radius: 18, speed: BASE_SPEED * 1.32, contactDmg: 7, icon: '🐵
       }
     };
 
@@ -873,7 +873,7 @@
         // Kích hoạt kỹ năng ngẫu nhiên 25% mỗi chiêu sau mỗi 3s di chuyển
         if (this.stunTimer <= 0) {
           this.wukongSkillTimer += 1 / 60;
-          if (this.wukongSkillTimer >= 2.25) {
+          if (this.wukongSkillTimer >= 2.05) {
             this.wukongSkillTimer = 0;
             const skillChoice = Math.floor(Math.random() * 4) + 1;
 
@@ -901,16 +901,16 @@
               logMessage(`🐵 ${this.name} thi triển Phân Thân Thuật! Triệu hồi 3 phân thân tồn tại 4.5s!`, 'wukong');
             }
             else if (skillChoice === 2) {
-              // SKILL 2: Ăn Đào Tiên (+5 HP, XÓA MỌI HIỆU ỨNG XẤU, bất tử 2s)
-              this.hp = Math.min(this.maxHp, this.hp + 8);
+              // SKILL 2: Ăn Đào Tiên (+11 HP, XÓA MỌI HIỆU ỨNG XẤU, bất tử 2s)
+              this.hp = Math.min(this.maxHp, this.hp + 11);
               this.burnStacks = 0; this.burnTimer = 0;
               this.slowTimer = 0; this.slowFactor = 1;
               this.stunTimer = 0;
-              this.wukongImmortalTimer = 2.0;
+              this.wukongImmortalTimer = 2.05;
 
               createParticles(this.x, this.y, '#f43f5e', 16);
               updateHUD();
-              logMessage(`🍑 ${this.name} ăn Đào Tiên! Hồi 7 HP, xóa sạch mọi hiệu ứng & Bất Tử trong 2s!`, 'wukong');
+              logMessage(`🍑 ${this.name} ăn Đào Tiên! Hồi 11 HP, xóa sạch mọi hiệu ứng & Bất Tử trong 2s!`, 'wukong');
             }
             else if (skillChoice === 3) {
               // SKILL 3: Tăng 40% tốc độ trong 3s + Quét gậy quạt tầm siêu rộng (2 đường kính + 1 đường kính = 3 đường kính Ball)
