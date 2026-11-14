@@ -873,7 +873,7 @@
         // Kích hoạt kỹ năng ngẫu nhiên 25% mỗi chiêu sau mỗi 3s di chuyển
         if (this.stunTimer <= 0) {
           this.wukongSkillTimer += 1 / 60;
-          if (this.wukongSkillTimer >= 3.0) {
+          if (this.wukongSkillTimer >= 2.35) {
             this.wukongSkillTimer = 0;
             const skillChoice = Math.floor(Math.random() * 4) + 1;
 
@@ -902,7 +902,7 @@
             }
             else if (skillChoice === 2) {
               // SKILL 2: Ăn Đào Tiên (+5 HP, XÓA MỌI HIỆU ỨNG XẤU, bất tử 2s)
-              this.hp = Math.min(this.maxHp, this.hp + 5);
+              this.hp = Math.min(this.maxHp, this.hp + 7);
               this.burnStacks = 0; this.burnTimer = 0;
               this.slowTimer = 0; this.slowFactor = 1;
               this.stunTimer = 0;
@@ -910,7 +910,7 @@
 
               createParticles(this.x, this.y, '#f43f5e', 16);
               updateHUD();
-              logMessage(`🍑 ${this.name} ăn Đào Tiên! Hồi 5 HP, xóa sạch mọi hiệu ứng & Bất Tử trong 2s!`, 'wukong');
+              logMessage(`🍑 ${this.name} ăn Đào Tiên! Hồi 7 HP, xóa sạch mọi hiệu ứng & Bất Tử trong 2s!`, 'wukong');
             }
             else if (skillChoice === 3) {
               // SKILL 3: Tăng 40% tốc độ trong 3s + Quét gậy quạt tầm siêu rộng (2 đường kính + 1 đường kính = 3 đường kính Ball)
