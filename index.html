@@ -673,7 +673,7 @@
 
         this.soulBeamTimer += 1 / 60;
         if (this.soulBeamTimer >= 2.0) {
-          this.soulBeamTimer = 0;
+          this.soulBeamTimer = 0.5;
           const aimAngle = Math.atan2(enemy.y - this.y, enemy.x - this.x);
           const baseAngleDeg = 30;
           const totalAngleDeg = baseAngleDeg + (this.collectedSoulsCount * 1.5);
@@ -687,7 +687,7 @@
             timer: 0.35, owner: this
           });
 
-          const beamDmg = 5 + (this.collectedSoulsCount * 2);
+          const beamDmg = 1 + (this.collectedSoulsCount * 3);
           logMessage(`🔮 ${this.name} phóng Chùm Sáng Linh Hồn (Góc rộng ${totalAngleDeg.toFixed(1)}°, ${beamDmg} dmg)!`, 'soul');
         }
       }
