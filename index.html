@@ -228,7 +228,7 @@
       },
       angel: {
         name: 'Angel Ball', color: '#fef08a', secondaryColor: '#eab308',
-        hp: 100, maxHp: 100, radius: 18, speed: BASE_SPEED * 0.9, contactDmg: 0, icon: '👼'
+        hp: 80, maxHp: 80, radius: 18, speed: BASE_SPEED * 0.9, contactDmg: 0, icon: '👼'
       }
     };
 
@@ -409,7 +409,7 @@
           this.angelHealTimer += 1 / 60;
           if (this.angelHealTimer >= 1.0) {
             this.angelHealTimer = 0;
-            enemy.receiveHealingFromAngel(2, this);
+            enemy.receiveHealingFromAngel(1, this);
           }
         }
 
@@ -748,7 +748,7 @@
 
         if (this.reaperSpeedBoostTimer > 0 && distToEnemy <= triggerDist) {
           const missingHp = enemy.maxHp - enemy.hp;
-          const slashDmg = 12 + Math.floor(missingHp * 0.4);
+          const slashDmg = 13 + Math.floor(missingHp * 0.4);
 
           enemy.takeDamage(slashDmg, 'Nhát Chém Tử Thần (Reaper)');
           
@@ -803,7 +803,7 @@
           
           const enemy = (this === p1) ? p2 : p1;
           if (enemy) {
-            enemy.receiveHealingFromAngel(18, this);
+            enemy.receiveHealingFromAngel(14, this);
           }
           updateHUD();
           return;
@@ -831,7 +831,7 @@
 
       receiveHealingFromAngel(amount, healer) {
         const missingHealerHp = healer ? (healer.maxHp - healer.hp) : 0;
-        const multiplier = 1 + (Math.floor(missingHealerHp / 3) * 0.05);
+        const multiplier = 1 + (Math.floor(missingHealerHp / 4) * 0.04);
         const actualHeal = amount * multiplier;
 
         const oldHp = this.hp;
@@ -999,10 +999,10 @@
           const target = (b1.typeKey === 'angel') ? b2 : b1;
 
           angel.receiveHealingFromAngel(10, angel);
-          target.receiveHealingFromAngel(12, angel);
+          target.receiveHealingFromAngel(10, angel);
           b1.hitCooldown = 20;
           b2.hitCooldown = 20;
-          logMessage(`👼 Angel Ball va chạm thánh thiện! Hồi máu đôi bên.`, 'angel');
+          logMessage(`👼 Angel Ball va chạm thánh thiện! Ban phước lành hồi máu đôi bên.`, 'angel');
         }
 
         if (b1.hitCooldown === 0) {
@@ -1083,7 +1083,7 @@
           if (wave.currentRadius >= distToEnemy - enemy.radius) {
             wave.hitEnemy = true;
             const clampedDist = Math.min(distToEnemy, maxPossibleDist);
-            const dmg = Math.max(3, 30 - (clampedDist / maxPossibleDist) * 27);
+            const dmg = Math.max(1, 21 - (clampedDist / maxPossibleDist) * 27);
             const finalDmg = Math.round(dmg);
 
             enemy.takeDamage(finalDmg, 'Sóng Âm');
