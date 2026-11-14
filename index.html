@@ -1256,7 +1256,7 @@
           while (angleDiff > Math.PI) angleDiff -= Math.PI * 2;
 
           if (Math.abs(angleDiff) <= beam.spread / 2) {
-            const beamDmg = 5 + (beam.owner.collectedSoulsCount * 2);
+            const beamDmg = 2 + (beam.owner.collectedSoulsCount * 2);
             enemy.takeDamage(beamDmg, 'Chùm Sáng Linh Hồn');
             createParticles(enemy.x, enemy.y, '#f472b6', 8);
             logMessage(`🔮 Chùm sáng Soul Ball quét trúng ${enemy.name}! (-${beamDmg} HP)`, 'soul');
