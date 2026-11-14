@@ -67,6 +67,7 @@
               <option value="soul">🔮 Soul Ball</option>
               <option value="marksman">🎯 Marksman Ball</option>
               <option value="ninja" selected>🥷 Ninja Ball</option>
+              <option value="reaper">💀 Reaper Ball</option>
               <option value="sound">🔊 Sound Ball</option>
               <option value="angel">👼 Angel Ball</option>
               <option value="wukong">🐵 Wukong Ball</option>
@@ -85,6 +86,7 @@
               <option value="soul" selected>🔮 Soul Ball</option>
               <option value="marksman">🎯 Marksman Ball</option>
               <option value="ninja">🥷 Ninja Ball</option>
+              <option value="reaper">💀 Reaper Ball</option>
               <option value="sound">🔊 Sound Ball</option>
               <option value="angel">👼 Angel Ball</option>
               <option value="wukong">🐵 Wukong Ball</option>
@@ -109,6 +111,7 @@
         <div class="text-slate-300"><span class="text-pink-400 font-bold">🔮 Soul Ball:</span> HP 100 | Dmg 5 | Tốc độ 1.1X. Tạo đốm linh hồn mỗi 1.15s. Nhặt linh hồn: +1 Max HP, hồi 3 HP, +30% tốc độ (2s). Mỗi 2s phóng chùm sáng hình quạt quét dài hết sân (rộng 30° + 1.5°/linh hồn) gây 1 dmg (+ 3 dmg/linh hồn).</div>
         <div class="text-slate-300"><span class="text-lime-400 font-bold">🎯 Marksman Ball:</span> HP 90 | Dmg 1 | Tốc độ X. Bắn 1 đạn khóa mục tiêu mỗi 1s (2 dmg). Mỗi 2s di chuyển đặt 1 Bẫy vĩnh viễn: Địch giẫm trúng bị Choáng 1s và nhận ngay 1 phát bắn chí mạng 25 dmg (độc lập chu kỳ).</div>
         <div class="text-slate-300"><span class="text-slate-200 font-bold">🥷 Ninja Ball:</span> HP 90 | Dmg va chạm: 5 | Tốc độ X. Nội tại chuỗi combo mỗi 2s: (1) Ném phi tiêu găm địch 15 dmg (trượt phải lặp lại đến trúng); (2) Lao xuyên sau lưng địch bất tử, gây 20 dmg + Slow 30% (2s); (3) Lướt 5 đường kính bất tử gây 20 dmg + 40% HP mất của địch (trượt sẽ bắt buộc quay lại đánh đòn 1).</div>
+        <div class="text-slate-300"><span class="text-slate-400 font-bold">💀 Reaper Ball:</span> HP 100 | Dmg va chạm: 1 | Tốc độ 1.25X. Tạo ảo ảnh bóng ma trên đường di chuyển, chạm ảo ảnh giúp tăng tốc bám đuổi và chém 12 dmg + 40% HP đã mất của địch.</div>
         <div class="text-slate-300"><span class="text-teal-400 font-bold">🔊 Sound Ball:</span> HP 100 | Dmg va chạm: 0 | Tốc độ 0.9X (+0.3% tốc độ mỗi 1% HP mất). Va chạm đối thủ tăng 40% tốc độ (2s). Va tường tạo Sóng Âm (gây tối đa 20 dmg sát tâm, giảm dần tới 1 dmg ở biên đối diện).</div>
         <div class="text-slate-300"><span class="text-yellow-200 font-bold">👼 Angel Ball:</span> HP 80 | Dmg va chạm: 0 | Tốc độ 0.9X (+1.25% hiệu quả hồi máu mỗi 1 HP mất). Va chạm hồi 12 HP đôi bên, cứ 1s hồi 1 HP cho địch. Bất tử 1 lần khi về 0 HP (hồi 15 HP cho địch). Nhận lại 25% HP dư từ địch & tích Dấu Ấn Phước Thần để kết liễu!</div>
         <div class="text-slate-300"><span class="text-orange-400 font-bold">🐵 Wukong Ball:</span> HP 102 | Dmg 7 | Tốc độ 1.32X. Sau mỗi 2.05s di chuyển ngẫu nhiên (25%/chiêu): (1) Tạo 3 Phân Thân tương tác vật lý chuẩn; (2) Ăn Đào Tiên hồi 11 HP, xóa mọi hiệu ứng xấu & bất tử 2.05s; (3) Tăng 40% tốc độ trong 3s, áp sát quét gậy 150° gây 24 dmg; (4) Quăng gậy xoay trúng địch gây 10 dmg & hất đổi hướng.</div>
@@ -125,11 +128,8 @@
             <span id="p1-name" class="text-xs font-bold font-orbitron text-cyan-400 truncate">P1</span>
             <span id="p1-hp-text" class="text-xs font-mono font-bold text-slate-300">100/100</span>
           </div>
-          <div id="p1-hp-container" class="w-full bg-slate-950 h-2.5 rounded-full overflow-hidden border border-slate-800 flex gap-0.5">
-            <div id="p1-hp-seg1" class="h-full bg-gradient-to-r from-cyan-500 to-emerald-400 transition-all duration-150 flex-1"></div>
-            <div id="p1-hp-seg2" class="h-full bg-gradient-to-r from-cyan-500 to-emerald-400 transition-all duration-150 flex-1"></div>
-            <div id="p1-hp-seg3" class="h-full bg-gradient-to-r from-cyan-500 to-emerald-400 transition-all duration-150 flex-1"></div>
-            <div id="p1-hp-seg4" class="h-full bg-gradient-to-r from-cyan-500 to-emerald-400 transition-all duration-150 flex-1"></div>
+          <div id="p1-hp-container" class="w-full bg-slate-950 h-2.5 rounded-full overflow-hidden border border-slate-800">
+            <div id="p1-hp-bar" class="h-full bg-gradient-to-r from-cyan-500 to-emerald-400 transition-all duration-150 w-full"></div>
           </div>
           <div id="p1-badges" class="flex flex-wrap gap-1 mt-1 min-h-[16px] text-[10px]"></div>
         </div>
@@ -142,11 +142,8 @@
             <span id="p2-hp-text" class="text-xs font-mono font-bold text-slate-300">100/100</span>
             <span id="p2-name" class="text-xs font-bold font-orbitron text-rose-400 truncate">P2</span>
           </div>
-          <div id="p2-hp-container" class="w-full bg-slate-950 h-2.5 rounded-full overflow-hidden border border-slate-800 flex gap-0.5">
-            <div id="p2-hp-seg1" class="h-full bg-gradient-to-r from-rose-500 to-amber-400 transition-all duration-150 flex-1"></div>
-            <div id="p2-hp-seg2" class="h-full bg-gradient-to-r from-rose-500 to-amber-400 transition-all duration-150 flex-1"></div>
-            <div id="p2-hp-seg3" class="h-full bg-gradient-to-r from-rose-500 to-amber-400 transition-all duration-150 flex-1"></div>
-            <div id="p2-hp-seg4" class="h-full bg-gradient-to-r from-rose-500 to-amber-400 transition-all duration-150 flex-1"></div>
+          <div id="p2-hp-container" class="w-full bg-slate-950 h-2.5 rounded-full overflow-hidden border border-slate-800">
+            <div id="p2-hp-bar" class="h-full bg-gradient-to-r from-rose-500 to-amber-400 transition-all duration-150 w-full"></div>
           </div>
           <div id="p2-badges" class="flex flex-wrap gap-1 mt-1 justify-end min-h-[16px] text-[10px]"></div>
         </div>
@@ -222,6 +219,10 @@
         name: 'Ninja Ball', color: '#e2e8f0', secondaryColor: '#334155',
         hp: 90, maxHp: 90, radius: 18, speed: BASE_SPEED, contactDmg: 5, icon: '🥷'
       },
+      reaper: {
+        name: 'Reaper Ball', color: '#94a3b8', secondaryColor: '#475569',
+        hp: 100, maxHp: 100, radius: 18, speed: BASE_SPEED * 1.25, contactDmg: 1, icon: '💀'
+      },
       sound: {
         name: 'Sound Ball', color: '#2dd4bf', secondaryColor: '#0f766e',
         hp: 100, maxHp: 100, radius: 18, speed: BASE_SPEED * 0.9, contactDmg: 0, icon: '🔊'
@@ -245,6 +246,8 @@
     let marksmanTraps = [];
     let marksmanBullets = [];
     let ninjaProjectiles = [];
+    let reaperIllusions = [];
+    let activeReaperSlashes = [];
     let soundWaves = [];
     let wukongClones = [];
     let wukongStaffs = [];
@@ -276,6 +279,7 @@
       if (type === 'soul') colorClass = 'text-pink-400';
       if (type === 'marksman') colorClass = 'text-lime-400';
       if (type === 'ninja') colorClass = 'text-slate-200';
+      if (type === 'reaper') colorClass = 'text-slate-400';
       if (type === 'sound') colorClass = 'text-teal-400';
       if (type === 'angel') colorClass = 'text-yellow-300';
       if (type === 'wukong') colorClass = 'text-orange-400';
@@ -343,10 +347,13 @@
         this.marksmanTrapTimer = 0;
 
         // --- NINJA BALL ---
-        this.ninjaComboStep = 1;      // Bước combo hiện tại (1, 2, 3)
-        this.ninjaComboTimer = 0;     // Đếm thời gian kích hoạt combo mỗi 2s
-        this.ninjaWaitingHit = false; // Trạng thái chờ trúng đòn 1
-        this.ninjaInvulnerable = false; // Không thể bị chọn làm mục tiêu / không thể chết
+        this.ninjaComboStep = 1;
+        this.ninjaComboTimer = 0;
+        this.ninjaInvulnerable = false;
+
+        // --- REAPER BALL ---
+        this.reaperSpeedBoostTimer = 0;
+        this.illusionSpawnTimer = 0;
 
         this.soundSpeedBoostTimer = 0;
 
@@ -377,6 +384,9 @@
         if (this.typeKey === 'soul' && this.soulSpeedBoostTimer > 0) {
           speed *= 1.3;
         }
+        if (this.typeKey === 'reaper' && this.reaperSpeedBoostTimer > 0) {
+          speed *= 1.5;
+        }
         if (this.typeKey === 'wukong' && this.wukongSweepTimer > 0) {
           speed *= 1.4;
         }
@@ -400,6 +410,10 @@
 
         if (this.typeKey === 'soul' && this.soulSpeedBoostTimer > 0) {
           this.soulSpeedBoostTimer -= 1 / 60;
+        }
+
+        if (this.typeKey === 'reaper' && this.reaperSpeedBoostTimer > 0) {
+          this.reaperSpeedBoostTimer -= 1 / 60;
         }
 
         if (this.typeKey === 'sound' && this.soundSpeedBoostTimer > 0) {
@@ -466,6 +480,9 @@
         }
         else if (this.typeKey === 'ninja') {
           this.updateNinjaInternal(enemy);
+        }
+        else if (this.typeKey === 'reaper') {
+          this.updateReaperInternal(enemy);
         }
         else if (this.typeKey === 'wukong') {
           this.updateWukongInternal(enemy);
@@ -704,33 +721,27 @@
         }
       }
 
-      // --- NINJA BALL NỘI TAI COMBO MỖI 2S ---
       updateNinjaInternal(enemy) {
         if (!enemy) return;
         if (this.stunTimer > 0) return;
 
         this.ninjaComboTimer += 1 / 60;
-        const interval = this.ninjaWaitingHit ? 2.0 : 2.0;
-
-        if (this.ninjaComboTimer >= interval) {
+        if (this.ninjaComboTimer >= 2.0) {
           this.ninjaComboTimer = 0;
 
           if (this.ninjaComboStep === 1) {
-            // Đòn 1: Ném phi tiêu găm vào địch gây 15 dmg (nếu trượt, 2s sau lặp lại đòn 1)
             const angle = Math.atan2(enemy.y - this.y, enemy.x - this.x);
             ninjaProjectiles.push({
               x: this.x, y: this.y,
               vx: Math.cos(angle) * (BASE_SPEED * 4.5),
               vy: Math.sin(angle) * (BASE_SPEED * 4.5),
-              owner: this, target: enemy, type: 'dart'
+              owner: this, target: enemy
             });
             logMessage(`🥷 ${this.name} ném Phi Tiêu (Đòn 1 Combo)!`, 'ninja');
           } 
           else if (this.ninjaComboStep === 2) {
-            // Đòn 2: Lao và đi xuyên ra sau lưng địch, bất tử trên đường lao, gây 20 dmg + chậm 30% (2s)
             this.ninjaInvulnerable = true;
             const enemyAngle = Math.atan2(enemy.y - this.y, enemy.x - this.x);
-            // Đứng phía sau lưng địch theo hướng góc
             const behindX = enemy.x + Math.cos(enemyAngle) * (enemy.radius + this.radius + 10);
             const behindY = enemy.y + Math.sin(enemyAngle) * (enemy.radius + this.radius + 10);
             
@@ -743,10 +754,9 @@
             logMessage(`🥷 ${this.name} đột kích sau lưng ${enemy.name} (-20 HP + Slow 2s, Đòn 2)!`, 'ninja');
 
             this.ninjaInvulnerable = false;
-            this.ninjaComboStep = 3; // Chuyển sang đòn 3
+            this.ninjaComboStep = 3;
           } 
           else if (this.ninjaComboStep === 3) {
-            // Đòn 3: Lướt (chiều dài = 5 đường kính Ball) về phía địch, bất tử trên đường lướt, gây 20 dmg + 40% HP mất của địch
             this.ninjaInvulnerable = true;
             const diameter = this.radius * 2;
             const dashDistance = diameter * 5;
@@ -769,18 +779,71 @@
               enemy.takeDamage(totalDmg, 'Ảnh Trảm (Ninja Đòn 3)');
               createParticles(enemy.x, enemy.y, '#e2e8f0', 20);
               logMessage(`🥷 ${this.name} Ảnh Trảm cực mạnh trúng ${enemy.name}! (-${totalDmg} HP, Đòn 3)`, 'ninja');
-              
-              // Hoàn thành chuỗi combo, reset về 1
               this.ninjaComboStep = 1;
             } else {
-              // Lướt trượt -> Lập tức quay lại thi triển đòn thứ nhất trong chuỗi combo
               logMessage(`🥷 ${this.name} lướt trượt Đòn 3! Lập tức reset về Đòn 1 ném phi tiêu!`, 'ninja');
               this.ninjaComboStep = 1;
-              this.ninjaComboTimer = 2.0; // Kích hoạt ngay lập tức
+              this.ninjaComboTimer = 2.0;
             }
 
             this.ninjaInvulnerable = false;
           }
+        }
+      }
+
+      updateReaperInternal(enemy) {
+        if (!enemy) return;
+        this.illusionSpawnTimer += 1 / 60;
+        if (this.illusionSpawnTimer >= 0.35) {
+          this.illusionSpawnTimer = 0;
+          reaperIllusions.push({
+            x: enemy.x, y: enemy.y,
+            createdAt: Date.now(), radius: enemy.radius
+          });
+        }
+
+        const now = Date.now();
+        for (let i = reaperIllusions.length - 1; i >= 0; i--) {
+          const illusion = reaperIllusions[i];
+          if (now - illusion.createdAt >= 2000) {
+            reaperIllusions.splice(i, 1);
+            continue;
+          }
+
+          const distToIllusion = Math.hypot(this.x - illusion.x, this.y - illusion.y);
+          if (distToIllusion < this.radius + illusion.radius) {
+            this.reaperSpeedBoostTimer = 2.0;
+            logMessage(`💀 ${this.name} chạm Linh Hồn Ảo Ảnh! Tăng tốc bám đuổi địch!`, 'reaper');
+            createParticles(illusion.x, illusion.y, '#94a3b8', 8);
+            reaperIllusions.splice(i, 1);
+            break;
+          }
+        }
+
+        const distToEnemy = Math.hypot(this.x - enemy.x, this.y - enemy.y);
+        const triggerDist = (this.radius * 2) * 1.1;
+
+        if (this.reaperSpeedBoostTimer > 0 && distToEnemy <= triggerDist) {
+          const missingHp = enemy.maxHp - enemy.hp;
+          const slashDmg = 12 + Math.floor(missingHp * 0.4);
+
+          enemy.takeDamage(slashDmg, 'Nhát Chém Tử Thần (Reaper)');
+          
+          const slashAngle = Math.atan2(enemy.y - this.y, enemy.x - this.x);
+          activeReaperSlashes.push({
+            x: this.x, y: this.y,
+            angle: slashAngle, spread: (120 * Math.PI) / 180,
+            radius: (this.radius * 2) * 1.2, timer: 0.3
+          });
+
+          createParticles(enemy.x, enemy.y, '#94a3b8', 15);
+          logMessage(`💀 Reaper Ball áp sát chém quạt ${enemy.name}! (-${slashDmg} HP)`, 'reaper');
+
+          this.reaperSpeedBoostTimer = 0;
+          const randomAngle = Math.random() * Math.PI * 2;
+          const randSpeed = this.baseSpeed * 1.25;
+          this.vx = Math.cos(randomAngle) * randSpeed;
+          this.vy = Math.sin(randomAngle) * randSpeed;
         }
       }
 
@@ -1202,15 +1265,58 @@
           createParticles(p.target.x, p.target.y, '#e2e8f0', 10);
           logMessage(`🥷 Phi Tiêu găm trúng ${p.target.name} (-15 HP)! Chuyển sang Đòn 2 Combo!`, 'ninja');
           
-          // Trúng đòn -> Chuyển sang bước combo tiếp theo (bước 2)
           p.owner.ninjaComboStep = 2;
           ninjaProjectiles.splice(i, 1);
         } else if (p.x <= 0 || p.x >= canvas.width || p.y <= 0 || p.y >= canvas.height) {
-          // Ném hụt -> 2s sau phải thực hiện lại đòn 1 cho đến khi trúng mới qua đòn 2
           logMessage(`🥷 Phi Tiêu bay trượt! Phải lặp lại Đòn 1 sau 2s!`, 'ninja');
           p.owner.ninjaComboStep = 1;
-          p.owner.ninjaComboTimer = 0; // Reset đếm 2s để thử lại đòn 1
+          p.owner.ninjaComboTimer = 0;
           ninjaProjectiles.splice(i, 1);
+        }
+      }
+    }
+
+    function updateReaperIllusionsAndSlashes() {
+      const now = Date.now();
+      for (let i = reaperIllusions.length - 1; i >= 0; i--) {
+        const ill = reaperIllusions[i];
+        const age = now - ill.createdAt;
+        if (age >= 2000) {
+          reaperIllusions.splice(i, 1);
+          continue;
+        }
+
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(ill.x, ill.y, ill.radius * 0.8, 0, Math.PI * 2);
+        const alpha = Math.max(0, 1 - age / 2000);
+        ctx.fillStyle = `rgba(148, 163, 184, ${alpha * 0.35})`;
+        ctx.fill();
+        ctx.strokeStyle = `rgba(226, 232, 240, ${alpha * 0.6})`;
+        ctx.lineWidth = 1.5;
+        ctx.setLineDash([2, 2]);
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      for (let i = activeReaperSlashes.length - 1; i >= 0; i--) {
+        const slash = activeReaperSlashes[i];
+        slash.timer -= 1 / 60;
+
+        ctx.save();
+        ctx.beginPath();
+        ctx.moveTo(slash.x, slash.y);
+        ctx.arc(slash.x, slash.y, slash.radius, slash.angle - slash.spread / 2, slash.angle + slash.spread / 2);
+        ctx.closePath();
+        ctx.fillStyle = 'rgba(148, 163, 184, 0.35)';
+        ctx.fill();
+        ctx.strokeStyle = 'rgba(226, 232, 240, 0.8)';
+        ctx.lineWidth = 2.5;
+        ctx.stroke();
+        ctx.restore();
+
+        if (slash.timer <= 0) {
+          activeReaperSlashes.splice(i, 1);
         }
       }
     }
@@ -1758,10 +1864,9 @@
       document.getElementById(`${prefix}-name`).innerText = `${ball.icon} ${ball.name}`;
       document.getElementById(`${prefix}-hp-text`).innerText = `${Math.ceil(ball.hp)}/${ball.maxHp}`;
       
-      const container = document.getElementById(`${prefix}-hp-container`);
-      container.style.display = 'block';
       const pct = Math.max(0, (ball.hp / ball.maxHp) * 100);
-      container.innerHTML = `<div class="h-full bg-gradient-to-r ${prefix === 'p1' ? 'from-cyan-500 to-emerald-400' : 'from-rose-500 to-amber-400'} transition-all duration-150" style="width: ${pct}%;"></div>`;
+      const hpBar = document.getElementById(`${prefix}-hp-bar`);
+      hpBar.style.width = `${pct}%`;
 
       const badges = document.getElementById(`${prefix}-badges`);
       badges.innerHTML = '';
@@ -1790,7 +1895,7 @@
       p1 = new Ball('p1', p1Select.value, 80, canvas.height / 2, 'p1');
       p2 = new Ball('p2', p2Select.value, canvas.width - 80, canvas.height / 2, 'p2');
 
-      fireTrails = []; shurikens = []; lightningZones = []; soulOrbs = []; activeSoulBeams = []; marksmanTraps = []; marksmanBullets = []; ninjaProjectiles = []; soundWaves = []; wukongClones = []; wukongStaffs = []; activeWukongSweeps = []; particles = [];
+      fireTrails = []; shurikens = []; lightningZones = []; soulOrbs = []; activeSoulBeams = []; marksmanTraps = []; marksmanBullets = []; ninjaProjectiles = []; reaperIllusions = []; activeReaperSlashes = []; soundWaves = []; wukongClones = []; wukongStaffs = []; activeWukongSweeps = []; particles = [];
       
       battleLog.innerHTML = '';
       logMessage(`Bắt đầu trận đấu: ${p1.name} VS ${p2.name}!`);
@@ -1821,6 +1926,7 @@
       }
 
       updateNinjaProjectiles();
+      updateReaperIllusionsAndSlashes();
       updateWukongSkills();
       updateMarksmanTrapsAndBullets();
       updateSoulOrbsAndBeams();
