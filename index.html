@@ -111,7 +111,7 @@
         <div class="text-slate-300"><span class="text-slate-200 font-bold">🥷 Reaper Ball:</span> HP 100 (4 thanh 25HP độc lập) | Dmg va chạm: 1 | Tốc độ 1.25X. Chạm ảo ảnh -> Tăng tốc bám đuổi -> Chém 12 dmg + 40% HP đã mất, sau đó random hướng chạy.</div>
         <div class="text-slate-300"><span class="text-teal-400 font-bold">🔊 Sound Ball:</span> HP 100 | Dmg va chạm: 0 | Tốc độ 0.9X (+0.3% tốc độ mỗi 1% HP mất). Va chạm đối thủ tăng 40% tốc độ (2s). Va tường tạo Sóng Âm (gây tối đa 20 dmg sát tâm, giảm dần tới 1 dmg ở biên đối diện).</div>
         <div class="text-slate-300"><span class="text-yellow-200 font-bold">👼 Angel Ball:</span> HP 80 | Dmg va chạm: 0 | Tốc độ 0.9X (+1.25% hiệu quả hồi máu mỗi 1 HP mất). Va chạm hồi 12 HP đôi bên, cứ 1s hồi 1 HP cho địch. Bất tử 1 lần khi về 0 HP (hồi 15 HP cho địch). Nhận lại 25% HP dư từ địch & tích Dấu Ấn Phước Thần để kết liễu!</div>
-        <div class="text-slate-300"><span class="text-orange-400 font-bold">🐵 Wukong Ball:</span> HP 102 | Dmg 7 | Tốc độ 1.12X. Sau mỗi 3s di chuyển ngẫu nhiên (25%/chiêu): (1) Tạo 3 Phân Thân đầy đủ tính chất vật lý (tương tác với cả Wukong, địch, bẫy & thu hồn Ghost); (2) Ăn Đào Tiên hồi 5 HP, xóa mọi hiệu ứng xấu & bất tử 2s; (3) Tăng 40% tốc độ trong 3s, áp sát quét gậy phạm vi siêu rộng 3 đường kính gây 20 dmg; (4) Quăng gậy xoay trúng địch gây 5 dmg & hất đổi hướng.</div>
+        <div class="text-slate-300"><span class="text-orange-400 font-bold">🐵 Wukong Ball:</span> HP 102 | Dmg 7 | Tốc độ 1.32X. Sau mỗi 2.05s di chuyển ngẫu nhiên (25%/chiêu): (1) Tạo 3 Phân Thân tương tác vật lý chuẩn; (2) Ăn Đào Tiên hồi 11 HP, xóa mọi hiệu ứng xấu & bất tử 2.05s; (3) Tăng 40% tốc độ trong 3s, áp sát quét gậy 150° gây 24 dmg; (4) Quăng gậy xoay trúng địch gây 10 dmg & hất đổi hướng.</div>
       </div>
     </div>
 
@@ -185,114 +185,56 @@
 
     const BASE_SPEED = 3.99;
 
-    // =========================================================================
-    // =========================================================================
-    // 🌟 KHU VỰC CẤU HÌNH STAT VÀ NỘI TAI RIÊNG BIỆT CHO TỪNG BALL 🌟
-    // Anh muốn chỉnh sửa chỉ số hoặc sát thương của Ball nào, hãy tìm đúng tên ở đây!
-    // =========================================================================
-    // =========================================================================
-
     const BALL_TYPES = {
-      
-      // =======================================================================
-      // 1. FIRE BALL (🔥)
-      // =======================================================================
       fire: {
         name: 'Fire Ball', color: '#f97316', secondaryColor: '#ef4444',
         hp: 100, maxHp: 100, radius: 18, speed: BASE_SPEED, contactDmg: 3, icon: '🔥'
       },
-
-      // =======================================================================
-      // 2. GHOST BALL (👻)
-      // =======================================================================
       ghost: {
         name: 'Ghost Ball', color: '#c084fc', secondaryColor: '#a855f7',
         hp: 105, maxHp: 105, radius: 18, speed: BASE_SPEED * 1.5, contactDmg: 15, icon: '👻'
       },
-
-      // =======================================================================
-      // 3. ASSASSIN BALL (🗡️)
-      // =======================================================================
       assassin: {
         name: 'Assassin Ball', color: '#10b981', secondaryColor: '#059669',
         hp: 80, maxHp: 80, radius: 18, speed: BASE_SPEED, contactDmg: 5, icon: '🗡️'
       },
-
-      // =======================================================================
-      // 4. BEAR BALL (🐻)
-      // =======================================================================
       bear: {
         name: 'Bear Ball', color: '#d97706', secondaryColor: '#78350f',
         hp: 120, maxHp: 120, radius: 19, speed: BASE_SPEED, contactDmg: 7, icon: '🐻'
       },
-
-      // =======================================================================
-      // 5. STORM BALL (⚡)
-      // =======================================================================
       storm: {
         name: 'Storm Ball', color: '#38bdf8', secondaryColor: '#0284c7',
         hp: 100, maxHp: 100, radius: 18, speed: BASE_SPEED * 1.6, contactDmg: 4, icon: '⚡'
       },
-
-      // =======================================================================
-      // 6. WANDERER BALL (⚔️)
-      // =======================================================================
       wanderer: {
         name: 'Wanderer Ball', color: '#818cf8', secondaryColor: '#4f46e5',
         hp: 100, maxHp: 100, radius: 18, speed: BASE_SPEED, contactDmg: 6, icon: '⚔️'
       },
-
-      // =======================================================================
-      // 7. SOUL BALL (🔮)
-      // =======================================================================
       soul: {
         name: 'Soul Ball', color: '#f472b6', secondaryColor: '#db2777',
         hp: 100, maxHp: 100, radius: 18, speed: BASE_SPEED * 1.1, contactDmg: 5, icon: '🔮'
       },
-
-      // =======================================================================
-      // 8. MARKSMAN BALL (🎯)
-      // =======================================================================
       marksman: {
         name: 'Marksman Ball', color: '#84cc16', secondaryColor: '#4d7c0f',
         hp: 90, maxHp: 90, radius: 18, speed: BASE_SPEED, contactDmg: 1, icon: '🎯'
       },
-
-      // =======================================================================
-      // 9. REAPER BALL (🥷) - 4 thanh HP (mỗi thanh 25HP)
-      // =======================================================================
       reaper: {
         name: 'Reaper Ball', color: '#e2e8f0', secondaryColor: '#475569',
         hp: 100, maxHp: 100, radius: 18, speed: BASE_SPEED * 1.25, contactDmg: 1, icon: '🥷'
       },
-
-      // =======================================================================
-      // 10. SOUND BALL (🔊)
-      // =======================================================================
       sound: {
         name: 'Sound Ball', color: '#2dd4bf', secondaryColor: '#0f766e',
         hp: 100, maxHp: 100, radius: 18, speed: BASE_SPEED * 0.9, contactDmg: 0, icon: '🔊'
       },
-
-      // =======================================================================
-      // 11. ANGEL BALL (👼)
-      // =======================================================================
       angel: {
         name: 'Angel Ball', color: '#fef08a', secondaryColor: '#eab308',
         hp: 80, maxHp: 80, radius: 18, speed: BASE_SPEED * 0.9, contactDmg: 0, icon: '👼'
       },
-
-      // =======================================================================
-      // 12. WUKONG BALL (🐵)
-      // =======================================================================
       wukong: {
         name: 'Wukong Ball', color: '#fb923c', secondaryColor: '#b45309',
         hp: 102, maxHp: 102, radius: 18, speed: BASE_SPEED * 1.32, contactDmg: 7, icon: '🐵'
       }
     };
-
-    // =========================================================================
-    // =========================================================================
 
     let p1, p2;
     let fireTrails = [];
@@ -378,64 +320,53 @@
         this.cooldownTimer = 0;
         this.hitCooldown = 0;
         
-        // --- GHOST BALL ---
         this.isGhosting = false;
         this.ghostX = 0; this.ghostY = 0; this.ghostVx = 0; this.ghostVy = 0;
         this.ghostReturning = false; this.ghostHitCooldown = 0; this.ghostReturnHit = false;
 
-        // --- BEAR BALL ---
         this.effectiveHealStored = 0;
         this.healTimer = 0;
 
-        // --- STORM BALL ---
         this.moveTimer = 0;
 
-        // --- WANDERER BALL ---
         this.shieldActive = true;
         this.shieldTimer = 0;
         this.slashCooldown = 0;
         this.slashCount = 0;
         this.activeSlash = null;
 
-        // --- SOUL BALL ---
         this.soulSpawnTimer = 0;
         this.soulBeamTimer = 0;
         this.collectedSoulsCount = 0;
         this.soulSpeedBoostTimer = 0;
 
-        // --- MARKSMAN BALL ---
         this.marksmanShootTimer = 0;
         this.marksmanTrapTimer = 0;
 
-        // --- REAPER BALL ---
         this.reaperSpeedBoostTimer = 0;
         this.illusionSpawnTimer = 0;
 
-        // --- SOUND BALL ---
         this.soundSpeedBoostTimer = 0;
 
-        // --- ANGEL BALL ---
         this.angelReviveUsed = false;
         this.blessingMarks = 0;
         this.angelHealTimer = 0;
 
-        // --- WUKONG BALL ---
         this.wukongSkillTimer = 0;
-        this.wukongImmortalTimer = 0; // Đào tiên bất tử
-        this.wukongSweepTimer = 0;    // Quét gậy tăng tốc
-        this.wukongSweepHit = false;  // Đánh dấu đã quét trúng trong 1 lần bật skill
+        this.wukongImmortalTimer = 0;
+        this.wukongSweepTimer = 0;
+        this.wukongSweepHit = false;
       }
 
       get currentSpeed() {
         if (this.stunTimer > 0) return 0;
         let speed = this.baseSpeed;
         
-        // SOUND BALL: Tăng +0.3% tốc độ mỗi 1% HP mất đi
         if (this.typeKey === 'sound') {
           const missingHpPercent = Math.max(0, this.maxHp - this.hp);
           speed *= (1 + missingHpPercent * 0.003);
           if (this.soundSpeedBoostTimer > 0) {
-            speed *= 1.4; // Tăng 40% khi va chạm địch
+            speed *= 1.4;
           }
         }
 
@@ -448,7 +379,7 @@
           speed *= 1.5;
         }
         if (this.typeKey === 'wukong' && this.wukongSweepTimer > 0) {
-          speed *= 1.4; // Tăng 40% tốc độ từ skill 3
+          speed *= 1.4;
         }
         return speed;
       }
@@ -491,7 +422,6 @@
           }
         }
 
-        // ANGEL BALL: Mỗi 1s tự động hồi 1 HP cho địch
         if (this.typeKey === 'angel' && enemy) {
           this.angelHealTimer += 1 / 60;
           if (this.angelHealTimer >= 1.0) {
@@ -515,9 +445,6 @@
         if (this.hitCooldown > 0) this.hitCooldown--;
         if (this.ghostHitCooldown > 0) this.ghostHitCooldown--;
 
-        // =========================================================================
-        // GỌI HÀM NỘI TAI ĐỘC LẬP TỪNG BALL
-        // =========================================================================
         if (this.typeKey === 'fire') {
           this.updateFireInternal();
         } 
@@ -585,25 +512,18 @@
             this.y = canvas.height - this.radius; this.vy = -Math.abs(this.vy); hitWall = true; 
           }
 
-          // SOUND BALL: Va tường kích hoạt sóng âm
           if (hitWall && this.typeKey === 'sound') {
             triggerSoundWave(this);
           }
         }
       }
 
-      // =======================================================================
-      // 🌟 KHU VỰC CHI TIẾT LOGIC NỘI TAI TỪNG BALL 🌟
-      // =======================================================================
-
-      // --- 1. FIRE BALL ---
       updateFireInternal() {
         if (Math.random() < 0.4) {
           fireTrails.push({ x: this.x, y: this.y, radius: 12, owner: this, createdAt: Date.now() });
         }
       }
 
-      // --- 2. GHOST BALL ---
       updateGhostInternal(enemy) {
         if (!enemy) return;
         if (!this.isGhosting) {
@@ -659,7 +579,6 @@
         }
       }
 
-      // --- 3. ASSASSIN BALL ---
       updateAssassinInternal(enemy) {
         if (!enemy) return;
         this.cooldownTimer += 1 / 60;
@@ -670,7 +589,6 @@
         }
       }
 
-      // --- 4. BEAR BALL ---
       updateBearInternal() {
         const interval = (this.hp < 50) ? 0.21 : 0.5;
         this.healTimer += 1 / 60;
@@ -686,7 +604,6 @@
         }
       }
 
-      // --- 5. STORM BALL ---
       updateStormInternal(enemy) {
         if (!enemy) return;
         this.moveTimer += 1 / 60;
@@ -701,7 +618,6 @@
         }
       }
 
-      // --- 6. WANDERER BALL ---
       updateWandererInternal(enemy) {
         if (!enemy) return;
         if (!this.shieldActive) {
@@ -754,7 +670,6 @@
         }
       }
 
-      // --- 7. SOUL BALL ---
       updateSoulInternal(enemy) {
         if (!enemy) return;
         this.soulSpawnTimer += 1 / 60;
@@ -782,13 +697,11 @@
             timer: 0.35, owner: this
           });
 
-          // ⚠️ CHỈNH DMG CHÙM SÁNG SOUL BALL Ở ĐÂY (Base dmg = 1, mỗi linh hồn +3 dmg)
           const beamDmg = 1 + (this.collectedSoulsCount * 3);
           logMessage(`🔮 ${this.name} phóng Chùm Sáng Linh Hồn (Góc rộng ${totalAngleDeg.toFixed(1)}°, ${beamDmg} dmg)!`, 'soul');
         }
       }
 
-      // --- 8. MARKSMAN BALL ---
       updateMarksmanInternal(enemy) {
         if (!enemy) return;
         this.marksmanShootTimer += 1 / 60;
@@ -809,7 +722,6 @@
         }
       }
 
-      // --- 9. REAPER BALL ---
       updateReaperInternal(enemy) {
         if (!enemy) return;
         this.illusionSpawnTimer += 1 / 60;
@@ -866,11 +778,9 @@
         }
       }
 
-      // --- 12. WUKONG BALL (🐵) ---
       updateWukongInternal(enemy) {
         if (!enemy) return;
 
-        // Kích hoạt kỹ năng ngẫu nhiên 25% mỗi chiêu sau mỗi 3s di chuyển
         if (this.stunTimer <= 0) {
           this.wukongSkillTimer += 1 / 60;
           if (this.wukongSkillTimer >= 2.05) {
@@ -878,13 +788,12 @@
             const skillChoice = Math.floor(Math.random() * 4) + 1;
 
             if (skillChoice === 1) {
-              // SKILL 1: Tạo 3 phân thân (1 ngược hướng, 2 vuông góc trái/phải)
               const currentAngle = Math.atan2(this.vy, this.vx);
               const spd = this.currentSpeed || this.baseSpeed;
               const angles = [
-                currentAngle + Math.PI,       // Ngược hướng
-                currentAngle - Math.PI / 2,   // Vuông góc bên trái
-                currentAngle + Math.PI / 2    // Vuông góc bên phải
+                currentAngle + Math.PI,
+                currentAngle - Math.PI / 2,
+                currentAngle + Math.PI / 2
               ];
 
               angles.forEach(ang => {
@@ -901,7 +810,6 @@
               logMessage(`🐵 ${this.name} thi triển Phân Thân Thuật! Triệu hồi 3 phân thân tồn tại 4.5s!`, 'wukong');
             }
             else if (skillChoice === 2) {
-              // SKILL 2: Ăn Đào Tiên (+11 HP, XÓA MỌI HIỆU ỨNG XẤU, bất tử 2s)
               this.hp = Math.min(this.maxHp, this.hp + 11);
               this.burnStacks = 0; this.burnTimer = 0;
               this.slowTimer = 0; this.slowFactor = 1;
@@ -913,7 +821,6 @@
               logMessage(`🍑 ${this.name} ăn Đào Tiên! Hồi 11 HP, xóa sạch mọi hiệu ứng & Bất Tử trong 2s!`, 'wukong');
             }
             else if (skillChoice === 3) {
-              // SKILL 3: Tăng 40% tốc độ trong 3s + Quét gậy quạt tầm siêu rộng (2 đường kính + 1 đường kính = 3 đường kính Ball)
               this.wukongSweepTimer = 3.0;
               this.wukongSweepHit = false;
               createParticles(this.x, this.y, '#facc15', 12);
@@ -921,7 +828,6 @@
               logMessage(`⚡ ${this.name} kích hoạt Hầu Vương Càn Quét (+40% Tốc Độ 3s)!`, 'wukong');
             }
             else if (skillChoice === 4) {
-              // SKILL 4: Quăng gậy xoay chắc chắn trúng địch (dài 1.75 đường kính Ball)
               const staffLength = (this.radius * 2) * 1.75;
               wukongStaffs.push({
                 x: this.x, y: this.y,
@@ -935,10 +841,9 @@
           }
         }
 
-        // Xử lý Skill 3: Khi đang tăng tốc, nếu lại gần địch (trong phạm vi 3 đường kính Ball = 6 * radius)
         if (this.wukongSweepTimer > 0 && !this.wukongSweepHit) {
           const diameter = this.radius * 2;
-          const sweepRange = diameter * 3; // 2 đường kính + thêm 1 đường kính = 3 đường kính Ball
+          const sweepRange = diameter * 3;
           const distToEnemy = Math.hypot(enemy.x - this.x, enemy.y - this.y);
 
           if (distToEnemy <= sweepRange + enemy.radius) {
@@ -956,7 +861,7 @@
 
             enemy.takeDamage(24, 'Quét Gậy Như Ý');
             createParticles(enemy.x, enemy.y, '#fb923c', 18);
-            logMessage(`💥 ${this.name} quét gậy hình quạt 150° siêu rộng trúng ${enemy.name}! (-20 HP)`, 'wukong');
+            logMessage(`💥 ${this.name} quét gậy hình quạt 150° siêu rộng trúng ${enemy.name}! (-24 HP)`, 'wukong');
           }
         }
       }
@@ -993,7 +898,6 @@
           return;
         }
 
-        // ANGEL BALL: Bất tử 1 lần khi HP về 0, hồi 15 HP cho địch
         if (this.typeKey === 'angel' && !this.angelReviveUsed && this.hp - amount <= 0) {
           this.angelReviveUsed = true;
           this.hp = 1;
@@ -1008,7 +912,6 @@
           return;
         }
 
-        // REAPER BALL: 4 thanh HP độc quyền (mỗi thanh 25 HP)
         if (this.typeKey === 'reaper') {
           this.hp = Math.max(0, this.hp - amount);
           logMessage(`🥷 Reaper Ball nhận ${amount} dmg (${source}) -> Còn ${this.hp} HP`, 'reaper');
@@ -1020,7 +923,6 @@
           return;
         }
 
-        // Các Ball khác nhận sát thương tiêu chuẩn
         this.hp = Math.max(0, this.hp - amount);
         updateHUD();
         if (this.hp <= 0 && !gameOver) {
@@ -1268,11 +1170,7 @@
       }
     }
 
-    // =========================================================================
-    // 🌟 CẬP NHẬT KỸ NĂNG WUKONG BALL (PHÂN THÂN TƯƠNG TÁC VẬT LÝ HOÀN CHỈNH) 🌟
-    // =========================================================================
     function updateWukongSkills() {
-      // 1. Cập nhật Phân Thân: Tương tác vật lý chuẩn với Wukong, Địch, Bẫy Marksman & Ghost Thu Hồn
       for (let i = wukongClones.length - 1; i >= 0; i--) {
         const clone = wukongClones[i];
         clone.lifeTimer -= 1 / 60;
@@ -1287,13 +1185,11 @@
         clone.x += clone.vx;
         clone.y += clone.vy;
 
-        let hitWall = false;
-        if (clone.x - clone.radius <= 0) { clone.x = clone.radius; clone.vx = Math.abs(clone.vx); hitWall = true; }
-        else if (clone.x + clone.radius >= canvas.width) { clone.x = canvas.width - clone.radius; clone.vx = -Math.abs(clone.vx); hitWall = true; }
-        if (clone.y - clone.radius <= 0) { clone.y = clone.radius; clone.vy = Math.abs(clone.vy); hitWall = true; }
-        else if (clone.y + clone.radius >= canvas.height) { clone.y = canvas.height - clone.radius; clone.vy = -Math.abs(clone.vy); hitWall = true; }
+        if (clone.x - clone.radius <= 0) { clone.x = clone.radius; clone.vx = Math.abs(clone.vx); }
+        else if (clone.x + clone.radius >= canvas.width) { clone.x = canvas.width - clone.radius; clone.vx = -Math.abs(clone.vx); }
+        if (clone.y - clone.radius <= 0) { clone.y = clone.radius; clone.vy = Math.abs(clone.vy); }
+        else if (clone.y + clone.radius >= canvas.height) { clone.y = canvas.height - clone.radius; clone.vy = -Math.abs(clone.vy); }
 
-        // Phân thân va chạm với Wukong gốc
         const wukongOwner = clone.owner;
         if (wukongOwner) {
           const dxW = wukongOwner.x - clone.x;
@@ -1310,7 +1206,6 @@
           }
         }
 
-        // Phân thân tương tác với Bẫy Marksman
         for (let t = marksmanTraps.length - 1; t >= 0; t--) {
           const trap = marksmanTraps[t];
           if (Math.hypot(clone.x - trap.x, clone.y - trap.y) < clone.radius + trap.radius) {
@@ -1321,7 +1216,6 @@
           }
         }
 
-        // Phân thân tương tác với Ghost Ball (Tông xác ghost để kéo hồn về)
         const ghostBall = (p1.typeKey === 'ghost') ? p1 : ((p2.typeKey === 'ghost') ? p2 : null);
         if (ghostBall && ghostBall.isGhosting && !ghostBall.ghostReturning) {
           if (Math.hypot(clone.x - ghostBall.x, clone.y - ghostBall.y) < clone.radius + ghostBall.radius) {
@@ -1330,7 +1224,6 @@
           }
         }
 
-        // Phân thân va chạm với Ball địch
         const enemy = (clone.owner === p1) ? p2 : p1;
         if (enemy && !enemy.isGhosting) {
           const dx = enemy.x - clone.x;
@@ -1365,7 +1258,6 @@
           }
         }
 
-        // Vẽ Phân Thân
         ctx.save();
         ctx.globalAlpha = 0.72;
         ctx.beginPath();
@@ -1387,7 +1279,6 @@
         ctx.restore();
       }
 
-      // 2. Cập nhật Gậy Như Ý xoay tròn lao trúng địch (Skill 4)
       for (let i = wukongStaffs.length - 1; i >= 0; i--) {
         const staff = wukongStaffs[i];
         staff.rotation += 0.45;
@@ -1426,12 +1317,11 @@
           staff.target.vy = Math.sin(pushAngle) * pushSpeed;
 
           createParticles(staff.target.x, staff.target.y, '#facc15', 14);
-          logMessage(`棒 Gậy Như Ý xoay đập trúng ${staff.target.name} (-5 HP) và hất đổi hướng!`, 'wukong');
+          logMessage(`棒 Gậy Như Ý xoay đập trúng ${staff.target.name} (-10 HP) và hất đổi hướng!`, 'wukong');
           wukongStaffs.splice(i, 1);
         }
       }
 
-      // 3. Cập nhật hiệu ứng Quét Gậy Hình Quạt 150° (Skill 3)
       for (let i = activeWukongSweeps.length - 1; i >= 0; i--) {
         const sw = activeWukongSweeps[i];
         sw.timer -= 1 / 60;
