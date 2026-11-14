@@ -183,7 +183,7 @@
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
 
-    const BASE_SPEED = 3.85;
+    const BASE_SPEED = 4.45;
 
     // =========================================================================
     // =========================================================================
@@ -954,7 +954,7 @@
               timer: 0.35
             });
 
-            enemy.takeDamage(20, 'Quét Gậy Như Ý');
+            enemy.takeDamage(24, 'Quét Gậy Như Ý');
             createParticles(enemy.x, enemy.y, '#fb923c', 18);
             logMessage(`💥 ${this.name} quét gậy hình quạt 150° siêu rộng trúng ${enemy.name}! (-20 HP)`, 'wukong');
           }
@@ -1418,7 +1418,7 @@
 
         const dist = Math.hypot(staff.target.x - staff.x, staff.target.y - staff.y);
         if (dist <= staff.target.radius + 10) {
-          staff.target.takeDamage(5, 'Gậy Như Ý Xoay');
+          staff.target.takeDamage(10, 'Gậy Như Ý Xoay');
           
           const pushAngle = angle + (Math.random() - 0.5) * 0.8;
           const pushSpeed = Math.max(staff.target.currentSpeed || BASE_SPEED, BASE_SPEED * 2.2);
