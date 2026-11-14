@@ -568,7 +568,7 @@
       updateAssassinInternal(enemy) {
         if (!enemy) return;
         this.cooldownTimer += 1 / 60;
-        if (this.cooldownTimer >= 1.7) {
+        if (this.cooldownTimer >= 1.65) {
           this.cooldownTimer = 0;
           spawnShuriken(this, enemy, 0);
           logMessage(`${this.name} ném Phi Tiêu Shuriken!`, 'assassin');
@@ -1083,7 +1083,7 @@
           if (wave.currentRadius >= distToEnemy - enemy.radius) {
             wave.hitEnemy = true;
             const clampedDist = Math.min(distToEnemy, maxPossibleDist);
-            const dmg = Math.max(1, 21 - (clampedDist / maxPossibleDist) * 27);
+            const dmg = Math.max(0, 20 - (clampedDist / maxPossibleDist) * 27);
             const finalDmg = Math.round(dmg);
 
             enemy.takeDamage(finalDmg, 'Sóng Âm');
