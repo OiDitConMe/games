@@ -625,7 +625,7 @@
       updateAssassinInternal(enemy) {
         if (!enemy) return;
         this.cooldownTimer += 1 / 60;
-        if (this.cooldownTimer >= 1.8) {
+        if (this.cooldownTimer >= 1.5) {
           this.cooldownTimer = 0;
           spawnShuriken(this, enemy, 0);
           logMessage(`${this.name} ném Phi Tiêu Shuriken!`, 'assassin');
@@ -1400,7 +1400,7 @@
         if (!s.isStuck && !s.isReturning) {
           s.x += s.vx; s.y += s.vy;
           if (Math.hypot(s.x - enemy.x, s.y - enemy.y) < enemy.radius + 10 && !s.hitOnThrow) {
-            enemy.takeDamage(5, 'Shuriken');
+            enemy.takeDamage(6, 'Shuriken');
             s.hitOnThrow = true;
             createParticles(s.x, s.y, '#10b981', 6);
             logMessage(`Shuriken xuyên trúng ${enemy.name} (-5 HP)`, 'assassin');
