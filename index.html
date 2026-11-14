@@ -568,7 +568,7 @@
       updateAssassinInternal(enemy) {
         if (!enemy) return;
         this.cooldownTimer += 1 / 60;
-        if (this.cooldownTimer >= 1.85) {
+        if (this.cooldownTimer >= 1.7) {
           this.cooldownTimer = 0;
           spawnShuriken(this, enemy, 0);
           logMessage(`${this.name} ném Phi Tiêu Shuriken!`, 'assassin');
