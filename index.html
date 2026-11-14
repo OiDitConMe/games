@@ -1140,7 +1140,7 @@
             wave.hitEnemy = true;
             const clampedDist = Math.min(distToEnemy, maxPossibleDist);
             // ⚠️ CHỈNH DMG SÓNG ÂM SOUND BALL Ở ĐÂY (Sát tâm = 30 dmg, tối thiểu = 3 dmg)
-            const dmg = Math.max(1, 22 - (clampedDist / maxPossibleDist) * 27);
+            const dmg = Math.max(0, 21 - (clampedDist / maxPossibleDist) * 27);
             const finalDmg = Math.round(dmg);
 
             enemy.takeDamage(finalDmg, 'Sóng Âm');
