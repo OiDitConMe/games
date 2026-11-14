@@ -873,7 +873,7 @@
         // Kích hoạt kỹ năng ngẫu nhiên 25% mỗi chiêu sau mỗi 3s di chuyển
         if (this.stunTimer <= 0) {
           this.wukongSkillTimer += 1 / 60;
-          if (this.wukongSkillTimer >= 2.35) {
+          if (this.wukongSkillTimer >= 2.25) {
             this.wukongSkillTimer = 0;
             const skillChoice = Math.floor(Math.random() * 4) + 1;
 
@@ -902,7 +902,7 @@
             }
             else if (skillChoice === 2) {
               // SKILL 2: Ăn Đào Tiên (+5 HP, XÓA MỌI HIỆU ỨNG XẤU, bất tử 2s)
-              this.hp = Math.min(this.maxHp, this.hp + 7);
+              this.hp = Math.min(this.maxHp, this.hp + 8);
               this.burnStacks = 0; this.burnTimer = 0;
               this.slowTimer = 0; this.slowFactor = 1;
               this.stunTimer = 0;
