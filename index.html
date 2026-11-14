@@ -568,7 +568,7 @@
       updateAssassinInternal(enemy) {
         if (!enemy) return;
         this.cooldownTimer += 1 / 60;
-        if (this.cooldownTimer >= 2.2) {
+        if (this.cooldownTimer >= 1.85) {
           this.cooldownTimer = 0;
           spawnShuriken(this, enemy, 0);
           logMessage(`${this.name} ném Phi Tiêu Shuriken!`, 'assassin');
@@ -577,7 +577,7 @@
 
       // --- NỘI TAI BEAR ---
       updateBearInternal() {
-        const interval = (this.hp < 50) ? 0.25 : 0.5;
+        const interval = (this.hp < 50) ? 0.2 : 0.5;
         this.healTimer += 1 / 60;
         if (this.healTimer >= interval) {
           this.healTimer -= interval;
@@ -611,7 +611,7 @@
         if (!enemy) return;
         if (!this.shieldActive) {
           this.shieldTimer += 1 / 60;
-          if (this.shieldTimer >= 8) {
+          if (this.shieldTimer >= 7.5) {
             this.shieldActive = true;
             this.shieldTimer = 0;
             logMessage(`🛡️ ${this.name} tái tạo Khiên bảo vệ!`, 'wanderer');
@@ -756,7 +756,7 @@
           activeReaperSlashes.push({
             x: this.x, y: this.y,
             angle: slashAngle, spread: (120 * Math.PI) / 180,
-            radius: (this.radius * 2) * 1.2, timer: 0.3
+            radius: (this.radius * 2) * 1.6, timer: 0.3
           });
 
           createParticles(enemy.x, enemy.y, '#f43f5e', 15);
@@ -799,7 +799,7 @@
           this.angelReviveUsed = true;
           this.hp = 1;
           logMessage(`👼 Angel Ball kích hoạt Phước Thần Bất Tử! Giữ lại 1 HP!`, 'angel');
-          createParticles(this.x, this.y, '#fef08a', 20);
+          createParticles(this.x, this.y, '#fef08a', 14);
           
           const enemy = (this === p1) ? p2 : p1;
           if (enemy) {
@@ -852,10 +852,10 @@
             endGame(this);
           }
 
-          // Angel Ball nhận lại 50% lượng HP dư ra
+          // Angel Ball nhận lại 25% lượng HP dư ra
           if (healer && healer.hp > 0) {
-            healer.hp = Math.min(healer.maxHp, healer.hp + excess * 0.5);
-            logMessage(`👼 Angel Ball nhận lại 50% HP dư từ phước lành (+${Math.round(excess * 0.5)} HP)!`, 'angel');
+            healer.hp = Math.min(healer.maxHp, healer.hp + excess * 0.25);
+            logMessage(`👼 Angel Ball nhận lại 25% HP dư từ phước lành (+${Math.round(excess * 0.5)} HP)!`, 'angel');
             updateHUD();
           }
         } else {
@@ -998,8 +998,8 @@
           const angel = (b1.typeKey === 'angel') ? b1 : b2;
           const target = (b1.typeKey === 'angel') ? b2 : b1;
 
-          angel.receiveHealingFromAngel(18, angel);
-          target.receiveHealingFromAngel(20, angel);
+          angel.receiveHealingFromAngel(10, angel);
+          target.receiveHealingFromAngel(12, angel);
           b1.hitCooldown = 20;
           b2.hitCooldown = 20;
           logMessage(`👼 Angel Ball va chạm thánh thiện! Hồi máu đôi bên.`, 'angel');
