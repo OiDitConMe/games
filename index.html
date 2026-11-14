@@ -887,12 +887,12 @@
 
               createParticles(this.x, this.y, '#f43f5e', 16);
               updateHUD();
-              logMessage(`🍑 ${this.name} ăn Đào Tiên! Hồi 11 HP, xóa sạch mọi hiệu ứng & Bất Tử trong 2s!`, 'wukong');
+              logMessage(`🍑 ${this.name} ăn Đào Tiên! Hồi 10 HP, xóa sạch mọi hiệu ứng & Bất Tử trong 2s!`, 'wukong');
             }
             else if (skillChoice === 3) {
               this.wukongSweepTimer = 3.0;
               this.wukongSweepHit = false;
-              createParticles(this.x, this.y, '#facc15', 12);
+              createParticles(this.x, this.y, '#facc15', 10);
               updateHUD();
               logMessage(`⚡ ${this.name} kích hoạt Hầu Vương Càn Quét (+40% Tốc Độ 3s)!`, 'wukong');
             }
@@ -928,7 +928,7 @@
               timer: 0.35
             });
 
-            enemy.takeDamage(24, 'Quét Gậy Như Ý');
+            enemy.takeDamage(20, 'Quét Gậy Như Ý');
             createParticles(enemy.x, enemy.y, '#fb923c', 18);
             logMessage(`💥 ${this.name} quét gậy hình quạt 150° siêu rộng trúng ${enemy.name}! (-24 HP)`, 'wukong');
           }
@@ -979,7 +979,7 @@
           this.angelReviveUsed = true;
           this.hp = 1;
           logMessage(`👼 Angel Ball kích hoạt Phước Thần Bất Tử! Giữ lại 1 HP!`, 'angel');
-          createParticles(this.x, this.y, '#fef08a', 14);
+          createParticles(this.x, this.y, '#fef08a', 12);
           
           const enemy = (this === p1) ? p2 : p1;
           if (enemy) {
@@ -998,7 +998,7 @@
 
       receiveHealingFromAngel(amount, healer) {
         const missingHealerHp = healer ? (healer.maxHp - healer.hp) : 0;
-        const multiplier = 1 + (missingHealerHp * 0.0125);
+        const multiplier = 1 + (missingHealerHp * 0.012);
         const actualHeal = amount * multiplier;
 
         const oldHp = this.hp;
