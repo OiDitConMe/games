@@ -412,7 +412,7 @@
         // SOUND BALL: Tăng +0.4% tốc độ mỗi 1% HP mất đi
         if (this.typeKey === 'sound') {
           const missingHpPercent = Math.max(0, this.maxHp - this.hp);
-          speed *= (1 + missingHpPercent * 0.004);
+          speed *= (1 + missingHpPercent * 0.003);
           if (this.soundSpeedBoostTimer > 0) {
             speed *= 1.4; // Tăng 40% khi va chạm địch
           }
