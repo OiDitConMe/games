@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Physics Ball Arena</title>
+  <title>Physics Ball Arena - Ultra VFX Edition</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto+Mono:wght@400;600&display=swap');
@@ -20,7 +20,7 @@
     }
     
     canvas {
-      box-shadow: 0 0 25px rgba(0, 0, 0, 0.8), 0 0 10px rgba(14, 165, 233, 0.3);
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.9), 0 0 15px rgba(14, 165, 233, 0.25);
     }
 
     .custom-scrollbar::-webkit-scrollbar {
@@ -42,7 +42,7 @@
     <h1 class="text-2xl sm:text-3xl font-black font-orbitron tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-500 to-indigo-400 drop-shadow-md">
       BALL BATTLE ARENA
     </h1>
-    <p class="text-xs text-slate-400 mt-1">Mô phỏng Đấu Vật Lý & Nội Tại Độc Quyền</p>
+    <p class="text-xs text-slate-400 mt-1">Ultra VFX Edition • Mô phỏng Đấu Vật Lý & Nội Tại Độc Quyền</p>
   </header>
 
   <!-- Main Container -->
@@ -92,8 +92,8 @@
               <option value="reaper">💀 Reaper Ball</option>
               <option value="shen">⛩️ Shen Ball</option>
               <option value="sound">🔊 Sound Ball</option>
-              <option value="angel" selected>👼 Angel Ball</option>
-              <option value="wukong">🐵 Wukong Ball</option>
+              <option value="angel">👼 Angel Ball</option>
+              <option value="wukong" selected>🐵 Wukong Ball</option>
               <option value="demon">👿 Demon Ball</option>
               <option value="poseidon">🔱 Poseidon Ball</option>
             </select>
@@ -107,8 +107,12 @@
 
       <!-- Skill Guide Info -->
       <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-3 text-xs space-y-2 max-h-[300px] overflow-y-auto custom-scrollbar">
-        <div class="font-bold text-cyan-400 font-orbitron">🔱 POSEIDON (NÂNG CẤP):</div>
-        <div class="text-slate-300">Vụ nổ 1 làm chậm 50% trong 0.5s & đẩy lùi văng 2 đường kính Ball! Vụ 2 & 3 tiếp tục dồn ép tạo Đại Dương & Đuối Nước tối thượng!</div>
+        <div class="font-bold text-cyan-400 font-orbitron">✨ CẬP NHẬT ULTRA VFX:</div>
+        <div class="text-slate-300 leading-relaxed">
+          • <span class="text-sky-400 font-semibold">Poseidon:</span> Combo 3 vụ nổ đẩy thẳng chuyền nhịp (9/15/21 dmg), mở rộng +0.65d.<br>
+          • <span class="text-teal-400 font-semibold">Sound Ball:</span> Gỡ tăng tốc máu thấp, nâng cấp sóng đa sắc cộng hưởng.<br>
+          • <span class="text-amber-400 font-semibold">16 Chiến Binh:</span> Đại tu toàn bộ hiệu ứng lửa, kiếm khí, sét, linh hồn, gậy Như Ý & bẫy!
+        </div>
       </div>
     </div>
 
@@ -208,7 +212,7 @@
       ninja: { stepInterval: 2.0, step1ShurikenDmg: 15, step2DashDmg: 20, step3DashDistMult: 4.5, step3BaseDmg: 22, step3MissingHpPct: 0.4 },
       reaper: { trailSpawnInterval: 0.2, trailLifespan: 3000, speedBoostMult: 1.6, slashBaseDmg: 12, slashMissingHpPct: 0.40 },
       shen: { zoneRadiusMult: 4.0, shieldAmount: 5, shieldDuration: 2, pullBladeInterval: 7, swapCooldown: 4.0, swapDmg: 1 },
-      sound: { minWaveDmg: 1, maxWaveDmg: 20, missingHpSpeedBonus: 0.003 },
+      sound: { minWaveDmg: 1, maxWaveDmg: 20 },
       angel: { passiveHealInterval: 1.0, passiveHealAmount: 1, collisionSelfHeal: 11, collisionEnemyHeal: 10, healBonusPerMissingHp: 0.013, selfHealShareFromOverheal: 0.25 },
       wukong: { skillInterval: 2.15, cloneDuration: 3.1, cloneContactDmg: 7, peachHeal: 10, peachImmortalDur: 2.15, sweepSpeedBonus: 1.4, sweepSpeedDur: 2.0, sweepTriggerDiamMult: 2.5, sweepRadiusDiamMult: 2.55, sweepAngleDeg: 150, sweepDmg: 24, staffLengthDiamMult: 1.5, staffDmg: 10 },
       demon: { maxRevives: 7, incomingDmgMult: 2.0, reflectBaseMult: 1.0, hpConvertInterval: 0.7, normalShieldGain: 1, lowHpShieldGain: 4, reflectBonusPerShield: 0.06 },
@@ -219,24 +223,29 @@
     let fireTrails = [];
     let assassinShurikens = [];
     let lightningZones = [];
+    let lightningBolts = [];
     let soulOrbs = [];
     let activeSoulBeams = [];
     let marksmanTraps = [];
     let marksmanBullets = [];
     let ninjaProjectiles = [];
     let reaperIllusions = [];
+    let reaperSlashes = [];
     let soundWaves = [];
     let wukongClones = [];
     let wukongStaffs = [];
     let activeWukongSweeps = [];
+    let wukongAfterimages = [];
     let poseidonWaves = [];
     let poseidonBursts = [];
     let oceanBubbles = [];
+    let shockwaves = [];
     let particles = [];
     let floatingTexts = [];
     let oceanEnvironmentTimer = 0;
     let gameOver = false;
     let animationFrameId = null;
+    let globalTick = 0;
 
     const p1Select = document.getElementById('p1-select');
     const p2Select = document.getElementById('p2-select');
@@ -263,12 +272,23 @@
       battleLog.scrollTop = battleLog.scrollHeight;
     }
 
-    function createParticles(x, y, color, count) {
+    function createParticles(x, y, color, count, speedMult = 1) {
       for (let i = 0; i < count; i++) {
         const angle = Math.random() * Math.PI * 2;
-        const speed = Math.random() * 3 + 1;
-        particles.push({ x, y, vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed, color, life: 1 });
+        const speed = (Math.random() * 3 + 1) * speedMult;
+        particles.push({
+          x, y,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed,
+          size: Math.random() * 2.5 + 1.5,
+          color,
+          life: 1
+        });
       }
+    }
+
+    function createShockwave(x, y, maxRadius, color, lineWidth = 3) {
+      shockwaves.push({ x, y, radius: 5, maxRadius, color, lineWidth, life: 1.0 });
     }
 
     function createFloatingText(x, y, text, color) {
@@ -280,6 +300,29 @@
       if (l2 === 0) return Math.hypot(p.x - a.x, p.y - a.y);
       let t = Math.max(0, Math.min(1, ((p.x - a.x) * (b.x - a.x) + (p.y - a.y) * (b.y - a.y)) / l2));
       return Math.hypot(p.x - (a.x + t * (b.x - a.x)), p.y - (a.y + t * (b.y - a.y)));
+    }
+
+    // Helper vẽ nhát chém lưỡi liềm sắc bén
+    function drawCrescentSlash(ctx, x, y, radius, angle, spread, color, glowColor, alpha) {
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(angle);
+      ctx.globalAlpha = alpha;
+      ctx.shadowColor = glowColor;
+      ctx.shadowBlur = 16;
+
+      ctx.beginPath();
+      ctx.arc(0, 0, radius, -spread / 2, spread / 2, false);
+      ctx.arc(-radius * 0.25, 0, radius * 0.85, spread / 2, -spread / 2, true);
+      ctx.closePath();
+
+      const grad = ctx.createRadialGradient(0, 0, radius * 0.4, 0, 0, radius);
+      grad.addColorStop(0, 'rgba(255,255,255,0.1)');
+      grad.addColorStop(0.6, color);
+      grad.addColorStop(1, '#ffffff');
+      ctx.fillStyle = grad;
+      ctx.fill();
+      ctx.restore();
     }
 
     class Ball {
@@ -385,10 +428,7 @@
       get currentSpeed() {
         if (this.drownedTimer > 0 || this.stunTimer > 0) return 0;
         let speed = this.baseSpeed;
-        if (this.typeKey === 'sound') {
-          const missingHpPercent = Math.max(0, this.maxHp - this.hp);
-          speed *= (1 + missingHpPercent * SKILL_CONFIG.sound.missingHpSpeedBonus);
-        }
+        // Đã xóa nội tại tăng tốc khi thấp HP của Sound Ball theo yêu cầu
         speed *= this.slowFactor;
         if (this.typeKey === 'reaper' && this.reaperSpeedBoostTimer > 0) speed *= SKILL_CONFIG.reaper.speedBoostMult;
         if (this.typeKey === 'wukong' && this.wukongSweepTimer > 0) speed *= SKILL_CONFIG.wukong.sweepSpeedBonus;
@@ -408,7 +448,7 @@
         }
         if (this.slowTimer > 0) {
           this.slowTimer -= 1 / 60;
-          if (this.slowTimer <= 0) { this.slowFactor = 1; this.slowTimer = 0; }
+          if (this.slowTimer <= 0) { this.slowFactor = 1; this.slowTimer = 0; updateHUD(); }
         }
         if (this.shield > 0 && this.shieldTimer > 0 && this.typeKey !== 'demon') {
           this.shieldTimer -= 1 / 60;
@@ -492,14 +532,21 @@
           else if (this.y + this.radius >= canvas.height) { this.y = canvas.height - this.radius; this.vy = -Math.abs(this.vy); hitWall = true; }
 
           if (hitWall && this.typeKey === 'sound') {
-            soundWaves.push({ x: this.x, y: this.y, currentRadius: this.radius, owner: this, hitTarget: false });
+            soundWaves.push({ x: this.x, y: this.y, currentRadius: this.radius, owner: this, hitTarget: false, hueOffset: Math.random() * 360 });
           }
         }
       }
 
       updateFire() {
-        if (Math.random() < 0.45) {
-          fireTrails.push({ x: this.x, y: this.y, radius: 12, owner: this, createdAt: Date.now() });
+        if (Math.random() < 0.55) {
+          fireTrails.push({
+            x: this.x + (Math.random() - 0.5) * 6,
+            y: this.y + (Math.random() - 0.5) * 6,
+            radius: 13 + Math.random() * 4,
+            owner: this,
+            createdAt: Date.now(),
+            flickerSeed: Math.random() * 10
+          });
         }
       }
 
@@ -516,6 +563,7 @@
             const gSpeed = BASE_SPEED * SKILL_CONFIG.ghost.ghostSpeedMult;
             this.ghostVx = Math.cos(angle) * gSpeed;
             this.ghostVy = Math.sin(angle) * gSpeed;
+            createShockwave(this.x, this.y, 60, '#c084fc', 3);
             logMessage(`👻 ${this.name} xuất hồn vĩnh viễn!`, 'ghost');
           }
           return;
@@ -531,7 +579,8 @@
           enemy.takeDamage(SKILL_CONFIG.ghost.ghostDmg, 'Hồn Lướt Qua');
           enemy.applySlow(SKILL_CONFIG.ghost.ghostSlowDuration);
           this.ghostHitCooldown = 45;
-          createParticles(enemy.x, enemy.y, '#c084fc', 8);
+          createParticles(enemy.x, enemy.y, '#c084fc', 10);
+          createShockwave(enemy.x, enemy.y, 45, '#e879f9', 2);
         }
 
         let shouldRecall = (Math.hypot(this.x - enemy.x, this.y - enemy.y) <= this.radius + enemy.radius);
@@ -562,6 +611,7 @@
             if (s.state === 'stuck') {
               s.state = 'returning';
               s.hitOnReturn = false;
+              s.trail = [];
             }
           });
           return;
@@ -587,7 +637,8 @@
           owner: this,
           state: 'flying',
           hitOnThrow: false,
-          hitOnReturn: false
+          hitOnReturn: false,
+          trail: []
         });
       }
 
@@ -602,8 +653,8 @@
             const actualHeal = Math.min(1, this.maxHp - this.hp);
             this.hp += actualHeal;
             this.effectiveHealStored += actualHeal;
-            createParticles(this.x, this.y, '#4ade80', 3);
-            createFloatingText(this.x, this.y - 10, '+1', '#4ade80');
+            createParticles(this.x, this.y, '#fbbf24', 3);
+            createFloatingText(this.x, this.y - 12, `+1 🔥(${this.effectiveHealStored})`, '#fbbf24');
             updateHUD();
           }
         }
@@ -617,7 +668,8 @@
             x: this.x, y: this.y,
             radius: this.radius * SKILL_CONFIG.storm.zoneRadiusMult,
             owner: this,
-            strikeTimer: SKILL_CONFIG.storm.strikeDelay
+            strikeTimer: SKILL_CONFIG.storm.strikeDelay,
+            maxDelay: SKILL_CONFIG.storm.strikeDelay
           });
         }
       }
@@ -629,6 +681,7 @@
           if (this.wandererShieldTimer >= SKILL_CONFIG.wanderer.shieldCooldown) {
             this.wandererShieldActive = true;
             this.wandererShieldTimer = 0;
+            createShockwave(this.x, this.y, 40, '#818cf8', 2);
             updateHUD();
           }
         }
@@ -642,13 +695,23 @@
           this.slashCount++;
           const isThirdHit = (this.slashCount >= 3);
           const dmg = isThirdHit ? SKILL_CONFIG.wanderer.slash3Dmg : SKILL_CONFIG.wanderer.slash12Dmg;
+          const aimAngle = Math.atan2(enemy.y - this.y, enemy.x - this.x);
 
-          this.activeSlash = { x: this.x, y: this.y, radius: slashRange, timer: 0.25, isUltimate: isThirdHit };
+          // Animation chém 360 độ xoáy kiếm khí cực ngầu
+          this.activeSlash = {
+            x: this.x, y: this.y,
+            radius: slashRange,
+            timer: 0.28,
+            maxTimer: 0.28,
+            startAngle: aimAngle - Math.PI,
+            isUltimate: isThirdHit
+          };
           enemy.takeDamage(dmg, isThirdHit ? 'Trảm Cực Hạn' : 'Kiếm Khí');
-          createParticles(enemy.x, enemy.y, '#818cf8', isThirdHit ? 14 : 6);
+          createParticles(enemy.x, enemy.y, isThirdHit ? '#c084fc' : '#818cf8', isThirdHit ? 16 : 8, 1.3);
 
           if (isThirdHit) {
             this.slashCount = 0;
+            createShockwave(this.x, this.y, slashRange * 1.2, '#c084fc', 3);
             const knockAngle = Math.atan2(enemy.y - this.y, enemy.x - this.x);
             const enemySpd = enemy.currentSpeed || enemy.baseSpeed;
             enemy.vx = Math.cos(knockAngle) * enemySpd;
@@ -665,7 +728,8 @@
           soulOrbs.push({
             x: Math.random() * (canvas.width - 60) + 30,
             y: Math.random() * (canvas.height - 60) + 30,
-            radius: 10
+            radius: 11,
+            phase: Math.random() * Math.PI * 2
           });
         }
 
@@ -680,12 +744,27 @@
           const spreadRad = (angleDeg * Math.PI) / 180;
           const beamDmg = SKILL_CONFIG.soul.baseBeamDmg + this.collectedSoulsCount * SKILL_CONFIG.soul.bonusDmgPerSoul;
 
+          // Tạo các hạt lấp lánh bên trong chùm sáng
+          const sparkles = [];
+          for (let k = 0; k < 28; k++) {
+            const rDist = Math.random() * ARENA_DIAGONAL * 0.85;
+            const rAng = aimAngle + (Math.random() - 0.5) * spreadRad;
+            sparkles.push({
+              x: this.x + Math.cos(rAng) * rDist,
+              y: this.y + Math.sin(rAng) * rDist,
+              size: Math.random() * 2.5 + 1,
+              twinkle: Math.random() * Math.PI * 2
+            });
+          }
+
           activeSoulBeams.push({
             x: this.x, y: this.y,
             angle: aimAngle,
             spread: spreadRad,
             maxRadius: ARENA_DIAGONAL,
-            timer: 0.35,
+            timer: 0.4,
+            maxTimer: 0.4,
+            sparkles: sparkles,
             owner: this
           });
 
@@ -694,7 +773,7 @@
           if (diff > Math.PI) diff = 2 * Math.PI - diff;
           if (diff <= spreadRad / 2 + 0.1) {
             enemy.takeDamage(beamDmg, `Chùm Sáng (${this.collectedSoulsCount} Hồn)`);
-            createParticles(enemy.x, enemy.y, '#f472b6', 10);
+            createParticles(enemy.x, enemy.y, '#f472b6', 12);
           }
         }
       }
@@ -706,7 +785,8 @@
           this.marksmanShootTimer = 0;
           marksmanBullets.push({
             x: this.x, y: this.y, target: enemy,
-            speed: BASE_SPEED * 3.8, damage: SKILL_CONFIG.marksman.normalBulletDmg
+            speed: BASE_SPEED * 4.0, damage: SKILL_CONFIG.marksman.normalBulletDmg,
+            isCrit: false, trail: []
           });
         }
 
@@ -714,7 +794,7 @@
           this.marksmanTrapTimer += 1 / 60;
           if (this.marksmanTrapTimer >= SKILL_CONFIG.marksman.trapSpawnInterval) {
             this.marksmanTrapTimer = 0;
-            marksmanTraps.push({ x: this.x, y: this.y, radius: 14, owner: this });
+            marksmanTraps.push({ x: this.x, y: this.y, radius: 15, owner: this, pulse: 0 });
           }
         }
       }
@@ -729,8 +809,10 @@
             const angle = Math.atan2(enemy.y - this.y, enemy.x - this.x);
             ninjaProjectiles.push({
               x: this.x, y: this.y,
-              vx: Math.cos(angle) * (BASE_SPEED * 4.5),
-              vy: Math.sin(angle) * (BASE_SPEED * 4.5),
+              vx: Math.cos(angle) * (BASE_SPEED * 4.8),
+              vy: Math.sin(angle) * (BASE_SPEED * 4.8),
+              angle: 0,
+              trail: [],
               owner: this, target: enemy
             });
           } else if (this.ninjaComboStep === 2) {
@@ -742,6 +824,7 @@
               startX: this.x, startY: this.y, endX: behindX, endY: behindY, progress: 0, duration: 0.16,
               callback: () => {
                 enemy.takeDamage(SKILL_CONFIG.ninja.step2DashDmg, 'Đột Kích');
+                reaperSlashes.push({ x: enemy.x, y: enemy.y, angle: enemyAngle + Math.PI / 4, radius: 34, timer: 0.25, maxTimer: 0.25, color: '#e2e8f0' });
                 this.ninjaInvulnerable = false;
                 this.ninjaComboStep = 3;
               }
@@ -762,14 +845,16 @@
                   const missingHp = enemy.maxHp - enemy.hp;
                   const dmg = SKILL_CONFIG.ninja.step3BaseDmg + Math.round(missingHp * SKILL_CONFIG.ninja.step3MissingHpPct);
                   enemy.takeDamage(dmg, 'Ảnh Trảm');
+                  reaperSlashes.push({ x: enemy.x, y: enemy.y, angle: angle, radius: 44, timer: 0.3, maxTimer: 0.3, color: '#38bdf8' });
                   this.ninjaComboStep = 1;
                 } else {
                   this.ninjaComboStep = 1;
                   const retryAng = Math.atan2(enemy.y - this.y, enemy.x - this.x);
                   ninjaProjectiles.push({
                     x: this.x, y: this.y,
-                    vx: Math.cos(retryAng) * (BASE_SPEED * 4.5),
-                    vy: Math.sin(retryAng) * (BASE_SPEED * 4.5),
+                    vx: Math.cos(retryAng) * (BASE_SPEED * 4.8),
+                    vy: Math.sin(retryAng) * (BASE_SPEED * 4.8),
+                    angle: 0, trail: [],
                     owner: this, target: enemy
                   });
                 }
@@ -789,7 +874,8 @@
             x: enemy.x, y: enemy.y,
             createdAt: now,
             lifespan: SKILL_CONFIG.reaper.trailLifespan,
-            radius: enemy.radius
+            radius: enemy.radius,
+            wobble: Math.random() * Math.PI * 2
           });
         }
 
@@ -798,6 +884,7 @@
           if (now - ill.createdAt >= ill.lifespan) { reaperIllusions.splice(i, 1); continue; }
           if (Math.hypot(this.x - ill.x, this.y - ill.y) < this.radius + ill.radius) {
             this.reaperSpeedBoostTimer = 2.5;
+            createParticles(ill.x, ill.y, '#cbd5e1', 6);
             reaperIllusions.splice(i, 1);
             break;
           }
@@ -813,8 +900,13 @@
             const missingHp = enemy.maxHp - enemy.hp;
             const slashDmg = SKILL_CONFIG.reaper.slashBaseDmg + Math.floor(missingHp * SKILL_CONFIG.reaper.slashMissingHpPct);
             enemy.takeDamage(slashDmg, 'Nhát Chém Tử Thần');
-            this.reaperSpeedBoostTimer = 0;
+            
+            // Hiệu ứng lưỡi hái tử thần chém cực lực
+            reaperSlashes.push({ x: enemy.x, y: enemy.y, angle: angle, radius: 52, timer: 0.35, maxTimer: 0.35, color: '#f87171' });
+            createShockwave(enemy.x, enemy.y, 55, '#94a3b8', 3);
+            createParticles(enemy.x, enemy.y, '#ef4444', 14, 1.4);
 
+            this.reaperSpeedBoostTimer = 0;
             const randAngle = Math.random() * Math.PI * 2;
             this.vx = Math.cos(randAngle) * this.baseSpeed;
             this.vy = Math.sin(randAngle) * this.baseSpeed;
@@ -846,6 +938,7 @@
         if (isInsideNow && !this.wasInsideBladeZone) {
           this.shield = SKILL_CONFIG.shen.shieldAmount;
           this.shieldTimer = SKILL_CONFIG.shen.shieldDuration;
+          createShockwave(this.x, this.y, 38, '#22d3ee', 2);
           updateHUD();
         }
         this.wasInsideBladeZone = isInsideNow;
@@ -871,7 +964,10 @@
           const ropeDmg = Math.round((enemy.maxHp * 0.04) + (this.maxHp * 0.04) + ((enemy.maxHp - enemy.hp) * 0.14));
           this.dashAnim = {
             startX: this.x, startY: this.y, endX: this.spiritBladeX, endY: this.spiritBladeY, progress: 0, duration: 0.1,
-            callback: () => { enemy.takeDamage(ropeDmg, 'Lướt Dây Linh Hồn'); }
+            callback: () => {
+              enemy.takeDamage(ropeDmg, 'Lướt Dây Linh Hồn');
+              createShockwave(enemy.x, enemy.y, 42, '#06b6d4', 2.5);
+            }
           };
         }
       }
@@ -893,6 +989,10 @@
         }
         if (this.wukongSweepTimer > 0) {
           this.wukongSweepTimer -= 1 / 60;
+          // Tạo dư ảnh rực cháy khi Wukong tăng tốc chiêu 3
+          if (globalTick % 3 === 0) {
+            wukongAfterimages.push({ x: this.x, y: this.y, radius: this.radius, life: 1.0 });
+          }
           if (this.wukongSweepTimer <= 0) { this.wukongSweepTimer = 0; updateHUD(); }
         }
 
@@ -917,6 +1017,7 @@
                   hitCooldown: 0
                 });
               });
+              createShockwave(this.x, this.y, 50, '#fb923c', 2.5);
               logMessage(`🐵 Wukong phân thân 3 bản sao!`, 'wukong');
             } else if (choice === 2) {
               this.hp = Math.min(this.maxHp, this.hp + SKILL_CONFIG.wukong.peachHeal);
@@ -926,11 +1027,14 @@
               this.slowTimer = 0;
               this.slowFactor = 1;
               this.stunTimer = 0;
+              createShockwave(this.x, this.y, 60, '#fde047', 3);
+              createParticles(this.x, this.y, '#f472b6', 14);
               updateHUD();
-              logMessage(`🍑 Wukong ăn Đào Tiên: Giải trừ toàn bộ hiệu ứng bất lợi & bất tử!`, 'wukong');
+              logMessage(`🍑 Wukong ăn Đào Tiên: Hào quang bất tử & giải trừ bất lợi!`, 'wukong');
             } else if (choice === 3) {
               this.wukongSweepTimer = SKILL_CONFIG.wukong.sweepSpeedDur;
               this.wukongSweepHit = false;
+              createShockwave(this.x, this.y, 45, '#f97316', 3);
               logMessage(`⚡ Wukong vận kình tăng 40% tốc độ!`, 'wukong');
             } else if (choice === 4) {
               wukongStaffs.push({
@@ -938,7 +1042,8 @@
                 target: enemy,
                 speed: BASE_SPEED * 4.5,
                 length: (this.radius * 2) * SKILL_CONFIG.wukong.staffLengthDiamMult,
-                rotation: 0
+                rotation: 0,
+                trail: []
               });
               logMessage(`🥢 Wukong phóng Gậy Như Ý xoay tròn!`, 'wukong');
             }
@@ -956,10 +1061,12 @@
             radius: sweepRadius,
             angle: aimAngle,
             spread: (SKILL_CONFIG.wukong.sweepAngleDeg * Math.PI) / 180,
-            timer: 0.25
+            timer: 0.32,
+            maxTimer: 0.32
           });
           enemy.takeDamage(SKILL_CONFIG.wukong.sweepDmg, 'Quét Gậy Hình Quạt');
-          createParticles(enemy.x, enemy.y, '#fb923c', 12);
+          createShockwave(enemy.x, enemy.y, 65, '#f97316', 4);
+          createParticles(enemy.x, enemy.y, '#fbbf24', 18, 1.5);
         }
       }
 
@@ -992,6 +1099,7 @@
           });
 
           enemy.takeDamage(SKILL_CONFIG.poseidon.waveDmg, 'Sóng Nước');
+          enemy.slowFactor = SKILL_CONFIG.poseidon.waveSlowFactor;
           enemy.applySlow(SKILL_CONFIG.poseidon.waveSlowDuration);
 
           const pushAngle = Math.atan2(enemy.y - this.y, enemy.x - this.x);
@@ -1000,7 +1108,7 @@
           enemy.vy = Math.sin(pushAngle) * enemySpd * 1.5;
 
           enemy.oceanicMarks++;
-          createParticles(enemy.x, enemy.y, '#0ea5e9', 8);
+          createParticles(enemy.x, enemy.y, '#38bdf8', 8);
           logMessage(`🔱 Poseidon tạo sóng nước đẩy lùi! Hải Thần Ấn: ${enemy.oceanicMarks}/4`, 'poseidon');
 
           if (enemy.oceanicMarks >= 4) {
@@ -1011,8 +1119,8 @@
             enemy.slowTimer = 0; enemy.slowFactor = 1;
             enemy.stunTimer = 0;
             enemy.shield = 0; enemy.shieldTimer = 0;
-            createParticles(canvas.width / 2, canvas.height / 2, '#0284c7', 40);
-            logMessage(`🌊 HẢI THẦN THỨC TỈNH! Map biến thành ĐẠI DƯƠNG rực rỡ trong 2s! ${enemy.name} trúng ĐUỐI NƯỚC, xoá toàn bộ hiệu ứng & bất động!`, 'poseidon');
+            createParticles(canvas.width / 2, canvas.height / 2, '#0284c7', 45);
+            logMessage(`🌊 HẢI THẦN THỨC TỈNH! Map biến thành ĐẠI DƯƠNG trong 2s! ${enemy.name} trúng ĐUỐI NƯỚC, xoá toàn bộ hiệu ứng & bất động!`, 'poseidon');
           }
         }
 
@@ -1022,22 +1130,24 @@
           const bAngle = Math.atan2(enemy.y - this.y, enemy.x - this.x);
           const d = this.radius * 2; // Đường kính Ball
 
-          const r1 = d * 0.875; // Bán kính vụ 1 (Đường kính = 1.75d)
-          const r2 = d * 1.75;  // Bán kính vụ 2 (Đường kính = 3.5d)
-          const r3 = d * 2.125; // Bán kính vụ 3 (Đường kính = 4.25d)
+          // Chiều dài đường kính mỗi vụ nổ được tăng thêm 0.65d -> Bán kính tăng thêm 0.325d
+          const r1 = d * (0.875 + 0.325); // Đường kính = 2.40d
+          const r2 = d * (1.75 + 0.325);  // Đường kính = 4.15d
+          const r3 = d * (2.125 + 0.325); // Đường kính = 4.90d
 
+          // 3 đường tròn không cắt nhau, tâm thẳng hàng dọc theo trục bAngle
           const dist1 = d + r1;
-          const dist2 = (dist1 + r1) + (d * 0.75) + r2;
-          const dist3 = (dist2 + r2) + (d * 0.75) + r3;
+          const dist2 = (dist1 + r1) + (d * 0.45) + r2;
+          const dist3 = (dist2 + r2) + (d * 0.45) + r3;
 
           poseidonBursts.push({
             owner: this, enemy: enemy, angle: bAngle,
-            x1: this.x + Math.cos(bAngle) * dist1, y1: this.y + Math.sin(bAngle) * dist1, r1: r1, dmg1: 8,
-            x2: this.x + Math.cos(bAngle) * dist2, y2: this.y + Math.sin(bAngle) * dist2, r2: r2, dmg2: 14,
-            x3: this.x + Math.cos(bAngle) * dist3, y3: this.y + Math.sin(bAngle) * dist3, r3: r3, dmg3: 20,
+            x1: this.x + Math.cos(bAngle) * dist1, y1: this.y + Math.sin(bAngle) * dist1, r1: r1, dmg1: 9,
+            x2: this.x + Math.cos(bAngle) * dist2, y2: this.y + Math.sin(bAngle) * dist2, r2: r2, dmg2: 15,
+            x3: this.x + Math.cos(bAngle) * dist3, y3: this.y + Math.sin(bAngle) * dist3, r3: r3, dmg3: 21,
             stage: 1, timer: 0, hit1: false, hit2: false, hit3: false
           });
-          logMessage(`💧 Poseidon phóng chuỗi 3 Vụ Nổ Nước thẳng hướng kẻ địch!`, 'poseidon');
+          logMessage(`💧 Poseidon phóng chuỗi 3 Vụ Nổ Nước đẩy chuyền thẳng hàng!`, 'poseidon');
         }
       }
 
@@ -1050,6 +1160,7 @@
 
       applySlow(duration) {
         if (this.isImmuneToDebuffs()) return;
+        if (this.slowTimer <= 0) this.slowFactor = 0.7;
         this.slowTimer = Math.max(this.slowTimer, duration);
         updateHUD();
       }
@@ -1069,7 +1180,8 @@
         if (this.typeKey === 'wanderer' && this.wandererShieldActive) {
           this.wandererShieldActive = false;
           this.wandererShieldTimer = 0;
-          createParticles(this.x, this.y, '#818cf8', 10);
+          createShockwave(this.x, this.y, 45, '#818cf8', 3);
+          createParticles(this.x, this.y, '#818cf8', 12);
           updateHUD();
           return;
         }
@@ -1079,6 +1191,7 @@
           this.hp = 1;
           const enemy = (this === p1) ? p2 : p1;
           if (enemy) enemy.receiveHealingFromAngel(15, this);
+          createShockwave(this.x, this.y, 70, '#fef08a', 4);
           createParticles(this.x, this.y, '#eab308', 25);
           logMessage(`👼 Angel Ball kích hoạt Phước Thần Hồi Sinh: Giữ 1 HP & hồi 15 HP cho địch!`, 'angel');
           updateHUD();
@@ -1117,6 +1230,7 @@
           this.demonReviveCount++;
           this.hp = this.maxHp;
           logMessage(`👿 Demon Ball hồi sinh lần ${this.demonReviveCount}/${SKILL_CONFIG.demon.maxRevives}!`, 'demon');
+          createShockwave(this.x, this.y, 65, '#ef4444', 4);
           createParticles(this.x, this.y, '#ef4444', 20);
           updateHUD();
           return;
@@ -1174,19 +1288,90 @@
 
       draw() {
         ctx.save();
+
+        // Bear Ball: Hào quang gầm thét tích tụ đòn đánh cực mạnh
+        if (this.typeKey === 'bear' && this.effectiveHealStored > 0) {
+          const powerRatio = Math.min(1, this.effectiveHealStored / 25);
+          const pulse = Math.sin(globalTick * 0.25) * 3;
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.radius + 5 + powerRatio * 8 + pulse, 0, Math.PI * 2);
+          const bearAura = ctx.createRadialGradient(this.x, this.y, this.radius, this.x, this.y, this.radius + 14);
+          bearAura.addColorStop(0, 'rgba(245, 158, 11, 0.5)');
+          bearAura.addColorStop(1, 'rgba(239, 68, 68, 0)');
+          ctx.fillStyle = bearAura;
+          ctx.fill();
+
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.radius + 4 + pulse * 0.5, 0, Math.PI * 2);
+          ctx.strokeStyle = `rgba(251, 191, 36, ${0.4 + powerRatio * 0.6})`;
+          ctx.lineWidth = 2 + powerRatio * 2;
+          ctx.stroke();
+        }
+
+        // Wanderer Ball: Khiên gió xoay tinh tế
         if (this.typeKey === 'wanderer' && this.wandererShieldActive) {
-          ctx.beginPath(); ctx.arc(this.x, this.y, this.radius + 6, 0, Math.PI * 2);
-          ctx.strokeStyle = '#818cf8'; ctx.lineWidth = 2.5; ctx.stroke();
+          ctx.save();
+          ctx.translate(this.x, this.y);
+          ctx.rotate(globalTick * 0.05);
+          ctx.beginPath();
+          ctx.arc(0, 0, this.radius + 7, 0, Math.PI * 2);
+          ctx.strokeStyle = 'rgba(129, 140, 248, 0.75)';
+          ctx.lineWidth = 2;
+          ctx.setLineDash([10, 6]);
+          ctx.stroke();
+
+          ctx.rotate(-globalTick * 0.1);
+          ctx.beginPath();
+          ctx.arc(0, 0, this.radius + 4, 0, Math.PI * 2);
+          ctx.strokeStyle = 'rgba(199, 210, 254, 0.45)';
+          ctx.lineWidth = 1.5;
+          ctx.setLineDash([]);
+          ctx.stroke();
+          ctx.restore();
         }
+
+        // Wukong Ball Chiêu 2: Hào quang bất tử loang màu vàng kim - hồng đào
         if (this.typeKey === 'wukong' && this.wukongImmortalTimer > 0) {
-          ctx.beginPath(); ctx.arc(this.x, this.y, this.radius + 7, 0, Math.PI * 2);
-          ctx.strokeStyle = '#fde047'; ctx.lineWidth = 3; ctx.stroke();
+          ctx.save();
+          const auraGrad = ctx.createRadialGradient(this.x, this.y, this.radius * 0.8, this.x, this.y, this.radius + 16);
+          auraGrad.addColorStop(0, 'rgba(253, 224, 71, 0.75)');
+          auraGrad.addColorStop(0.55, 'rgba(244, 114, 182, 0.45)');
+          auraGrad.addColorStop(1, 'rgba(253, 224, 71, 0)');
+          ctx.fillStyle = auraGrad;
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.radius + 16, 0, Math.PI * 2);
+          ctx.fill();
+
+          ctx.translate(this.x, this.y);
+          ctx.rotate(globalTick * 0.08);
+          ctx.beginPath();
+          ctx.arc(0, 0, this.radius + 8, 0, Math.PI * 2);
+          ctx.strokeStyle = '#fde047';
+          ctx.lineWidth = 2.5;
+          ctx.setLineDash([8, 5]);
+          ctx.stroke();
+          ctx.restore();
         }
+
+        // Wukong Ball Chiêu 3: Luồng khí rực cháy khi tăng tốc
+        if (this.typeKey === 'wukong' && this.wukongSweepTimer > 0) {
+          ctx.save();
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.radius + 8, 0, Math.PI * 2);
+          ctx.strokeStyle = '#f97316';
+          ctx.lineWidth = 3;
+          ctx.shadowColor = '#fb923c';
+          ctx.shadowBlur = 15;
+          ctx.stroke();
+          ctx.restore();
+        }
+
         if (this.typeKey === 'ninja' && this.ninjaInvulnerable) {
           ctx.beginPath(); ctx.arc(this.x, this.y, this.radius + 8, 0, Math.PI * 2);
           ctx.strokeStyle = '#94a3b8'; ctx.lineWidth = 3; ctx.stroke();
         }
 
+        // Thân Ball chính
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
         const grad = ctx.createRadialGradient(this.x - 5, this.y - 5, 2, this.x, this.y, this.radius);
@@ -1197,7 +1382,7 @@
         ctx.shadowColor = this.color;
         ctx.shadowBlur = 12;
         ctx.fill();
-        ctx.strokeStyle = 'rgba(255,255,255,0.6)';
+        ctx.strokeStyle = 'rgba(255,255,255,0.65)';
         ctx.lineWidth = 1.5;
         ctx.stroke();
 
@@ -1208,15 +1393,34 @@
         ctx.fillText(this.icon, this.x, this.y);
         ctx.restore();
 
+        // Ghost Ball: Sợi dây linh hồn tím nối liền thể xác & hồn + thực thể hồn
         if (this.typeKey === 'ghost' && this.isGhosting) {
           ctx.save();
+          // Sợi dây linh hồn uốn lượn nhẹ
+          const midX = (this.x + this.ghostX) / 2 + Math.sin(globalTick * 0.15) * 14;
+          const midY = (this.y + this.ghostY) / 2 + Math.cos(globalTick * 0.15) * 14;
+          const tetherGrad = ctx.createLinearGradient(this.x, this.y, this.ghostX, this.ghostY);
+          tetherGrad.addColorStop(0, 'rgba(168, 85, 247, 0.25)');
+          tetherGrad.addColorStop(0.5, 'rgba(216, 180, 254, 0.85)');
+          tetherGrad.addColorStop(1, 'rgba(192, 132, 252, 0.9)');
+
+          ctx.beginPath();
+          ctx.moveTo(this.x, this.y);
+          ctx.quadraticCurveTo(midX, midY, this.ghostX, this.ghostY);
+          ctx.strokeStyle = tetherGrad;
+          ctx.lineWidth = 2.5;
+          ctx.shadowColor = '#c084fc';
+          ctx.shadowBlur = 10;
+          ctx.stroke();
+
+          // Thực thể Hồn
           ctx.beginPath();
           ctx.arc(this.ghostX, this.ghostY, this.radius, 0, Math.PI * 2);
           ctx.fillStyle = 'rgba(192, 132, 252, 0.45)';
           ctx.shadowColor = '#c084fc';
-          ctx.shadowBlur = 15;
+          ctx.shadowBlur = 18;
           ctx.fill();
-          ctx.strokeStyle = '#e879f9';
+          ctx.strokeStyle = '#f0abfc';
           ctx.lineWidth = 2;
           ctx.stroke();
           ctx.shadowBlur = 0;
@@ -1268,13 +1472,29 @@
 
         if (b1.hitCooldown === 0) {
           let dmg1 = b1.contactDmg;
-          if (b1.typeKey === 'bear') { dmg1 += b1.effectiveHealStored; b1.effectiveHealStored = 0; }
+          if (b1.typeKey === 'bear') {
+            if (b1.effectiveHealStored > 0) {
+              createShockwave(b2.x, b2.y, 65, '#f59e0b', 4);
+              createParticles(b2.x, b2.y, '#fbbf24', 18, 1.5);
+              createFloatingText(b2.x, b2.y - 18, `💥 GẦM THÉT -${dmg1 + b1.effectiveHealStored}!`, '#f59e0b');
+            }
+            dmg1 += b1.effectiveHealStored;
+            b1.effectiveHealStored = 0;
+          }
           if (b1.typeKey === 'shen') dmg1 = Math.round(b2.maxHp * 0.05 + (b2.maxHp - b2.hp) * 0.05 + (b1.maxHp - b1.hp) * 0.05);
           if (dmg1 > 0) { b2.takeDamage(dmg1, 'Va Chạm'); b1.hitCooldown = 15; }
         }
         if (b2.hitCooldown === 0) {
           let dmg2 = b2.contactDmg;
-          if (b2.typeKey === 'bear') { dmg2 += b2.effectiveHealStored; b2.effectiveHealStored = 0; }
+          if (b2.typeKey === 'bear') {
+            if (b2.effectiveHealStored > 0) {
+              createShockwave(b1.x, b1.y, 65, '#f59e0b', 4);
+              createParticles(b1.x, b1.y, '#fbbf24', 18, 1.5);
+              createFloatingText(b1.x, b1.y - 18, `💥 GẦM THÉT -${dmg2 + b2.effectiveHealStored}!`, '#f59e0b');
+            }
+            dmg2 += b2.effectiveHealStored;
+            b2.effectiveHealStored = 0;
+          }
           if (b2.typeKey === 'shen') dmg2 = Math.round(b1.maxHp * 0.05 + (b1.maxHp - b1.hp) * 0.05 + (b2.maxHp - b2.hp) * 0.05);
           if (dmg2 > 0) { b1.takeDamage(dmg2, 'Va Chạm'); b2.hitCooldown = 15; }
         }
@@ -1300,10 +1520,10 @@
     function updateAndDrawEntities() {
       const now = Date.now();
 
+      // 1. Môi trường Đại Dương
       if (oceanEnvironmentTimer > 0) {
         oceanEnvironmentTimer -= 1 / 60;
         ctx.save();
-        
         const oceanGrad = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
         oceanGrad.addColorStop(0, 'rgba(3, 105, 161, 0.35)');
         oceanGrad.addColorStop(0.5, 'rgba(14, 165, 233, 0.25)');
@@ -1315,7 +1535,7 @@
         ctx.beginPath(); ctx.moveTo(50, 0); ctx.lineTo(120, 0); ctx.lineTo(220, canvas.height); ctx.lineTo(150, canvas.height); ctx.fill();
         ctx.beginPath(); ctx.moveTo(220, 0); ctx.lineTo(300, 0); ctx.lineTo(400, canvas.height); ctx.lineTo(320, canvas.height); ctx.fill();
 
-        if (Math.random() < 0.3) {
+        if (Math.random() < 0.35) {
           oceanBubbles.push({
             x: Math.random() * canvas.width,
             y: canvas.height + 10,
@@ -1324,7 +1544,6 @@
             alpha: Math.random() * 0.5 + 0.3
           });
         }
-
         for (let i = oceanBubbles.length - 1; i >= 0; i--) {
           const bub = oceanBubbles[i];
           bub.y -= bub.speed;
@@ -1334,7 +1553,6 @@
           ctx.lineWidth = 1; ctx.fill(); ctx.stroke();
           if (bub.y < -10) oceanBubbles.splice(i, 1);
         }
-
         ctx.strokeStyle = '#38bdf8';
         ctx.lineWidth = 2.5;
         ctx.strokeRect(4, 4, canvas.width - 8, canvas.height - 8);
@@ -1343,109 +1561,173 @@
         oceanBubbles = [];
       }
 
+      // 2. Poseidon Sóng Nước Mềm Mại & Êm Dịu (Nhiều lớp sóng lan tỏa)
       for (let i = poseidonWaves.length - 1; i >= 0; i--) {
         const w = poseidonWaves[i];
-        w.currentRadius += 4;
+        w.currentRadius += 3.5;
+        const progress = Math.min(1, w.currentRadius / w.maxRadius);
+        const alpha = (1 - progress) * 0.7;
+
         ctx.save();
-        ctx.beginPath(); ctx.arc(w.x, w.y, w.currentRadius, 0, Math.PI * 2);
-        ctx.strokeStyle = 'rgba(14, 165, 233, 0.6)'; ctx.lineWidth = 3; ctx.stroke();
+        for (let ring = 0; ring < 3; ring++) {
+          const r = w.currentRadius - ring * 9;
+          if (r > 0) {
+            ctx.beginPath();
+            ctx.arc(w.x, w.y, r, 0, Math.PI * 2);
+            ctx.strokeStyle = ring === 0 ? `rgba(125, 211, 252, ${alpha})` : `rgba(14, 165, 233, ${alpha * (0.7 - ring * 0.2)})`;
+            ctx.lineWidth = 3 - ring * 0.7;
+            ctx.stroke();
+          }
+        }
         ctx.restore();
         if (w.currentRadius >= w.maxRadius) poseidonWaves.splice(i, 1);
       }
 
+      // 3. Poseidon Chuỗi 3 Vụ Nổ Nước Đẩy Chuyền Thẳng Hàng + Hiệu Ứng Nước Nổ Mạnh Mẽ
       for (let i = poseidonBursts.length - 1; i >= 0; i--) {
         const b = poseidonBursts[i];
         b.timer += 1 / 60;
+        const stageProgress = Math.min(1, b.timer / 0.3);
+
+        const drawWaterExplosion = (cx, cy, radius, p, baseColor, rimColor) => {
+          ctx.save();
+          // Vòng sóng nước dâng lên từ tâm
+          const expandR = radius * (0.35 + 0.65 * Math.sin(p * Math.PI * 0.5));
+          const grad = ctx.createRadialGradient(cx, cy, expandR * 0.1, cx, cy, expandR);
+          grad.addColorStop(0, 'rgba(224, 242, 254, 0.55)');
+          grad.addColorStop(0.6, baseColor);
+          grad.addColorStop(1, 'rgba(2, 132, 199, 0.05)');
+
+          ctx.beginPath();
+          ctx.arc(cx, cy, expandR, 0, Math.PI * 2);
+          ctx.fillStyle = grad;
+          ctx.fill();
+
+          // Viền bọt sóng kép
+          ctx.beginPath();
+          ctx.arc(cx, cy, expandR, 0, Math.PI * 2);
+          ctx.strokeStyle = rimColor;
+          ctx.lineWidth = 3 * (1 - p * 0.4);
+          ctx.stroke();
+
+          ctx.beginPath();
+          ctx.arc(cx, cy, expandR * 0.72, 0, Math.PI * 2);
+          ctx.strokeStyle = 'rgba(255, 255, 255, 0.45)';
+          ctx.lineWidth = 1.5;
+          ctx.setLineDash([6, 6]);
+          ctx.stroke();
+          ctx.restore();
+        };
 
         if (b.stage === 1) {
-          ctx.save();
-          ctx.beginPath(); ctx.arc(b.x1, b.y1, b.r1, 0, Math.PI * 2);
-          ctx.fillStyle = 'rgba(14, 165, 233, 0.28)'; ctx.fill(); ctx.strokeStyle = '#0284c7'; ctx.lineWidth = 2.5; ctx.stroke();
-          ctx.restore();
+          drawWaterExplosion(b.x1, b.y1, b.r1, stageProgress, 'rgba(14, 165, 233, 0.42)', '#38bdf8');
 
           if (!b.hit1 && Math.hypot(b.enemy.x - b.x1, b.enemy.y - b.y1) <= b.enemy.radius + b.r1) {
             b.hit1 = true;
             b.enemy.takeDamage(b.dmg1, 'Vụ Nổ Nước 1');
-            
-            // Cập nhật: Vụ nổ 1 làm chậm 50% trong 0.5s và đẩy lùi 2 đường kính Ball
+
+            // Làm chậm 50% trong 0.5s & Đẩy thẳng chính xác tới tâm Vụ Nổ 2!
             b.enemy.slowFactor = 0.5;
             b.enemy.slowTimer = Math.max(b.enemy.slowTimer, 0.5);
-            
-            const pushAngle = Math.atan2(b.enemy.y - b.y1, b.enemy.x - b.x1);
-            const pushDist = (b.enemy.radius * 2) * 2; // 2 đường kính Ball
-            b.enemy.x = Math.max(b.enemy.radius, Math.min(canvas.width - b.enemy.radius, b.enemy.x + Math.cos(pushAngle) * pushDist));
-            b.enemy.y = Math.max(b.enemy.radius, Math.min(canvas.height - b.enemy.radius, b.enemy.y + Math.sin(pushAngle) * pushDist));
+            b.enemy.x = Math.max(b.enemy.radius, Math.min(canvas.width - b.enemy.radius, b.x2));
+            b.enemy.y = Math.max(b.enemy.radius, Math.min(canvas.height - b.enemy.radius, b.y2));
 
-            createParticles(b.enemy.x, b.enemy.y, '#0ea5e9', 12);
-            logMessage(`💧 Vụ Nổ Nước 1 trúng ${b.enemy.name}: Làm chậm 50% (0.5s) & Đẩy lùi văng xa!`, 'poseidon');
+            createShockwave(b.x1, b.y1, b.r1 * 1.15, '#38bdf8', 3.5);
+            createParticles(b.enemy.x, b.enemy.y, '#7dd3fc', 16, 1.4);
+            logMessage(`💧 Vụ Nổ 1 trúng ${b.enemy.name}: Làm chậm 50% & Đẩy thẳng vào tâm Vụ Nổ 2!`, 'poseidon');
           }
           if (b.timer >= 0.3) { b.stage = 2; b.timer = 0; }
         } else if (b.stage === 2) {
-          ctx.save();
-          ctx.beginPath(); ctx.arc(b.x2, b.y2, b.r2, 0, Math.PI * 2);
-          ctx.fillStyle = 'rgba(2, 132, 199, 0.28)'; ctx.fill(); ctx.strokeStyle = '#0369a1'; ctx.lineWidth = 2.5; ctx.stroke();
-          ctx.restore();
+          drawWaterExplosion(b.x2, b.y2, b.r2, stageProgress, 'rgba(2, 132, 199, 0.45)', '#0ea5e9');
 
           if (!b.hit2 && Math.hypot(b.enemy.x - b.x2, b.enemy.y - b.y2) <= b.enemy.radius + b.r2) {
             b.hit2 = true;
             b.enemy.takeDamage(b.dmg2, 'Vụ Nổ Nước 2');
-            createParticles(b.enemy.x, b.enemy.y, '#0284c7', 12);
+
+            // Đẩy thẳng tiếp tới tâm Vụ Nổ 3!
+            b.enemy.x = Math.max(b.enemy.radius, Math.min(canvas.width - b.enemy.radius, b.x3));
+            b.enemy.y = Math.max(b.enemy.radius, Math.min(canvas.height - b.enemy.radius, b.y3));
+
+            createShockwave(b.x2, b.y2, b.r2 * 1.15, '#0ea5e9', 4);
+            createParticles(b.enemy.x, b.enemy.y, '#38bdf8', 20, 1.5);
+            logMessage(`🌊 Vụ Nổ 2 hất thẳng ${b.enemy.name} vào tâm Vụ Nổ 3!`, 'poseidon');
           }
           if (b.timer >= 0.3) { b.stage = 3; b.timer = 0; }
         } else if (b.stage === 3) {
-          ctx.save();
-          ctx.beginPath(); ctx.arc(b.x3, b.y3, b.r3, 0, Math.PI * 2);
-          ctx.fillStyle = 'rgba(56, 189, 248, 0.28)'; ctx.fill(); ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 2.5; ctx.stroke();
-          ctx.restore();
+          drawWaterExplosion(b.x3, b.y3, b.r3, stageProgress, 'rgba(56, 189, 248, 0.5)', '#bae6fd');
 
           if (!b.hit3 && Math.hypot(b.enemy.x - b.x3, b.enemy.y - b.y3) <= b.enemy.radius + b.r3) {
             b.hit3 = true;
             b.enemy.takeDamage(b.dmg3, 'Vụ Nổ Nước 3');
-            createParticles(b.enemy.x, b.enemy.y, '#38bdf8', 16);
+            createShockwave(b.x3, b.y3, b.r3 * 1.2, '#bae6fd', 4.5);
+            createParticles(b.enemy.x, b.enemy.y, '#e0f2fe', 25, 1.7);
+            logMessage(`🔱 Vụ Nổ 3 kích nổ cực đại lên ${b.enemy.name}!`, 'poseidon');
           }
           if (b.timer >= 0.3) { poseidonBursts.splice(i, 1); }
         }
       }
 
+      // 4. Fire Ball: Ngọn lửa bập bùng chân thực nhiều lớp
       for (let i = fireTrails.length - 1; i >= 0; i--) {
         const t = fireTrails[i];
-        if (now - t.createdAt >= SKILL_CONFIG.fire.trailLifespan) { fireTrails.splice(i, 1); continue; }
-        ctx.beginPath(); ctx.arc(t.x, t.y, t.radius, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(249, 115, 22, 0.4)'; ctx.fill();
+        const age = now - t.createdAt;
+        if (age >= SKILL_CONFIG.fire.trailLifespan) { fireTrails.splice(i, 1); continue; }
+        const lifeRatio = 1 - age / SKILL_CONFIG.fire.trailLifespan;
+        const flicker = Math.sin(globalTick * 0.35 + t.flickerSeed) * 2.5;
+        const r = Math.max(2, (t.radius + flicker) * lifeRatio);
+
+        ctx.save();
+        const fGrad = ctx.createRadialGradient(t.x, t.y, r * 0.1, t.x, t.y, r);
+        fGrad.addColorStop(0, `rgba(254, 240, 138, ${lifeRatio * 0.9})`);
+        fGrad.addColorStop(0.45, `rgba(249, 115, 22, ${lifeRatio * 0.75})`);
+        fGrad.addColorStop(1, 'rgba(220, 38, 38, 0)');
+        ctx.fillStyle = fGrad;
+        ctx.beginPath();
+        ctx.arc(t.x, t.y - (1 - lifeRatio) * 6, r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+
         const enemy = (t.owner === p1) ? p2 : p1;
         if (enemy && Math.hypot(enemy.x - t.x, enemy.y - t.y) < enemy.radius + t.radius) {
           enemy.applyBurn();
         }
       }
 
+      // 5. Assassin Ball: Shuriken sắc nét kèm vệt xé gió trên đường bay đi và thu về
       for (let i = assassinShurikens.length - 1; i >= 0; i--) {
         const s = assassinShurikens[i];
         const enemy = (s.owner === p1) ? p2 : p1;
 
+        if (s.state !== 'stuck') {
+          s.trail.push({ x: s.x, y: s.y });
+          if (s.trail.length > 8) s.trail.shift();
+        }
+
         if (s.state === 'flying') {
           s.x += s.vx; s.y += s.vy;
-          s.angle += 0.3;
-          if (enemy && !s.hitOnThrow && Math.hypot(enemy.x - s.x, enemy.y - s.y) <= enemy.radius + 6) {
+          s.angle += 0.45;
+          if (enemy && !s.hitOnThrow && Math.hypot(enemy.x - s.x, enemy.y - s.y) <= enemy.radius + 7) {
             enemy.takeDamage(SKILL_CONFIG.assassin.shurikenDmg, 'Phi Tiêu');
             s.hitOnThrow = true;
-            createParticles(enemy.x, enemy.y, '#10b981', 5);
+            createParticles(enemy.x, enemy.y, '#10b981', 7);
           }
           if (s.x <= 6 || s.x >= canvas.width - 6 || s.y <= 6 || s.y >= canvas.height - 6) {
             s.x = Math.max(6, Math.min(canvas.width - 6, s.x));
             s.y = Math.max(6, Math.min(canvas.height - 6, s.y));
             s.state = 'stuck';
+            s.trail = [];
           }
         } else if (s.state === 'returning') {
           const ang = Math.atan2(s.owner.y - s.y, s.owner.x - s.x);
           const retSpd = BASE_SPEED * 4.5;
           s.x += Math.cos(ang) * retSpd;
           s.y += Math.sin(ang) * retSpd;
-          s.angle += 0.4;
+          s.angle += 0.55;
 
-          if (enemy && !s.hitOnReturn && Math.hypot(enemy.x - s.x, enemy.y - s.y) <= enemy.radius + 6) {
+          if (enemy && !s.hitOnReturn && Math.hypot(enemy.x - s.x, enemy.y - s.y) <= enemy.radius + 7) {
             enemy.takeDamage(SKILL_CONFIG.assassin.shurikenDmg, 'Thu Hồi Phi Tiêu');
             s.hitOnReturn = true;
-            createParticles(enemy.x, enemy.y, '#34d399', 6);
+            createParticles(enemy.x, enemy.y, '#34d399', 8);
           }
 
           if (Math.hypot(s.owner.x - s.x, s.owner.y - s.y) <= s.owner.radius + 6) {
@@ -1458,54 +1740,175 @@
           }
         }
 
+        // Vẽ vệt xé gió sắc lẹm
+        if (s.trail.length > 1) {
+          ctx.save();
+          for (let tIdx = 1; tIdx < s.trail.length; tIdx++) {
+            const p0 = s.trail[tIdx - 1];
+            const p1Pt = s.trail[tIdx];
+            const tRatio = tIdx / s.trail.length;
+            ctx.beginPath();
+            ctx.moveTo(p0.x, p0.y);
+            ctx.lineTo(p1Pt.x, p1Pt.y);
+            ctx.strokeStyle = s.state === 'returning' ? `rgba(52, 211, 153, ${tRatio * 0.85})` : `rgba(16, 185, 129, ${tRatio * 0.8})`;
+            ctx.lineWidth = tRatio * 6;
+            ctx.lineCap = 'round';
+            ctx.stroke();
+          }
+          ctx.restore();
+        }
+
+        // Vẽ Shuriken 4 cánh sắc bén
         ctx.save();
         ctx.translate(s.x, s.y);
         ctx.rotate(s.angle || 0);
-        ctx.fillStyle = (s.state === 'stuck') ? '#fbbf24' : '#10b981';
-        ctx.shadowColor = '#34d399'; ctx.shadowBlur = 8;
+        ctx.fillStyle = (s.state === 'stuck') ? '#fbbf24' : '#ecfdf5';
+        ctx.strokeStyle = (s.state === 'stuck') ? '#d97706' : '#10b981';
+        ctx.lineWidth = 1.5;
+        ctx.shadowColor = (s.state === 'stuck') ? '#fbbf24' : '#34d399';
+        ctx.shadowBlur = 10;
         ctx.beginPath();
         for (let k = 0; k < 4; k++) {
           ctx.rotate(Math.PI / 2);
-          ctx.lineTo(0, -9);
-          ctx.lineTo(3, -3);
-          ctx.lineTo(9, 0);
+          ctx.lineTo(0, -11);
+          ctx.lineTo(2.8, -2.8);
+          ctx.lineTo(11, 0);
         }
         ctx.closePath();
         ctx.fill();
+        ctx.stroke();
         ctx.restore();
       }
 
+      // 6. Storm Ball: Vùng tích tụ điện áp lực & Tia sét ziczac chói lòa
       for (let i = lightningZones.length - 1; i >= 0; i--) {
         const z = lightningZones[i];
         z.strikeTimer -= 1 / 60;
-        ctx.beginPath(); ctx.arc(z.x, z.y, z.radius, 0, Math.PI * 2);
-        ctx.strokeStyle = 'rgba(56, 189, 248, 0.6)'; ctx.lineWidth = 2; ctx.setLineDash([4, 4]); ctx.stroke(); ctx.setLineDash([]);
+        const chargeRatio = 1 - Math.max(0, z.strikeTimer / z.maxDelay);
+
+        ctx.save();
+        // Vòng tụ điện bên ngoài
+        ctx.beginPath();
+        ctx.arc(z.x, z.y, z.radius, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(14, 165, 233, ${0.05 + chargeRatio * 0.14})`;
+        ctx.fill();
+        ctx.strokeStyle = `rgba(56, 189, 248, ${0.4 + chargeRatio * 0.6})`;
+        ctx.lineWidth = 1.5 + chargeRatio * 1.5;
+        ctx.setLineDash([6, 4]);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        // Vòng thu hẹp báo hiệu sắp giáng sét
+        ctx.beginPath();
+        ctx.arc(z.x, z.y, z.radius * (1 - chargeRatio), 0, Math.PI * 2);
+        ctx.strokeStyle = `rgba(186, 230, 253, ${0.3 + chargeRatio * 0.7})`;
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+        ctx.restore();
+
         if (z.strikeTimer <= 0) {
+          // Tạo tia sét giáng từ trên trời xuống tâm vùng
+          lightningBolts.push({ x: z.x, y: z.y, radius: z.radius, timer: 0.25, maxTimer: 0.25 });
+          createShockwave(z.x, z.y, z.radius, '#38bdf8', 3);
+
           const enemy = (z.owner === p1) ? p2 : p1;
           if (enemy && Math.hypot(z.x - enemy.x, z.y - enemy.y) <= z.radius + enemy.radius) {
             enemy.takeDamage(SKILL_CONFIG.storm.lightningDmg, 'Sấm Sét');
             enemy.applySlow(SKILL_CONFIG.storm.slowDuration);
-            createParticles(enemy.x, enemy.y, '#38bdf8', 10);
+            createParticles(enemy.x, enemy.y, '#7dd3fc', 14, 1.4);
           }
           lightningZones.splice(i, 1);
         }
       }
 
+      // Vẽ tia sét ziczac giáng xuống
+      for (let i = lightningBolts.length - 1; i >= 0; i--) {
+        const lb = lightningBolts[i];
+        lb.timer -= 1 / 60;
+        const alpha = Math.max(0, lb.timer / lb.maxTimer);
+
+        ctx.save();
+        ctx.globalAlpha = alpha;
+        ctx.shadowColor = '#38bdf8';
+        ctx.shadowBlur = 20;
+
+        // Tia sét chính từ đỉnh màn hình xuống (lb.x, lb.y)
+        ctx.beginPath();
+        let curX = lb.x + (Math.random() - 0.5) * 40;
+        let curY = 0;
+        ctx.moveTo(curX, curY);
+        const steps = 6;
+        for (let s = 1; s <= steps; s++) {
+          const nextY = (lb.y / steps) * s;
+          const nextX = (s === steps) ? lb.x : lb.x + (Math.random() - 0.5) * 36;
+          ctx.lineTo(nextX, nextY);
+        }
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = 4;
+        ctx.stroke();
+        ctx.strokeStyle = '#38bdf8';
+        ctx.lineWidth = 8;
+        ctx.stroke();
+
+        // Chớp sáng mặt đất
+        ctx.beginPath();
+        ctx.arc(lb.x, lb.y, lb.radius * 0.6, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(186, 230, 253, 0.35)';
+        ctx.fill();
+        ctx.restore();
+
+        if (lb.timer <= 0) lightningBolts.splice(i, 1);
+      }
+
+      // 7. Wanderer Ball: Kiếm khí 360 độ xoáy cực ngầu
       [p1, p2].forEach(b => {
         if (b && b.activeSlash) {
           b.activeSlash.timer -= 1 / 60;
-          ctx.beginPath(); ctx.arc(b.activeSlash.x, b.activeSlash.y, b.activeSlash.radius, 0, Math.PI * 2);
-          ctx.strokeStyle = b.activeSlash.isUltimate ? '#c084fc' : '#818cf8';
-          ctx.lineWidth = b.activeSlash.isUltimate ? 4 : 2; ctx.stroke();
+          const p = 1 - Math.max(0, b.activeSlash.timer / b.activeSlash.maxTimer);
+          const spinAngle = b.activeSlash.startAngle + p * Math.PI * 2;
+          const alpha = Math.sin(p * Math.PI);
+
+          drawCrescentSlash(
+            ctx, b.x, b.y, b.activeSlash.radius, spinAngle, Math.PI * 1.45,
+            b.activeSlash.isUltimate ? '#c084fc' : '#818cf8',
+            b.activeSlash.isUltimate ? '#e879f9' : '#6366f1',
+            alpha
+          );
           if (b.activeSlash.timer <= 0) b.activeSlash = null;
         }
       });
 
+      // 8. Soul Ball: Linh hồn ma trơi bí ẩn có sức sống
       for (let i = soulOrbs.length - 1; i >= 0; i--) {
         const orb = soulOrbs[i];
+        orb.phase += 0.12;
+        const floatY = orb.y + Math.sin(orb.phase) * 3;
+        const pulseR = orb.radius + Math.sin(orb.phase * 1.5) * 2;
+
         ctx.save();
-        ctx.beginPath(); ctx.arc(orb.x, orb.y, orb.radius, 0, Math.PI * 2);
-        ctx.fillStyle = '#f472b6'; ctx.shadowColor = '#ec4899'; ctx.shadowBlur = 12; ctx.fill();
+        // Vòng aura ma mị bên ngoài
+        const aura = ctx.createRadialGradient(orb.x, floatY, 2, orb.x, floatY, pulseR * 2.1);
+        aura.addColorStop(0, 'rgba(244, 114, 182, 0.9)');
+        aura.addColorStop(0.45, 'rgba(192, 38, 211, 0.45)');
+        aura.addColorStop(1, 'rgba(134, 25, 143, 0)');
+        ctx.fillStyle = aura;
+        ctx.beginPath();
+        ctx.arc(orb.x, floatY, pulseR * 2.1, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Đuôi lửa ma trơi bay lên
+        ctx.beginPath();
+        ctx.moveTo(orb.x - pulseR * 0.6, floatY);
+        ctx.quadraticCurveTo(orb.x + Math.sin(orb.phase * 2) * 5, floatY - pulseR * 2.2, orb.x, floatY - pulseR * 2.6);
+        ctx.quadraticCurveTo(orb.x - Math.sin(orb.phase * 2) * 5, floatY - pulseR * 2.2, orb.x + pulseR * 0.6, floatY);
+        ctx.fillStyle = 'rgba(232, 121, 249, 0.65)';
+        ctx.fill();
+
+        // Lõi linh hồn sáng rực
+        ctx.beginPath();
+        ctx.arc(orb.x, floatY, pulseR * 0.55, 0, Math.PI * 2);
+        ctx.fillStyle = '#fdf2f8';
+        ctx.fill();
         ctx.restore();
 
         [p1, p2].forEach(b => {
@@ -1513,37 +1916,101 @@
             b.collectedSoulsCount++;
             b.maxHp += SKILL_CONFIG.soul.orbMaxHpBonus;
             b.hp = Math.min(b.maxHp, b.hp + SKILL_CONFIG.soul.orbHeal);
+            createShockwave(orb.x, floatY, 32, '#f472b6', 2);
             soulOrbs.splice(i, 1);
             updateHUD();
           }
         });
       }
 
+      // Chùm sáng lung linh lấp lánh sang trọng của Soul Ball
       for (let i = activeSoulBeams.length - 1; i >= 0; i--) {
         const beam = activeSoulBeams[i];
         beam.timer -= 1 / 60;
+        const alpha = Math.max(0, beam.timer / beam.maxTimer);
+
         ctx.save();
-        ctx.beginPath(); ctx.moveTo(beam.x, beam.y);
+        const beamGrad = ctx.createRadialGradient(beam.x, beam.y, 10, beam.x, beam.y, beam.maxRadius * 0.85);
+        beamGrad.addColorStop(0, `rgba(253, 242, 248, ${alpha * 0.7})`);
+        beamGrad.addColorStop(0.35, `rgba(244, 114, 182, ${alpha * 0.4})`);
+        beamGrad.addColorStop(1, 'rgba(192, 38, 211, 0)');
+
+        ctx.beginPath();
+        ctx.moveTo(beam.x, beam.y);
         ctx.arc(beam.x, beam.y, beam.maxRadius, beam.angle - beam.spread / 2, beam.angle + beam.spread / 2);
-        ctx.closePath(); ctx.fillStyle = 'rgba(244, 114, 182, 0.32)'; ctx.fill();
+        ctx.closePath();
+        ctx.fillStyle = beamGrad;
+        ctx.fill();
+
+        // 2 tia viền sáng tinh tế
+        ctx.strokeStyle = `rgba(251, 207, 232, ${alpha * 0.75})`;
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+
+        // Các hạt sao lấp lánh bên trong chùm sáng
+        beam.sparkles.forEach(sp => {
+          sp.twinkle += 0.3;
+          const spAlpha = alpha * (0.5 + 0.5 * Math.sin(sp.twinkle));
+          ctx.fillStyle = `rgba(255, 255, 255, ${spAlpha})`;
+          ctx.beginPath();
+          ctx.arc(sp.x, sp.y, sp.size, 0, Math.PI * 2);
+          ctx.fill();
+        });
+
         ctx.restore();
         if (beam.timer <= 0) activeSoulBeams.splice(i, 1);
       }
 
+      // 9. Marksman Ball: Bẫy kẹp răng cưa cơ khí chỉnh chu & Đạn thường / Đạn chí mạng aura nguy hiểm
       for (let i = marksmanTraps.length - 1; i >= 0; i--) {
         const trap = marksmanTraps[i];
+        trap.pulse += 0.1;
+
         ctx.save();
-        ctx.beginPath(); ctx.arc(trap.x, trap.y, trap.radius, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(132, 204, 22, 0.25)'; ctx.fill();
-        ctx.strokeStyle = '#84cc16'; ctx.lineWidth = 2.5; ctx.stroke();
+        ctx.translate(trap.x, trap.y);
+        // Vùng cảm biến bẫy
+        ctx.beginPath();
+        ctx.arc(0, 0, trap.radius + Math.sin(trap.pulse) * 2, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(132, 204, 22, 0.18)';
+        ctx.fill();
+        ctx.strokeStyle = 'rgba(163, 230, 53, 0.7)';
+        ctx.lineWidth = 1.5;
+        ctx.setLineDash([3, 3]);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        // Vành răng cưa kim loại
+        ctx.rotate(trap.pulse * 0.25);
+        ctx.strokeStyle = '#bef264';
+        ctx.fillStyle = '#365314';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        const teeth = 8;
+        for (let k = 0; k < teeth * 2; k++) {
+          const r = (k % 2 === 0) ? trap.radius * 0.85 : trap.radius * 0.55;
+          const a = (k * Math.PI) / teeth;
+          if (k === 0) ctx.moveTo(Math.cos(a) * r, Math.sin(a) * r);
+          else ctx.lineTo(Math.cos(a) * r, Math.sin(a) * r);
+        }
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+
+        // Đèn đỏ cảnh báo ở tâm bẫy
+        ctx.beginPath();
+        ctx.arc(0, 0, 3, 0, Math.PI * 2);
+        ctx.fillStyle = (Math.sin(trap.pulse * 2) > 0) ? '#ef4444' : '#fca5a5';
+        ctx.fill();
         ctx.restore();
 
         const enemy = (trap.owner === p1) ? p2 : p1;
         if (enemy && Math.hypot(enemy.x - trap.x, enemy.y - trap.y) < enemy.radius + trap.radius) {
           enemy.applyStun(SKILL_CONFIG.marksman.trapStunDuration);
+          createShockwave(trap.x, trap.y, 40, '#ef4444', 3);
           marksmanBullets.push({
             x: trap.owner.x, y: trap.owner.y, target: enemy,
-            speed: BASE_SPEED * 4.5, damage: SKILL_CONFIG.marksman.trapBonusBulletDmg
+            speed: BASE_SPEED * 4.8, damage: SKILL_CONFIG.marksman.trapBonusBulletDmg,
+            isCrit: true, trail: []
           });
           marksmanTraps.splice(i, 1);
         }
@@ -1551,25 +2018,122 @@
 
       for (let i = marksmanBullets.length - 1; i >= 0; i--) {
         const b = marksmanBullets[i];
+        b.trail.push({ x: b.x, y: b.y });
+        if (b.trail.length > (b.isCrit ? 12 : 6)) b.trail.shift();
+
         const ang = Math.atan2(b.target.y - b.y, b.target.x - b.x);
-        b.x += Math.cos(ang) * b.speed; b.y += Math.sin(ang) * b.speed;
-        ctx.beginPath(); ctx.arc(b.x, b.y, 4.5, 0, Math.PI * 2);
-        ctx.fillStyle = '#a3e635'; ctx.fill();
-        if (Math.hypot(b.target.x - b.x, b.target.y - b.y) <= b.target.radius + 5) {
-          b.target.takeDamage(b.damage, 'Đạn Bắn Tỉa');
+        b.x += Math.cos(ang) * b.speed;
+        b.y += Math.sin(ang) * b.speed;
+
+        ctx.save();
+        // Đuôi đạn
+        if (b.trail.length > 1) {
+          for (let t = 1; t < b.trail.length; t++) {
+            const ratio = t / b.trail.length;
+            ctx.beginPath();
+            ctx.moveTo(b.trail[t - 1].x, b.trail[t - 1].y);
+            ctx.lineTo(b.trail[t].x, b.trail[t].y);
+            ctx.strokeStyle = b.isCrit ? `rgba(239, 68, 68, ${ratio * 0.9})` : `rgba(163, 230, 53, ${ratio * 0.6})`;
+            ctx.lineWidth = b.isCrit ? ratio * 7 : ratio * 3;
+            ctx.lineCap = 'round';
+            ctx.stroke();
+          }
+        }
+
+        // Đầu đạn nhọn khí động học
+        ctx.translate(b.x, b.y);
+        ctx.rotate(ang);
+        if (b.isCrit) {
+          // Aura đỏ rực nguy hiểm cho viên đạn chí mạng
+          ctx.beginPath();
+          ctx.arc(0, 0, 12, 0, Math.PI * 2);
+          ctx.fillStyle = 'rgba(239, 68, 68, 0.35)';
+          ctx.fill();
+
+          ctx.fillStyle = '#fef2f2';
+          ctx.strokeStyle = '#ef4444';
+          ctx.lineWidth = 2;
+          ctx.shadowColor = '#dc2626';
+          ctx.shadowBlur = 15;
+          ctx.beginPath();
+          ctx.moveTo(11, 0);
+          ctx.lineTo(-6, -5);
+          ctx.lineTo(-3, 0);
+          ctx.lineTo(-6, 5);
+          ctx.closePath();
+          ctx.fill();
+          ctx.stroke();
+        } else {
+          ctx.fillStyle = '#ecfccb';
+          ctx.strokeStyle = '#84cc16';
+          ctx.lineWidth = 1.5;
+          ctx.beginPath();
+          ctx.moveTo(7, 0);
+          ctx.lineTo(-4, -3);
+          ctx.lineTo(-4, 3);
+          ctx.closePath();
+          ctx.fill();
+          ctx.stroke();
+        }
+        ctx.restore();
+
+        if (Math.hypot(b.target.x - b.x, b.target.y - b.y) <= b.target.radius + 6) {
+          b.target.takeDamage(b.damage, b.isCrit ? 'Đạn Chí Mạng!' : 'Đạn Bắn Tỉa');
+          if (b.isCrit) {
+            createShockwave(b.target.x, b.target.y, 50, '#ef4444', 3.5);
+            createParticles(b.target.x, b.target.y, '#ef4444', 16, 1.5);
+          } else {
+            createParticles(b.target.x, b.target.y, '#a3e635', 5);
+          }
           marksmanBullets.splice(i, 1);
         }
       }
 
+      // 10. Ninja Ball: Phi tiêu combo 1 sắc bén xoay tít kèm vệt sáng bạc
       for (let i = ninjaProjectiles.length - 1; i >= 0; i--) {
         const p = ninjaProjectiles[i];
-        p.x += p.vx; p.y += p.vy;
-        ctx.beginPath(); ctx.arc(p.x, p.y, 5, 0, Math.PI * 2);
-        ctx.fillStyle = '#e2e8f0'; ctx.fill();
+        p.trail.push({ x: p.x, y: p.y });
+        if (p.trail.length > 7) p.trail.shift();
 
-        if (Math.hypot(p.target.x - p.x, p.target.y - p.y) <= p.target.radius + 5) {
+        p.x += p.vx; p.y += p.vy;
+        p.angle += 0.55;
+
+        ctx.save();
+        if (p.trail.length > 1) {
+          for (let t = 1; t < p.trail.length; t++) {
+            const ratio = t / p.trail.length;
+            ctx.beginPath();
+            ctx.moveTo(p.trail[t - 1].x, p.trail[t - 1].y);
+            ctx.lineTo(p.trail[t].x, p.trail[t].y);
+            ctx.strokeStyle = `rgba(226, 232, 240, ${ratio * 0.7})`;
+            ctx.lineWidth = ratio * 4;
+            ctx.stroke();
+          }
+        }
+
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.angle);
+        ctx.fillStyle = '#f8fafc';
+        ctx.strokeStyle = '#64748b';
+        ctx.lineWidth = 1.2;
+        ctx.shadowColor = '#cbd5e1';
+        ctx.shadowBlur = 10;
+        ctx.beginPath();
+        for (let k = 0; k < 4; k++) {
+          ctx.rotate(Math.PI / 2);
+          ctx.lineTo(0, -10);
+          ctx.lineTo(2.5, -2.5);
+          ctx.lineTo(10, 0);
+        }
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+        ctx.restore();
+
+        if (Math.hypot(p.target.x - p.x, p.target.y - p.y) <= p.target.radius + 6) {
           p.target.takeDamage(SKILL_CONFIG.ninja.step1ShurikenDmg, 'Phi Tiêu Ninja');
           p.owner.ninjaComboStep = 2;
+          createParticles(p.target.x, p.target.y, '#e2e8f0', 8);
           ninjaProjectiles.splice(i, 1);
           continue;
         }
@@ -1578,20 +2142,77 @@
         }
       }
 
+      // 11. Reaper Ball: Vệt linh hồn khói sương ma mị mềm mại & Nhát chém lưỡi hái sắc lực
       reaperIllusions.forEach(ill => {
         const alpha = Math.max(0, 1 - (now - ill.createdAt) / ill.lifespan);
+        ill.wobble += 0.08;
+        const wx = ill.x + Math.sin(ill.wobble) * 3;
+        const wy = ill.y - (1 - alpha) * 8;
+
         ctx.save();
-        ctx.beginPath(); ctx.arc(ill.x, ill.y, ill.radius * 0.7, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(148, 163, 184, ${alpha * 0.35})`; ctx.fill();
-        ctx.strokeStyle = `rgba(226, 232, 240, ${alpha * 0.75})`; ctx.lineWidth = 1.5; ctx.setLineDash([2, 2]); ctx.stroke();
+        const mistGrad = ctx.createRadialGradient(wx, wy, 2, wx, wy, ill.radius * 1.1);
+        mistGrad.addColorStop(0, `rgba(226, 232, 240, ${alpha * 0.5})`);
+        mistGrad.addColorStop(0.55, `rgba(148, 163, 184, ${alpha * 0.25})`);
+        mistGrad.addColorStop(1, 'rgba(71, 85, 105, 0)');
+        ctx.fillStyle = mistGrad;
+        ctx.beginPath();
+        ctx.arc(wx, wy, ill.radius * 1.1, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc(wx, wy, ill.radius * 0.45, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(248, 250, 252, ${alpha * 0.45})`;
+        ctx.fill();
         ctx.restore();
       });
 
+      for (let i = reaperSlashes.length - 1; i >= 0; i--) {
+        const rs = reaperSlashes[i];
+        rs.timer -= 1 / 60;
+        const alpha = Math.max(0, rs.timer / rs.maxTimer);
+        drawCrescentSlash(ctx, rs.x, rs.y, rs.radius, rs.angle, Math.PI * 1.1, rs.color, '#ffffff', alpha);
+        if (rs.timer <= 0) reaperSlashes.splice(i, 1);
+      }
+
+      // 12. Sound Ball: Sóng âm đa sắc cộng hưởng kèm hạt rung động
       for (let i = soundWaves.length - 1; i >= 0; i--) {
         const w = soundWaves[i];
         w.currentRadius += 5;
-        ctx.beginPath(); ctx.arc(w.x, w.y, w.currentRadius, 0, Math.PI * 2);
-        ctx.strokeStyle = 'rgba(45, 212, 191, 0.55)'; ctx.lineWidth = 2.5; ctx.stroke();
+        const progress = Math.min(1, w.currentRadius / ARENA_DIAGONAL);
+        const alpha = (1 - progress) * 0.85;
+        const hue = (w.hueOffset + w.currentRadius * 0.6) % 360;
+
+        ctx.save();
+        // Vòng sóng chính đổi màu cầu vồng thanh âm
+        ctx.beginPath();
+        ctx.arc(w.x, w.y, w.currentRadius, 0, Math.PI * 2);
+        ctx.strokeStyle = `hsla(${hue}, 85%, 60%, ${alpha})`;
+        ctx.lineWidth = 3;
+        ctx.shadowColor = `hsla(${hue}, 90%, 65%, 0.6)`;
+        ctx.shadowBlur = 8;
+        ctx.stroke();
+
+        // Vòng sóng hòa âm thứ cấp bên trong
+        if (w.currentRadius > 14) {
+          ctx.beginPath();
+          ctx.arc(w.x, w.y, w.currentRadius - 10, 0, Math.PI * 2);
+          ctx.strokeStyle = `hsla(${(hue + 50) % 360}, 85%, 65%, ${alpha * 0.55})`;
+          ctx.lineWidth = 1.5;
+          ctx.stroke();
+        }
+
+        // Các hạt cộng hưởng chạy dọc theo vòng sóng
+        const dots = 8;
+        for (let d = 0; d < dots; d++) {
+          const dAng = (d * Math.PI * 2) / dots + w.currentRadius * 0.02;
+          const dx = w.x + Math.cos(dAng) * w.currentRadius;
+          const dy = w.y + Math.sin(dAng) * w.currentRadius;
+          ctx.fillStyle = `hsla(${(hue + 90) % 360}, 95%, 75%, ${alpha})`;
+          ctx.beginPath();
+          ctx.arc(dx, dy, 2.2, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        ctx.restore();
 
         const enemy = (w.owner === p1) ? p2 : p1;
         if (enemy && !w.hitTarget) {
@@ -1601,10 +2222,23 @@
             const ratio = Math.max(0, Math.min(1, 1 - (distToEnemy / ARENA_DIAGONAL)));
             const dmg = Math.round(SKILL_CONFIG.sound.minWaveDmg + ratio * (SKILL_CONFIG.sound.maxWaveDmg - SKILL_CONFIG.sound.minWaveDmg));
             enemy.takeDamage(dmg, 'Sóng Âm');
-            createParticles(enemy.x, enemy.y, '#2dd4bf', 8);
+            createParticles(enemy.x, enemy.y, '#2dd4bf', 10);
           }
         }
         if (w.currentRadius > ARENA_DIAGONAL) soundWaves.splice(i, 1);
+      }
+
+      // 13. Wukong Ball: Phân thân, Dư ảnh tăng tốc, Quét gậy rực lửa & Gậy Như Ý bịt vàng thân đỏ
+      for (let i = wukongAfterimages.length - 1; i >= 0; i--) {
+        const ai = wukongAfterimages[i];
+        ai.life -= 0.08;
+        if (ai.life <= 0) { wukongAfterimages.splice(i, 1); continue; }
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(ai.x, ai.y, ai.radius * ai.life, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(249, 115, 22, ${ai.life * 0.4})`;
+        ctx.fill();
+        ctx.restore();
       }
 
       for (let i = wukongClones.length - 1; i >= 0; i--) {
@@ -1619,48 +2253,97 @@
 
         ctx.save();
         ctx.beginPath(); ctx.arc(c.x, c.y, c.radius, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(251, 146, 60, 0.7)'; ctx.fill();
+        ctx.fillStyle = 'rgba(251, 146, 60, 0.72)'; ctx.fill();
         ctx.strokeStyle = '#fdba74'; ctx.lineWidth = 1.5; ctx.stroke();
         ctx.font = '13px sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
         ctx.fillText('🐵', c.x, c.y);
         ctx.restore();
       }
 
+      // Đòn quét gậy chiêu 3: Nhát chém rực lửa có lực và sắc nét
       for (let i = activeWukongSweeps.length - 1; i >= 0; i--) {
         const sw = activeWukongSweeps[i];
         sw.timer -= 1 / 60;
-        ctx.save();
-        ctx.beginPath(); ctx.moveTo(sw.x, sw.y);
-        ctx.arc(sw.x, sw.y, sw.radius, sw.angle - sw.spread / 2, sw.angle + sw.spread / 2);
-        ctx.closePath(); ctx.fillStyle = 'rgba(251, 146, 60, 0.35)'; ctx.fill();
-        ctx.restore();
+        const alpha = Math.max(0, sw.timer / sw.maxTimer);
+        drawCrescentSlash(ctx, sw.x, sw.y, sw.radius, sw.angle, sw.spread, '#f97316', '#fde047', alpha);
         if (sw.timer <= 0) activeWukongSweeps.splice(i, 1);
       }
 
+      // Gậy Như Ý chiêu 4: Thiết kế tinh xảo 2 đầu bịt vàng kim, thân đỏ rực kèm vệt quang xoay
       for (let i = wukongStaffs.length - 1; i >= 0; i--) {
         const st = wukongStaffs[i];
+        st.trail.push({ x: st.x, y: st.y, rot: st.rotation });
+        if (st.trail.length > 5) st.trail.shift();
+
         const ang = Math.atan2(st.target.y - st.y, st.target.x - st.x);
         st.x += Math.cos(ang) * st.speed;
         st.y += Math.sin(ang) * st.speed;
-        st.rotation += 0.35;
+        st.rotation += 0.42;
 
+        // Vệt tàn ảnh xoay của Gậy Như Ý
+        st.trail.forEach((tr, idx) => {
+          const tAlpha = ((idx + 1) / st.trail.length) * 0.25;
+          ctx.save();
+          ctx.translate(tr.x, tr.y);
+          ctx.rotate(tr.rot);
+          ctx.fillStyle = `rgba(251, 191, 36, ${tAlpha})`;
+          ctx.fillRect(-st.length / 2, -3.5, st.length, 7);
+          ctx.restore();
+        });
+
+        // Cây Gậy Như Ý chính
         ctx.save();
         ctx.translate(st.x, st.y);
         ctx.rotate(st.rotation);
-        ctx.fillStyle = '#f59e0b';
-        ctx.fillRect(-st.length / 2, -3, st.length, 6);
+        ctx.shadowColor = '#f59e0b';
+        ctx.shadowBlur = 14;
+
+        const halfL = st.length / 2;
+        const capL = st.length * 0.22;
+
+        // Thân gậy đỏ sơn son
+        ctx.fillStyle = '#dc2626';
+        ctx.fillRect(-halfL + capL, -3.5, st.length - capL * 2, 7);
+
+        // Hai đầu bịt vàng kim chạm khắc
+        ctx.fillStyle = '#fde047';
+        ctx.fillRect(-halfL, -4.5, capL, 9);
+        ctx.fillRect(halfL - capL, -4.5, capL, 9);
+
+        // Viền sáng dọc thân gậy
+        ctx.strokeStyle = '#fef08a';
+        ctx.lineWidth = 1;
+        ctx.strokeRect(-halfL, -4.5, st.length, 9);
         ctx.restore();
 
-        if (Math.hypot(st.target.x - st.x, st.target.y - st.y) <= st.target.radius + 10) {
+        if (Math.hypot(st.target.x - st.x, st.target.y - st.y) <= st.target.radius + 12) {
           st.target.takeDamage(SKILL_CONFIG.wukong.staffDmg, 'Gậy Như Ý');
           const enemySpd = st.target.currentSpeed || st.target.baseSpeed;
           st.target.vx = Math.cos(ang) * enemySpd;
           st.target.vy = Math.sin(ang) * enemySpd;
-          createParticles(st.target.x, st.target.y, '#f59e0b', 10);
+          createShockwave(st.target.x, st.target.y, 48, '#fbbf24', 3.5);
+          createParticles(st.target.x, st.target.y, '#f59e0b', 14, 1.4);
           wukongStaffs.splice(i, 1);
         }
       }
 
+      // 14. Sóng xung kích (Shockwaves)
+      for (let i = shockwaves.length - 1; i >= 0; i--) {
+        const sw = shockwaves[i];
+        sw.radius += (sw.maxRadius - sw.radius) * 0.22;
+        sw.life -= 0.06;
+        if (sw.life <= 0) { shockwaves.splice(i, 1); continue; }
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(sw.x, sw.y, sw.radius, 0, Math.PI * 2);
+        ctx.strokeStyle = sw.color;
+        ctx.globalAlpha = sw.life;
+        ctx.lineWidth = sw.lineWidth * sw.life;
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      // 15. Chữ bay & Hạt hiệu ứng (Particles)
       for (let i = floatingTexts.length - 1; i >= 0; i--) {
         const ft = floatingTexts[i];
         ft.y += ft.vy; ft.life -= 0.025;
@@ -1678,8 +2361,12 @@
         const p = particles[i];
         p.x += p.vx; p.y += p.vy; p.life -= 0.04;
         if (p.life <= 0) { particles.splice(i, 1); continue; }
-        ctx.beginPath(); ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
-        ctx.fillStyle = p.color; ctx.globalAlpha = p.life; ctx.fill(); ctx.globalAlpha = 1;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size || 3, 0, Math.PI * 2);
+        ctx.fillStyle = p.color;
+        ctx.globalAlpha = p.life;
+        ctx.fill();
+        ctx.globalAlpha = 1;
       }
     }
 
@@ -1697,7 +2384,7 @@
       if (ball.drownedTimer > 0) badges.innerHTML += `<span class="bg-sky-950 text-cyan-300 border border-cyan-400 px-1 rounded animate-pulse">🌊 Đuối Nước</span>`;
       if (ball.oceanicMarks > 0) badges.innerHTML += `<span class="bg-blue-950 text-blue-300 border border-blue-400 px-1 rounded">🔱 Ấn: ${ball.oceanicMarks}/4</span>`;
       if (ball.stunTimer > 0) badges.innerHTML += `<span class="bg-yellow-950 text-yellow-400 border border-yellow-500/40 px-1 rounded">💫 Choáng</span>`;
-      if (ball.slowTimer > 0) badges.innerHTML += `<span class="bg-blue-950 text-blue-300 border border-blue-500/40 px-1 rounded">❄️ Chậm (-50%)</span>`;
+      if (ball.slowTimer > 0) badges.innerHTML += `<span class="bg-blue-950 text-blue-300 border border-blue-500/40 px-1 rounded">❄️ Chậm</span>`;
       if (ball.burnTimer > 0) badges.innerHTML += `<span class="bg-amber-950 text-amber-400 border border-amber-500/40 px-1 rounded">🔥 Cháy (${ball.burnStacks})</span>`;
       if (ball.shield > 0) badges.innerHTML += `<span class="bg-cyan-950 text-cyan-300 border border-cyan-500/40 px-1 rounded">🛡️ Khiên (${Math.round(ball.shield)})</span>`;
       if (ball.typeKey === 'wanderer' && ball.wandererShieldActive) badges.innerHTML += `<span class="bg-indigo-950 text-indigo-300 border border-indigo-400 px-1 rounded">⚔️ Khiên Chặn Dmg</span>`;
@@ -1711,7 +2398,7 @@
       if (ball.typeKey === 'wukong' && ball.wukongImmortalTimer > 0) badges.innerHTML += `<span class="bg-amber-950 text-yellow-300 border border-yellow-400 px-1 rounded">🍑 Bất Tử (Đào)</span>`;
       if (ball.typeKey === 'wukong' && ball.wukongSweepTimer > 0) badges.innerHTML += `<span class="bg-orange-950 text-orange-300 border border-orange-400 px-1 rounded">⚡ Tăng Tốc (+40%)</span>`;
       if (ball.typeKey === 'ninja' && ball.ninjaInvulnerable) badges.innerHTML += `<span class="bg-slate-800 text-slate-200 border border-slate-500 px-1 rounded">🥷 Vô Địch (Lướt)</span>`;
-      if (ball.typeKey === 'reaper' && ball.reaperSpeedBoostTimer > 0) badges.innerHTML += `<span class="bg-slate-700 text-slate-100 border border-slate-400 px-1 rounded">💀 Tăng Tốc (+55%)</span>`;
+      if (ball.typeKey === 'reaper' && ball.reaperSpeedBoostTimer > 0) badges.innerHTML += `<span class="bg-slate-700 text-slate-100 border border-slate-400 px-1 rounded">💀 Tăng Tốc (+60%)</span>`;
       if (ball.typeKey === 'demon') badges.innerHTML += `<span class="bg-red-950 text-red-300 border border-red-500/40 px-1 rounded">👿 Hồi Sinh: ${ball.demonReviveCount}/7</span>`;
     }
 
@@ -1724,15 +2411,18 @@
       if (animationFrameId) cancelAnimationFrame(animationFrameId);
       gameOver = false;
       oceanEnvironmentTimer = 0;
+      globalTick = 0;
       winnerOverlay.classList.add('hidden');
 
       p1 = new Ball('p1', p1Select.value, 80, canvas.height / 2, 'p1');
       p2 = new Ball('p2', p2Select.value, canvas.width - 80, canvas.height / 2, 'p2');
 
-      fireTrails = []; assassinShurikens = []; lightningZones = []; soulOrbs = []; activeSoulBeams = [];
-      marksmanTraps = []; marksmanBullets = []; ninjaProjectiles = []; reaperIllusions = [];
-      soundWaves = []; wukongClones = []; wukongStaffs = []; activeWukongSweeps = [];
-      poseidonWaves = []; poseidonBursts = []; oceanBubbles = []; particles = []; floatingTexts = [];
+      fireTrails = []; assassinShurikens = []; lightningZones = []; lightningBolts = [];
+      soulOrbs = []; activeSoulBeams = []; marksmanTraps = []; marksmanBullets = [];
+      ninjaProjectiles = []; reaperIllusions = []; reaperSlashes = []; soundWaves = [];
+      wukongClones = []; wukongStaffs = []; activeWukongSweeps = []; wukongAfterimages = [];
+      poseidonWaves = []; poseidonBursts = []; oceanBubbles = []; shockwaves = [];
+      particles = []; floatingTexts = [];
       
       battleLog.innerHTML = '';
       logMessage(`Bắt đầu trận đấu: ${p1.name} VS ${p2.name}!`);
@@ -1750,6 +2440,7 @@
     }
 
     function gameLoop() {
+      globalTick++;
       ctx.fillStyle = '#030712';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -1757,15 +2448,54 @@
       for (let x = 0; x < canvas.width; x += 40) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke(); }
       for (let y = 0; y < canvas.height; y += 40) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke(); }
 
+      // Vẽ Vùng Kiếm Hồn & Dây Liên Kết Phát Quang của Shen Ball
       [p1, p2].forEach(ball => {
         if (ball && ball.typeKey === 'shen') {
+          const zRadius = ball.radius * SKILL_CONFIG.shen.zoneRadiusMult;
           ctx.save();
-          ctx.beginPath(); ctx.moveTo(ball.x, ball.y); ctx.lineTo(ball.spiritBladeX, ball.spiritBladeY);
-          ctx.strokeStyle = 'rgba(6, 182, 212, 0.45)'; ctx.lineWidth = 2; ctx.setLineDash([4, 4]); ctx.stroke(); ctx.setLineDash([]);
 
-          ctx.beginPath(); ctx.arc(ball.spiritBladeX, ball.spiritBladeY, ball.radius * SKILL_CONFIG.shen.zoneRadiusMult, 0, Math.PI * 2);
-          ctx.fillStyle = 'rgba(6, 182, 212, 0.12)'; ctx.fill(); ctx.strokeStyle = '#06b6d4'; ctx.lineWidth = 1.5; ctx.stroke();
-          ctx.font = '16px sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+          // Năng lượng phát quang mờ ảo quanh Kiếm Hồn
+          const shenAura = ctx.createRadialGradient(ball.spiritBladeX, ball.spiritBladeY, 6, ball.spiritBladeX, ball.spiritBladeY, zRadius);
+          shenAura.addColorStop(0, 'rgba(34, 211, 238, 0.28)');
+          shenAura.addColorStop(0.65, 'rgba(6, 182, 212, 0.12)');
+          shenAura.addColorStop(1, 'rgba(8, 145, 178, 0)');
+          ctx.fillStyle = shenAura;
+          ctx.beginPath();
+          ctx.arc(ball.spiritBladeX, ball.spiritBladeY, zRadius, 0, Math.PI * 2);
+          ctx.fill();
+
+          // Vòng năng lượng xoay nhẹ quanh vùng kiếm
+          ctx.translate(ball.spiritBladeX, ball.spiritBladeY);
+          ctx.rotate(globalTick * 0.02);
+          ctx.beginPath();
+          ctx.arc(0, 0, zRadius, 0, Math.PI * 2);
+          ctx.strokeStyle = 'rgba(34, 211, 238, 0.55)';
+          ctx.lineWidth = 2;
+          ctx.setLineDash([12, 6]);
+          ctx.stroke();
+          ctx.setLineDash([]);
+          ctx.rotate(-globalTick * 0.02);
+          ctx.translate(-ball.spiritBladeX, -ball.spiritBladeY);
+
+          // Sợi dây liên kết năng lượng phát sáng sắc nét giữa Shen và Kiếm Hồn
+          const linkGrad = ctx.createLinearGradient(ball.x, ball.y, ball.spiritBladeX, ball.spiritBladeY);
+          linkGrad.addColorStop(0, 'rgba(6, 182, 212, 0.85)');
+          linkGrad.addColorStop(0.5, 'rgba(165, 243, 252, 0.95)');
+          linkGrad.addColorStop(1, 'rgba(34, 211, 238, 0.85)');
+
+          ctx.beginPath();
+          ctx.moveTo(ball.x, ball.y);
+          ctx.lineTo(ball.spiritBladeX, ball.spiritBladeY);
+          ctx.strokeStyle = linkGrad;
+          ctx.lineWidth = 2.5;
+          ctx.shadowColor = '#22d3ee';
+          ctx.shadowBlur = 10;
+          ctx.stroke();
+
+          // Biểu tượng Kiếm Hồn phát sáng
+          ctx.font = '18px sans-serif';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
           ctx.fillText('🗡️', ball.spiritBladeX, ball.spiritBladeY);
           ctx.restore();
         }
