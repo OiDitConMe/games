@@ -105,8 +105,8 @@
 
       <!-- Skill Guide Info -->
       <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-3 text-xs space-y-2 max-h-[300px] overflow-y-auto custom-scrollbar">
-        <div class="font-bold text-amber-400 font-orbitron">TÍNH NĂNG & KẺ ĐỐI LẬP:</div>
-        <div class="text-slate-300"><span class="text-yellow-200 font-bold">👼 Angel vs 👿 Demon:</span> Angel tích Phước Thần phán quyết, nhưng Demon Ball sẽ tiêu hao 1 trong 7 mạng hồi sinh để kháng đòn phán quyết này!</div>
+        <div class="font-bold text-amber-400 font-orbitron">KẺ ĐỐI LẬP:</div>
+        <div class="text-slate-300"><span class="text-yellow-200 font-bold">👼 Angel vs 👿 Demon:</span> Demon Ball kháng Phán Quyết của Angel bằng cách tiêu hao 1 trong 7 mạng hồi sinh cực kỳ cân kèo!</div>
       </div>
     </div>
 
@@ -194,21 +194,21 @@
     };
 
     const SKILL_CONFIG = {
-      fire: { burnDmgPerTick: 2, burnTickInterval: 500, burnDuration: 2.0, maxBurnStacks: 2, trailLifespan: 3000 },
-      ghost: { cooldownToGhost: 4.0, ghostDmg: 22, ghostSlowDuration: 1.5, ghostSpeedMult: 1.5 },
+      fire: { burnDmgPerTick: 2, burnTickInterval: 500, burnDuration: 2.0, maxBurnStacks: 3, trailLifespan: 3000 },
+      ghost: { cooldownToGhost: 5.0, ghostDmg: 21, ghostSlowDuration: 1.5, ghostSpeedMult: 1.5 },
       assassin: { throwInterval: 1.5, shurikenDmg: 6, maxStuckShurikens: 3 },
-      bear: { normalHealInterval: 0.45, lowHpHealInterval: 0.2, lowHpThreshold: 60 },
-      storm: { spawnInterval: 0.4, strikeDelay: 1.5, lightningDmg: 14, slowDuration: 2.0, zoneRadiusMult: 4.5 },
+      bear: { normalHealInterval: 0.5, lowHpHealInterval: 0.21, lowHpThreshold: 50 },
+      storm: { spawnInterval: 0.42, strikeDelay: 1.5, lightningDmg: 14, slowDuration: 2.0, zoneRadiusMult: 4.5 },
       wanderer: { shieldCooldown: 6.75, slashCooldown: 1.0, slash12Dmg: 17, slash3Dmg: 22, slashRangeMult: 3.0 },
       soul: { orbSpawnInterval: 1.15, orbHeal: 3, orbMaxHpBonus: 1, beamInterval: 2.0, baseBeamDmg: 10, bonusDmgPerSoul: 3, baseBeamAngleDeg: 35, bonusAnglePerSoulDeg: 5, maxBeamAngleDeg: 160 },
       marksman: { normalShootInterval: 1.0, normalBulletDmg: 2, trapSpawnInterval: 2.0, trapStunDuration: 1.0, trapBonusBulletDmg: 25 },
       ninja: { stepInterval: 2.0, step1ShurikenDmg: 15, step2DashDmg: 20, step3DashDistMult: 4.5, step3BaseDmg: 22, step3MissingHpPct: 0.38 },
-      reaper: { trailSpawnInterval: 0.2, trailLifespan: 3000, speedBoostMult: 1.55, slashBaseDmg: 12, slashMissingHpPct: 0.44 },
-      shen: { zoneRadiusMult: 4.0, shieldAmount: 5, shieldDuration: 2, pullBladeInterval: 7, swapCooldown: 4.0, swapDmg: 1 },
+      reaper: { trailSpawnInterval: 0.2, trailLifespan: 3000, speedBoostMult: 1.55, slashBaseDmg: 12, slashMissingHpPct: 0.40 },
+      shen: { zoneRadiusMult: 4.0, shieldAmount: 6, shieldDuration: 3.5, pullBladeInterval: 6.75, swapCooldown: 3.0, swapDmg: 1 },
       sound: { minWaveDmg: 1, maxWaveDmg: 20, missingHpSpeedBonus: 0.003 },
       angel: { passiveHealInterval: 1.0, passiveHealAmount: 1, collisionSelfHeal: 11, collisionEnemyHeal: 10, healBonusPerMissingHp: 0.013, selfHealShareFromOverheal: 0.25 },
       wukong: { skillInterval: 2.15, cloneDuration: 3.1, cloneContactDmg: 7, peachHeal: 10, peachImmortalDur: 2.0, sweepSpeedBonus: 1.4, sweepSpeedDur: 2.0, sweepTriggerDiamMult: 2.5, sweepRadiusDiamMult: 2.55, sweepAngleDeg: 150, sweepDmg: 24, staffLengthDiamMult: 1.5, staffDmg: 10 },
-      demon: { maxRevives: 7, incomingDmgMult: 2.0, reflectBaseMult: 1.0, hpConvertInterval: 0.7, normalShieldGain: 1, lowHpShieldGain: 4, reflectBonusPerShield: 0.03 }
+      demon: { maxRevives: 7, incomingDmgMult: 2.0, reflectBaseMult: 1.0, hpConvertInterval: 0.75, normalShieldGain: 1, lowHpShieldGain: 3, reflectBonusPerShield: 0.03 }
     };
 
     let p1, p2;
@@ -1045,7 +1045,6 @@
         }
       }
 
-      // Xử lý Phước Thần & Kháng phán quyết của Demon Ball
       receiveHealingFromAngel(baseAmount, angelHealer) {
         const missingAngelHp = Math.max(0, angelHealer.maxHp - angelHealer.hp);
         const healMultiplier = 1 + (missingAngelHp * SKILL_CONFIG.angel.healBonusPerMissingHp);
@@ -1071,22 +1070,19 @@
 
         updateHUD();
 
-        // Kiểm tra Phước Thần >= HP hiện tại của địch -> Phán quyết kết liễu
         if (this.blessingMarks >= this.hp && this.hp > 0 && !gameOver) {
           logMessage(`👼 PHÁN QUYẾT PHƯỚC THẦN! Địch đã tích đủ ${this.blessingMarks} Phước Thần (${this.hp} HP)!`, 'angel');
 
-          // --- KHÁNG PHÁN QUYẾT CHO DEMON BALL (TIÊU HAO 1 MẠNG HỒI SINH) ---
           if (this.typeKey === 'demon' && this.demonReviveCount < SKILL_CONFIG.demon.maxRevives) {
             this.demonReviveCount++;
             this.hp = this.maxHp;
-            this.blessingMarks = 0; // Xóa sạch số Phước Thần tích trên người
+            this.blessingMarks = 0;
             createParticles(this.x, this.y, '#ef4444', 30);
             logMessage(`👿 Demon Ball kháng Phán Quyết! Tiêu hao 1 mạng hồi sinh (Còn ${SKILL_CONFIG.demon.maxRevives - this.demonReviveCount} mạng)!`, 'demon');
             updateHUD();
             return;
           }
 
-          // Các con Ball khác dính phán quyết là chết tươi
           this.hp = 0;
           updateHUD();
           endGame(this);
@@ -1597,12 +1593,10 @@
       }
     }
 
-btnStart.addEventListener('click', () => {
-      initGame();
-    });
-    btnRestart.addEventListener('click', () => {
-      initGame();
-    });
+    btnStart.addEventListener('click', initGame);
+    btnRestart.addEventListener('click', initGame);
+    
+    // Tự động khởi chạy trận đấu ngay khi load trang
     initGame();
   </script>
 </body>
