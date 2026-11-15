@@ -194,21 +194,21 @@
     };
 
     const SKILL_CONFIG = {
-      fire: { burnDmgPerTick: 2, burnTickInterval: 500, burnDuration: 2.0, maxBurnStacks: 3, trailLifespan: 3000 },
-      ghost: { cooldownToGhost: 5.0, ghostDmg: 21, ghostSlowDuration: 1.5, ghostSpeedMult: 1.5 },
+      fire: { burnDmgPerTick: 2, burnTickInterval: 500, burnDuration: 2.0, maxBurnStacks: 2, trailLifespan: 3000 },
+      ghost: { cooldownToGhost: 4.0, ghostDmg: 22, ghostSlowDuration: 1.5, ghostSpeedMult: 1.5 },
       assassin: { throwInterval: 1.5, shurikenDmg: 6, maxStuckShurikens: 3 },
-      bear: { normalHealInterval: 0.5, lowHpHealInterval: 0.21, lowHpThreshold: 50 },
-      storm: { spawnInterval: 0.42, strikeDelay: 1.5, lightningDmg: 14, slowDuration: 2.0, zoneRadiusMult: 4.5 },
+      bear: { normalHealInterval: 0.45, lowHpHealInterval: 0.18, lowHpThreshold: 60 },
+      storm: { spawnInterval: 0.4, strikeDelay: 1.4, lightningDmg: 17, slowDuration: 2.0, zoneRadiusMult: 4.5 },
       wanderer: { shieldCooldown: 6.75, slashCooldown: 1.0, slash12Dmg: 17, slash3Dmg: 22, slashRangeMult: 3.0 },
       soul: { orbSpawnInterval: 1.15, orbHeal: 3, orbMaxHpBonus: 1, beamInterval: 2.0, baseBeamDmg: 10, bonusDmgPerSoul: 3, baseBeamAngleDeg: 35, bonusAnglePerSoulDeg: 5, maxBeamAngleDeg: 160 },
       marksman: { normalShootInterval: 1.0, normalBulletDmg: 2, trapSpawnInterval: 2.0, trapStunDuration: 1.0, trapBonusBulletDmg: 25 },
-      ninja: { stepInterval: 2.0, step1ShurikenDmg: 15, step2DashDmg: 20, step3DashDistMult: 4.5, step3BaseDmg: 22, step3MissingHpPct: 0.38 },
-      reaper: { trailSpawnInterval: 0.2, trailLifespan: 3000, speedBoostMult: 1.55, slashBaseDmg: 12, slashMissingHpPct: 0.40 },
-      shen: { zoneRadiusMult: 4.0, shieldAmount: 6, shieldDuration: 3.5, pullBladeInterval: 6.75, swapCooldown: 3.0, swapDmg: 1 },
+      ninja: { stepInterval: 2.0, step1ShurikenDmg: 15, step2DashDmg: 20, step3DashDistMult: 4.5, step3BaseDmg: 22, step3MissingHpPct: 0.4 },
+      reaper: { trailSpawnInterval: 0.2, trailLifespan: 3000, speedBoostMult: 1.6, slashBaseDmg: 12, slashMissingHpPct: 0.40 },
+      shen: { zoneRadiusMult: 4.0, shieldAmount: 5, shieldDuration: 2, pullBladeInterval: 7, swapCooldown: 4.0, swapDmg: 1 },
       sound: { minWaveDmg: 1, maxWaveDmg: 20, missingHpSpeedBonus: 0.003 },
       angel: { passiveHealInterval: 1.0, passiveHealAmount: 1, collisionSelfHeal: 11, collisionEnemyHeal: 10, healBonusPerMissingHp: 0.013, selfHealShareFromOverheal: 0.25 },
-      wukong: { skillInterval: 2.15, cloneDuration: 3.1, cloneContactDmg: 7, peachHeal: 10, peachImmortalDur: 2.0, sweepSpeedBonus: 1.4, sweepSpeedDur: 2.0, sweepTriggerDiamMult: 2.5, sweepRadiusDiamMult: 2.55, sweepAngleDeg: 150, sweepDmg: 24, staffLengthDiamMult: 1.5, staffDmg: 10 },
-      demon: { maxRevives: 7, incomingDmgMult: 2.0, reflectBaseMult: 1.0, hpConvertInterval: 0.75, normalShieldGain: 1, lowHpShieldGain: 3, reflectBonusPerShield: 0.03 }
+      wukong: { skillInterval: 2.15, cloneDuration: 3.1, cloneContactDmg: 7, peachHeal: 10, peachImmortalDur: 2.15, sweepSpeedBonus: 1.4, sweepSpeedDur: 2.0, sweepTriggerDiamMult: 2.5, sweepRadiusDiamMult: 2.55, sweepAngleDeg: 150, sweepDmg: 24, staffLengthDiamMult: 1.5, staffDmg: 10 },
+      demon: { maxRevives: 7, incomingDmgMult: 2.0, reflectBaseMult: 1.0, hpConvertInterval: 0.7, normalShieldGain: 1, lowHpShieldGain: 3, reflectBonusPerShield: 0.06 }
     };
 
     let p1, p2;
