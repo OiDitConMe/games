@@ -105,10 +105,8 @@
 
       <!-- Skill Guide Info -->
       <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-3 text-xs space-y-2 max-h-[300px] overflow-y-auto custom-scrollbar">
-        <div class="font-bold text-amber-400 font-orbitron">TÍNH NĂNG & HIỆU ỨNG:</div>
-        <div class="text-slate-300"><span class="text-yellow-200 font-bold">👼 Angel Ball:</span> Hồi dư HP tích Phước Thần trên địch (>= HP địch = kết liễu). Nhận 25% HP hồi dư. Hồi sinh lần đầu giữ 1 HP bản thân, hồi 15 HP cho địch.</div>
-        <div class="text-slate-300"><span class="text-emerald-400 font-bold">🗡️ Assassin Ball:</span> Shuriken có dạng phi tiêu thực tế, hiệu ứng bay lượn và thu hồi chuẩn xác.</div>
-        <div class="text-slate-300"><span class="text-cyan-400 font-bold">✨ Hiệu ứng:</span> Dấu cộng xanh nổi lên khi hồi máu, hạt lửa, chớp giật, hiển thị đầy đủ mọi trạng thái Buff/Debuff ở thanh trạng thái dưới HP.</div>
+        <div class="font-bold text-amber-400 font-orbitron">TÍNH NĂNG & KẺ ĐỐI LẬP:</div>
+        <div class="text-slate-300"><span class="text-yellow-200 font-bold">👼 Angel vs 👿 Demon:</span> Angel tích Phước Thần phán quyết, nhưng Demon Ball sẽ tiêu hao 1 trong 7 mạng hồi sinh để kháng đòn phán quyết này!</div>
       </div>
     </div>
 
@@ -197,20 +195,20 @@
 
     const SKILL_CONFIG = {
       fire: { burnDmgPerTick: 2, burnTickInterval: 500, burnDuration: 2.0, maxBurnStacks: 2, trailLifespan: 3000 },
-      ghost: { cooldownToGhost: 5.0, ghostDmg: 21, ghostSlowDuration: 1.5, ghostSpeedMult: 1.5 },
+      ghost: { cooldownToGhost: 4.0, ghostDmg: 22, ghostSlowDuration: 1.5, ghostSpeedMult: 1.5 },
       assassin: { throwInterval: 1.5, shurikenDmg: 6, maxStuckShurikens: 3 },
-      bear: { normalHealInterval: 0.5, lowHpHealInterval: 0.21, lowHpThreshold: 50 },
-      storm: { spawnInterval: 0.42, strikeDelay: 1.5, lightningDmg: 14, slowDuration: 2.0, zoneRadiusMult: 4.5 },
+      bear: { normalHealInterval: 0.45, lowHpHealInterval: 0.2, lowHpThreshold: 60 },
+      storm: { spawnInterval: 0.4, strikeDelay: 1.5, lightningDmg: 14, slowDuration: 2.0, zoneRadiusMult: 4.5 },
       wanderer: { shieldCooldown: 6.75, slashCooldown: 1.0, slash12Dmg: 17, slash3Dmg: 22, slashRangeMult: 3.0 },
       soul: { orbSpawnInterval: 1.15, orbHeal: 3, orbMaxHpBonus: 1, beamInterval: 2.0, baseBeamDmg: 10, bonusDmgPerSoul: 3, baseBeamAngleDeg: 35, bonusAnglePerSoulDeg: 5, maxBeamAngleDeg: 160 },
       marksman: { normalShootInterval: 1.0, normalBulletDmg: 2, trapSpawnInterval: 2.0, trapStunDuration: 1.0, trapBonusBulletDmg: 25 },
       ninja: { stepInterval: 2.0, step1ShurikenDmg: 15, step2DashDmg: 20, step3DashDistMult: 4.5, step3BaseDmg: 22, step3MissingHpPct: 0.38 },
-      reaper: { trailSpawnInterval: 0.2, trailLifespan: 3000, speedBoostMult: 1.55, slashBaseDmg: 12, slashMissingHpPct: 0.40 },
-      shen: { zoneRadiusMult: 4.0, shieldAmount: 5, shieldDuration: 2, pullBladeInterval: 6.75, swapCooldown: 3.0, swapDmg: 1 },
+      reaper: { trailSpawnInterval: 0.2, trailLifespan: 3000, speedBoostMult: 1.55, slashBaseDmg: 12, slashMissingHpPct: 0.44 },
+      shen: { zoneRadiusMult: 4.0, shieldAmount: 5, shieldDuration: 2, pullBladeInterval: 7, swapCooldown: 4.0, swapDmg: 1 },
       sound: { minWaveDmg: 1, maxWaveDmg: 20, missingHpSpeedBonus: 0.003 },
       angel: { passiveHealInterval: 1.0, passiveHealAmount: 1, collisionSelfHeal: 11, collisionEnemyHeal: 10, healBonusPerMissingHp: 0.013, selfHealShareFromOverheal: 0.25 },
       wukong: { skillInterval: 2.15, cloneDuration: 3.1, cloneContactDmg: 7, peachHeal: 10, peachImmortalDur: 2.0, sweepSpeedBonus: 1.4, sweepSpeedDur: 2.0, sweepTriggerDiamMult: 2.5, sweepRadiusDiamMult: 2.55, sweepAngleDeg: 150, sweepDmg: 24, staffLengthDiamMult: 1.5, staffDmg: 10 },
-      demon: { maxRevives: 7, incomingDmgMult: 2.0, reflectBaseMult: 1.0, hpConvertInterval: 0.75, normalShieldGain: 1, lowHpShieldGain: 4, reflectBonusPerShield: 0.035 }
+      demon: { maxRevives: 7, incomingDmgMult: 2.0, reflectBaseMult: 1.0, hpConvertInterval: 0.7, normalShieldGain: 1, lowHpShieldGain: 4, reflectBonusPerShield: 0.03 }
     };
 
     let p1, p2;
@@ -228,7 +226,7 @@
     let wukongStaffs = [];
     let activeWukongSweeps = [];
     let particles = [];
-    let floatingTexts = []; // Hiệu ứng chữ/dấu cộng hồi máu bay lên
+    let floatingTexts = [];
     let gameOver = false;
     let animationFrameId = null;
 
@@ -310,45 +308,35 @@
         this.cooldownTimer = 0;
         this.hitCooldown = 0;
         
-        // Ghost
         this.isGhosting = false;
         this.ghostX = 0; this.ghostY = 0; this.ghostVx = 0; this.ghostVy = 0;
         this.ghostHitCooldown = 0;
 
-        // Bear
         this.effectiveHealStored = 0;
         this.healTimer = 0;
-
-        // Storm
         this.moveTimer = 0;
 
-        // Wanderer
         this.wandererShieldActive = true;
         this.wandererShieldTimer = 0;
         this.slashCooldown = 0;
         this.slashCount = 0;
         this.activeSlash = null;
 
-        // Soul
         this.soulSpawnTimer = 0;
         this.soulBeamTimer = 0;
         this.collectedSoulsCount = 0;
 
-        // Marksman
         this.marksmanShootTimer = 0;
         this.marksmanTrapTimer = 0;
 
-        // Ninja
         this.ninjaComboStep = 1;
         this.ninjaComboTimer = 0;
         this.ninjaInvulnerable = false;
         this.dashAnim = null;
 
-        // Reaper
         this.reaperSpeedBoostTimer = 0;
         this.illusionSpawnTimer = 0;
 
-        // Shen
         this.spiritBladeX = Math.random() * (canvas.width - 100) + 50;
         this.spiritBladeY = Math.random() * (canvas.height - 100) + 50;
         this.pullBladeTimer = 0;
@@ -356,18 +344,15 @@
         this.shenSwapCooldown = 0;
         this.wasInsideBladeZone = false;
 
-        // Angel
-        this.blessingMarks = 0; // Phước Thần tích trên người Ball địch
+        this.blessingMarks = 0;
         this.angelHealTimer = 0;
-        this.angelReviveUsed = false; // Hồi sinh lần đầu giữ 1 HP bản thân, hồi 15 HP cho địch
+        this.angelReviveUsed = false;
 
-        // Wukong
         this.wukongSkillTimer = 0;
         this.wukongImmortalTimer = 0;
         this.wukongSweepTimer = 0;
         this.wukongSweepHit = false;
 
-        // Demon
         this.demonReviveCount = 0;
         this.demonHpTimer = 0;
       }
@@ -913,7 +898,6 @@
               });
               logMessage(`🐵 Wukong phân thân 3 bản sao!`, 'wukong');
             } else if (choice === 2) {
-              // Ăn Đào Tiên: hồi 10 HP, bất tử 2s, xoá sạch hiệu ứng bất lợi
               this.hp = Math.min(this.maxHp, this.hp + SKILL_CONFIG.wukong.peachHeal);
               this.wukongImmortalTimer = SKILL_CONFIG.wukong.peachImmortalDur;
               this.burnStacks = 0;
@@ -1007,7 +991,6 @@
           return;
         }
 
-        // Angel Ball: Hồi sinh lần đầu giữ 1 HP bản thân, hồi 15 HP cho địch
         if (this.typeKey === 'angel' && !this.angelReviveUsed && this.hp - amount <= 0) {
           this.angelReviveUsed = true;
           this.hp = 1;
@@ -1062,7 +1045,7 @@
         }
       }
 
-      // Angel Ball: Hồi HP cho địch, tích Phước Thần trên địch, nhận 25% HP hồi dư cho bản thân
+      // Xử lý Phước Thần & Kháng phán quyết của Demon Ball
       receiveHealingFromAngel(baseAmount, angelHealer) {
         const missingAngelHp = Math.max(0, angelHealer.maxHp - angelHealer.hp);
         const healMultiplier = 1 + (missingAngelHp * SKILL_CONFIG.angel.healBonusPerMissingHp);
@@ -1076,11 +1059,9 @@
         createFloatingText(this.x, this.y - 10, `+${actualHealed}`, '#fef08a');
 
         if (overheal > 0) {
-          // Tích Phước Thần trên người Ball địch
           this.blessingMarks += overheal;
           logMessage(`👼 Angel hồi dư +${overheal} HP -> Đặt ${overheal} Phước Thần lên ${this.name} (Tổng: ${this.blessingMarks})!`, 'angel');
           
-          // Angel nhận lại 25% lượng HP hồi dư
           const selfShare = Math.round(overheal * SKILL_CONFIG.angel.selfHealShareFromOverheal);
           if (selfShare > 0) {
             angelHealer.hp = Math.min(angelHealer.maxHp, angelHealer.hp + selfShare);
@@ -1090,26 +1071,27 @@
 
         updateHUD();
 
-        // Kiểm tra Phước Thần >= HP hiện tại của địch -> Kết liễu tức thì
+        // Kiểm tra Phước Thần >= HP hiện tại của địch -> Phán quyết kết liễu
         if (this.blessingMarks >= this.hp && this.hp > 0 && !gameOver) {
-          logMessage(`👼 PHÁN QUYẾT PHƯỚC THẦN! Địch đã đủ ${this.blessingMarks} Phước Thần trên người với ${this.hp} HP!`, 'angel');
-          
-          // --- XỬ LÝ RIÊNG CHO DEMON BALL: NẾU CÒN HỒI SINH THÌ TIÊU HAO 1 MẠNG ĐỂ KHÁNG PHÁN QUYẾT ---
+          logMessage(`👼 PHÁN QUYẾT PHƯỚC THẦN! Địch đã tích đủ ${this.blessingMarks} Phước Thần (${this.hp} HP)!`, 'angel');
+
+          // --- KHÁNG PHÁN QUYẾT CHO DEMON BALL (TIÊU HAO 1 MẠNG HỒI SINH) ---
           if (this.typeKey === 'demon' && this.demonReviveCount < SKILL_CONFIG.demon.maxRevives) {
             this.demonReviveCount++;
             this.hp = this.maxHp;
-            this.blessingMarks = 0; // Xóa sạch dấu ấn Phước Thần sau khi hồi sinh
-            createParticles(this.x, this.y, '#ef4444', 25);
-            logMessage(`👿 Demon Ball chống chịu Phán Quyết! Tiêu hao 1 mạng hồi sinh (Còn ${SKILL_CONFIG.demon.maxRevives - this.demonReviveCount} mạng)!`, 'demon');
+            this.blessingMarks = 0; // Xóa sạch số Phước Thần tích trên người
+            createParticles(this.x, this.y, '#ef4444', 30);
+            logMessage(`👿 Demon Ball kháng Phán Quyết! Tiêu hao 1 mạng hồi sinh (Còn ${SKILL_CONFIG.demon.maxRevives - this.demonReviveCount} mạng)!`, 'demon');
             updateHUD();
             return;
           }
 
-          // Các con Ball bình thường khác dính Phước Thần là chết tươi
+          // Các con Ball khác dính phán quyết là chết tươi
           this.hp = 0;
           updateHUD();
           endGame(this);
         }
+      }
 
       draw() {
         ctx.save();
@@ -1194,7 +1176,6 @@
 
     function checkAllCollisions(b1, b2) {
       if (resolveElasticCollision(b1, b2)) {
-        // Angel Ball va chạm: hồi 10 HP cho địch, 11 HP cho bản thân
         if (b1.typeKey === 'angel') {
           b1.hp = Math.min(b1.maxHp, b1.hp + SKILL_CONFIG.angel.collisionSelfHeal);
           createFloatingText(b1.x, b1.y - 10, `+${SKILL_CONFIG.angel.collisionSelfHeal}`, '#4ade80');
@@ -1240,7 +1221,6 @@
     function updateAndDrawEntities() {
       const now = Date.now();
 
-      // Fire Trails
       for (let i = fireTrails.length - 1; i >= 0; i--) {
         const t = fireTrails[i];
         if (now - t.createdAt >= SKILL_CONFIG.fire.trailLifespan) { fireTrails.splice(i, 1); continue; }
@@ -1252,7 +1232,6 @@
         }
       }
 
-      // Shurikens (Vẽ icon dạng phi tiêu thực tế)
       for (let i = assassinShurikens.length - 1; i >= 0; i--) {
         const s = assassinShurikens[i];
         const enemy = (s.owner === p1) ? p2 : p1;
@@ -1293,7 +1272,6 @@
           }
         }
 
-        // Vẽ Shuriken hình phi tiêu
         ctx.save();
         ctx.translate(s.x, s.y);
         ctx.rotate(s.angle || 0);
@@ -1311,7 +1289,6 @@
         ctx.restore();
       }
 
-      // Storm Lightning Zones
       for (let i = lightningZones.length - 1; i >= 0; i--) {
         const z = lightningZones[i];
         z.strikeTimer -= 1 / 60;
@@ -1328,7 +1305,6 @@
         }
       }
 
-      // Wanderer Slashes
       [p1, p2].forEach(b => {
         if (b && b.activeSlash) {
           b.activeSlash.timer -= 1 / 60;
@@ -1339,7 +1315,6 @@
         }
       });
 
-      // Soul Orbs & Beams
       for (let i = soulOrbs.length - 1; i >= 0; i--) {
         const orb = soulOrbs[i];
         ctx.save();
@@ -1369,7 +1344,6 @@
         if (beam.timer <= 0) activeSoulBeams.splice(i, 1);
       }
 
-      // Marksman Traps & Bullets
       for (let i = marksmanTraps.length - 1; i >= 0; i--) {
         const trap = marksmanTraps[i];
         ctx.save();
@@ -1401,7 +1375,6 @@
         }
       }
 
-      // Ninja Projectiles
       for (let i = ninjaProjectiles.length - 1; i >= 0; i--) {
         const p = ninjaProjectiles[i];
         p.x += p.vx; p.y += p.vy;
@@ -1419,7 +1392,6 @@
         }
       }
 
-      // Reaper Illusions
       reaperIllusions.forEach(ill => {
         const alpha = Math.max(0, 1 - (now - ill.createdAt) / ill.lifespan);
         ctx.save();
@@ -1429,7 +1401,6 @@
         ctx.restore();
       });
 
-      // Sound Waves
       for (let i = soundWaves.length - 1; i >= 0; i--) {
         const w = soundWaves[i];
         w.currentRadius += 5;
@@ -1450,7 +1421,6 @@
         if (w.currentRadius > ARENA_DIAGONAL) soundWaves.splice(i, 1);
       }
 
-      // Wukong Clones & Staffs
       for (let i = wukongClones.length - 1; i >= 0; i--) {
         const c = wukongClones[i];
         c.lifeTimer -= 1 / 60;
@@ -1505,7 +1475,6 @@
         }
       }
 
-      // Floating Texts (Hiệu ứng chữ bay lên)
       for (let i = floatingTexts.length - 1; i >= 0; i--) {
         const ft = floatingTexts[i];
         ft.y += ft.vy; ft.life -= 0.025;
@@ -1519,7 +1488,6 @@
         ctx.restore();
       }
 
-      // Particles
       for (let i = particles.length - 1; i >= 0; i--) {
         const p = particles[i];
         p.x += p.vx; p.y += p.vy; p.life -= 0.04;
@@ -1529,9 +1497,6 @@
       }
     }
 
-    // =========================================================================
-    // HUD & THANH TRẠNG THÁI HIỆU ỨNG (BUFS/DEBUFFS CHÚ THÍCH ĐẦY ĐỦ)
-    // =========================================================================
     function updateHUDForPlayer(ball, prefix) {
       let shieldText = ball.shield > 0 ? ` (🛡️${Math.round(ball.shield)})` : '';
       if (ball.typeKey === 'demon') shieldText = ` (🛡️${Math.round(ball.shield)} | Phản: +${ball.shield * 3}%)`;
@@ -1543,17 +1508,13 @@
       const badges = document.getElementById(`${prefix}-badges`);
       badges.innerHTML = '';
 
-      // Hiển thị đầy đủ mọi trạng thái Buff / Debuff / Nội tại tại thanh trạng thái
       if (ball.stunTimer > 0) badges.innerHTML += `<span class="bg-yellow-950 text-yellow-400 border border-yellow-500/40 px-1 rounded">💫 Choáng</span>`;
       if (ball.slowTimer > 0) badges.innerHTML += `<span class="bg-blue-950 text-blue-300 border border-blue-500/40 px-1 rounded">❄️ Chậm (-30%)</span>`;
       if (ball.burnTimer > 0) badges.innerHTML += `<span class="bg-amber-950 text-amber-400 border border-amber-500/40 px-1 rounded">🔥 Cháy (${ball.burnStacks})</span>`;
       if (ball.shield > 0) badges.innerHTML += `<span class="bg-cyan-950 text-cyan-300 border border-cyan-500/40 px-1 rounded">🛡️ Khiên (${Math.round(ball.shield)})</span>`;
       if (ball.typeKey === 'wanderer' && ball.wandererShieldActive) badges.innerHTML += `<span class="bg-indigo-950 text-indigo-300 border border-indigo-400 px-1 rounded">⚔️ Khiên Chặn Dmg</span>`;
       if (ball.typeKey === 'soul') badges.innerHTML += `<span class="bg-pink-950 text-pink-300 border border-pink-500/40 px-1 rounded">🔮 Hồn: ${ball.collectedSoulsCount}</span>`;
-      
-      // Phước Thần hiển thị trên người Ball địch
       if (ball.blessingMarks > 0) badges.innerHTML += `<span class="bg-yellow-900 text-yellow-200 border border-yellow-400 px-1 rounded">✨ Phước Thần: ${ball.blessingMarks}</span>`;
-      
       if (ball.typeKey === 'angel' && ball.angelReviveUsed) badges.innerHTML += `<span class="bg-yellow-950 text-yellow-300 border border-yellow-500/40 px-1 rounded">👼 Đã Hồi Sinh</span>`;
       if (ball.typeKey === 'shen') {
         const dist = Math.hypot(ball.x - ball.spiritBladeX, ball.y - ball.spiritBladeY);
