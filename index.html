@@ -72,6 +72,7 @@
               <option value="sound">🔊 Sound Ball</option>
               <option value="angel">👼 Angel Ball</option>
               <option value="wukong">🐵 Wukong Ball</option>
+              <option value="demon">👿 Demon Ball</option>
             </select>
           </div>
 
@@ -84,7 +85,7 @@
               <option value="bear">🐻 Bear Ball</option>
               <option value="storm">⚡ Storm Ball</option>
               <option value="wanderer">⚔️ Wanderer Ball</option>
-              <option value="soul" selected>🔮 Soul Ball</option>
+              <option value="soul">🔮 Soul Ball</option>
               <option value="marksman">🎯 Marksman Ball</option>
               <option value="ninja">🥷 Ninja Ball</option>
               <option value="reaper">💀 Reaper Ball</option>
@@ -92,6 +93,7 @@
               <option value="sound">🔊 Sound Ball</option>
               <option value="angel">👼 Angel Ball</option>
               <option value="wukong">🐵 Wukong Ball</option>
+              <option value="demon" selected>👿 Demon Ball</option>
             </select>
           </div>
 
@@ -104,20 +106,21 @@
       <!-- Skill Guide Info -->
       <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-3 text-xs space-y-2 max-h-[300px] overflow-y-auto custom-scrollbar">
         <div class="font-bold text-amber-400 font-orbitron">CHI TIẾT CHỈ SỐ:</div>
-        <div class="text-slate-300"><span class="text-amber-500 font-bold">🔥 Fire Ball:</span> HP 100 | Dmg 3 | Tốc độ X. Vệt lửa 4s gây 2 dmg/0.5s (Max 3 tầng).</div>
-        <div class="text-slate-300"><span class="text-purple-400 font-bold">👻 Ghost Ball:</span> HP 105 | Dmg 15 | Tốc độ 1.5X. Xuất hồn 5s/lần xuyên đòn gây 21 dmg + Slow 30%.</div>
-        <div class="text-slate-300"><span class="text-emerald-400 font-bold">🗡️ Assassin Ball:</span> HP 80 | Dmg 5 | Tốc độ X. Ném Shuriken (6 dmg) mỗi 1.5s. Thu hồi đủ 3 cái ghim tường.</div>
-        <div class="text-slate-300"><span class="text-amber-600 font-bold">🐻 Bear Ball:</span> HP 120 | Dmg 7 | Tốc độ X. Hồi 1 HP/0.5s. Tích lũy HP hồi làm sát thương cộng dồn khi va chạm.</div>
-        <div class="text-slate-300"><span class="text-sky-400 font-bold">⚡ Storm Ball:</span> HP 100 | Dmg 4 | Tốc độ 1.6X. Vùng sét đánh xuống sau 1.5s gây 14 dmg + Slow 30%.</div>
-        <div class="text-slate-300"><span class="text-indigo-400 font-bold">⚔️ Wanderer Ball:</span> HP 100 | Dmg 6 | Tốc độ X. Khiên CD 7.5s. Đòn chém 360 độ (Đòn 3 hất văng).</div>
-        <div class="text-slate-300"><span class="text-pink-400 font-bold">🔮 Soul Ball:</span> HP 100 | Dmg 5 | Tốc độ 1.1X. Nhặt linh hồn tăng Max HP, tốc độ và chùm sáng quét diện rộng.</div>
-        <div class="text-slate-300"><span class="text-lime-400 font-bold">🎯 Marksman Ball:</span> HP 90 | Dmg 1 | Tốc độ X. Bắn tỉa mỗi 1s & đặt bẫy vĩnh viễn gây choáng 1s.</div>
-        <div class="text-slate-300"><span class="text-slate-200 font-bold">🥷 Ninja Ball:</span> HP 90 | Dmg 5 | Tốc độ X. Combo lướt tàng hình vô địch ra sau lưng địch (Chiêu 2 & 3) né mọi sát thương tuyệt đối!</div>
-        <div class="text-slate-300"><span class="text-slate-400 font-bold">💀 Reaper Ball:</span> HP 100 | Dmg 1 | Tốc độ 1.25X. Tạo Ảo Ảnh 3s trước (tồn tại 4s khi HP địch > 50%). Chạm ảo ảnh sẽ truy đuổi dí theo địch, chém 12 dmg + 40% HP mất rồi random hướng chạy!</div>
-        <div class="text-slate-300"><span class="text-cyan-300 font-bold">⛩️ Shen Ball:</span> HP 100 | Tốc độ 1.15X. Kiếm Hồn liên kết dây linh hồn, bất tử khi ở trong vùng, +5 lá chắn tồn tại 6s, Kiếm Hồn tự lướt thu về kèm chậm 30% (2s), và cơ chế lướt đổi chỗ (CD 3s) gây 5 dmg!</div>
-        <div class="text-slate-300"><span class="text-teal-400 font-bold">🔊 Sound Ball:</span> HP 100 | Dmg va chạm: 0 | Tốc độ 0.9X (+0.3% tốc độ mỗi 1% HP mất). Va tường tạo Sóng Âm lan tỏa.</div>
-        <div class="text-slate-300"><span class="text-yellow-200 font-bold">👼 Angel Ball:</span> HP 80 | Dmg va chạm: 0 | Tốc độ 0.9X. Hồi HP cho đôi bên, bất tử 1 lần khi về 0 HP & tích Dấu Ấn Phước Thần phán quyết.</div>
-        <div class="text-slate-300"><span class="text-orange-400 font-bold">🐵 Wukong Ball:</span> HP 102 | Dmg 7 | Tốc độ 1.32X. Phân thân, ăn đào tiên bất tử, quét gậy hình quạt và quăng gậy Như Ý.</div>
+        <div class="text-slate-300"><span class="text-amber-500 font-bold">🔥 Fire Ball:</span> HP 100 | Dmg 3. Vệt lửa gây dmg theo tầng.</div>
+        <div class="text-slate-300"><span class="text-purple-400 font-bold">👻 Ghost Ball:</span> HP 105 | Dmg 15. Xuất hồn xuyên đòn.</div>
+        <div class="text-slate-300"><span class="text-emerald-400 font-bold">🗡️ Assassin Ball:</span> HP 80 | Dmg 5. Ném Shuriken liên tục.</div>
+        <div class="text-slate-300"><span class="text-amber-600 font-bold">🐻 Bear Ball:</span> HP 120 | Dmg 7. Hồi HP cộng dồn sát thương va chạm.</div>
+        <div class="text-slate-300"><span class="text-sky-400 font-bold">⚡ Storm Ball:</span> HP 100 | Dmg 4. Sấm sét diện rộng.</div>
+        <div class="text-slate-300"><span class="text-indigo-400 font-bold">⚔️ Wanderer Ball:</span> HP 100 | Dmg 6. Khiên chắn & Chém 360 độ.</div>
+        <div class="text-slate-300"><span class="text-pink-400 font-bold">🔮 Soul Ball:</span> HP 100 | Dmg 5. Nhặt linh hồn tăng HP, bắn tia sáng quét diện rộng.</div>
+        <div class="text-slate-300"><span class="text-lime-400 font-bold">🎯 Marksman Ball:</span> HP 90 | Dmg 1. Bắn tỉa tự động & đặt bẫy choáng vĩnh viễn.</div>
+        <div class="text-slate-300"><span class="text-slate-200 font-bold">🥷 Ninja Ball:</span> HP 90 | Dmg 5. Lướt tàng hình vô địch né mọi sát thương.</div>
+        <div class="text-slate-300"><span class="text-slate-400 font-bold">💀 Reaper Ball:</span> HP 100 | Dmg 1. Tạo ảo ảnh truy đuổi dí theo địch chém chí mạng.</div>
+        <div class="text-slate-300"><span class="text-cyan-300 font-bold">⛩️ Shen Ball:</span> HP 100. Kiếm Hồn bất tử trong vùng, lá chắn 3s, thu hồi 6.75s, đổi chỗ CD 3s gây 1 dmg.</div>
+        <div class="text-slate-300"><span class="text-teal-400 font-bold">🔊 Sound Ball:</span> HP 100. Sóng âm lan tỏa khi va tường.</div>
+        <div class="text-slate-300"><span class="text-yellow-200 font-bold">👼 Angel Ball:</span> HP 80. Hồi HP đôi bên & phán quyết phước thần.</div>
+        <div class="text-slate-300"><span class="text-orange-400 font-bold">🐵 Wukong Ball:</span> HP 102 | Dmg 7. Phân thân, ăn đào tiên bất tử & quăng gậy Như Ý.</div>
+        <div class="text-slate-300"><span class="text-red-500 font-bold">👿 Demon Ball:</span> HP 112 | Dmg 6 | Tốc độ 1.06X. Hồi sinh 7 lần, nhận thêm 100% dmg nhưng phản 100% dmg, tự đổi HP thành lá chắn vĩnh viễn cường hóa sát thương phản đòn!</div>
       </div>
     </div>
 
@@ -199,7 +202,8 @@
       shen: { name: 'Shen Ball', color: '#06b6d4', secondaryColor: '#0e7490', hp: 100, maxHp: 100, radius: 18, speed: BASE_SPEED * 1.15, contactDmg: 5, icon: '⛩️' },
       sound: { name: 'Sound Ball', color: '#2dd4bf', secondaryColor: '#0f766e', hp: 100, maxHp: 100, radius: 18, speed: BASE_SPEED * 0.9, contactDmg: 0, icon: '🔊' },
       angel: { name: 'Angel Ball', color: '#fef08a', secondaryColor: '#eab308', hp: 80, maxHp: 80, radius: 18, speed: BASE_SPEED * 0.9, contactDmg: 0, icon: '👼' },
-      wukong: { name: 'Wukong Ball', color: '#fb923c', secondaryColor: '#b45309', hp: 102, maxHp: 102, radius: 18, speed: BASE_SPEED * 1.32, contactDmg: 7, icon: '🐵' }
+      wukong: { name: 'Wukong Ball', color: '#fb923c', secondaryColor: '#b45309', hp: 102, maxHp: 102, radius: 18, speed: BASE_SPEED * 1.32, contactDmg: 7, icon: '🐵' },
+      demon: { name: 'Demon Ball', color: '#ef4444', secondaryColor: '#991b1b', hp: 12, maxHp: 12, radius: 18, speed: BASE_SPEED * 1.06, contactDmg: 6, icon: '👿' }
     };
 
     let p1, p2;
@@ -249,6 +253,7 @@
       if (type === 'sound') colorClass = 'text-teal-400';
       if (type === 'angel') colorClass = 'text-yellow-300';
       if (type === 'wukong') colorClass = 'text-orange-400';
+      if (type === 'demon') colorClass = 'text-red-500';
       if (type === 'p1') colorClass = 'text-cyan-400';
       if (type === 'p2') colorClass = 'text-rose-400';
       
@@ -273,7 +278,7 @@
         this.maxHp = config.maxHp;
         this.hp = config.hp;
         this.shield = 0;
-        this.shieldTimer = 0; // Tồn tại 6s
+        this.shieldTimer = 0;
         this.baseSpeed = config.speed;
         this.contactDmg = config.contactDmg;
         
@@ -313,23 +318,20 @@
         this.marksmanShootTimer = 0;
         this.marksmanTrapTimer = 0;
 
-        // --- NINJA BALL ---
         this.ninjaComboStep = 1;
         this.ninjaComboTimer = 0;
         this.ninjaInvulnerable = false;
         this.dashAnim = null;
 
-        // --- REAPER BALL ---
         this.reaperSpeedBoostTimer = 0;
         this.illusionSpawnTimer = 0;
         this.positionHistory = [];
 
-        // --- SHEN BALL ---
         this.spiritBladeX = Math.random() * (canvas.width - 100) + 50;
         this.spiritBladeY = Math.random() * (canvas.height - 100) + 50;
         this.pullBladeTimer = 0;
-        this.bladeDashAnim = null; // Hoạt ảnh lướt riêng cho Kiếm Hồn khi thu hồi
-        this.shenSwapCooldown = 0; // Hồi chiêu đổi chỗ 3s
+        this.bladeDashAnim = null;
+        this.shenSwapCooldown = 0;
 
         this.soundSpeedBoostTimer = 0;
 
@@ -341,6 +343,10 @@
         this.wukongImmortalTimer = 0;
         this.wukongSweepTimer = 0;
         this.wukongSweepHit = false;
+
+        // --- DEMON BALL ---
+        this.demonReviveCount = 0;
+        this.demonHpTimer = 0;
       }
 
       get currentSpeed() {
@@ -373,8 +379,7 @@
           if (this.slowTimer <= 0) { this.slowFactor = 1; this.slowTimer = 0; }
         }
 
-        // Quản lý lá chắn 6s của Shen
-        if (this.shield > 0 && this.shieldTimer > 0) {
+        if (this.shield > 0 && this.shieldTimer > 0 && this.typeKey !== 'demon') {
           this.shieldTimer -= 1 / 60;
           if (this.shieldTimer <= 0) {
             this.shield = 0;
@@ -382,10 +387,7 @@
           }
         }
 
-        // Quản lý hồi chiêu đổi chỗ Shen (3s)
-        if (this.shenSwapCooldown > 0) {
-          this.shenSwapCooldown -= 1 / 60;
-        }
+        if (this.shenSwapCooldown > 0) this.shenSwapCooldown -= 1 / 60;
 
         if (this.typeKey === 'soul' && this.soulSpeedBoostTimer > 0) this.soulSpeedBoostTimer -= 1 / 60;
         if (this.typeKey === 'reaper' && this.reaperSpeedBoostTimer > 0) this.reaperSpeedBoostTimer -= 1 / 60;
@@ -407,6 +409,22 @@
           if (this.angelHealTimer >= 1.0) {
             this.angelHealTimer = 0;
             enemy.receiveHealingFromAngel(1, this);
+          }
+        }
+
+        if (this.typeKey === 'demon') {
+          this.demonHpTimer += 1 / 60;
+          if (this.demonHpTimer >= 0.75) {
+            this.demonHpTimer = 0;
+            if (this.hp > 1) {
+              this.hp -= 1;
+              this.shield += 1;
+              createParticles(this.x, this.y, '#ef4444', 2);
+            } else if (this.hp === 1) {
+              this.shield += 3;
+              createParticles(this.x, this.y, '#ef4444', 3);
+            }
+            updateHUD();
           }
         }
 
@@ -505,7 +523,7 @@
             this.ghostVx = Math.cos(angle) * gSpeed;
             this.ghostVy = Math.sin(angle) * gSpeed;
             this.ghostReturning = false; this.ghostReturnHit = false;
-            logMessage(`${this.name} (${this.side.toUpperCase()}) đứng yên xuất hồn!`, 'ghost');
+            logMessage(`${this.name} xuất hồn!`, 'ghost');
           }
           return;
         }
@@ -522,6 +540,10 @@
             enemy.applySlow(1.5);
             this.ghostHitCooldown = 45;
             createParticles(enemy.x, enemy.y, '#c084fc', 8);
+          }
+          // Tự động thu hồn sau 2.5s
+          if (Math.hypot(this.ghostX - this.x, this.ghostY - this.y) > 180) {
+            this.ghostReturning = true;
           }
         } else {
           const angle = Math.atan2(this.y - this.ghostY, this.x - this.ghostX);
@@ -551,7 +573,6 @@
         if (this.cooldownTimer >= 1.5) {
           this.cooldownTimer = 0;
           spawnShuriken(this, enemy, 0);
-          logMessage(`${this.name} ném Phi Tiêu Shuriken!`, 'assassin');
         }
       }
 
@@ -578,9 +599,8 @@
           const radiusZone = this.radius * 4.5;
           lightningZones.push({
             x: this.x, y: this.y, radius: radiusZone,
-            owner: this, strikeTimer: 1.5, struckCount: 0
+            owner: this, strikeTimer: 1.5
           });
-          logMessage(`⚡ ${this.name} tạo vùng sấm sét chuẩn bị đánh xuống!`, 'storm');
         }
       }
 
@@ -591,45 +611,23 @@
           if (this.wandererShieldTimer >= 7.5) {
             this.wandererShieldActive = true;
             this.wandererShieldTimer = 0;
-            logMessage(`🛡️ ${this.name} tái tạo Khiên bảo vệ!`, 'wanderer');
           }
         }
 
         if (this.slashCooldown > 0) this.slashCooldown -= 1 / 60;
-
         const dist = Math.hypot(this.x - enemy.x, this.y - enemy.y);
         const slashRange = this.radius * 3;
 
         if (dist <= slashRange + enemy.radius && this.slashCooldown <= 0) {
           this.slashCooldown = 1.0;
           this.slashCount++;
-
           let dmg = 15;
-          let rangeMultiplier = 1;
           let isUltimate = (this.slashCount >= 3);
+          if (isUltimate) { dmg = 20; this.slashCount = 0; }
 
-          if (isUltimate) {
-            dmg = 20; rangeMultiplier = 1.25; this.slashCount = 0;
-            logMessage(`⚔️ ${this.name} tung Kiếm Khí Cực Hạn (Đòn thứ 3)!`, 'wanderer');
-          } else {
-            logMessage(`⚔️ ${this.name} chém vòng quanh trúng ${enemy.name} (Đòn ${this.slashCount})`, 'wanderer');
-          }
-
-          this.activeSlash = {
-            x: this.x, y: this.y, radius: slashRange * rangeMultiplier,
-            timer: 0.25, isUlt: isUltimate
-          };
-
+          this.activeSlash = { x: this.x, y: this.y, radius: slashRange, timer: 0.25 };
           enemy.takeDamage(dmg, 'Kiếm Khí');
-          createParticles(enemy.x, enemy.y, '#818cf8', isUltimate ? 12 : 6);
-
-          if (isUltimate) {
-            const angleToEnemy = Math.atan2(enemy.y - this.y, enemy.x - this.x);
-            const knockbackSpeed = BASE_SPEED * 2.5;
-            enemy.vx = Math.cos(angleToEnemy) * knockbackSpeed;
-            enemy.vy = Math.sin(angleToEnemy) * knockbackSpeed;
-            logMessage(`💥 ${enemy.name} bị hất văng đổi hướng bởi Kiếm Khí!`, 'wanderer');
-          }
+          createParticles(enemy.x, enemy.y, '#818cf8', 6);
         }
       }
 
@@ -638,22 +636,15 @@
         this.soulSpawnTimer += 1 / 60;
         if (this.soulSpawnTimer >= 1.15) {
           this.soulSpawnTimer = 0;
-          const padding = 30;
-          const orbX = padding + Math.random() * (canvas.width - padding * 2);
-          const orbY = padding + Math.random() * (canvas.height - padding * 2);
-          soulOrbs.push({ x: orbX, y: orbY, radius: 8 });
+          soulOrbs.push({ x: Math.random() * (canvas.width - 60) + 30, y: Math.random() * (canvas.height - 60) + 30, radius: 10 });
         }
 
         this.soulBeamTimer += 1 / 60;
         if (this.soulBeamTimer >= 2.0) {
           this.soulBeamTimer = 0;
           const aimAngle = Math.atan2(enemy.y - this.y, enemy.x - this.x);
-          const baseAngleDeg = 30;
-          const totalAngleDeg = baseAngleDeg + (this.collectedSoulsCount * 1.5);
-          const totalAngleRad = (totalAngleDeg * Math.PI) / 180;
-
           activeSoulBeams.push({
-            x: this.x, y: this.y, angle: aimAngle, spread: totalAngleRad,
+            x: this.x, y: this.y, angle: aimAngle, spread: 0.6,
             maxRadius: Math.hypot(canvas.width, canvas.height), timer: 0.35, owner: this
           });
         }
@@ -664,15 +655,14 @@
         this.marksmanShootTimer += 1 / 60;
         if (this.marksmanShootTimer >= 1.0) {
           this.marksmanShootTimer = 0;
-          spawnMarksmanBullet(this, enemy, 2, false);
+          spawnMarksmanBullet(this, enemy, 2);
         }
 
         if (this.stunTimer <= 0) {
           this.marksmanTrapTimer += 1 / 60;
           if (this.marksmanTrapTimer >= 2.0) {
             this.marksmanTrapTimer = 0;
-            marksmanTraps.push({ x: this.x, y: this.y, radius: 13, owner: this });
-            logMessage(`🎯 ${this.name} đặt 1 Bẫy cố định trên sân!`, 'marksman');
+            marksmanTraps.push({ x: this.x, y: this.y, radius: 14, owner: this });
           }
         }
       }
@@ -684,7 +674,6 @@
         this.ninjaComboTimer += 1 / 60;
         if (this.ninjaComboTimer >= 2.0) {
           this.ninjaComboTimer = 0;
-
           if (this.ninjaComboStep === 1) {
             const angle = Math.atan2(enemy.y - this.y, enemy.x - this.x);
             ninjaProjectiles.push({
@@ -693,65 +682,32 @@
               vy: Math.sin(angle) * (BASE_SPEED * 4.5),
               owner: this, target: enemy
             });
-            logMessage(`🥷 ${this.name} ném Phi Tiêu (Đòn 1 Combo)!`, 'ninja');
-          } 
-          else if (this.ninjaComboStep === 2) {
+            this.ninjaComboStep = 2;
+          } else if (this.ninjaComboStep === 2) {
             this.ninjaInvulnerable = true;
             const enemyAngle = Math.atan2(enemy.y - this.y, enemy.x - this.x);
-            const behindX = enemy.x + Math.cos(enemyAngle) * (enemy.radius + this.radius + 15);
-            const behindY = enemy.y + Math.sin(enemyAngle) * (enemy.radius + this.radius + 15);
-            
-            const startX = this.x, startY = this.y;
-            const endX = Math.max(this.radius, Math.min(canvas.width - this.radius, behindX));
-            const endY = Math.max(this.radius, Math.min(canvas.height - this.radius, behindY));
-
+            const behindX = enemy.x + Math.cos(enemyAngle) * 25;
+            const behindY = enemy.y + Math.sin(enemyAngle) * 25;
             this.dashAnim = {
-              startX, startY, endX, endY, progress: 0, duration: 0.18,
+              startX: this.x, startY: this.y, endX: behindX, endY: behindY, progress: 0, duration: 0.18,
               callback: () => {
-                enemy.takeDamage(20, 'Đột Kích (Ninja Đòn 2)');
+                enemy.takeDamage(20, 'Đột Kích');
                 enemy.applySlow(2.0);
-                createParticles(enemy.x, enemy.y, '#e2e8f0', 14);
-                logMessage(`🥷 ${this.name} lướt ẩn thân ra sau ${enemy.name} (-20 HP + Slow 2s, Đòn 2)!`, 'ninja');
                 this.ninjaInvulnerable = false;
                 this.ninjaComboStep = 3;
               }
             };
-          } 
-          else if (this.ninjaComboStep === 3) {
+          } else if (this.ninjaComboStep === 3) {
             this.ninjaInvulnerable = true;
-            const diameter = this.radius * 2;
-            const dashDistance = diameter * 5;
             const angle = Math.atan2(enemy.y - this.y, enemy.x - this.x);
-
-            const startX = this.x, startY = this.y;
-            const destX = this.x + Math.cos(angle) * dashDistance;
-            const destY = this.y + Math.sin(angle) * dashDistance;
-            const endX = Math.max(this.radius, Math.min(canvas.width - this.radius, destX));
-            const endY = Math.max(this.radius, Math.min(canvas.height - this.radius, destY));
-
+            const destX = this.x + Math.cos(angle) * 80;
+            const destY = this.y + Math.sin(angle) * 80;
             this.dashAnim = {
-              startX, startY, endX, endY, progress: 0, duration: 0.15,
+              startX: this.x, startY: this.y, endX: destX, endY: destY, progress: 0, duration: 0.15,
               callback: () => {
-                const distToEnemy = Math.hypot(this.x - enemy.x, this.y - enemy.y);
-                const hitSuccess = (distToEnemy <= this.radius + enemy.radius + 35);
-
-                if (hitSuccess) {
-                  const missingHp = enemy.maxHp - enemy.hp;
-                  const bonusDmg = Math.floor(missingHp * 0.4);
-                  const totalDmg = 20 + bonusDmg;
-
-                  enemy.takeDamage(totalDmg, 'Ảnh Trảm (Ninja Đòn 3)');
-                  createParticles(enemy.x, enemy.y, '#e2e8f0', 20);
-                  logMessage(`🥷 ${this.name} Ảnh Trảm tàng hình chém trúng ${enemy.name}! (-${totalDmg} HP, Đòn 3)`, 'ninja');
-                  this.ninjaComboStep = 1;
-                } else {
-                  logMessage(`🥷 ${this.name} lướt trượt Đòn 3! Lập tức reset về Đòn 1 ném phi tiêu!`, 'ninja');
-                  this.ninjaComboStep = 1;
-                  this.ninjaComboTimer = 2.0;
-                }
-
-                this.vx = Math.cos(angle) * this.baseSpeed * 1.4;
-                this.vy = Math.sin(angle) * this.baseSpeed * 1.4;
+                const missingHp = enemy.maxHp - enemy.hp;
+                enemy.takeDamage(20 + Math.floor(missingHp * 0.4), 'Ảnh Trảm');
+                this.ninjaComboStep = 1;
                 this.ninjaInvulnerable = false;
               }
             };
@@ -761,7 +717,6 @@
 
       updateReaperInternal(enemy) {
         if (!enemy) return;
-
         const now = Date.now();
         this.positionHistory.push({ x: enemy.x, y: enemy.y, time: now });
         while (this.positionHistory.length > 0 && now - this.positionHistory[0].time > 3000) {
@@ -771,90 +726,53 @@
         this.illusionSpawnTimer += 1 / 60;
         if (this.illusionSpawnTimer >= 0.35) {
           this.illusionSpawnTimer = 0;
-          const targetPastPos = (this.positionHistory.length > 0) ? this.positionHistory[0] : { x: enemy.x, y: enemy.y };
-          const lifespan = (enemy.hp > enemy.maxHp * 0.5) ? 4000 : 2000;
-
-          reaperIllusions.push({
-            x: targetPastPos.x, y: targetPastPos.y,
-            createdAt: now, lifespan: lifespan, radius: enemy.radius
-          });
+          const pastPos = this.positionHistory[0] || { x: enemy.x, y: enemy.y };
+          reaperIllusions.push({ x: pastPos.x, y: pastPos.y, createdAt: now, lifespan: 4000, radius: enemy.radius });
         }
 
         for (let i = reaperIllusions.length - 1; i >= 0; i--) {
           const ill = reaperIllusions[i];
-          const age = now - ill.createdAt;
-          if (age >= ill.lifespan) {
-            reaperIllusions.splice(i, 1);
-            continue;
-          }
-
-          const distToIllusion = Math.hypot(this.x - ill.x, this.y - ill.y);
-          if (distToIllusion < this.radius + ill.radius) {
+          if (now - ill.createdAt >= ill.lifespan) { reaperIllusions.splice(i, 1); continue; }
+          if (Math.hypot(this.x - ill.x, this.y - ill.y) < this.radius + ill.radius) {
             this.reaperSpeedBoostTimer = 2.5;
-            logMessage(`💀 ${this.name} chạm Linh Hồn Ảo Ảnh! Bắt đầu truy đuổi dí theo địch!`, 'reaper');
-            createParticles(ill.x, ill.y, '#94a3b8', 10);
             reaperIllusions.splice(i, 1);
             break;
           }
         }
 
         if (this.reaperSpeedBoostTimer > 0) {
-          const angleToEnemy = Math.atan2(enemy.y - this.y, enemy.x - this.x);
-          const chaseSpeed = this.baseSpeed * 1.7;
-          this.vx = Math.cos(angleToEnemy) * chaseSpeed;
-          this.vy = Math.sin(angleToEnemy) * chaseSpeed;
+          const angle = Math.atan2(enemy.y - this.y, enemy.x - this.x);
+          this.vx = Math.cos(angle) * this.baseSpeed * 1.7;
+          this.vy = Math.sin(angle) * this.baseSpeed * 1.7;
         }
 
-        const distToEnemy = Math.hypot(this.x - enemy.x, this.y - enemy.y);
-        const triggerDist = (this.radius * 2) * 1.3;
-
-        if (this.reaperSpeedBoostTimer > 0 && distToEnemy <= triggerDist) {
+        if (this.reaperSpeedBoostTimer > 0 && Math.hypot(this.x - enemy.x, this.y - enemy.y) <= this.radius * 3) {
           const missingHp = enemy.maxHp - enemy.hp;
-          const slashDmg = 12 + Math.floor(missingHp * 0.4);
-
-          enemy.takeDamage(slashDmg, 'Nhát Chém Tử Thần (Reaper)');
-          
-          const slashAngle = Math.atan2(enemy.y - this.y, enemy.x - this.x);
-          activeReaperSlashes.push({
-            x: this.x, y: this.y, angle: slashAngle,
-            spread: (120 * Math.PI) / 180, radius: (this.radius * 2) * 1.2, timer: 0.3
-          });
-
-          createParticles(enemy.x, enemy.y, '#94a3b8', 15);
-          logMessage(`💀 Reaper Ball truy đuổi chém trúng ${enemy.name}! (-${slashDmg} HP), hoàn thành và random đổi hướng chạy!`, 'reaper');
-
+          enemy.takeDamage(12 + Math.floor(missingHp * 0.4), 'Nhát Chém Tử Thần');
           this.reaperSpeedBoostTimer = 0;
-          const randomAngle = Math.random() * Math.PI * 2;
-          const randSpeed = this.baseSpeed * 1.25;
-          this.vx = Math.cos(randomAngle) * randSpeed;
-          this.vy = Math.sin(randomAngle) * randSpeed;
+          const randAngle = Math.random() * Math.PI * 2;
+          this.vx = Math.cos(randAngle) * this.baseSpeed;
+          this.vy = Math.sin(randAngle) * this.baseSpeed;
         }
       }
 
       updateShenInternal(enemy) {
         if (!enemy) return;
 
-        // Thu hồi Kiếm Hồn về gần bản thân mỗi 5s với hoạt ảnh Kiếm Hồn lướt nhanh đến + làm chậm 30% (2s)
+        // Kéo Kiếm Hồn về sau 6.75s
         this.pullBladeTimer += 1 / 60;
-        if (this.pullBladeTimer >= 5.0 && !this.bladeDashAnim) {
+        if (this.pullBladeTimer >= 6.75 && !this.bladeDashAnim) {
           this.pullBladeTimer = 0;
           const targetX = this.x + (Math.random() - 0.5) * 60;
           const targetY = this.y + (Math.random() - 0.5) * 60;
-          
-          const startX = this.spiritBladeX, startY = this.spiritBladeY;
-          const endX = Math.max(20, Math.min(canvas.width - 20, targetX));
-          const endY = Math.max(20, Math.min(canvas.height - 20, targetY));
-
-          logMessage(`⛩️ Kiếm Hồn lướt nhanh về gần Shen Ball!`, 'shen');
           this.bladeDashAnim = {
-            startX, startY, endX, endY, progress: 0, duration: 0.2,
+            startX: this.spiritBladeX, startY: this.spiritBladeY,
+            endX: Math.max(20, Math.min(canvas.width - 20, targetX)),
+            endY: Math.max(20, Math.min(canvas.height - 20, targetY)),
+            progress: 0, duration: 0.25,
             callback: () => {
-              createParticles(this.spiritBladeX, this.spiritBladeY, '#06b6d4', 12);
-              // Kiểm tra nếu lúc Kiếm Hồn lướt đến vị trí gần địch hoặc địch ở gần, làm chậm 30% trong 2s
-              const distToEnemy = Math.hypot(enemy.x - this.spiritBladeX, enemy.y - this.spiritBladeY);
-              if (distToEnemy <= this.radius * 4 + enemy.radius) {
+              if (Math.hypot(enemy.x - this.spiritBladeX, enemy.y - this.spiritBladeY) <= this.radius * 4) {
                 enemy.applySlow(2.0);
-                logMessage(`⛩️ Vùng năng lượng Kiếm Hồn thu về làm chậm 30% ${enemy.name} trong 2s!`, 'shen');
               }
             }
           };
@@ -863,133 +781,77 @@
         const bladeRadius = this.radius * 4;
         const distToBlade = Math.hypot(this.x - this.spiritBladeX, this.y - this.spiritBladeY);
 
-        // Chỉ bất tử khi đứng trực tiếp ở trong vùng năng lượng Kiếm Hồn
+        // Nhận lá chắn 3s khi vào vùng
         if (distToBlade <= bladeRadius) {
           if (this.shield === 0) {
-            this.shield = 5; // Nhận 5 lá chắn
-            this.shieldTimer = 6.0; // Tồn tại 6s
-            logMessage(`⛩️ Shen Ball vào vùng Kiếm Hồn! Nhận +5 Lá Chắn (tồn tại 6s)!`, 'shen');
-            createParticles(this.spiritBladeX, this.spiritBladeY, '#06b6d4', 12);
+            this.shield = 5;
+            this.shieldTimer = 3.0;
             updateHUD();
           }
         }
 
-        // Cơ chế đổi chỗ khi địch bước vào vùng năng lượng Kiếm Hồn (Hồi chiêu 3s)
+        // Địch vào vùng Kiếm Hồn: Dmg = 1, đổi chỗ (CD 3s)
         const enemyDistToBlade = Math.hypot(enemy.x - this.spiritBladeX, enemy.y - this.spiritBladeY);
         if (enemyDistToBlade <= bladeRadius && enemy.hitCooldown === 0 && this.shenSwapCooldown <= 0 && !this.dashAnim && !this.bladeDashAnim) {
-          this.shenSwapCooldown = 3.0; // Set hồi chiêu 3s
+          this.shenSwapCooldown = 3.0;
           enemy.hitCooldown = 30;
-          logMessage(`⛩️ ${enemy.name} bước vào vùng Kiếm Hồn! Shen lướt xuyên đến Kiếm Hồn, Kiếm Hồn lướt về chỗ Shen gây 5 dmg!`, 'shen');
           
           const startShenX = this.x, startShenY = this.y;
           const endShenX = this.spiritBladeX, endShenY = this.spiritBladeY;
-
           const startBladeX = this.spiritBladeX, startBladeY = this.spiritBladeY;
           const endBladeX = startShenX, endBladeY = startShenY;
 
-          // Shen lướt đến vị trí Kiếm Hồn
           this.dashAnim = {
             startX: startShenX, startY: startShenY, endX: endShenX, endY: endShenY, progress: 0, duration: 0.12,
-            callback: () => {
-              enemy.takeDamage(5, 'Đổi Chỗ Kiếm Hồn (Shen)');
-              createParticles(this.x, this.y, '#06b6d4', 15);
-            }
+            callback: () => { enemy.takeDamage(1, 'Vùng Kiếm Hồn'); }
           };
-
-          // Kiếm Hồn lướt về vị trí cũ của Shen
           this.bladeDashAnim = {
-            startX: startBladeX, startY: startBladeY, endX: endBladeX, endY: endBladeY, progress: 0, duration: 0.12,
-            callback: () => {
-              createParticles(this.spiritBladeX, this.spiritBladeY, '#06b6d4', 15);
-            }
+            startX: startBladeX, startY: startBladeY, endX: endBladeX, endY: endBladeY, progress: 0, duration: 0.12
           };
         }
 
-        // Kiểm tra địch chạm dây Linh Hồn giữa Shen và Kiếm Hồn
+        // Dây linh hồn
         const lineDist = distToSegment({ x: enemy.x, y: enemy.y }, { x: this.x, y: this.y }, { x: this.spiritBladeX, y: this.spiritBladeY });
         if (lineDist <= enemy.radius + 8 && !this.dashAnim && enemy.hitCooldown === 0) {
           enemy.hitCooldown = 30;
           const ropeDmg = Math.round((enemy.maxHp * 0.04) + (this.maxHp * 0.04) + ((enemy.maxHp - enemy.hp) * 0.14));
-          logMessage(`⛩️ ${enemy.name} chạm dây linh hồn! Shen lướt xuyên cực nhanh tới Kiếm Hồn gây ${ropeDmg} dmg!`, 'shen');
-          
-          const startX = this.x, startY = this.y;
-          const endX = this.spiritBladeX, endY = this.spiritBladeY;
-
           this.dashAnim = {
-            startX, startY, endX, endY, progress: 0, duration: 0.1,
-            callback: () => {
-              enemy.takeDamage(ropeDmg, 'Lướt Dây Linh Hồn (Shen)');
-              createParticles(this.x, this.y, '#06b6d4', 18);
-            }
+            startX: this.x, startY: this.y, endX: this.spiritBladeX, endY: this.spiritBladeY, progress: 0, duration: 0.1,
+            callback: () => { enemy.takeDamage(ropeDmg, 'Lướt Dây Linh Hồn'); }
           };
         }
       }
 
       updateWukongInternal(enemy) {
         if (!enemy) return;
-
         if (this.stunTimer <= 0) {
           this.wukongSkillTimer += 1 / 60;
           if (this.wukongSkillTimer >= 2.05) {
             this.wukongSkillTimer = 0;
-            const skillChoice = Math.floor(Math.random() * 4) + 1;
-
-            if (skillChoice === 1) {
-              const currentAngle = Math.atan2(this.vy, this.vx);
-              const spd = this.currentSpeed || this.baseSpeed;
-              const angles = [currentAngle + Math.PI, currentAngle - Math.PI / 2, currentAngle + Math.PI / 2];
-
-              angles.forEach(ang => {
+            const choice = Math.floor(Math.random() * 4) + 1;
+            if (choice === 1) {
+              const ang = Math.atan2(this.vy, this.vx);
+              [ang + Math.PI, ang - Math.PI/2, ang + Math.PI/2].forEach(a => {
                 wukongClones.push({
-                  x: this.x, y: this.y,
-                  vx: Math.cos(ang) * spd, vy: Math.sin(ang) * spd,
-                  hp: this.hp, maxHp: this.maxHp,
-                  radius: this.radius, contactDmg: this.contactDmg,
-                  owner: this, lifeTimer: 4.5, hitCooldown: 0
+                  x: this.x, y: this.y, vx: Math.cos(a) * this.baseSpeed, vy: Math.sin(a) * this.baseSpeed,
+                  radius: this.radius, lifeTimer: 4.5, owner: this
                 });
               });
-              createParticles(this.x, this.y, '#fb923c', 16);
-            }
-            else if (skillChoice === 2) {
+            } else if (choice === 2) {
               this.hp = Math.min(this.maxHp, this.hp + 11);
-              this.burnStacks = 0; this.burnTimer = 0; this.slowTimer = 0; this.slowFactor = 1; this.stunTimer = 0;
               this.wukongImmortalTimer = 2.05;
-              createParticles(this.x, this.y, '#f43f5e', 16);
               updateHUD();
-            }
-            else if (skillChoice === 3) {
+            } else if (choice === 3) {
               this.wukongSweepTimer = 3.0;
               this.wukongSweepHit = false;
-              createParticles(this.x, this.y, '#facc15', 12);
-              updateHUD();
-            }
-            else if (skillChoice === 4) {
-              const staffLength = (this.radius * 2) * 1.75;
-              wukongStaffs.push({
-                x: this.x, y: this.y, target: enemy, owner: this,
-                speed: BASE_SPEED * 4.2, length: staffLength, rotation: 0
-              });
+            } else if (choice === 4) {
+              wukongStaffs.push({ x: this.x, y: this.y, target: enemy, speed: BASE_SPEED * 4.2 });
             }
           }
         }
-
-        if (this.wukongSweepTimer > 0 && !this.wukongSweepHit) {
-          const diameter = this.radius * 2;
-          const sweepRange = diameter * 3;
-          const distToEnemy = Math.hypot(enemy.x - this.x, enemy.y - this.y);
-
-          if (distToEnemy <= sweepRange + enemy.radius) {
-            this.wukongSweepHit = true;
-            const aimAngle = Math.atan2(enemy.y - this.y, enemy.x - this.x);
-            const spreadRad = (150 * Math.PI) / 180;
-
-            activeWukongSweeps.push({
-              x: this.x, y: this.y, angle: aimAngle, spread: spreadRad, radius: sweepRange, timer: 0.35
-            });
-
-            enemy.takeDamage(24, 'Quét Gậy Như Ý');
-            createParticles(enemy.x, enemy.y, '#fb923c', 18);
-          }
+        if (this.wukongSweepTimer > 0 && !this.wukongSweepHit && Math.hypot(enemy.x - this.x, enemy.y - this.y) <= this.radius * 5) {
+          this.wukongSweepHit = true;
+          enemy.takeDamage(24, 'Quét Gậy Như Ý');
         }
       }
 
@@ -1014,27 +876,16 @@
       }
 
       takeDamage(amount, source) {
-        if (this.typeKey === 'wukong' && this.wukongImmortalTimer > 0) {
-          createParticles(this.x, this.y, '#fef08a', 6); return;
-        }
-        if (this.typeKey === 'ninja' && this.ninjaInvulnerable) {
-          createParticles(this.x, this.y, '#cbd5e1', 6); return;
-        }
+        if (this.typeKey === 'wukong' && this.wukongImmortalTimer > 0) return;
+        if (this.typeKey === 'ninja' && this.ninjaInvulnerable) return;
 
-        // Shen Ball chỉ bất tử khi đứng trong vùng năng lượng Kiếm Hồn
         if (this.typeKey === 'shen') {
-          const bladeRadius = this.radius * 4;
-          const distToBlade = Math.hypot(this.x - this.spiritBladeX, this.y - this.spiritBladeY);
-          if (distToBlade <= bladeRadius) {
-            createParticles(this.x, this.y, '#06b6d4', 6);
-            return; // Bất tử trong vùng
-          }
+          if (Math.hypot(this.x - this.spiritBladeX, this.y - this.spiritBladeY) <= this.radius * 4) return;
         }
 
         if (this.typeKey === 'wanderer' && this.wandererShieldActive) {
           this.wandererShieldActive = false;
           this.wandererShieldTimer = 0;
-          createParticles(this.x, this.y, '#818cf8', 10);
           updateHUD();
           return;
         }
@@ -1042,14 +893,27 @@
         if (this.typeKey === 'angel' && !this.angelReviveUsed && this.hp - amount <= 0) {
           this.angelReviveUsed = true;
           this.hp = 1;
-          createParticles(this.x, this.y, '#fef08a', 14);
           const enemy = (this === p1) ? p2 : p1;
           if (enemy) enemy.receiveHealingFromAngel(15, this);
           updateHUD();
           return;
         }
 
-        let remainingDmg = amount;
+        // --- XỬ LÝ DEMON BALL ---
+        let finalIncomingDmg = amount;
+        let enemy = (this === p1) ? p2 : p1;
+
+        if (this.typeKey === 'demon') {
+          finalIncomingDmg = amount * 2; // Nhận thêm 100% dmg
+          if (enemy && source !== 'Phản Đòn Demon') {
+            const shieldMultiplier = 1 + (this.shield * 0.03);
+            const reflectedDmg = Math.round(amount * shieldMultiplier);
+            enemy.takeDamage(reflectedDmg, 'Phản Đòn Demon');
+            logMessage(`👿 Demon Ball phản đòn gây ${reflectedDmg} dmg lên ${enemy.name}!`, 'demon');
+          }
+        }
+
+        let remainingDmg = finalIncomingDmg;
         if (this.shield > 0) {
           if (this.shield >= remainingDmg) {
             this.shield -= remainingDmg;
@@ -1065,6 +929,16 @@
           this.hp = Math.max(0, this.hp - remainingDmg);
         }
 
+        // Hồi sinh Demon Ball (7 lần)
+        if (this.hp <= 0 && this.typeKey === 'demon' && this.demonReviveCount < 7) {
+          this.demonReviveCount++;
+          this.hp = this.maxHp;
+          logMessage(`👿 Demon Ball hồi sinh lần thứ ${this.demonReviveCount} với full HP!`, 'demon');
+          createParticles(this.x, this.y, '#ef4444', 20);
+          updateHUD();
+          return;
+        }
+
         updateHUD();
         if (this.hp <= 0 && !gameOver) {
           endGame(this);
@@ -1072,72 +946,30 @@
       }
 
       receiveHealingFromAngel(amount, healer) {
-        const missingHealerHp = healer ? (healer.maxHp - healer.hp) : 0;
-        const multiplier = 1 + (missingHealerHp * 0.0125);
-        const actualHeal = amount * multiplier;
-        const oldHp = this.hp;
-        this.hp = Math.min(this.maxHp, this.hp + actualHeal);
+        this.hp = Math.min(this.maxHp, this.hp + amount);
         updateHUD();
-
-        const excess = (oldHp + actualHeal) - this.maxHp;
-        if (excess > 0) {
-          this.blessingMarks += excess;
-          if (this.blessingMarks >= this.hp && !gameOver) {
-            this.hp = 0;
-            updateHUD();
-            endGame(this);
-          }
-          if (healer && healer.hp > 0) {
-            const selfRecover = excess * 0.25;
-            healer.hp = Math.min(healer.maxHp, healer.hp + selfRecover);
-            updateHUD();
-          }
-        }
-        createParticles(this.x, this.y, '#eab308', 8);
       }
 
       draw() {
         ctx.save();
-
         if (this.typeKey === 'wukong' && this.wukongImmortalTimer > 0) {
           ctx.beginPath(); ctx.arc(this.x, this.y, this.radius + 7, 0, Math.PI * 2);
-          ctx.strokeStyle = '#fde047'; ctx.lineWidth = 3; ctx.shadowColor = '#facc15'; ctx.shadowBlur = 14; ctx.stroke();
+          ctx.strokeStyle = '#fde047'; ctx.lineWidth = 3; ctx.stroke();
         }
-
         if (this.typeKey === 'ninja' && this.ninjaInvulnerable) {
           ctx.beginPath(); ctx.arc(this.x, this.y, this.radius + 8, 0, Math.PI * 2);
-          ctx.strokeStyle = '#94a3b8'; ctx.lineWidth = 3; ctx.shadowColor = '#cbd5e1'; ctx.shadowBlur = 12; ctx.stroke();
-        }
-
-        if (this.typeKey === 'shen') {
-          const bladeRadius = this.radius * 4;
-          const distToBlade = Math.hypot(this.x - this.spiritBladeX, this.y - this.spiritBladeY);
-          if (distToBlade <= bladeRadius) {
-            ctx.beginPath(); ctx.arc(this.x, this.y, this.radius + 8, 0, Math.PI * 2);
-            ctx.strokeStyle = '#06b6d4'; ctx.lineWidth = 3; ctx.shadowColor = '#22d3ee'; ctx.shadowBlur = 14; ctx.stroke();
-          }
+          ctx.strokeStyle = '#94a3b8'; ctx.lineWidth = 3; ctx.stroke();
         }
 
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-        
-        const gradient = ctx.createRadialGradient(this.x - 5, this.y - 5, 2, this.x, this.y, this.radius);
-        gradient.addColorStop(0, '#ffffff');
-        gradient.addColorStop(0.4, this.color);
-        gradient.addColorStop(1, this.secondaryColor);
-
-        ctx.fillStyle = gradient;
-        ctx.shadowColor = this.color;
-        ctx.shadowBlur = 12;
-        ctx.fill();
-
-        ctx.strokeStyle = 'rgba(255,255,255,0.6)';
-        ctx.lineWidth = 1.5;
-        ctx.stroke();
+        const grad = ctx.createRadialGradient(this.x - 5, this.y - 5, 2, this.x, this.y, this.radius);
+        grad.addColorStop(0, '#ffffff'); grad.addColorStop(0.4, this.color); grad.addColorStop(1, this.secondaryColor);
+        ctx.fillStyle = grad; ctx.shadowColor = this.color; ctx.shadowBlur = 12; ctx.fill();
+        ctx.strokeStyle = 'rgba(255,255,255,0.6)'; ctx.lineWidth = 1.5; ctx.stroke();
 
         ctx.shadowBlur = 0; ctx.font = '14px sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
         ctx.fillText(this.icon, this.x, this.y);
-
         ctx.restore();
       }
     }
@@ -1160,244 +992,43 @@
         const nx = dx / (distance || 1);
         const ny = dy / (distance || 1);
 
-        if (!b1.isGhosting) {
-          b1.x = Math.max(b1.radius, Math.min(canvas.width - b1.radius, b1.x - nx * overlap / 2));
-          b1.y = Math.max(b1.radius, Math.min(canvas.height - b1.radius, b1.y - ny * overlap / 2));
-        }
-        if (!b2.isGhosting) {
-          b2.x = Math.max(b2.radius, Math.min(canvas.width - b2.radius, b2.x + nx * overlap / 2));
-          b2.y = Math.max(b2.radius, Math.min(canvas.height - b2.radius, b2.y + ny * overlap / 2));
-        }
+        b1.x = Math.max(b1.radius, Math.min(canvas.width - b1.radius, b1.x - nx * overlap / 2));
+        b1.y = Math.max(b1.radius, Math.min(canvas.height - b1.radius, b1.y - ny * overlap / 2));
+        b2.x = Math.max(b2.radius, Math.min(canvas.width - b2.radius, b2.x + nx * overlap / 2));
+        b2.y = Math.max(b2.radius, Math.min(canvas.height - b2.radius, b2.y + ny * overlap / 2));
 
         const kx = b1.vx - b2.vx;
         const ky = b1.vy - b2.vy;
         const p = 2 * (nx * kx + ny * ky) / 2;
-
-        if (!b1.isGhosting) { b1.vx -= p * nx; b1.vy -= p * ny; }
-        if (!b2.isGhosting) { b2.vx += p * nx; b2.vy += p * ny; }
+        b1.vx -= p * nx; b1.vy -= p * ny;
+        b2.vx += p * nx; b2.vy += p * ny;
 
         if (b1.hitCooldown === 0) {
-          let totalDmg1 = b1.contactDmg;
-          if (b1.typeKey === 'shen') {
-            const maxHpDmg = b2.maxHp * 0.05;
-            const missingHpEnemyDmg = (b2.maxHp - b2.hp) * 0.05;
-            const missingHpSelfDmg = (b1.maxHp - b1.hp) * 0.05;
-            totalDmg1 = Math.round(maxHpDmg + missingHpEnemyDmg + missingHpSelfDmg);
-          } else if (b1.typeKey === 'bear' && b1.effectiveHealStored > 0) {
-            totalDmg1 += b1.effectiveHealStored;
-            b1.effectiveHealStored = 0;
-            updateHUD();
-          }
-          if (totalDmg1 > 0) {
-            b2.takeDamage(totalDmg1, 'Va Chạm');
-            b1.hitCooldown = 15;
-            logMessage(`${b1.name} tông ${b2.name} (-${totalDmg1} HP)`, b1.side);
-          }
+          let dmg1 = b1.contactDmg;
+          if (b1.typeKey === 'shen') dmg1 = Math.round(b2.maxHp * 0.05 + (b2.maxHp - b2.hp) * 0.05 + (b1.maxHp - b1.hp) * 0.05);
+          if (dmg1 > 0) { b2.takeDamage(dmg1, 'Va Chạm'); b1.hitCooldown = 15; }
         }
-        
         if (b2.hitCooldown === 0) {
-          let totalDmg2 = b2.contactDmg;
-          if (b2.typeKey === 'shen') {
-            const maxHpDmg = b1.maxHp * 0.05;
-            const missingHpEnemyDmg = (b1.maxHp - b1.hp) * 0.05;
-            const missingHpSelfDmg = (b2.maxHp - b2.hp) * 0.05;
-            totalDmg2 = Math.round(maxHpDmg + missingHpEnemyDmg + missingHpSelfDmg);
-          } else if (b2.typeKey === 'bear' && b2.effectiveHealStored > 0) {
-            totalDmg2 += b2.effectiveHealStored;
-            b2.effectiveHealStored = 0;
-            updateHUD();
-          }
-          if (totalDmg2 > 0) {
-            b1.takeDamage(totalDmg2, 'Va Chạm');
-            b2.hitCooldown = 15;
-            logMessage(`${b2.name} tông ${b1.name} (-${totalDmg2} HP)`, b2.side);
-          }
+          let dmg2 = b2.contactDmg;
+          if (b2.typeKey === 'shen') dmg2 = Math.round(b1.maxHp * 0.05 + (b1.maxHp - b1.hp) * 0.05 + (b2.maxHp - b2.hp) * 0.05);
+          if (dmg2 > 0) { b1.takeDamage(dmg2, 'Va Chạm'); b2.hitCooldown = 15; }
         }
-
         createParticles((b1.x + b2.x) / 2, (b1.y + b2.y) / 2, '#ffffff', 6);
       }
     }
 
-    function updateNinjaProjectiles() {
-      for (let i = ninjaProjectiles.length - 1; i >= 0; i--) {
-        const p = ninjaProjectiles[i];
-        p.x += p.vx; p.y += p.vy;
-
-        ctx.save();
-        ctx.beginPath(); ctx.arc(p.x, p.y, 4, 0, Math.PI * 2);
-        ctx.fillStyle = '#cbd5e1'; ctx.shadowColor = '#f8fafc'; ctx.shadowBlur = 8; ctx.fill();
-        ctx.restore();
-
-        const dist = Math.hypot(p.target.x - p.x, p.target.y - p.y);
-        if (dist <= p.target.radius + 6) {
-          p.target.takeDamage(15, 'Phi Tiêu Ninja (Đòn 1)');
-          createParticles(p.target.x, p.target.y, '#e2e8f0', 10);
-          logMessage(`🥷 Phi Tiêu găm trúng ${p.target.name} (-15 HP)! Chuyển sang Đòn 2 Combo!`, 'ninja');
-          p.owner.ninjaComboStep = 2;
-          ninjaProjectiles.splice(i, 1);
-        } else if (p.x <= 0 || p.x >= canvas.width || p.y <= 0 || p.y >= canvas.height) {
-          p.owner.ninjaComboStep = 1;
-          p.owner.ninjaComboTimer = 0;
-          ninjaProjectiles.splice(i, 1);
-        }
-      }
+    function spawnShuriken(owner, enemy, angleOffset = 0) {
+      const baseAngle = Math.atan2(enemy.y - owner.y, enemy.x - owner.x) + angleOffset;
+      shurikens.push({
+        x: owner.x, y: owner.y,
+        vx: Math.cos(baseAngle) * BASE_SPEED * 4, vy: Math.sin(baseAngle) * BASE_SPEED * 4,
+        owner: owner
+      });
     }
 
-    function updateReaperIllusionsAndSlashes() {
-      const now = Date.now();
-      for (let i = reaperIllusions.length - 1; i >= 0; i--) {
-        const ill = reaperIllusions[i];
-        const age = now - ill.createdAt;
-        if (age >= ill.lifespan) { reaperIllusions.splice(i, 1); continue; }
-
-        ctx.save();
-        ctx.beginPath(); ctx.arc(ill.x, ill.y, ill.radius * 0.8, 0, Math.PI * 2);
-        const alpha = Math.max(0, 1 - age / ill.lifespan);
-        ctx.fillStyle = `rgba(148, 163, 184, ${alpha * 0.35})`; ctx.fill();
-        ctx.strokeStyle = `rgba(226, 232, 240, ${alpha * 0.6})`; ctx.lineWidth = 1.5; ctx.setLineDash([2, 2]); ctx.stroke();
-        ctx.restore();
-      }
-
-      for (let i = activeReaperSlashes.length - 1; i >= 0; i--) {
-        const slash = activeReaperSlashes[i];
-        slash.timer -= 1 / 60;
-        ctx.save();
-        ctx.beginPath(); ctx.moveTo(slash.x, slash.y);
-        ctx.arc(slash.x, slash.y, slash.radius, slash.angle - slash.spread / 2, slash.angle + slash.spread / 2);
-        ctx.closePath(); ctx.fillStyle = 'rgba(148, 163, 184, 0.35)'; ctx.fill();
-        ctx.strokeStyle = 'rgba(226, 232, 240, 0.8)'; ctx.lineWidth = 2.5; ctx.stroke();
-        ctx.restore();
-        if (slash.timer <= 0) activeReaperSlashes.splice(i, 1);
-      }
-    }
-
-    function updateWukongSkills() {
-      for (let i = wukongClones.length - 1; i >= 0; i--) {
-        const clone = wukongClones[i];
-        clone.lifeTimer -= 1 / 60;
-        if (clone.hitCooldown > 0) clone.hitCooldown--;
-        if (clone.lifeTimer <= 0 || clone.hp <= 0) {
-          createParticles(clone.x, clone.y, '#fb923c', 8); wukongClones.splice(i, 1); continue;
-        }
-        clone.x += clone.vx; clone.y += clone.vy;
-        if (clone.x - clone.radius <= 0) { clone.x = clone.radius; clone.vx = Math.abs(clone.vx); }
-        else if (clone.x + clone.radius >= canvas.width) { clone.x = canvas.width - clone.radius; clone.vx = -Math.abs(clone.vx); }
-        if (clone.y - clone.radius <= 0) { clone.y = clone.radius; clone.vy = Math.abs(clone.vy); }
-        else if (clone.y + clone.radius >= canvas.height) { clone.y = canvas.height - clone.radius; clone.vy = -Math.abs(clone.vy); }
-
-        ctx.save(); ctx.globalAlpha = 0.72;
-        ctx.beginPath(); ctx.arc(clone.x, clone.y, clone.radius, 0, Math.PI * 2);
-        ctx.fillStyle = '#fb923c'; ctx.fill(); ctx.restore();
-      }
-
-      for (let i = wukongStaffs.length - 1; i >= 0; i--) {
-        const staff = wukongStaffs[i];
-        staff.rotation += 0.45;
-        const angle = Math.atan2(staff.target.y - staff.y, staff.target.x - staff.x);
-        staff.x += Math.cos(angle) * staff.speed; staff.y += Math.sin(angle) * staff.speed;
-        const dist = Math.hypot(staff.target.x - staff.x, staff.target.y - staff.y);
-        if (dist <= staff.target.radius + 10) {
-          staff.target.takeDamage(10, 'Gậy Như Ý Xoay');
-          wukongStaffs.splice(i, 1);
-        }
-      }
-
-      for (let i = activeWukongSweeps.length - 1; i >= 0; i--) {
-        const sw = activeWukongSweeps[i];
-        sw.timer -= 1 / 60;
-        if (sw.timer <= 0) activeWukongSweeps.splice(i, 1);
-      }
-    }
-
-    function updateSoundWaves() {
-      for (let i = soundWaves.length - 1; i >= 0; i--) {
-        const wave = soundWaves[i]; wave.currentRadius += 5;
-        if (wave.currentRadius >= wave.maxRadius) soundWaves.splice(i, 1);
-      }
-    }
-
-    function updateMarksmanTrapsAndBullets() {
-      for (let i = marksmanTraps.length - 1; i >= 0; i--) {
-        const trap = marksmanTraps[i];
-        const enemy = (trap.owner === p1) ? p2 : p1;
-        if (enemy && !enemy.isGhosting) {
-          if (Math.hypot(enemy.x - trap.x, enemy.y - trap.y) < enemy.radius + trap.radius) {
-            enemy.applyStun(1.0);
-            spawnMarksmanBullet(trap.owner, enemy, 25, true);
-            marksmanTraps.splice(i, 1);
-          }
-        }
-      }
-      for (let i = marksmanBullets.length - 1; i >= 0; i--) {
-        const b = marksmanBullets[i];
-        const angle = Math.atan2(b.target.y - b.y, b.target.x - b.x);
-        b.x += Math.cos(angle) * b.speed; b.y += Math.sin(angle) * b.speed;
-        if (Math.hypot(b.target.x - b.x, b.target.y - b.y) <= b.target.radius + 6) {
-          b.target.takeDamage(b.damage, 'Đạn Bắn Tỉa');
-          marksmanBullets.splice(i, 1);
-        }
-      }
-    }
-
-    function updateSoulOrbsAndBeams() {
-      for (let i = soulOrbs.length - 1; i >= 0; i--) {
-        const orb = soulOrbs[i];
-        [p1, p2].forEach(ball => {
-          if (ball && ball.typeKey === 'soul') {
-            if (Math.hypot(ball.x - orb.x, ball.y - orb.y) < ball.radius + orb.radius) {
-              ball.collectedSoulsCount++; ball.maxHp += 1; ball.hp = Math.min(ball.maxHp, ball.hp + 3);
-              updateHUD(); soulOrbs.splice(i, 1);
-            }
-          }
-        });
-      }
-      for (let i = activeSoulBeams.length - 1; i >= 0; i--) {
-        const beam = activeSoulBeams[i];
-        beam.timer -= 1 / 60;
-        if (beam.timer <= 0) activeSoulBeams.splice(i, 1);
-      }
-    }
-
-    function updateLightningZones() {
-      for (let i = lightningZones.length - 1; i >= 0; i--) {
-        const zone = lightningZones[i];
-        zone.strikeTimer -= 1 / 60;
-        if (zone.strikeTimer <= 0) {
-          const enemy = (zone.owner === p1) ? p2 : p1;
-          if (Math.hypot(zone.x - enemy.x, zone.y - enemy.y) <= zone.radius + enemy.radius) {
-            enemy.takeDamage(14, 'Sấm Sét'); enemy.applySlow(2);
-          }
-          lightningZones.splice(i, 1);
-        }
-      }
-    }
-
-    function updateFireTrails() {
-      const now = Date.now();
-      for (let i = fireTrails.length - 1; i >= 0; i--) {
-        const trail = fireTrails[i];
-        if (now - trail.createdAt >= 4000) { fireTrails.splice(i, 1); continue; }
-        const enemy = (trail.owner === p1) ? p2 : p1;
-        if (Math.hypot(enemy.x - trail.x, enemy.y - trail.y) < enemy.radius + trail.radius) {
-          enemy.applyBurn();
-        }
-      }
-    }
-
-    function updateShurikens() {
-      for (let i = shurikens.length - 1; i >= 0; i--) {
-        const s = shurikens[i];
-        if (!s.isStuck) {
-          s.x += s.vx; s.y += s.vy;
-          const enemy = (s.owner === p1) ? p2 : p1;
-          if (Math.hypot(s.x - enemy.x, s.y - enemy.y) < enemy.radius + 10) {
-            enemy.takeDamage(6, 'Shuriken'); shurikens.splice(i, 1); continue;
-          }
-          if (s.x <= 5 || s.x >= canvas.width - 5 || s.y <= 5 || s.y >= canvas.height - 5) {
-            shurikens.splice(i, 1);
-          }
-        }
-      }
+    function spawnMarksmanBullet(owner, enemy, damage) {
+      if (!enemy) return;
+      marksmanBullets.push({ x: owner.x, y: owner.y, target: enemy, speed: BASE_SPEED * 3.5, damage: damage });
     }
 
     function createParticles(x, y, color, count) {
@@ -1408,51 +1039,118 @@
       }
     }
 
-    function updateParticles() {
-      for (let i = particles.length - 1; i >= 0; i--) {
-        const p = particles[i]; p.x += p.vx; p.y += p.vy; p.life -= 0.04;
-        if (p.life <= 0) particles.splice(i, 1);
-      }
-    }
-
-    function spawnShuriken(owner, enemy, angleOffset = 0) {
-      const baseAngle = Math.atan2(enemy.y - owner.y, enemy.x - owner.x) + angleOffset;
-      shurikens.push({
-        x: owner.x, y: owner.y,
-        vx: Math.cos(baseAngle) * BASE_SPEED * 4, vy: Math.sin(baseAngle) * BASE_SPEED * 4,
-        owner: owner, isStuck: false
+    // --- CÁC HÀM VẼ THỰC THỂ PHỤ (ĐÃ FIX LỖI HIỂN THỊ) ---
+    function drawAuxiliaryVisuals() {
+      // 1. Vệt lửa Fire Ball
+      const now = Date.now();
+      fireTrails.forEach(t => {
+        ctx.beginPath(); ctx.arc(t.x, t.y, t.radius, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(249, 115, 22, 0.4)'; ctx.fill();
       });
-    }
 
-    function spawnMarksmanBullet(owner, enemy, damage, isTrapCrit) {
-      if (!enemy) return;
-      marksmanBullets.push({
-        x: owner.x, y: owner.y, target: enemy, speed: BASE_SPEED * 3.5, damage: damage
+      // 2. Shuriken Assassin
+      shurikens.forEach(s => {
+        s.x += s.vx; s.y += s.vy;
+        ctx.beginPath(); ctx.arc(s.x, s.y, 5, 0, Math.PI * 2);
+        ctx.fillStyle = '#10b981'; ctx.shadowColor = '#34d399'; ctx.shadowBlur = 8; ctx.fill(); ctx.shadowBlur = 0;
       });
+
+      // 3. Vùng Sấm Sét Storm
+      lightningZones.forEach(z => {
+        z.strikeTimer -= 1 / 60;
+        ctx.beginPath(); ctx.arc(z.x, z.y, z.radius, 0, Math.PI * 2);
+        ctx.strokeStyle = 'rgba(56, 189, 248, 0.6)'; ctx.lineWidth = 2; ctx.setLineDash([4, 4]); ctx.stroke(); ctx.setLineDash([]);
+        if (z.strikeTimer <= 0) {
+          const enemy = (z.owner === p1) ? p2 : p1;
+          if (Math.hypot(z.x - enemy.x, z.y - enemy.y) <= z.radius + enemy.radius) {
+            enemy.takeDamage(14, 'Sấm Sét'); enemy.applySlow(2);
+          }
+        }
+      });
+      lightningZones = lightningZones.filter(z => z.strikeTimer > 0);
+
+      // 4. Linh hồn Soul Ball & Chùm sáng Beam
+      soulOrbs.forEach(orb => {
+        ctx.beginPath(); ctx.arc(orb.x, orb.y, orb.radius, 0, Math.PI * 2);
+        ctx.fillStyle = '#f472b6'; ctx.shadowColor = '#ec4899'; ctx.shadowBlur = 10; ctx.fill(); ctx.shadowBlur = 0;
+        [p1, p2].forEach(b => {
+          if (b && b.typeKey === 'soul' && Math.hypot(b.x - orb.x, b.y - orb.y) < b.radius + orb.radius) {
+            b.maxHp += 1; b.hp = Math.min(b.maxHp, b.hp + 3); orb.collected = true; updateHUD();
+          }
+        });
+      });
+      soulOrbs = soulOrbs.filter(o => !o.collected);
+
+      activeSoulBeams.forEach(beam => {
+        beam.timer -= 1 / 60;
+        ctx.save(); ctx.beginPath();
+        ctx.moveTo(beam.x, beam.y);
+        ctx.arc(beam.x, beam.y, beam.maxRadius, beam.angle - beam.spread/2, beam.angle + beam.spread/2);
+        ctx.closePath(); ctx.fillStyle = 'rgba(244, 114, 182, 0.3)'; ctx.fill();
+        ctx.restore();
+      });
+      activeSoulBeams = activeSoulBeams.filter(b => b.timer > 0);
+
+      // 5. Bẫy & Đạn Marksman
+      marksmanTraps.forEach(trap => {
+        ctx.beginPath(); ctx.arc(trap.x, trap.y, trap.radius, 0, Math.PI * 2);
+        ctx.strokeStyle = '#84cc16'; ctx.lineWidth = 2; ctx.stroke();
+        const enemy = (trap.owner === p1) ? p2 : p1;
+        if (enemy && Math.hypot(enemy.x - trap.x, enemy.y - trap.y) < enemy.radius + trap.radius) {
+          enemy.applyStun(1.0);
+          spawnMarksmanBullet(trap.owner, enemy, 25);
+          trap.triggered = true;
+        }
+      });
+      marksmanTraps = marksmanTraps.filter(t => !t.triggered);
+
+      marksmanBullets.forEach(b => {
+        const ang = Math.atan2(b.target.y - b.y, b.target.x - b.x);
+        b.x += Math.cos(ang) * b.speed; b.y += Math.sin(ang) * b.speed;
+        ctx.beginPath(); ctx.arc(b.x, b.y, 4, 0, Math.PI * 2);
+        ctx.fillStyle = '#a3e635'; ctx.fill();
+        if (Math.hypot(b.target.x - b.x, b.target.y - b.y) <= b.target.radius + 4) {
+          b.target.takeDamage(b.damage, 'Đạn Bắn Tỉa');
+          b.hit = true;
+        }
+      });
+      marksmanBullets = marksmanBullets.filter(b => !b.hit);
+
+      // 6. Sóng âm Sound Ball
+      soundWaves.forEach(w => {
+        w.currentRadius += 4;
+        ctx.beginPath(); ctx.arc(w.x, w.y, w.currentRadius, 0, Math.PI * 2);
+        ctx.strokeStyle = 'rgba(45, 212, 191, 0.5)'; ctx.lineWidth = 2; ctx.stroke();
+      });
+      soundWaves = soundWaves.filter(w => w.currentRadius < 300);
+
+      // 7. Hiệu ứng Particles
+      particles.forEach(p => {
+        p.x += p.vx; p.y += p.vy; p.life -= 0.04;
+        ctx.beginPath(); ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
+        ctx.fillStyle = p.color; ctx.globalAlpha = p.life; ctx.fill(); ctx.globalAlpha = 1;
+      });
+      particles = particles.filter(p => p.life > 0);
     }
 
     function updateHUDForPlayer(ball, prefix) {
+      let shieldText = ball.shield > 0 ? ` (🛡️${Math.round(ball.shield)})` : '';
+      if (ball.typeKey === 'demon') shieldText = ` (🛡️${Math.round(ball.shield)} | Phản: +${ball.shield * 3}%)`;
+      
       document.getElementById(`${prefix}-name`).innerText = `${ball.icon} ${ball.name}`;
-      document.getElementById(`${prefix}-hp-text`).innerText = `${Math.ceil(ball.hp)}/${ball.maxHp}${ball.shield > 0 ? ' (🛡️' + Math.ceil(ball.shield) + ')' : ''}`;
+      document.getElementById(`${prefix}-hp-text`).innerText = `${Math.ceil(ball.hp)}/${ball.maxHp}${shieldText}`;
       
       const pct = Math.max(0, (ball.hp / ball.maxHp) * 100);
-      const hpBar = document.getElementById(`${prefix}-hp-bar`);
-      hpBar.style.width = `${pct}%`;
+      document.getElementById(`${prefix}-hp-bar`).style.width = `${pct}%`;
 
       const badges = document.getElementById(`${prefix}-badges`);
       badges.innerHTML = '';
       if (ball.stunTimer > 0) badges.innerHTML += `<span class="bg-yellow-950 text-yellow-400 border border-yellow-500/40 px-1 rounded">💫 Choáng</span>`;
-      if (ball.burnStacks > 0) badges.innerHTML += `<span class="bg-amber-950 text-amber-400 border border-amber-500/40 px-1 rounded">🔥 ${ball.burnStacks}</span>`;
-      if (ball.slowTimer > 0) badges.innerHTML += `<span class="bg-sky-950 text-sky-400 border border-sky-500/40 px-1 rounded">❄️ Chậm</span>`;
-      if (ball.typeKey === 'ninja') badges.innerHTML += `<span class="bg-slate-800 text-slate-200 border border-slate-600 px-1 rounded">🥷 Combo ${ball.ninjaComboStep}</span>`;
-      if (ball.typeKey === 'shen' && ball.shield > 0) badges.innerHTML += `<span class="bg-cyan-950 text-cyan-300 border border-cyan-500/40 px-1 rounded">🛡️ Giáp: ${Math.round(ball.shield)} (${Math.ceil(ball.shieldTimer)}s)</span>`;
       if (ball.typeKey === 'shen') {
-        const bladeRadius = ball.radius * 4;
-        const distToBlade = Math.hypot(ball.x - ball.spiritBladeX, ball.y - ball.spiritBladeY);
-        if (distToBlade <= bladeRadius) {
-          badges.innerHTML += `<span class="bg-cyan-950 text-cyan-200 border border-cyan-400 px-1 rounded">⛩️ Bất Tử Vùng</span>`;
-        }
+        const dist = Math.hypot(ball.x - ball.spiritBladeX, ball.y - ball.spiritBladeY);
+        if (dist <= ball.radius * 4) badges.innerHTML += `<span class="bg-cyan-950 text-cyan-200 border border-cyan-400 px-1 rounded">⛩️ Bất Tử Vùng</span>`;
       }
+      if (ball.typeKey === 'demon') badges.innerHTML += `<span class="bg-red-950 text-red-300 border border-red-500/40 px-1 rounded">👿 Hồi Sinh: ${ball.demonReviveCount}/7</span>`;
     }
 
     function updateHUD() {
@@ -1493,27 +1191,15 @@
       for (let x = 0; x < canvas.width; x += 40) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke(); }
       for (let y = 0; y < canvas.height; y += 40) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke(); }
 
+      // Vẽ dây & vùng Kiếm Hồn của Shen
       [p1, p2].forEach(ball => {
         if (ball && ball.typeKey === 'shen') {
           ctx.save();
-          ctx.beginPath();
-          ctx.moveTo(ball.x, ball.y);
-          ctx.lineTo(ball.spiritBladeX, ball.spiritBladeY);
-          ctx.strokeStyle = 'rgba(6, 182, 212, 0.45)';
-          ctx.lineWidth = 2;
-          ctx.setLineDash([4, 4]);
-          ctx.stroke();
-          ctx.setLineDash([]);
+          ctx.beginPath(); ctx.moveTo(ball.x, ball.y); ctx.lineTo(ball.spiritBladeX, ball.spiritBladeY);
+          ctx.strokeStyle = 'rgba(6, 182, 212, 0.45)'; ctx.lineWidth = 2; ctx.setLineDash([4, 4]); ctx.stroke(); ctx.setLineDash([]);
 
-          const bladeRadius = ball.radius * 4;
-          ctx.beginPath();
-          ctx.arc(ball.spiritBladeX, ball.spiritBladeY, bladeRadius, 0, Math.PI * 2);
-          ctx.fillStyle = 'rgba(6, 182, 212, 0.12)';
-          ctx.fill();
-          ctx.strokeStyle = '#06b6d4';
-          ctx.lineWidth = 1.5;
-          ctx.stroke();
-
+          ctx.beginPath(); ctx.arc(ball.spiritBladeX, ball.spiritBladeY, ball.radius * 4, 0, Math.PI * 2);
+          ctx.fillStyle = 'rgba(6, 182, 212, 0.12)'; ctx.fill(); ctx.strokeStyle = '#06b6d4'; ctx.lineWidth = 1.5; ctx.stroke();
           ctx.font = '16px sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
           ctx.fillText('🗡️', ball.spiritBladeX, ball.spiritBladeY);
           ctx.restore();
@@ -1525,16 +1211,7 @@
         checkBallCollision(p1, p2);
       }
 
-      updateNinjaProjectiles();
-      updateReaperIllusionsAndSlashes();
-      updateWukongSkills();
-      updateMarksmanTrapsAndBullets();
-      updateSoulOrbsAndBeams();
-      updateSoundWaves();
-      updateFireTrails();
-      updateLightningZones();
-      updateShurikens();
-      updateParticles();
+      drawAuxiliaryVisuals();
 
       if (p1) p1.draw();
       if (p2) p2.draw();
