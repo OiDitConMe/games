@@ -1092,12 +1092,24 @@
 
         // Kiểm tra Phước Thần >= HP hiện tại của địch -> Kết liễu tức thì
         if (this.blessingMarks >= this.hp && this.hp > 0 && !gameOver) {
-          logMessage(`👼 PHÁN QUYẾT PHƯỚC THẦN! Địch đã đủ ${this.blessingMarks} Phước Thần trên người với ${this.hp} HP $\to$ Kết liễu tức thì!`, 'angel');
+          logMessage(`👼 PHÁN QUYẾT PHƯỚC THẦN! Địch đã đủ ${this.blessingMarks} Phước Thần trên người với ${this.hp} HP!`, 'angel');
+          
+          // --- XỬ LÝ RIÊNG CHO DEMON BALL: NẾU CÒN HỒI SINH THÌ TIÊU HAO 1 MẠNG ĐỂ KHÁNG PHÁN QUYẾT ---
+          if (this.typeKey === 'demon' && this.demonReviveCount < SKILL_CONFIG.demon.maxRevives) {
+            this.demonReviveCount++;
+            this.hp = this.maxHp;
+            this.blessingMarks = 0; // Xóa sạch dấu ấn Phước Thần sau khi hồi sinh
+            createParticles(this.x, this.y, '#ef4444', 25);
+            logMessage(`👿 Demon Ball chống chịu Phán Quyết! Tiêu hao 1 mạng hồi sinh (Còn ${SKILL_CONFIG.demon.maxRevives - this.demonReviveCount} mạng)!`, 'demon');
+            updateHUD();
+            return;
+          }
+
+          // Các con Ball bình thường khác dính Phước Thần là chết tươi
           this.hp = 0;
           updateHUD();
           endGame(this);
         }
-      }
 
       draw() {
         ctx.save();
