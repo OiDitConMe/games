@@ -302,26 +302,129 @@
       return Math.hypot(p.x - (a.x + t * (b.x - a.x)), p.y - (a.y + t * (b.y - a.y)));
     }
 
-    // Helper vẽ nhát chém lưỡi liềm sắc bén
+    // Lưỡi chém nhiều lớp: lõi sáng, thân kiếm khí và đường cạnh sắc.
+    // Chỉ là lớp hiển thị; không can thiệp hitbox hay sát thương.
     function drawCrescentSlash(ctx, x, y, radius, angle, spread, color, glowColor, alpha) {
+      if (alpha <= 0) return;
       ctx.save();
       ctx.translate(x, y);
       ctx.rotate(angle);
       ctx.globalAlpha = alpha;
       ctx.shadowColor = glowColor;
-      ctx.shadowBlur = 16;
-
+      ctx.shadowBlur = 18;
       ctx.beginPath();
       ctx.arc(0, 0, radius, -spread / 2, spread / 2, false);
-      ctx.arc(-radius * 0.25, 0, radius * 0.85, spread / 2, -spread / 2, true);
+      ctx.arc(-radius * 0.23, 0, radius * 0.82, spread / 2, -spread / 2, true);
       ctx.closePath();
-
-      const grad = ctx.createRadialGradient(0, 0, radius * 0.4, 0, 0, radius);
-      grad.addColorStop(0, 'rgba(255,255,255,0.1)');
-      grad.addColorStop(0.6, color);
-      grad.addColorStop(1, '#ffffff');
+      const grad = ctx.createLinearGradient(-radius * 0.2, -radius * 0.75, radius, radius * 0.5);
+      grad.addColorStop(0, 'rgba(255,255,255,0.08)');
+      grad.addColorStop(0.48, color);
+      grad.addColorStop(0.86, 'rgba(255,255,255,0.92)');
+      grad.addColorStop(1, 'rgba(255,255,255,0.08)');
       ctx.fillStyle = grad;
       ctx.fill();
+      ctx.shadowBlur = 5;
+      ctx.strokeStyle = 'rgba(255,255,255,0.88)';
+      ctx.lineWidth = 1.35;
+      ctx.stroke();
+      // Vệt tốc độ mảnh chạy song song cạnh chém.
+      ctx.globalAlpha = alpha * 0.72;
+      ctx.beginPath();
+      ctx.arc(0, 0, radius * 0.91, -spread * 0.43, spread * 0.43);
+      ctx.strokeStyle = glowColor;
+      ctx.lineWidth = 2.2;
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    function drawSpark(ctx, x, y, size, color, alpha = 1) {
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.globalAlpha = alpha;
+      ctx.strokeStyle = color;
+      ctx.fillStyle = color;
+      ctx.lineWidth = Math.max(0.7, size * 0.22);
+      ctx.shadowColor = color;
+      ctx.shadowBlur = size * 2.2;
+      ctx.beginPath();
+      ctx.moveTo(-size, 0); ctx.lineTo(size, 0);
+      ctx.moveTo(0, -size); ctx.lineTo(0, size);
+      ctx.stroke();
+      ctx.beginPath(); ctx.arc(0, 0, size * 0.22, 0, Math.PI * 2); ctx.fill();
+      ctx.restore();
+    }
+
+    // Dấu ấn thị giác riêng cho từng chiến binh. Không thay đổi thông số chiến đấu.
+    function drawBallSignatureVFX(ball) {
+      const x = ball.x, y = ball.y, r = ball.radius, t = globalTick;
+      ctx.save();
+      if (ball.typeKey === 'fire') {
+        for (let i = 0; i < 7; i++) {
+          const a = t * 0.055 + i * Math.PI * 2 / 7;
+          const h = 7 + (Math.sin(t * 0.19 + i * 2) + 1) * 5;
+          const px = x + Math.cos(a) * (r + 2), py = y + Math.sin(a) * (r + 2);
+          ctx.globalAlpha = 0.48 + 0.25 * Math.sin(t * 0.16 + i);
+          ctx.fillStyle = i % 2 ? '#fb923c' : '#fde68a';
+          ctx.shadowColor = '#f97316'; ctx.shadowBlur = 12;
+          ctx.beginPath(); ctx.moveTo(px - 3, py + 3); ctx.quadraticCurveTo(px - 5, py - h * 0.55, px + Math.sin(t * 0.1 + i) * 2, py - h); ctx.quadraticCurveTo(px + 6, py - h * 0.35, px + 3, py + 3); ctx.closePath(); ctx.fill();
+        }
+      } else if (ball.typeKey === 'assassin') {
+        ctx.translate(x, y); ctx.rotate(-t * 0.025);
+        ctx.strokeStyle = 'rgba(52,211,153,0.55)'; ctx.shadowColor = '#34d399'; ctx.shadowBlur = 12; ctx.lineWidth = 1.2;
+        ctx.beginPath(); ctx.arc(0, 0, r + 6 + Math.sin(t * 0.12) * 2, 0.25, Math.PI * 1.55); ctx.stroke();
+        for (let i = 0; i < 4; i++) { const a = i * Math.PI / 2 + t * 0.035; drawSpark(ctx, Math.cos(a) * (r + 8), Math.sin(a) * (r + 8), 2.2, '#a7f3d0', 0.7); }
+      } else if (ball.typeKey === 'bear' && ball.effectiveHealStored > 0) {
+        const q = Math.min(1, ball.effectiveHealStored / 25), pulse = 1 + Math.sin(t * 0.18) * 0.08;
+        ctx.translate(x, y); ctx.rotate(t * 0.018);
+        ctx.strokeStyle = `rgba(251,191,36,${0.3 + q * 0.55})`; ctx.lineWidth = 1.4 + q * 1.4; ctx.setLineDash([3, 7]);
+        ctx.beginPath(); ctx.arc(0, 0, (r + 12 + q * 9) * pulse, 0, Math.PI * 2); ctx.stroke(); ctx.setLineDash([]);
+        for (let i = 0; i < 4; i++) { const a = i * Math.PI / 2 + t * 0.025; drawSpark(ctx, Math.cos(a) * (r + 10 + q * 5), Math.sin(a) * (r + 10 + q * 5), 2 + q * 2, '#fbbf24', 0.45 + q * 0.5); }
+      } else if (ball.typeKey === 'storm') {
+        ctx.strokeStyle = 'rgba(125,211,252,0.55)'; ctx.lineWidth = 1.3; ctx.shadowColor = '#38bdf8'; ctx.shadowBlur = 12;
+        for (let i = 0; i < 3; i++) { const a = t * 0.045 + i * Math.PI * 2 / 3; ctx.beginPath(); ctx.arc(x, y, r + 5 + i * 3, a, a + 0.85); ctx.stroke(); }
+        if (t % 13 < 2) drawSpark(ctx, x + Math.sin(t) * (r + 8), y + Math.cos(t * 0.7) * (r + 8), 4, '#e0f2fe', 0.9);
+      } else if (ball.typeKey === 'wanderer' && ball.wandererShieldActive) {
+        ctx.translate(x, y); ctx.rotate(-t * 0.025);
+        ctx.strokeStyle = 'rgba(199,210,254,0.72)'; ctx.lineWidth = 1.4;
+        for (let i = 0; i < 6; i++) { const a = i * Math.PI / 3; ctx.beginPath(); ctx.moveTo(Math.cos(a) * (r + 5), Math.sin(a) * (r + 5)); ctx.lineTo(Math.cos(a) * (r + 11), Math.sin(a) * (r + 11)); ctx.stroke(); }
+      } else if (ball.typeKey === 'soul') {
+        ctx.translate(x, y); ctx.rotate(t * 0.018);
+        ctx.strokeStyle = 'rgba(244,114,182,0.45)'; ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.ellipse(0, 0, r + 9, r + 4, 0, 0, Math.PI * 2); ctx.stroke();
+        drawSpark(ctx, Math.cos(t * 0.08) * (r + 10), Math.sin(t * 0.08) * (r + 6), 3, '#fbcfe8', 0.8);
+      } else if (ball.typeKey === 'marksman') {
+        ctx.strokeStyle = 'rgba(190,242,100,0.55)'; ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.arc(x, y, r + 7, t * 0.02, t * 0.02 + Math.PI * 1.45); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(x - r - 5, y); ctx.lineTo(x - r - 1, y); ctx.moveTo(x + r + 1, y); ctx.lineTo(x + r + 5, y); ctx.moveTo(x, y - r - 5); ctx.lineTo(x, y - r - 1); ctx.stroke();
+      } else if (ball.typeKey === 'ninja' && !ball.ninjaInvulnerable) {
+        ctx.translate(x, y); ctx.rotate(t * 0.035);
+        ctx.strokeStyle = 'rgba(226,232,240,0.35)'; ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.arc(0, 0, r + 5, Math.PI * 0.15, Math.PI * 0.85); ctx.stroke();
+      } else if (ball.typeKey === 'reaper') {
+        const pulse = 0.5 + 0.5 * Math.sin(t * 0.09);
+        ctx.strokeStyle = `rgba(203,213,225,${0.18 + pulse * 0.25})`; ctx.lineWidth = 2; ctx.shadowColor = '#94a3b8'; ctx.shadowBlur = 12;
+        ctx.beginPath(); ctx.arc(x, y, r + 5 + pulse * 4, Math.PI * 0.1, Math.PI * 1.75); ctx.stroke();
+      } else if (ball.typeKey === 'sound') {
+        for (let i = 0; i < 3; i++) { const rr = r + 5 + i * 4 + Math.sin(t * 0.12 + i) * 1.5; ctx.beginPath(); ctx.arc(x, y, rr, -0.65, 0.65); ctx.strokeStyle = `hsla(${(t + i * 65) % 360},85%,70%,0.5)`; ctx.lineWidth = 1.3; ctx.stroke(); }
+      } else if (ball.typeKey === 'angel') {
+        ctx.translate(x, y); ctx.rotate(t * 0.012);
+        ctx.strokeStyle = 'rgba(254,240,138,0.5)'; ctx.lineWidth = 1.3;
+        ctx.beginPath(); ctx.ellipse(0, 0, r + 9, r + 4, 0, Math.PI, Math.PI * 2); ctx.stroke();
+        drawSpark(ctx, x - x + Math.cos(t * 0.05) * (r + 10), Math.sin(t * 0.05) * (r + 7), 2.5, '#fef3c7', 0.8);
+      } else if (ball.typeKey === 'wukong' && ball.wukongSweepTimer > 0) {
+        ctx.translate(x, y); ctx.rotate(t * 0.11);
+        ctx.strokeStyle = 'rgba(251,146,60,0.7)'; ctx.lineWidth = 2.2; ctx.shadowColor = '#fb923c'; ctx.shadowBlur = 14;
+        ctx.beginPath(); ctx.arc(0, 0, r + 13, 0.1, Math.PI * 1.25); ctx.stroke();
+      } else if (ball.typeKey === 'demon') {
+        const pulse = 0.5 + Math.sin(t * 0.1) * 0.5;
+        ctx.strokeStyle = `rgba(248,113,113,${0.2 + pulse * 0.3})`; ctx.lineWidth = 2; ctx.shadowColor = '#ef4444'; ctx.shadowBlur = 10;
+        ctx.beginPath(); ctx.arc(x, y, r + 5 + pulse * 3, 0, Math.PI * 2); ctx.stroke();
+      } else if (ball.typeKey === 'poseidon') {
+        ctx.translate(x, y); ctx.rotate(-t * 0.016);
+        ctx.strokeStyle = 'rgba(125,211,252,0.48)'; ctx.lineWidth = 1.5;
+        ctx.beginPath(); ctx.ellipse(0, 0, r + 11, r + 5, 0, 0, Math.PI * 2); ctx.stroke();
+        for (let i = 0; i < 3; i++) { const a = t * 0.035 + i * Math.PI * 2 / 3; drawSpark(ctx, Math.cos(a) * (r + 9), Math.sin(a) * (r + 7), 2, '#bae6fd', 0.7); }
+      }
       ctx.restore();
     }
 
@@ -1288,6 +1391,7 @@
 
       draw() {
         ctx.save();
+        drawBallSignatureVFX(this);
 
         // Bear Ball: Hào quang gầm thét tích tụ đòn đánh cực mạnh
         if (this.typeKey === 'bear' && this.effectiveHealStored > 0) {
@@ -1350,6 +1454,11 @@
           ctx.lineWidth = 2.5;
           ctx.setLineDash([8, 5]);
           ctx.stroke();
+          for (let mote = 0; mote < 5; mote++) {
+            const a = globalTick * 0.035 + mote * Math.PI * 2 / 5;
+            const rr = this.radius + 12 + Math.sin(globalTick * 0.08 + mote) * 3;
+            drawSpark(ctx, Math.cos(a) * rr, Math.sin(a) * rr, 2.3, mote % 2 ? '#fbcfe8' : '#fef08a', 0.72);
+          }
           ctx.restore();
         }
 
@@ -1412,6 +1521,22 @@
           ctx.shadowColor = '#c084fc';
           ctx.shadowBlur = 10;
           ctx.stroke();
+          // Sợi phụ mảnh như dòng linh lực, tạo cảm giác dây đang chuyển động.
+          ctx.beginPath();
+          ctx.moveTo(this.x, this.y);
+          ctx.quadraticCurveTo(midX - 7, midY + 8, this.ghostX, this.ghostY);
+          ctx.strokeStyle = 'rgba(243,232,255,0.72)';
+          ctx.lineWidth = 0.85;
+          ctx.setLineDash([3, 6]);
+          ctx.lineDashOffset = -globalTick * 0.35;
+          ctx.stroke();
+          ctx.setLineDash([]);
+          for (let mote = 0; mote < 4; mote++) {
+            const q = ((globalTick * 0.012 + mote * 0.25) % 1);
+            const mx = (1-q)*(1-q)*this.x + 2*(1-q)*q*midX + q*q*this.ghostX;
+            const my = (1-q)*(1-q)*this.y + 2*(1-q)*q*midY + q*q*this.ghostY;
+            drawSpark(ctx, mx, my, 2.1, '#e9d5ff', 0.78);
+          }
 
           // Thực thể Hồn
           ctx.beginPath();
@@ -1577,6 +1702,10 @@
             ctx.strokeStyle = ring === 0 ? `rgba(125, 211, 252, ${alpha})` : `rgba(14, 165, 233, ${alpha * (0.7 - ring * 0.2)})`;
             ctx.lineWidth = 3 - ring * 0.7;
             ctx.stroke();
+            ctx.beginPath();
+            ctx.ellipse(w.x, w.y, r * 1.035, r * 0.965, globalTick * 0.002, 0.35 + ring * 0.1, 2.55 + ring * 0.1);
+            ctx.strokeStyle = `rgba(224,242,254,${alpha * (0.32 - ring * 0.06)})`;
+            ctx.lineWidth = 1.15; ctx.stroke();
           }
         }
         ctx.restore();
@@ -1609,6 +1738,22 @@
           ctx.strokeStyle = rimColor;
           ctx.lineWidth = 3 * (1 - p * 0.4);
           ctx.stroke();
+          // Các tia nước bắn văng thành giọt, có độ cong và độ dài khác nhau.
+          ctx.save();
+          ctx.translate(cx, cy);
+          for (let drop = 0; drop < 14; drop++) {
+            const a = drop * Math.PI * 2 / 14 + p * 0.22;
+            const wobble = 0.82 + 0.18 * Math.sin(drop * 4.1 + p * 5);
+            const inner = expandR * (0.72 + 0.08 * Math.sin(drop));
+            const outer = expandR * (1.02 + 0.18 * wobble) * (0.55 + p * 0.45);
+            ctx.beginPath(); ctx.moveTo(Math.cos(a) * inner, Math.sin(a) * inner);
+            ctx.quadraticCurveTo(Math.cos(a - 0.08) * outer * 1.12, Math.sin(a - 0.08) * outer * 1.12, Math.cos(a) * outer, Math.sin(a) * outer);
+            ctx.strokeStyle = drop % 2 ? 'rgba(224,242,254,0.78)' : 'rgba(56,189,248,0.72)';
+            ctx.lineWidth = 1.4 + (1-p); ctx.lineCap = 'round'; ctx.stroke();
+            ctx.beginPath(); ctx.ellipse(Math.cos(a) * outer, Math.sin(a) * outer, 1.5 + p * 1.2, 3.2 + p * 2, a, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(186,230,253,0.72)'; ctx.fill();
+          }
+          ctx.restore();
 
           ctx.beginPath();
           ctx.arc(cx, cy, expandR * 0.72, 0, Math.PI * 2);
@@ -1685,6 +1830,17 @@
         ctx.beginPath();
         ctx.arc(t.x, t.y - (1 - lifeRatio) * 6, r, 0, Math.PI * 2);
         ctx.fill();
+        // Lưỡi lửa thuôn dài và lõi nóng, giúp vệt cháy có hướng thay vì đốm tròn.
+        ctx.globalAlpha = lifeRatio * 0.78;
+        ctx.fillStyle = '#fb923c';
+        ctx.beginPath();
+        ctx.moveTo(t.x - r * 0.62, t.y + r * 0.25);
+        ctx.quadraticCurveTo(t.x - r * 0.45, t.y - r * 1.15, t.x + Math.sin(t.flickerSeed + globalTick * 0.08) * r * 0.2, t.y - r * 1.65);
+        ctx.quadraticCurveTo(t.x + r * 0.9, t.y - r * 0.65, t.x + r * 0.58, t.y + r * 0.28);
+        ctx.closePath(); ctx.fill();
+        ctx.globalAlpha = lifeRatio * 0.72;
+        ctx.fillStyle = '#fef3c7';
+        ctx.beginPath(); ctx.ellipse(t.x, t.y + r * 0.12, r * 0.22, r * 0.48, 0, 0, Math.PI * 2); ctx.fill();
         ctx.restore();
 
         const enemy = (t.owner === p1) ? p2 : p1;
@@ -1777,6 +1933,15 @@
         ctx.closePath();
         ctx.fill();
         ctx.stroke();
+        // Lõi kim loại và bốn cạnh phản quang của phi tiêu.
+        ctx.beginPath(); ctx.arc(0, 0, 3.1, 0, Math.PI * 2);
+        ctx.fillStyle = '#064e3b'; ctx.fill();
+        ctx.strokeStyle = '#d1fae5'; ctx.lineWidth = 1; ctx.stroke();
+        for (let blade = 0; blade < 4; blade++) {
+          ctx.rotate(Math.PI / 2);
+          ctx.beginPath(); ctx.moveTo(0, -10); ctx.lineTo(0, -2.5);
+          ctx.strokeStyle = 'rgba(255,255,255,0.9)'; ctx.lineWidth = 1.1; ctx.stroke();
+        }
         ctx.restore();
       }
 
@@ -1804,6 +1969,17 @@
         ctx.strokeStyle = `rgba(186, 230, 253, ${0.3 + chargeRatio * 0.7})`;
         ctx.lineWidth = 1.5;
         ctx.stroke();
+        ctx.restore();
+        // Hồ quang điện chạy quanh mép vùng, dồn nhịp nhanh dần trước khi giáng sét.
+        ctx.save();
+        ctx.translate(z.x, z.y);
+        const arcSpin = globalTick * (0.035 + chargeRatio * 0.07);
+        for (let arc = 0; arc < 3; arc++) {
+          const a0 = arcSpin + arc * Math.PI * 2 / 3;
+          ctx.beginPath(); ctx.arc(0, 0, z.radius * (0.72 + arc * 0.07), a0, a0 + 0.42 + chargeRatio * 0.35);
+          ctx.strokeStyle = `rgba(224,242,254,${0.35 + chargeRatio * 0.55})`;
+          ctx.lineWidth = 1.2 + chargeRatio * 1.4; ctx.shadowColor = '#38bdf8'; ctx.shadowBlur = 10; ctx.stroke();
+        }
         ctx.restore();
 
         if (z.strikeTimer <= 0) {
@@ -1855,6 +2031,12 @@
         ctx.arc(lb.x, lb.y, lb.radius * 0.6, 0, Math.PI * 2);
         ctx.fillStyle = 'rgba(186, 230, 253, 0.35)';
         ctx.fill();
+        ctx.strokeStyle = `rgba(224,242,254,${alpha * 0.9})`; ctx.lineWidth = 2;
+        for (let ray = 0; ray < 8; ray++) {
+          const a = ray * Math.PI / 4 + globalTick * 0.025;
+          ctx.beginPath(); ctx.moveTo(lb.x + Math.cos(a) * 8, lb.y + Math.sin(a) * 8);
+          ctx.lineTo(lb.x + Math.cos(a) * lb.radius * 0.62, lb.y + Math.sin(a) * lb.radius * 0.62); ctx.stroke();
+        }
         ctx.restore();
 
         if (lb.timer <= 0) lightningBolts.splice(i, 1);
@@ -2000,7 +2182,17 @@
         ctx.beginPath();
         ctx.arc(0, 0, 3, 0, Math.PI * 2);
         ctx.fillStyle = (Math.sin(trap.pulse * 2) > 0) ? '#ef4444' : '#fca5a5';
-        ctx.fill();
+        ctx.shadowColor = '#ef4444'; ctx.shadowBlur = 9; ctx.fill();
+        // Bốn chốt khóa, rãnh kim loại và vòng lò xo bên trong.
+        ctx.shadowBlur = 0;
+        ctx.strokeStyle = 'rgba(217,249,157,0.9)'; ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.arc(0, 0, trap.radius * 0.38, 0, Math.PI * 2); ctx.stroke();
+        for (let pin = 0; pin < 4; pin++) {
+          const a = pin * Math.PI / 2;
+          ctx.fillStyle = '#d9f99d';
+          ctx.fillRect(Math.cos(a) * trap.radius * 0.62 - 1.5, Math.sin(a) * trap.radius * 0.62 - 1.5, 3, 3);
+          ctx.beginPath(); ctx.moveTo(Math.cos(a) * 4, Math.sin(a) * 4); ctx.lineTo(Math.cos(a) * trap.radius * 0.48, Math.sin(a) * trap.radius * 0.48); ctx.stroke();
+        }
         ctx.restore();
 
         const enemy = (trap.owner === p1) ? p2 : p1;
@@ -2063,6 +2255,8 @@
           ctx.closePath();
           ctx.fill();
           ctx.stroke();
+          ctx.beginPath(); ctx.moveTo(5, 0); ctx.lineTo(-4, 0); ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 1.1; ctx.stroke();
+          ctx.beginPath(); ctx.arc(-3, 0, 7, 0, Math.PI * 2); ctx.strokeStyle = 'rgba(248,113,113,0.75)'; ctx.lineWidth = 1; ctx.stroke();
         } else {
           ctx.fillStyle = '#ecfccb';
           ctx.strokeStyle = '#84cc16';
@@ -2074,6 +2268,7 @@
           ctx.closePath();
           ctx.fill();
           ctx.stroke();
+          ctx.beginPath(); ctx.moveTo(4, 0); ctx.lineTo(-3, 0); ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 0.8; ctx.stroke();
         }
         ctx.restore();
 
@@ -2128,6 +2323,9 @@
         ctx.closePath();
         ctx.fill();
         ctx.stroke();
+        ctx.beginPath(); ctx.arc(0, 0, 2.2, 0, Math.PI * 2); ctx.fillStyle = '#475569'; ctx.fill();
+        ctx.strokeStyle = 'rgba(255,255,255,0.95)'; ctx.lineWidth = 0.9;
+        for (let edge = 0; edge < 4; edge++) { ctx.rotate(Math.PI / 2); ctx.beginPath(); ctx.moveTo(0, -9); ctx.lineTo(0, -2); ctx.stroke(); }
         ctx.restore();
 
         if (Math.hypot(p.target.x - p.x, p.target.y - p.y) <= p.target.radius + 6) {
@@ -2163,6 +2361,15 @@
         ctx.arc(wx, wy, ill.radius * 0.45, 0, Math.PI * 2);
         ctx.fillStyle = `rgba(248, 250, 252, ${alpha * 0.45})`;
         ctx.fill();
+        // Ba dải linh vụ cuộn mềm quanh dấu tích, tan dần về phía sau.
+        ctx.lineWidth = 1.25;
+        for (let wisp = 0; wisp < 3; wisp++) {
+          const a = ill.wobble + wisp * Math.PI * 2 / 3;
+          ctx.beginPath();
+          ctx.moveTo(wx + Math.cos(a) * ill.radius * 0.25, wy + Math.sin(a) * ill.radius * 0.25);
+          ctx.quadraticCurveTo(wx + Math.cos(a + 0.7) * ill.radius * 1.05, wy + Math.sin(a + 0.7) * ill.radius * 0.9 - 5, wx + Math.cos(a + 1.25) * ill.radius * 0.75, wy + Math.sin(a + 1.25) * ill.radius * 0.75 - 10);
+          ctx.strokeStyle = `rgba(203,213,225,${alpha * 0.34})`; ctx.stroke();
+        }
         ctx.restore();
       });
 
@@ -2191,6 +2398,16 @@
         ctx.shadowColor = `hsla(${hue}, 90%, 65%, 0.6)`;
         ctx.shadowBlur = 8;
         ctx.stroke();
+        // Dải gợn vi mô chạy quanh sóng âm, tạo cảm giác rung động lan truyền.
+        ctx.beginPath();
+        for (let q = 0; q <= 96; q++) {
+          const a = q / 96 * Math.PI * 2;
+          const rippleR = w.currentRadius + Math.sin(a * 7 + globalTick * 0.16) * 2.2 + Math.sin(a * 13 - globalTick * 0.11) * 0.9;
+          const px = w.x + Math.cos(a) * rippleR, py = w.y + Math.sin(a) * rippleR;
+          if (q === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+        }
+        ctx.strokeStyle = `hsla(${(hue + 35) % 360},95%,78%,${alpha * 0.55})`;
+        ctx.lineWidth = 1.1; ctx.shadowBlur = 4; ctx.stroke();
 
         // Vòng sóng hòa âm thứ cấp bên trong
         if (w.currentRadius > 14) {
@@ -2314,6 +2531,13 @@
         ctx.strokeStyle = '#fef08a';
         ctx.lineWidth = 1;
         ctx.strokeRect(-halfL, -4.5, st.length, 9);
+        // Vân khắc vàng trên hai đầu bịt và một đường phản quang trên thân gậy.
+        ctx.fillStyle = '#fff7cc';
+        ctx.fillRect(-halfL + capL * 0.18, -4.5, 2, 9);
+        ctx.fillRect(halfL - capL * 0.18 - 2, -4.5, 2, 9);
+        ctx.strokeStyle = 'rgba(255,247,204,0.85)'; ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.moveTo(-halfL + capL, -1.4); ctx.lineTo(halfL - capL, -1.4); ctx.stroke();
+        ctx.beginPath(); ctx.arc(-halfL + capL * 0.5, 0, 2.2, 0, Math.PI * 2); ctx.arc(halfL - capL * 0.5, 0, 2.2, 0, Math.PI * 2); ctx.fill();
         ctx.restore();
 
         if (Math.hypot(st.target.x - st.x, st.target.y - st.y) <= st.target.radius + 12) {
@@ -2491,12 +2715,24 @@
           ctx.shadowColor = '#22d3ee';
           ctx.shadowBlur = 10;
           ctx.stroke();
+          // Ba hạt linh lực tuần hoàn trên dây, làm rõ hướng liên kết.
+          for (let mote = 0; mote < 3; mote++) {
+            const q = (globalTick * 0.018 + mote / 3) % 1;
+            const mx = ball.x + (ball.spiritBladeX - ball.x) * q;
+            const my = ball.y + (ball.spiritBladeY - ball.y) * q;
+            ctx.beginPath(); ctx.arc(mx, my, 2.2 + Math.sin(globalTick * 0.12 + mote) * 0.7, 0, Math.PI * 2);
+            ctx.fillStyle = '#ecfeff'; ctx.shadowColor = '#67e8f9'; ctx.shadowBlur = 12; ctx.fill();
+          }
 
           // Biểu tượng Kiếm Hồn phát sáng
           ctx.font = '18px sans-serif';
           ctx.textAlign = 'center';
           ctx.textBaseline = 'middle';
           ctx.fillText('🗡️', ball.spiritBladeX, ball.spiritBladeY);
+          ctx.beginPath(); ctx.arc(ball.spiritBladeX, ball.spiritBladeY, 11 + Math.sin(globalTick * 0.09) * 1.5, 0, Math.PI * 2);
+          ctx.strokeStyle = 'rgba(207,250,254,0.8)'; ctx.lineWidth = 1; ctx.stroke();
+          ctx.beginPath(); ctx.arc(ball.spiritBladeX, ball.spiritBladeY, 16, globalTick * 0.025, globalTick * 0.025 + Math.PI * 1.2);
+          ctx.strokeStyle = 'rgba(34,211,238,0.65)'; ctx.lineWidth = 1.5; ctx.stroke();
           ctx.restore();
         }
       });
