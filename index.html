@@ -107,8 +107,8 @@
 
       <!-- Skill Guide Info -->
       <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-3 text-xs space-y-2 max-h-[300px] overflow-y-auto custom-scrollbar">
-        <div class="font-bold text-cyan-400 font-orbitron">🔱 POSEIDON (ĐÃ SỬA):</div>
-        <div class="text-slate-300">Đã kích hoạt đầy đủ chuỗi 3 vụ nổ nước hướng về phía địch mỗi 4s! Sóng quét 3,5 đường kính. Môi trường Đại Dương & Đuối Nước hoạt động hoàn hảo.</div>
+        <div class="font-bold text-cyan-400 font-orbitron">🔱 POSEIDON (NÂNG CẤP):</div>
+        <div class="text-slate-300">Vụ nổ 1 làm chậm 50% trong 0.5s & đẩy lùi văng 2 đường kính Ball! Vụ 2 & 3 tiếp tục dồn ép tạo Đại Dương & Đuối Nước tối thượng!</div>
       </div>
     </div>
 
@@ -408,7 +408,6 @@
         }
         if (this.slowTimer > 0) {
           this.slowTimer -= 1 / 60;
-          this.slowFactor = 0.7;
           if (this.slowTimer <= 0) { this.slowFactor = 1; this.slowTimer = 0; }
         }
         if (this.shield > 0 && this.shieldTimer > 0 && this.typeKey !== 'demon') {
@@ -1367,7 +1366,18 @@
           if (!b.hit1 && Math.hypot(b.enemy.x - b.x1, b.enemy.y - b.y1) <= b.enemy.radius + b.r1) {
             b.hit1 = true;
             b.enemy.takeDamage(b.dmg1, 'Vụ Nổ Nước 1');
-            createParticles(b.enemy.x, b.enemy.y, '#0ea5e9', 8);
+            
+            // Cập nhật: Vụ nổ 1 làm chậm 50% trong 0.5s và đẩy lùi 2 đường kính Ball
+            b.enemy.slowFactor = 0.5;
+            b.enemy.slowTimer = Math.max(b.enemy.slowTimer, 0.5);
+            
+            const pushAngle = Math.atan2(b.enemy.y - b.y1, b.enemy.x - b.x1);
+            const pushDist = (b.enemy.radius * 2) * 2; // 2 đường kính Ball
+            b.enemy.x = Math.max(b.enemy.radius, Math.min(canvas.width - b.enemy.radius, b.enemy.x + Math.cos(pushAngle) * pushDist));
+            b.enemy.y = Math.max(b.enemy.radius, Math.min(canvas.height - b.enemy.radius, b.enemy.y + Math.sin(pushAngle) * pushDist));
+
+            createParticles(b.enemy.x, b.enemy.y, '#0ea5e9', 12);
+            logMessage(`💧 Vụ Nổ Nước 1 trúng ${b.enemy.name}: Làm chậm 50% (0.5s) & Đẩy lùi văng xa!`, 'poseidon');
           }
           if (b.timer >= 0.3) { b.stage = 2; b.timer = 0; }
         } else if (b.stage === 2) {
@@ -1687,7 +1697,7 @@
       if (ball.drownedTimer > 0) badges.innerHTML += `<span class="bg-sky-950 text-cyan-300 border border-cyan-400 px-1 rounded animate-pulse">🌊 Đuối Nước</span>`;
       if (ball.oceanicMarks > 0) badges.innerHTML += `<span class="bg-blue-950 text-blue-300 border border-blue-400 px-1 rounded">🔱 Ấn: ${ball.oceanicMarks}/4</span>`;
       if (ball.stunTimer > 0) badges.innerHTML += `<span class="bg-yellow-950 text-yellow-400 border border-yellow-500/40 px-1 rounded">💫 Choáng</span>`;
-      if (ball.slowTimer > 0) badges.innerHTML += `<span class="bg-blue-950 text-blue-300 border border-blue-500/40 px-1 rounded">❄️ Chậm (-30%)</span>`;
+      if (ball.slowTimer > 0) badges.innerHTML += `<span class="bg-blue-950 text-blue-300 border border-blue-500/40 px-1 rounded">❄️ Chậm (-50%)</span>`;
       if (ball.burnTimer > 0) badges.innerHTML += `<span class="bg-amber-950 text-amber-400 border border-amber-500/40 px-1 rounded">🔥 Cháy (${ball.burnStacks})</span>`;
       if (ball.shield > 0) badges.innerHTML += `<span class="bg-cyan-950 text-cyan-300 border border-cyan-500/40 px-1 rounded">🛡️ Khiên (${Math.round(ball.shield)})</span>`;
       if (ball.typeKey === 'wanderer' && ball.wandererShieldActive) badges.innerHTML += `<span class="bg-indigo-950 text-indigo-300 border border-indigo-400 px-1 rounded">⚔️ Khiên Chặn Dmg</span>`;
@@ -1780,7 +1790,6 @@
     btnStart.addEventListener('click', initGame);
     btnRestart.addEventListener('click', initGame);
     
-    // Tự động khởi chạy trận đấu ngay khi load trang
     initGame();
   </script>
 </body>
