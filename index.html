@@ -20,7 +20,7 @@
     }
     
     canvas {
-      box-shadow: 0 0 25px rgba(0, 0, 0, 0.8), 0 0 10px rgba(59, 130, 246, 0.2);
+      box-shadow: 0 0 25px rgba(0, 0, 0, 0.8), 0 0 10px rgba(14, 165, 233, 0.3);
     }
 
     .custom-scrollbar::-webkit-scrollbar {
@@ -39,7 +39,7 @@
 
   <!-- Header -->
   <header class="text-center mb-3">
-    <h1 class="text-2xl sm:text-3xl font-black font-orbitron tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-fuchsia-500 to-amber-400 drop-shadow-md">
+    <h1 class="text-2xl sm:text-3xl font-black font-orbitron tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-500 to-indigo-400 drop-shadow-md">
       BALL BATTLE ARENA
     </h1>
     <p class="text-xs text-slate-400 mt-1">Mô phỏng Đấu Vật Lý & Nội Tại Độc Quyền</p>
@@ -70,9 +70,10 @@
               <option value="reaper">💀 Reaper Ball</option>
               <option value="shen">⛩️ Shen Ball</option>
               <option value="sound">🔊 Sound Ball</option>
-              <option value="angel" selected>👼 Angel Ball</option>
+              <option value="angel">👼 Angel Ball</option>
               <option value="wukong">🐵 Wukong Ball</option>
               <option value="demon">👿 Demon Ball</option>
+              <option value="poseidon" selected>🔱 Poseidon Ball</option>
             </select>
           </div>
 
@@ -91,9 +92,10 @@
               <option value="reaper">💀 Reaper Ball</option>
               <option value="shen">⛩️ Shen Ball</option>
               <option value="sound">🔊 Sound Ball</option>
-              <option value="angel">👼 Angel Ball</option>
+              <option value="angel" selected>👼 Angel Ball</option>
               <option value="wukong">🐵 Wukong Ball</option>
-              <option value="demon" selected>👿 Demon Ball</option>
+              <option value="demon">👿 Demon Ball</option>
+              <option value="poseidon">🔱 Poseidon Ball</option>
             </select>
           </div>
 
@@ -105,8 +107,8 @@
 
       <!-- Skill Guide Info -->
       <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-3 text-xs space-y-2 max-h-[300px] overflow-y-auto custom-scrollbar">
-        <div class="font-bold text-amber-400 font-orbitron">KẺ ĐỐI LẬP:</div>
-        <div class="text-slate-300"><span class="text-yellow-200 font-bold">👼 Angel vs 👿 Demon:</span> Demon Ball kháng Phán Quyết của Angel bằng cách tiêu hao 1 trong 7 mạng hồi sinh cực kỳ cân kèo!</div>
+        <div class="font-bold text-cyan-400 font-orbitron">🔱 POSEIDON BALL:</div>
+        <div class="text-slate-300">Tạo sóng nước đẩy lùi, tích 4 ấn <span class="text-blue-300 font-bold">"Hải Thần Ấn"</span> kích hoạt Môi Trường Đại Dương & Áp chế <span class="text-cyan-200 font-bold">Đuối Nước</span> tuyệt đối!</div>
       </div>
     </div>
 
@@ -190,7 +192,8 @@
       sound:    { name: 'Sound Ball',    color: '#2dd4bf', secondaryColor: '#0f766e', hp: 100, maxHp: 100, radius: 18, speed: BASE_SPEED * 0.9,  contactDmg: 0,  icon: '🔊' },
       angel:    { name: 'Angel Ball',    color: '#fef08a', secondaryColor: '#eab308', hp: 80,  maxHp: 80,  radius: 18, speed: BASE_SPEED * 0.9,  contactDmg: 0,  icon: '👼' },
       wukong:   { name: 'Wukong Ball',   color: '#fb923c', secondaryColor: '#b45309', hp: 102, maxHp: 102, radius: 18, speed: BASE_SPEED * 1.32, contactDmg: 7,  icon: '🐵' },
-      demon:    { name: 'Demon Ball',    color: '#ef4444', secondaryColor: '#991b1b', hp: 12,  maxHp: 12,  radius: 18, speed: BASE_SPEED * 1.06, contactDmg: 6,  icon: '👿' }
+      demon:    { name: 'Demon Ball',    color: '#ef4444', secondaryColor: '#991b1b', hp: 12,  maxHp: 12,  radius: 18, speed: BASE_SPEED * 1.06, contactDmg: 6,  icon: '👿' },
+      poseidon: { name: 'Poseidon Ball', color: '#0ea5e9', secondaryColor: '#0369a1', hp: 100, maxHp: 100, radius: 18, speed: BASE_SPEED,        contactDmg: 0,  icon: '🔱' }
     };
 
     const SKILL_CONFIG = {
@@ -200,7 +203,7 @@
       bear: { normalHealInterval: 0.45, lowHpHealInterval: 0.18, lowHpThreshold: 60 },
       storm: { spawnInterval: 0.4, strikeDelay: 1.4, lightningDmg: 17, slowDuration: 2.0, zoneRadiusMult: 4.5 },
       wanderer: { shieldCooldown: 6.75, slashCooldown: 1.0, slash12Dmg: 17, slash3Dmg: 22, slashRangeMult: 3.0 },
-      soul: { orbSpawnInterval: 1.15, orbHeal: 3, orbMaxHpBonus: 1, beamInterval: 2.0, baseBeamDmg: 10, bonusDmgPerSoul: 3, baseBeamAngleDeg: 35, bonusAnglePerSoulDeg: 5, maxBeamAngleDeg: 160 },
+      soul: { orbSpawnInterval: 1.15, orbHeal: 3, orbMaxHpBonus: 1, beamInterval: 2.0, baseBeamDmg: 1, bonusDmgPerSoul: 3, baseBeamAngleDeg: 35, bonusAnglePerSoulDeg: 5, maxBeamAngleDeg: 160 },
       marksman: { normalShootInterval: 1.0, normalBulletDmg: 2, trapSpawnInterval: 2.0, trapStunDuration: 1.0, trapBonusBulletDmg: 25 },
       ninja: { stepInterval: 2.0, step1ShurikenDmg: 15, step2DashDmg: 20, step3DashDistMult: 4.5, step3BaseDmg: 22, step3MissingHpPct: 0.4 },
       reaper: { trailSpawnInterval: 0.2, trailLifespan: 3000, speedBoostMult: 1.6, slashBaseDmg: 12, slashMissingHpPct: 0.40 },
@@ -208,7 +211,8 @@
       sound: { minWaveDmg: 1, maxWaveDmg: 20, missingHpSpeedBonus: 0.003 },
       angel: { passiveHealInterval: 1.0, passiveHealAmount: 1, collisionSelfHeal: 11, collisionEnemyHeal: 10, healBonusPerMissingHp: 0.013, selfHealShareFromOverheal: 0.25 },
       wukong: { skillInterval: 2.15, cloneDuration: 3.1, cloneContactDmg: 7, peachHeal: 10, peachImmortalDur: 2.15, sweepSpeedBonus: 1.4, sweepSpeedDur: 2.0, sweepTriggerDiamMult: 2.5, sweepRadiusDiamMult: 2.55, sweepAngleDeg: 150, sweepDmg: 24, staffLengthDiamMult: 1.5, staffDmg: 10 },
-      demon: { maxRevives: 7, incomingDmgMult: 2.0, reflectBaseMult: 1.0, hpConvertInterval: 0.7, normalShieldGain: 1, lowHpShieldGain: 3, reflectBonusPerShield: 0.06 }
+      demon: { maxRevives: 7, incomingDmgMult: 2.0, reflectBaseMult: 1.0, hpConvertInterval: 0.7, normalShieldGain: 1, lowHpShieldGain: 4, reflectBonusPerShield: 0.06 },
+      poseidon: { waveTriggerDiam: 2.0, waveRadiusDiam: 2.25, waveDmg: 1, waveSlowDuration: 2.0, waveSlowFactor: 0.75, burstInterval: 4.0 }
     };
 
     let p1, p2;
@@ -225,8 +229,11 @@
     let wukongClones = [];
     let wukongStaffs = [];
     let activeWukongSweeps = [];
+    let poseidonWaves = [];
+    let poseidonBursts = [];
     let particles = [];
     let floatingTexts = [];
+    let oceanEnvironmentTimer = 0;
     let gameOver = false;
     let animationFrameId = null;
 
@@ -248,7 +255,7 @@
         soul: 'text-pink-400', marksman: 'text-lime-400', ninja: 'text-slate-200',
         reaper: 'text-slate-400', shen: 'text-cyan-400', sound: 'text-teal-400',
         angel: 'text-yellow-300', wukong: 'text-orange-400', demon: 'text-red-500',
-        p1: 'text-cyan-400', p2: 'text-rose-400', normal: 'text-slate-300'
+        poseidon: 'text-sky-300', p1: 'text-cyan-400', p2: 'text-rose-400', normal: 'text-slate-300'
       };
       entry.innerHTML = `<span class="text-slate-600">[${time}]</span> <span class="${colorMap[type] || 'text-slate-300'}">${msg}</span>`;
       battleLog.appendChild(entry);
@@ -355,9 +362,15 @@
 
         this.demonReviveCount = 0;
         this.demonHpTimer = 0;
+
+        this.poseidonWaveCooldown = 0;
+        this.poseidonBurstTimer = 0;
+        this.oceanicMarks = 0;
+        this.drownedTimer = 0;
       }
 
       isImmuneToDebuffs() {
+        if (this.drownedTimer > 0) return true;
         if (this.typeKey === 'wukong' && this.wukongImmortalTimer > 0) return true;
         if (this.typeKey === 'ninja' && this.ninjaInvulnerable) return true;
         if (this.typeKey === 'wanderer' && this.wandererShieldActive) return true;
@@ -369,7 +382,7 @@
       }
 
       get currentSpeed() {
-        if (this.stunTimer > 0) return 0;
+        if (this.drownedTimer > 0 || this.stunTimer > 0) return 0;
         let speed = this.baseSpeed;
         if (this.typeKey === 'sound') {
           const missingHpPercent = Math.max(0, this.maxHp - this.hp);
@@ -382,6 +395,12 @@
       }
 
       update(enemy) {
+        if (this.drownedTimer > 0) {
+          this.drownedTimer -= 1 / 60;
+          if (this.drownedTimer <= 0) { this.drownedTimer = 0; updateHUD(); }
+          return;
+        }
+
         if (this.stunTimer > 0) {
           this.stunTimer -= 1 / 60;
           if (this.stunTimer <= 0) { this.stunTimer = 0; updateHUD(); }
@@ -414,6 +433,7 @@
         if (this.ghostHitCooldown > 0) this.ghostHitCooldown--;
         if (this.shenSwapCooldown > 0) this.shenSwapCooldown -= 1 / 60;
         if (this.reaperSpeedBoostTimer > 0) this.reaperSpeedBoostTimer -= 1 / 60;
+        if (this.poseidonWaveCooldown > 0) this.poseidonWaveCooldown -= 1 / 60;
 
         if (this.bladeDashAnim) {
           this.bladeDashAnim.progress += 1 / 60;
@@ -452,6 +472,7 @@
           case 'angel':    this.updateAngel(enemy); break;
           case 'wukong':   this.updateWukong(enemy); break;
           case 'demon':    this.updateDemon(); break;
+          case 'poseidon': this.updatePoseidon(enemy); break;
         }
 
         if (!this.isGhosting && this.stunTimer <= 0) {
@@ -958,6 +979,65 @@
         }
       }
 
+      updatePoseidon(enemy) {
+        if (!enemy) return;
+        const dist = Math.hypot(this.x - enemy.x, this.y - enemy.y);
+        const triggerRange = (this.radius * 2) * SKILL_CONFIG.poseidon.waveTriggerDiam;
+
+        if (dist <= triggerRange && this.poseidonWaveCooldown <= 0) {
+          this.poseidonWaveCooldown = 1.0;
+          const waveRadius = (this.radius * 2) * SKILL_CONFIG.poseidon.waveRadiusDiam;
+          poseidonWaves.push({
+            x: this.x, y: this.y, currentRadius: this.radius, maxRadius: waveRadius, owner: this
+          });
+
+          enemy.takeDamage(SKILL_CONFIG.poseidon.waveDmg, 'Sóng Nước');
+          enemy.applySlow(SKILL_CONFIG.poseidon.waveSlowDuration);
+
+          const pushAngle = Math.atan2(enemy.y - this.y, enemy.x - this.x);
+          const enemySpd = enemy.currentSpeed || enemy.baseSpeed;
+          enemy.vx = Math.cos(pushAngle) * enemySpd * 1.5;
+          enemy.vy = Math.sin(pushAngle) * enemySpd * 1.5;
+
+          enemy.oceanicMarks++;
+          createParticles(enemy.x, enemy.y, '#0ea5e9', 8);
+          logMessage(`🔱 Poseidon tạo sóng nước đẩy lùi! Hải Thần Ấn: ${enemy.oceanicMarks}/4`, 'poseidon');
+
+          if (enemy.oceanicMarks >= 4) {
+            enemy.oceanicMarks = 0;
+            oceanEnvironmentTimer = 2.0;
+            enemy.drownedTimer = 2.0;
+            enemy.burnStacks = 0; enemy.burnTimer = 0;
+            enemy.slowTimer = 0; enemy.slowFactor = 1;
+            enemy.stunTimer = 0;
+            enemy.shield = 0; enemy.shieldTimer = 0;
+            createParticles(canvas.width / 2, canvas.height / 2, '#0284c7', 40);
+            logMessage(`🌊 HẢI THẦN THỨC TỈNH! Map biến thành ĐẠI DƯƠNG trong 2s! ${enemy.name} trúng hiệu ứng ĐUỐI NƯỚC, xoá toàn bộ hiệu ứng & bị bất động!`, 'poseidon');
+          }
+        }
+
+        this.poseidonBurstTimer += 1 / 60;
+        if (this.poseidonBurstTimer >= SKILL_CONFIG.poseidon.burstInterval) {
+          this.poseidonBurstTimer = 0;
+          const bAngle = Math.atan2(enemy.y - this.y, enemy.x - this.x);
+          const r = this.radius * 2;
+          poseidonBursts.push({
+            owner: this, enemy: enemy, angle: bAngle,
+            x1: this.x + Math.cos(bAngle) * (r * 0.75),
+            y1: this.y + Math.sin(bAngle) * (r * 0.75),
+            r1: r * 1.75, dmg1: 8,
+            x2: this.x + Math.cos(bAngle) * (r * 1.5),
+            y2: this.y + Math.sin(bAngle) * (r * 1.5),
+            r2: r * 3.5, dmg2: 14,
+            x3: this.x + Math.cos(bAngle) * (r * 2.25),
+            y3: this.y + Math.sin(bAngle) * (r * 2.25),
+            r3: r * 4.25, dmg3: 20,
+            stage: 1, timer: 0, hit1: false, hit2: false, hit3: false
+          });
+          logMessage(`💧 Poseidon thi triển chuỗi Vụ Nổ Nước 3 giai đoạn về phía ${enemy.name}!`, 'poseidon');
+        }
+      }
+
       applyBurn() {
         if (this.isImmuneToDebuffs()) return;
         this.burnStacks = Math.min(this.burnStacks + 1, SKILL_CONFIG.fire.maxBurnStacks);
@@ -1010,7 +1090,7 @@
             const shieldBonus = 1 + (this.shield * SKILL_CONFIG.demon.reflectBonusPerShield);
             const reflectedDmg = Math.round(amount * SKILL_CONFIG.demon.reflectBaseMult * shieldBonus);
             enemy.takeDamage(reflectedDmg, 'Phản Đòn Demon');
-            logMessage(`👿 Demon Ball phản ${reflectedDmg} dmg gốc (+${this.shield * 3}%) lên ${enemy.name}!`, 'demon');
+            logMessage(`👿 Demon Ball phản ${reflectedDmg} dmg gốc (+${Math.round(this.shield * 6)}%) lên ${enemy.name}!`, 'demon');
           }
         }
 
@@ -1216,6 +1296,70 @@
 
     function updateAndDrawEntities() {
       const now = Date.now();
+
+      if (oceanEnvironmentTimer > 0) {
+        oceanEnvironmentTimer -= 1 / 60;
+        ctx.save();
+        ctx.fillStyle = 'rgba(2, 132, 199, 0.18)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.strokeStyle = '#38bdf8';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(5, 5, canvas.width - 10, canvas.height - 10);
+        ctx.restore();
+      }
+
+      for (let i = poseidonWaves.length - 1; i >= 0; i--) {
+        const w = poseidonWaves[i];
+        w.currentRadius += 4;
+        ctx.save();
+        ctx.beginPath(); ctx.arc(w.x, w.y, w.currentRadius, 0, Math.PI * 2);
+        ctx.strokeStyle = 'rgba(14, 165, 233, 0.55)'; ctx.lineWidth = 2.5; ctx.stroke();
+        ctx.restore();
+        if (w.currentRadius >= w.maxRadius) poseidonWaves.splice(i, 1);
+      }
+
+      for (let i = poseidonBursts.length - 1; i >= 0; i--) {
+        const b = poseidonBursts[i];
+        b.timer += 1 / 60;
+
+        if (b.stage === 1) {
+          ctx.save();
+          ctx.beginPath(); ctx.arc(b.x1, b.y1, b.r1, 0, Math.PI * 2);
+          ctx.fillStyle = 'rgba(14, 165, 233, 0.25)'; ctx.fill(); ctx.strokeStyle = '#0284c7'; ctx.lineWidth = 2; ctx.stroke();
+          ctx.restore();
+
+          if (!b.hit1 && Math.hypot(b.enemy.x - b.x1, b.enemy.y - b.y1) <= b.enemy.radius + b.r1) {
+            b.hit1 = true;
+            b.enemy.takeDamage(b.dmg1, 'Vụ Nổ Nước 1');
+            createParticles(b.enemy.x, b.enemy.y, '#0ea5e9', 8);
+          }
+          if (b.timer >= 0.3) { b.stage = 2; b.timer = 0; }
+        } else if (b.stage === 2) {
+          ctx.save();
+          ctx.beginPath(); ctx.arc(b.x2, b.y2, b.r2, 0, Math.PI * 2);
+          ctx.fillStyle = 'rgba(2, 132, 199, 0.25)'; ctx.fill(); ctx.strokeStyle = '#0369a1'; ctx.lineWidth = 2; ctx.stroke();
+          ctx.restore();
+
+          if (!b.hit2 && Math.hypot(b.enemy.x - b.x2, b.enemy.y - b.y2) <= b.enemy.radius + b.r2) {
+            b.hit2 = true;
+            b.enemy.takeDamage(b.dmg2, 'Vụ Nổ Nước 2');
+            createParticles(b.enemy.x, b.enemy.y, '#0284c7', 12);
+          }
+          if (b.timer >= 0.3) { b.stage = 3; b.timer = 0; }
+        } else if (b.stage === 3) {
+          ctx.save();
+          ctx.beginPath(); ctx.arc(b.x3, b.y3, b.r3, 0, Math.PI * 2);
+          ctx.fillStyle = 'rgba(56, 189, 248, 0.25)'; ctx.fill(); ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 2; ctx.stroke();
+          ctx.restore();
+
+          if (!b.hit3 && Math.hypot(b.enemy.x - b.x3, b.enemy.y - b.y3) <= b.enemy.radius + b.r3) {
+            b.hit3 = true;
+            b.enemy.takeDamage(b.dmg3, 'Vụ Nổ Nước 3');
+            createParticles(b.enemy.x, b.enemy.y, '#38bdf8', 16);
+          }
+          if (b.timer >= 0.3) { poseidonBursts.splice(i, 1); }
+        }
+      }
 
       for (let i = fireTrails.length - 1; i >= 0; i--) {
         const t = fireTrails[i];
@@ -1495,7 +1639,7 @@
 
     function updateHUDForPlayer(ball, prefix) {
       let shieldText = ball.shield > 0 ? ` (🛡️${Math.round(ball.shield)})` : '';
-      if (ball.typeKey === 'demon') shieldText = ` (🛡️${Math.round(ball.shield)} | Phản: +${ball.shield * 3}%)`;
+      if (ball.typeKey === 'demon') shieldText = ` (🛡️${Math.round(ball.shield)} | Phản: +${Math.round(ball.shield * 6)}%)`;
       
       document.getElementById(`${prefix}-name`).innerText = `${ball.icon} ${ball.name}`;
       document.getElementById(`${prefix}-hp-text`).innerText = `${Math.ceil(ball.hp)}/${ball.maxHp}${shieldText}`;
@@ -1504,6 +1648,8 @@
       const badges = document.getElementById(`${prefix}-badges`);
       badges.innerHTML = '';
 
+      if (ball.drownedTimer > 0) badges.innerHTML += `<span class="bg-sky-950 text-cyan-300 border border-cyan-400 px-1 rounded animate-pulse">🌊 Đuối Nước</span>`;
+      if (ball.oceanicMarks > 0) badges.innerHTML += `<span class="bg-blue-950 text-blue-300 border border-blue-400 px-1 rounded">🔱 Ấn: ${ball.oceanicMarks}/4</span>`;
       if (ball.stunTimer > 0) badges.innerHTML += `<span class="bg-yellow-950 text-yellow-400 border border-yellow-500/40 px-1 rounded">💫 Choáng</span>`;
       if (ball.slowTimer > 0) badges.innerHTML += `<span class="bg-blue-950 text-blue-300 border border-blue-500/40 px-1 rounded">❄️ Chậm (-30%)</span>`;
       if (ball.burnTimer > 0) badges.innerHTML += `<span class="bg-amber-950 text-amber-400 border border-amber-500/40 px-1 rounded">🔥 Cháy (${ball.burnStacks})</span>`;
@@ -1531,6 +1677,7 @@
     function initGame() {
       if (animationFrameId) cancelAnimationFrame(animationFrameId);
       gameOver = false;
+      oceanEnvironmentTimer = 0;
       winnerOverlay.classList.add('hidden');
 
       p1 = new Ball('p1', p1Select.value, 80, canvas.height / 2, 'p1');
@@ -1538,7 +1685,8 @@
 
       fireTrails = []; assassinShurikens = []; lightningZones = []; soulOrbs = []; activeSoulBeams = [];
       marksmanTraps = []; marksmanBullets = []; ninjaProjectiles = []; reaperIllusions = [];
-      soundWaves = []; wukongClones = []; wukongStaffs = []; activeWukongSweeps = []; particles = []; floatingTexts = [];
+      soundWaves = []; wukongClones = []; wukongStaffs = []; activeWukongSweeps = [];
+      poseidonWaves = []; poseidonBursts = []; particles = []; floatingTexts = [];
       
       battleLog.innerHTML = '';
       logMessage(`Bắt đầu trận đấu: ${p1.name} VS ${p2.name}!`);
