@@ -107,8 +107,8 @@
 
       <!-- Skill Guide Info -->
       <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-3 text-xs space-y-2 max-h-[300px] overflow-y-auto custom-scrollbar">
-        <div class="font-bold text-cyan-400 font-orbitron">🔱 POSEIDON BALL:</div>
-        <div class="text-slate-300">Tạo sóng nước đẩy lùi, tích 4 ấn <span class="text-blue-300 font-bold">"Hải Thần Ấn"</span> kích hoạt Môi Trường Đại Dương & Áp chế <span class="text-cyan-200 font-bold">Đuối Nước</span> tuyệt đối!</div>
+        <div class="font-bold text-cyan-400 font-orbitron">🔱 POSEIDON (CẬP NHẬT):</div>
+        <div class="text-slate-300">Sóng quét tầm 3,5 đường kính. Chuỗi 3 vụ nổ nước hướng thẳng về phía địch không đè lên nhau. Kích hoạt Đại Dương cực kỳ rực rỡ & áp chế Đuối Nước!</div>
       </div>
     </div>
 
@@ -212,7 +212,7 @@
       angel: { passiveHealInterval: 1.0, passiveHealAmount: 1, collisionSelfHeal: 11, collisionEnemyHeal: 10, healBonusPerMissingHp: 0.013, selfHealShareFromOverheal: 0.25 },
       wukong: { skillInterval: 2.15, cloneDuration: 3.1, cloneContactDmg: 7, peachHeal: 10, peachImmortalDur: 2.15, sweepSpeedBonus: 1.4, sweepSpeedDur: 2.0, sweepTriggerDiamMult: 2.5, sweepRadiusDiamMult: 2.55, sweepAngleDeg: 150, sweepDmg: 24, staffLengthDiamMult: 1.5, staffDmg: 10 },
       demon: { maxRevives: 7, incomingDmgMult: 2.0, reflectBaseMult: 1.0, hpConvertInterval: 0.7, normalShieldGain: 1, lowHpShieldGain: 4, reflectBonusPerShield: 0.06 },
-      poseidon: { waveTriggerDiam: 2.0, waveRadiusDiam: 2.25, waveDmg: 1, waveSlowDuration: 2.0, waveSlowFactor: 0.75, burstInterval: 4.0 }
+      poseidon: { waveTriggerDiam: 3.5, waveRadiusDiam: 3.6, waveDmg: 1, waveSlowDuration: 2.0, waveSlowFactor: 0.75, burstInterval: 4.0 }
     };
 
     let p1, p2;
@@ -231,6 +231,7 @@
     let activeWukongSweeps = [];
     let poseidonWaves = [];
     let poseidonBursts = [];
+    let oceanBubbles = [];
     let particles = [];
     let floatingTexts = [];
     let oceanEnvironmentTimer = 0;
@@ -1012,7 +1013,7 @@
             enemy.stunTimer = 0;
             enemy.shield = 0; enemy.shieldTimer = 0;
             createParticles(canvas.width / 2, canvas.height / 2, '#0284c7', 40);
-            logMessage(`🌊 HẢI THẦN THỨC TỈNH! Map biến thành ĐẠI DƯƠNG trong 2s! ${enemy.name} trúng hiệu ứng ĐUỐI NƯỚC, xoá toàn bộ hiệu ứng & bị bất động!`, 'poseidon');
+            logMessage(`🌊 HẢI THẦN THỨC TỈNH! Map biến thành ĐẠI DƯƠNG rực rỡ trong 2s! ${enemy.name} trúng ĐUỐI NƯỚC, xoá toàn bộ hiệu ứng & bất động!`, 'poseidon');
           }
         }
 
@@ -1020,21 +1021,28 @@
         if (this.poseidonBurstTimer >= SKILL_CONFIG.poseidon.burstInterval) {
           this.poseidonBurstTimer = 0;
           const bAngle = Math.atan2(enemy.y - this.y, enemy.x - this.x);
-          const r = this.radius * 2;
+          const d = this.radius * 2; // Đường kính Ball
+
+          // Tâm 3 vụ nổ cách nhau thẳng hàng theo hướng về phía địch:
+          // Vụ 1 cách tâm Poseidon: d + r1
+          // Khoảng cách giữa mép vụ 1 và mép vụ 2 là 0.75d
+          // Khoảng cách giữa mép vụ 2 và mép vụ 3 là 0.75d
+          const r1 = d * 0.875; // Bán kính vụ 1 (Đường kính = 1.75d)
+          const r2 = d * 1.75;  // Bán kính vụ 2 (Đường kính = 3.5d)
+          const r3 = d * 2.125; // Bán kính vụ 3 (Đường kính = 4.25d)
+
+          const dist1 = d + r1;
+          const dist2 = (dist1 + r1) + (d * 0.75) + r2;
+          const dist3 = (dist2 + r2) + (d * 0.75) + r3;
+
           poseidonBursts.push({
             owner: this, enemy: enemy, angle: bAngle,
-            x1: this.x + Math.cos(bAngle) * (r * 0.75),
-            y1: this.y + Math.sin(bAngle) * (r * 0.75),
-            r1: r * 1.75, dmg1: 8,
-            x2: this.x + Math.cos(bAngle) * (r * 1.5),
-            y2: this.y + Math.sin(bAngle) * (r * 1.5),
-            r2: r * 3.5, dmg2: 14,
-            x3: this.x + Math.cos(bAngle) * (r * 2.25),
-            y3: this.y + Math.sin(bAngle) * (r * 2.25),
-            r3: r * 4.25, dmg3: 20,
+            x1: this.x + Math.cos(bAngle) * dist1, y1: this.y + Math.sin(bAngle) * dist1, r1: r1, dmg1: 8,
+            x2: this.x + Math.cos(bAngle) * dist2, y2: this.y + Math.sin(bAngle) * dist2, r2: r2, dmg2: 14,
+            x3: this.x + Math.cos(bAngle) * dist3, y3: this.y + Math.sin(bAngle) * dist3, r3: r3, dmg3: 20,
             stage: 1, timer: 0, hit1: false, hit2: false, hit3: false
           });
-          logMessage(`💧 Poseidon thi triển chuỗi Vụ Nổ Nước 3 giai đoạn về phía ${enemy.name}!`, 'poseidon');
+          logMessage(`💧 Poseidon phóng chuỗi 3 Vụ Nổ Nước thẳng hướng kẻ địch!`, 'poseidon');
         }
       }
 
@@ -1297,15 +1305,52 @@
     function updateAndDrawEntities() {
       const now = Date.now();
 
+      // Hiệu ứng Môi Trường Đại Dương siêu đẹp (Gợn sóng, tia sáng xuyên mặt nước & bọt khí)
       if (oceanEnvironmentTimer > 0) {
         oceanEnvironmentTimer -= 1 / 60;
         ctx.save();
-        ctx.fillStyle = 'rgba(2, 132, 199, 0.18)';
+        
+        // Gradient nền đại dương sâu thẳm huyền ảo
+        const oceanGrad = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+        oceanGrad.addColorStop(0, 'rgba(3, 105, 161, 0.35)');
+        oceanGrad.addColorStop(0.5, 'rgba(14, 165, 233, 0.25)');
+        oceanGrad.addColorStop(1, 'rgba(2, 132, 199, 0.4)');
+        ctx.fillStyle = oceanGrad;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Các tia sáng mặt trời rọi xuống đáy biển (Sunrays)
+        ctx.fillStyle = 'rgba(56, 189, 248, 0.08)';
+        ctx.beginPath(); ctx.moveTo(50, 0); ctx.lineTo(120, 0); ctx.lineTo(220, canvas.height); ctx.lineTo(150, canvas.height); ctx.fill();
+        ctx.beginPath(); ctx.moveTo(220, 0); ctx.lineTo(300, 0); ctx.lineTo(400, canvas.height); ctx.lineTo(320, canvas.height); ctx.fill();
+
+        // Tạo bọt khí bay lơ lửng
+        if (Math.random() < 0.3) {
+          oceanBubbles.push({
+            x: Math.random() * canvas.width,
+            y: canvas.height + 10,
+            r: Math.random() * 4 + 2,
+            speed: Math.random() * 1.5 + 0.8,
+            alpha: Math.random() * 0.5 + 0.3
+          });
+        }
+
+        for (let i = oceanBubbles.length - 1; i >= 0; i--) {
+          const bub = oceanBubbles[i];
+          bub.y -= bub.speed;
+          ctx.beginPath(); ctx.arc(bub.x, bub.y, bub.r, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(186, 230, 253, ${bub.alpha})`;
+          ctx.strokeStyle = `rgba(255, 255, 255, ${bub.alpha + 0.2})`;
+          ctx.lineWidth = 1; ctx.fill(); ctx.stroke();
+          if (bub.y < -10) oceanBubbles.splice(i, 1);
+        }
+
+        // Viền sáng khung cảnh đại dương
         ctx.strokeStyle = '#38bdf8';
-        ctx.lineWidth = 2;
-        ctx.strokeRect(5, 5, canvas.width - 10, canvas.height - 10);
+        ctx.lineWidth = 2.5;
+        ctx.strokeRect(4, 4, canvas.width - 8, canvas.height - 8);
         ctx.restore();
+      } else {
+        oceanBubbles = [];
       }
 
       for (let i = poseidonWaves.length - 1; i >= 0; i--) {
@@ -1313,7 +1358,7 @@
         w.currentRadius += 4;
         ctx.save();
         ctx.beginPath(); ctx.arc(w.x, w.y, w.currentRadius, 0, Math.PI * 2);
-        ctx.strokeStyle = 'rgba(14, 165, 233, 0.55)'; ctx.lineWidth = 2.5; ctx.stroke();
+        ctx.strokeStyle = 'rgba(14, 165, 233, 0.6)'; ctx.lineWidth = 3; ctx.stroke();
         ctx.restore();
         if (w.currentRadius >= w.maxRadius) poseidonWaves.splice(i, 1);
       }
@@ -1325,7 +1370,7 @@
         if (b.stage === 1) {
           ctx.save();
           ctx.beginPath(); ctx.arc(b.x1, b.y1, b.r1, 0, Math.PI * 2);
-          ctx.fillStyle = 'rgba(14, 165, 233, 0.25)'; ctx.fill(); ctx.strokeStyle = '#0284c7'; ctx.lineWidth = 2; ctx.stroke();
+          ctx.fillStyle = 'rgba(14, 165, 233, 0.28)'; ctx.fill(); ctx.strokeStyle = '#0284c7'; ctx.lineWidth = 2.5; ctx.stroke();
           ctx.restore();
 
           if (!b.hit1 && Math.hypot(b.enemy.x - b.x1, b.enemy.y - b.y1) <= b.enemy.radius + b.r1) {
@@ -1337,7 +1382,7 @@
         } else if (b.stage === 2) {
           ctx.save();
           ctx.beginPath(); ctx.arc(b.x2, b.y2, b.r2, 0, Math.PI * 2);
-          ctx.fillStyle = 'rgba(2, 132, 199, 0.25)'; ctx.fill(); ctx.strokeStyle = '#0369a1'; ctx.lineWidth = 2; ctx.stroke();
+          ctx.fillStyle = 'rgba(2, 132, 199, 0.28)'; ctx.fill(); ctx.strokeStyle = '#0369a1'; ctx.lineWidth = 2.5; ctx.stroke();
           ctx.restore();
 
           if (!b.hit2 && Math.hypot(b.enemy.x - b.x2, b.enemy.y - b.y2) <= b.enemy.radius + b.r2) {
@@ -1349,7 +1394,7 @@
         } else if (b.stage === 3) {
           ctx.save();
           ctx.beginPath(); ctx.arc(b.x3, b.y3, b.r3, 0, Math.PI * 2);
-          ctx.fillStyle = 'rgba(56, 189, 248, 0.25)'; ctx.fill(); ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 2; ctx.stroke();
+          ctx.fillStyle = 'rgba(56, 189, 248, 0.28)'; ctx.fill(); ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 2.5; ctx.stroke();
           ctx.restore();
 
           if (!b.hit3 && Math.hypot(b.enemy.x - b.x3, b.enemy.y - b.y3) <= b.enemy.radius + b.r3) {
@@ -1686,7 +1731,7 @@
       fireTrails = []; assassinShurikens = []; lightningZones = []; soulOrbs = []; activeSoulBeams = [];
       marksmanTraps = []; marksmanBullets = []; ninjaProjectiles = []; reaperIllusions = [];
       soundWaves = []; wukongClones = []; wukongStaffs = []; activeWukongSweeps = [];
-      poseidonWaves = []; poseidonBursts = []; particles = []; floatingTexts = [];
+      poseidonWaves = []; poseidonBursts = []; oceanBubbles = []; particles = []; floatingTexts = [];
       
       battleLog.innerHTML = '';
       logMessage(`Bắt đầu trận đấu: ${p1.name} VS ${p2.name}!`);
