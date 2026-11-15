@@ -1597,8 +1597,12 @@
       }
     }
 
-    btnStart.addEventListener('click', initGame);
-    btnRestart.addEventListener('click', initGame);
+btnStart.addEventListener('click', () => {
+      initGame();
+    });
+    btnRestart.addEventListener('click', () => {
+      initGame();
+    });
     initGame();
   </script>
 </body>
