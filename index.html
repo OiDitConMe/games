@@ -113,8 +113,8 @@
         <div class="text-slate-300"><span class="text-pink-400 font-bold">🔮 Soul Ball:</span> HP 100 | Dmg 5 | Tốc độ 1.1X. Nhặt linh hồn tăng Max HP, tốc độ và chùm sáng quét diện rộng.</div>
         <div class="text-slate-300"><span class="text-lime-400 font-bold">🎯 Marksman Ball:</span> HP 90 | Dmg 1 | Tốc độ X. Bắn tỉa mỗi 1s & đặt bẫy vĩnh viễn gây choáng 1s.</div>
         <div class="text-slate-300"><span class="text-slate-200 font-bold">🥷 Ninja Ball:</span> HP 90 | Dmg 5 | Tốc độ X. Combo lướt tàng hình vô địch ra sau lưng địch (Chiêu 2 & 3) né mọi sát thương tuyệt đối!</div>
-        <div class="text-slate-300"><span class="text-slate-400 font-bold">💀 Reaper Ball:</span> HP 100 | Dmg 1 | Tốc độ 1.25X. Tạo Ảo Ảnh 3s trước (tồn tại 4s khi HP địch > 50%). Chạm ảo ảnh sẽ **truy đuổi dí theo địch**, chém 12 dmg + 40% HP mất rồi random hướng chạy!</div>
-        <div class="text-slate-300"><span class="text-cyan-300 font-bold">⛩️ Shen Ball:</span> HP 100 | Dmg va chạm: 5% Max HP địch + 5% HP mất địch + 5% HP mất bản thân | Tốc độ 1.15X. Kiếm Hồn liên kết dây linh hồn, nhận bất tử (0.75s) & giáp ảo (tồn tại 8s), lướt xuyên khi địch chạm dây (sát thương 4% Max HP địch + 4% Max HP Shen + 14% HP mất địch) và đổi chỗ khi địch bước vào vùng!</div>
+        <div class="text-slate-300"><span class="text-slate-400 font-bold">💀 Reaper Ball:</span> HP 100 | Dmg 1 | Tốc độ 1.25X. Tạo Ảo Ảnh 3s trước (tồn tại 4s khi HP địch > 50%). Chạm ảo ảnh sẽ truy đuổi dí theo địch, chém 12 dmg + 40% HP mất rồi random hướng chạy!</div>
+        <div class="text-slate-300"><span class="text-cyan-300 font-bold">⛩️ Shen Ball:</span> HP 100 | Tốc độ 1.15X. Kiếm Hồn liên kết dây linh hồn, bất tử khi ở trong vùng, +5 lá chắn tồn tại 6s, Kiếm Hồn tự lướt thu về kèm chậm 30% (2s), và cơ chế lướt đổi chỗ (CD 3s) gây 5 dmg!</div>
         <div class="text-slate-300"><span class="text-teal-400 font-bold">🔊 Sound Ball:</span> HP 100 | Dmg va chạm: 0 | Tốc độ 0.9X (+0.3% tốc độ mỗi 1% HP mất). Va tường tạo Sóng Âm lan tỏa.</div>
         <div class="text-slate-300"><span class="text-yellow-200 font-bold">👼 Angel Ball:</span> HP 80 | Dmg va chạm: 0 | Tốc độ 0.9X. Hồi HP cho đôi bên, bất tử 1 lần khi về 0 HP & tích Dấu Ấn Phước Thần phán quyết.</div>
         <div class="text-slate-300"><span class="text-orange-400 font-bold">🐵 Wukong Ball:</span> HP 102 | Dmg 7 | Tốc độ 1.32X. Phân thân, ăn đào tiên bất tử, quét gậy hình quạt và quăng gậy Như Ý.</div>
@@ -186,62 +186,20 @@
     const BASE_SPEED = 3.99;
 
     const BALL_TYPES = {
-      fire: {
-        name: 'Fire Ball', color: '#f97316', secondaryColor: '#ef4444',
-        hp: 100, maxHp: 100, radius: 18, speed: BASE_SPEED, contactDmg: 3, icon: '🔥'
-      },
-      ghost: {
-        name: 'Ghost Ball', color: '#c084fc', secondaryColor: '#a855f7',
-        hp: 105, maxHp: 105, radius: 18, speed: BASE_SPEED * 1.5, contactDmg: 15, icon: '👻'
-      },
-      assassin: {
-        name: 'Assassin Ball', color: '#10b981', secondaryColor: '#059669',
-        hp: 80, maxHp: 80, radius: 18, speed: BASE_SPEED, contactDmg: 5, icon: '🗡️'
-      },
-      bear: {
-        name: 'Bear Ball', color: '#d97706', secondaryColor: '#78350f',
-        hp: 120, maxHp: 120, radius: 19, speed: BASE_SPEED, contactDmg: 7, icon: '🐻'
-      },
-      storm: {
-        name: 'Storm Ball', color: '#38bdf8', secondaryColor: '#0284c7',
-        hp: 100, maxHp: 100, radius: 18, speed: BASE_SPEED * 1.6, contactDmg: 4, icon: '⚡'
-      },
-      wanderer: {
-        name: 'Wanderer Ball', color: '#818cf8', secondaryColor: '#4f46e5',
-        hp: 100, maxHp: 100, radius: 18, speed: BASE_SPEED, contactDmg: 6, icon: '⚔️'
-      },
-      soul: {
-        name: 'Soul Ball', color: '#f472b6', secondaryColor: '#db2777',
-        hp: 100, maxHp: 100, radius: 18, speed: BASE_SPEED * 1.1, contactDmg: 5, icon: '🔮'
-      },
-      marksman: {
-        name: 'Marksman Ball', color: '#84cc16', secondaryColor: '#4d7c0f',
-        hp: 90, maxHp: 90, radius: 18, speed: BASE_SPEED, contactDmg: 1, icon: '🎯'
-      },
-      ninja: {
-        name: 'Ninja Ball', color: '#e2e8f0', secondaryColor: '#334155',
-        hp: 90, maxHp: 90, radius: 18, speed: BASE_SPEED, contactDmg: 5, icon: '🥷'
-      },
-      reaper: {
-        name: 'Reaper Ball', color: '#94a3b8', secondaryColor: '#475569',
-        hp: 100, maxHp: 100, radius: 18, speed: BASE_SPEED * 1.25, contactDmg: 1, icon: '💀'
-      },
-      shen: {
-        name: 'Shen Ball', color: '#06b6d4', secondaryColor: '#0e7490',
-        hp: 100, maxHp: 100, radius: 18, speed: BASE_SPEED * 1.15, contactDmg: 5, icon: '⛩️'
-      },
-      sound: {
-        name: 'Sound Ball', color: '#2dd4bf', secondaryColor: '#0f766e',
-        hp: 100, maxHp: 100, radius: 18, speed: BASE_SPEED * 0.9, contactDmg: 0, icon: '🔊'
-      },
-      angel: {
-        name: 'Angel Ball', color: '#fef08a', secondaryColor: '#eab308',
-        hp: 80, maxHp: 80, radius: 18, speed: BASE_SPEED * 0.9, contactDmg: 0, icon: '👼'
-      },
-      wukong: {
-        name: 'Wukong Ball', color: '#fb923c', secondaryColor: '#b45309',
-        hp: 102, maxHp: 102, radius: 18, speed: BASE_SPEED * 1.32, contactDmg: 7, icon: '🐵'
-      }
+      fire: { name: 'Fire Ball', color: '#f97316', secondaryColor: '#ef4444', hp: 100, maxHp: 100, radius: 18, speed: BASE_SPEED, contactDmg: 3, icon: '🔥' },
+      ghost: { name: 'Ghost Ball', color: '#c084fc', secondaryColor: '#a855f7', hp: 105, maxHp: 105, radius: 18, speed: BASE_SPEED * 1.5, contactDmg: 15, icon: '👻' },
+      assassin: { name: 'Assassin Ball', color: '#10b981', secondaryColor: '#059669', hp: 80, maxHp: 80, radius: 18, speed: BASE_SPEED, contactDmg: 5, icon: '🗡️' },
+      bear: { name: 'Bear Ball', color: '#d97706', secondaryColor: '#78350f', hp: 120, maxHp: 120, radius: 19, speed: BASE_SPEED, contactDmg: 7, icon: '🐻' },
+      storm: { name: 'Storm Ball', color: '#38bdf8', secondaryColor: '#0284c7', hp: 100, maxHp: 100, radius: 18, speed: BASE_SPEED * 1.6, contactDmg: 4, icon: '⚡' },
+      wanderer: { name: 'Wanderer Ball', color: '#818cf8', secondaryColor: '#4f46e5', hp: 100, maxHp: 100, radius: 18, speed: BASE_SPEED, contactDmg: 6, icon: '⚔️' },
+      soul: { name: 'Soul Ball', color: '#f472b6', secondaryColor: '#db2777', hp: 100, maxHp: 100, radius: 18, speed: BASE_SPEED * 1.1, contactDmg: 5, icon: '🔮' },
+      marksman: { name: 'Marksman Ball', color: '#84cc16', secondaryColor: '#4d7c0f', hp: 90, maxHp: 90, radius: 18, speed: BASE_SPEED, contactDmg: 1, icon: '🎯' },
+      ninja: { name: 'Ninja Ball', color: '#e2e8f0', secondaryColor: '#334155', hp: 90, maxHp: 90, radius: 18, speed: BASE_SPEED, contactDmg: 5, icon: '🥷' },
+      reaper: { name: 'Reaper Ball', color: '#94a3b8', secondaryColor: '#475569', hp: 100, maxHp: 100, radius: 18, speed: BASE_SPEED * 1.25, contactDmg: 1, icon: '💀' },
+      shen: { name: 'Shen Ball', color: '#06b6d4', secondaryColor: '#0e7490', hp: 100, maxHp: 100, radius: 18, speed: BASE_SPEED * 1.15, contactDmg: 5, icon: '⛩️' },
+      sound: { name: 'Sound Ball', color: '#2dd4bf', secondaryColor: '#0f766e', hp: 100, maxHp: 100, radius: 18, speed: BASE_SPEED * 0.9, contactDmg: 0, icon: '🔊' },
+      angel: { name: 'Angel Ball', color: '#fef08a', secondaryColor: '#eab308', hp: 80, maxHp: 80, radius: 18, speed: BASE_SPEED * 0.9, contactDmg: 0, icon: '👼' },
+      wukong: { name: 'Wukong Ball', color: '#fb923c', secondaryColor: '#b45309', hp: 102, maxHp: 102, radius: 18, speed: BASE_SPEED * 1.32, contactDmg: 7, icon: '🐵' }
     };
 
     let p1, p2;
@@ -315,7 +273,7 @@
         this.maxHp = config.maxHp;
         this.hp = config.hp;
         this.shield = 0;
-        this.shieldTimer = 0; // Thời gian tồn tại của lá chắn (8s)
+        this.shieldTimer = 0; // Tồn tại 6s
         this.baseSpeed = config.speed;
         this.contactDmg = config.contactDmg;
         
@@ -369,8 +327,9 @@
         // --- SHEN BALL ---
         this.spiritBladeX = Math.random() * (canvas.width - 100) + 50;
         this.spiritBladeY = Math.random() * (canvas.height - 100) + 50;
-        this.spiritBladeImmortalTimer = 0;
         this.pullBladeTimer = 0;
+        this.bladeDashAnim = null; // Hoạt ảnh lướt riêng cho Kiếm Hồn khi thu hồi
+        this.shenSwapCooldown = 0; // Hồi chiêu đổi chỗ 3s
 
         this.soundSpeedBoostTimer = 0;
 
@@ -414,13 +373,18 @@
           if (this.slowTimer <= 0) { this.slowFactor = 1; this.slowTimer = 0; }
         }
 
-        // Quản lý thời gian tồn tại lá chắn (8s) của Shen Ball
+        // Quản lý lá chắn 6s của Shen
         if (this.shield > 0 && this.shieldTimer > 0) {
           this.shieldTimer -= 1 / 60;
           if (this.shieldTimer <= 0) {
             this.shield = 0;
             updateHUD();
           }
+        }
+
+        // Quản lý hồi chiêu đổi chỗ Shen (3s)
+        if (this.shenSwapCooldown > 0) {
+          this.shenSwapCooldown -= 1 / 60;
         }
 
         if (this.typeKey === 'soul' && this.soulSpeedBoostTimer > 0) this.soulSpeedBoostTimer -= 1 / 60;
@@ -460,6 +424,19 @@
 
         if (this.hitCooldown > 0) this.hitCooldown--;
         if (this.ghostHitCooldown > 0) this.ghostHitCooldown--;
+
+        if (this.bladeDashAnim) {
+          this.bladeDashAnim.progress += 1 / 60;
+          const t = Math.min(1, this.bladeDashAnim.progress / this.bladeDashAnim.duration);
+          const easeT = t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+          this.spiritBladeX = this.bladeDashAnim.startX + (this.bladeDashAnim.endX - this.bladeDashAnim.startX) * easeT;
+          this.spiritBladeY = this.bladeDashAnim.startY + (this.bladeDashAnim.endY - this.bladeDashAnim.startY) * easeT;
+
+          if (t >= 1) {
+            if (this.bladeDashAnim.callback) this.bladeDashAnim.callback();
+            this.bladeDashAnim = null;
+          }
+        }
 
         if (this.dashAnim) {
           this.dashAnim.progress += 1 / 60;
@@ -821,7 +798,6 @@
           }
         }
 
-        // Khi đang nhận tốc độ truy đuổi, hướng vận tốc lao thẳng đuổi theo vị trí hiện tại của địch
         if (this.reaperSpeedBoostTimer > 0) {
           const angleToEnemy = Math.atan2(enemy.y - this.y, enemy.x - this.x);
           const chaseSpeed = this.baseSpeed * 1.7;
@@ -858,50 +834,78 @@
       updateShenInternal(enemy) {
         if (!enemy) return;
 
+        // Thu hồi Kiếm Hồn về gần bản thân mỗi 5s với hoạt ảnh Kiếm Hồn lướt nhanh đến + làm chậm 30% (2s)
         this.pullBladeTimer += 1 / 60;
-        if (this.pullBladeTimer >= 5.0) {
+        if (this.pullBladeTimer >= 5.0 && !this.bladeDashAnim) {
           this.pullBladeTimer = 0;
-          this.spiritBladeX = this.x + (Math.random() - 0.5) * 60;
-          this.spiritBladeY = this.y + (Math.random() - 0.5) * 60;
-          logMessage(`⛩️ Shen Ball kéo Kiếm Hồn về gần bản thân!`, 'shen');
-          createParticles(this.spiritBladeX, this.spiritBladeY, '#06b6d4', 12);
-        }
+          const targetX = this.x + (Math.random() - 0.5) * 60;
+          const targetY = this.y + (Math.random() - 0.5) * 60;
+          
+          const startX = this.spiritBladeX, startY = this.spiritBladeY;
+          const endX = Math.max(20, Math.min(canvas.width - 20, targetX));
+          const endY = Math.max(20, Math.min(canvas.height - 20, targetY));
 
-        if (this.spiritBladeImmortalTimer > 0) {
-          this.spiritBladeImmortalTimer -= 1 / 60;
+          logMessage(`⛩️ Kiếm Hồn lướt nhanh về gần Shen Ball!`, 'shen');
+          this.bladeDashAnim = {
+            startX, startY, endX, endY, progress: 0, duration: 0.2,
+            callback: () => {
+              createParticles(this.spiritBladeX, this.spiritBladeY, '#06b6d4', 12);
+              // Kiểm tra nếu lúc Kiếm Hồn lướt đến vị trí gần địch hoặc địch ở gần, làm chậm 30% trong 2s
+              const distToEnemy = Math.hypot(enemy.x - this.spiritBladeX, enemy.y - this.spiritBladeY);
+              if (distToEnemy <= this.radius * 4 + enemy.radius) {
+                enemy.applySlow(2.0);
+                logMessage(`⛩️ Vùng năng lượng Kiếm Hồn thu về làm chậm 30% ${enemy.name} trong 2s!`, 'shen');
+              }
+            }
+          };
         }
 
         const bladeRadius = this.radius * 4;
         const distToBlade = Math.hypot(this.x - this.spiritBladeX, this.y - this.spiritBladeY);
 
+        // Chỉ bất tử khi đứng trực tiếp ở trong vùng năng lượng Kiếm Hồn
         if (distToBlade <= bladeRadius) {
-          if (this.spiritBladeImmortalTimer <= 0) {
-            this.spiritBladeImmortalTimer = 0.75; // Giảm thời gian bất tử xuống 0.75s
-            this.shield += 10;
-            this.shieldTimer = 8.0; // Lá chắn tồn tại 8s
-            logMessage(`⛩️ Shen Ball vào vùng Kiếm Hồn! Nhận Bất Tử (0.75s) & +10 Lá Chắn (tồn tại 8s)!`, 'shen');
-            createParticles(this.spiritBladeX, this.spiritBladeY, '#06b6d4', 15);
+          if (this.shield === 0) {
+            this.shield = 5; // Nhận 5 lá chắn
+            this.shieldTimer = 6.0; // Tồn tại 6s
+            logMessage(`⛩️ Shen Ball vào vùng Kiếm Hồn! Nhận +5 Lá Chắn (tồn tại 6s)!`, 'shen');
+            createParticles(this.spiritBladeX, this.spiritBladeY, '#06b6d4', 12);
             updateHUD();
-          } else {
-            this.spiritBladeImmortalTimer = 0.75;
           }
         }
 
-        // Địch bước vào vùng năng lượng Kiếm Hồn: 5% Max HP địch + 5% HP đã mất của địch
+        // Cơ chế đổi chỗ khi địch bước vào vùng năng lượng Kiếm Hồn (Hồi chiêu 3s)
         const enemyDistToBlade = Math.hypot(enemy.x - this.spiritBladeX, enemy.y - this.spiritBladeY);
-        if (enemyDistToBlade <= bladeRadius && enemy.hitCooldown === 0) {
-          const zoneDmg = Math.round((enemy.maxHp * 0.05) + ((enemy.maxHp - enemy.hp) * 0.05));
-          enemy.takeDamage(zoneDmg, 'Vùng Kiếm Hồn (Shen)');
+        if (enemyDistToBlade <= bladeRadius && enemy.hitCooldown === 0 && this.shenSwapCooldown <= 0 && !this.dashAnim && !this.bladeDashAnim) {
+          this.shenSwapCooldown = 3.0; // Set hồi chiêu 3s
           enemy.hitCooldown = 30;
-          logMessage(`⛩️ ${enemy.name} bước vào vùng Kiếm Hồn (-${zoneDmg} HP)! Shen & Kiếm Hồn đổi chỗ cho nhau!`, 'shen');
+          logMessage(`⛩️ ${enemy.name} bước vào vùng Kiếm Hồn! Shen lướt xuyên đến Kiếm Hồn, Kiếm Hồn lướt về chỗ Shen gây 5 dmg!`, 'shen');
           
-          const oldX = this.x, oldY = this.y;
-          this.x = this.spiritBladeX; this.y = this.spiritBladeY;
-          this.spiritBladeX = oldX; this.spiritBladeY = oldY;
-          createParticles(this.x, this.y, '#06b6d4', 20);
+          const startShenX = this.x, startShenY = this.y;
+          const endShenX = this.spiritBladeX, endShenY = this.spiritBladeY;
+
+          const startBladeX = this.spiritBladeX, startBladeY = this.spiritBladeY;
+          const endBladeX = startShenX, endBladeY = startShenY;
+
+          // Shen lướt đến vị trí Kiếm Hồn
+          this.dashAnim = {
+            startX: startShenX, startY: startShenY, endX: endShenX, endY: endShenY, progress: 0, duration: 0.12,
+            callback: () => {
+              enemy.takeDamage(5, 'Đổi Chỗ Kiếm Hồn (Shen)');
+              createParticles(this.x, this.y, '#06b6d4', 15);
+            }
+          };
+
+          // Kiếm Hồn lướt về vị trí cũ của Shen
+          this.bladeDashAnim = {
+            startX: startBladeX, startY: startBladeY, endX: endBladeX, endY: endBladeY, progress: 0, duration: 0.12,
+            callback: () => {
+              createParticles(this.spiritBladeX, this.spiritBladeY, '#06b6d4', 15);
+            }
+          };
         }
 
-        // Địch chạm dây Linh Hồn: Shen lướt qua, gây dmg = 4% Max HP địch + 4% Max HP Shen + 14% HP đã mất của địch
+        // Kiểm tra địch chạm dây Linh Hồn giữa Shen và Kiếm Hồn
         const lineDist = distToSegment({ x: enemy.x, y: enemy.y }, { x: this.x, y: this.y }, { x: this.spiritBladeX, y: this.spiritBladeY });
         if (lineDist <= enemy.radius + 8 && !this.dashAnim && enemy.hitCooldown === 0) {
           enemy.hitCooldown = 30;
@@ -992,7 +996,6 @@
       applyBurn() {
         if (this.typeKey === 'wukong' && this.wukongImmortalTimer > 0) return;
         if (this.typeKey === 'ninja' && this.ninjaInvulnerable) return;
-        if (this.typeKey === 'shen' && this.spiritBladeImmortalTimer > 0) return;
         this.burnStacks = Math.min(this.burnStacks + 1, 3);
         this.burnTimer = 2;
       }
@@ -1000,14 +1003,12 @@
       applySlow(duration) {
         if (this.typeKey === 'wukong' && this.wukongImmortalTimer > 0) return;
         if (this.typeKey === 'ninja' && this.ninjaInvulnerable) return;
-        if (this.typeKey === 'shen' && this.spiritBladeImmortalTimer > 0) return;
         this.slowTimer = duration;
       }
 
       applyStun(duration) {
         if (this.typeKey === 'wukong' && this.wukongImmortalTimer > 0) return;
         if (this.typeKey === 'ninja' && this.ninjaInvulnerable) return;
-        if (this.typeKey === 'shen' && this.spiritBladeImmortalTimer > 0) return;
         this.stunTimer = Math.max(this.stunTimer, duration);
         updateHUD();
       }
@@ -1019,8 +1020,15 @@
         if (this.typeKey === 'ninja' && this.ninjaInvulnerable) {
           createParticles(this.x, this.y, '#cbd5e1', 6); return;
         }
-        if (this.typeKey === 'shen' && this.spiritBladeImmortalTimer > 0) {
-          createParticles(this.x, this.y, '#06b6d4', 6); return;
+
+        // Shen Ball chỉ bất tử khi đứng trong vùng năng lượng Kiếm Hồn
+        if (this.typeKey === 'shen') {
+          const bladeRadius = this.radius * 4;
+          const distToBlade = Math.hypot(this.x - this.spiritBladeX, this.y - this.spiritBladeY);
+          if (distToBlade <= bladeRadius) {
+            createParticles(this.x, this.y, '#06b6d4', 6);
+            return; // Bất tử trong vùng
+          }
         }
 
         if (this.typeKey === 'wanderer' && this.wandererShieldActive) {
@@ -1041,7 +1049,6 @@
           return;
         }
 
-        // Ưu tiên trừ vào giáp ảo trước
         let remainingDmg = amount;
         if (this.shield > 0) {
           if (this.shield >= remainingDmg) {
@@ -1102,9 +1109,13 @@
           ctx.strokeStyle = '#94a3b8'; ctx.lineWidth = 3; ctx.shadowColor = '#cbd5e1'; ctx.shadowBlur = 12; ctx.stroke();
         }
 
-        if (this.typeKey === 'shen' && this.spiritBladeImmortalTimer > 0) {
-          ctx.beginPath(); ctx.arc(this.x, this.y, this.radius + 8, 0, Math.PI * 2);
-          ctx.strokeStyle = '#06b6d4'; ctx.lineWidth = 3; ctx.shadowColor = '#22d3ee'; ctx.shadowBlur = 14; ctx.stroke();
+        if (this.typeKey === 'shen') {
+          const bladeRadius = this.radius * 4;
+          const distToBlade = Math.hypot(this.x - this.spiritBladeX, this.y - this.spiritBladeY);
+          if (distToBlade <= bladeRadius) {
+            ctx.beginPath(); ctx.arc(this.x, this.y, this.radius + 8, 0, Math.PI * 2);
+            ctx.strokeStyle = '#06b6d4'; ctx.lineWidth = 3; ctx.shadowColor = '#22d3ee'; ctx.shadowBlur = 14; ctx.stroke();
+          }
         }
 
         ctx.beginPath();
@@ -1435,7 +1446,13 @@
       if (ball.slowTimer > 0) badges.innerHTML += `<span class="bg-sky-950 text-sky-400 border border-sky-500/40 px-1 rounded">❄️ Chậm</span>`;
       if (ball.typeKey === 'ninja') badges.innerHTML += `<span class="bg-slate-800 text-slate-200 border border-slate-600 px-1 rounded">🥷 Combo ${ball.ninjaComboStep}</span>`;
       if (ball.typeKey === 'shen' && ball.shield > 0) badges.innerHTML += `<span class="bg-cyan-950 text-cyan-300 border border-cyan-500/40 px-1 rounded">🛡️ Giáp: ${Math.round(ball.shield)} (${Math.ceil(ball.shieldTimer)}s)</span>`;
-      if (ball.typeKey === 'shen' && ball.spiritBladeImmortalTimer > 0) badges.innerHTML += `<span class="bg-cyan-950 text-cyan-200 border border-cyan-400 px-1 rounded">⛩️ Bất Tử Vùng</span>`;
+      if (ball.typeKey === 'shen') {
+        const bladeRadius = ball.radius * 4;
+        const distToBlade = Math.hypot(ball.x - ball.spiritBladeX, ball.y - ball.spiritBladeY);
+        if (distToBlade <= bladeRadius) {
+          badges.innerHTML += `<span class="bg-cyan-950 text-cyan-200 border border-cyan-400 px-1 rounded">⛩️ Bất Tử Vùng</span>`;
+        }
+      }
     }
 
     function updateHUD() {
