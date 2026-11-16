@@ -56,7 +56,14 @@
         
         <div class="space-y-3">
           <div>
-            <label class="block text-xs font-semibold text-cyan-400 mb-1">BALL 1 (Bên Trái)</label>
+            <label class="block text-xs font-semibold text-slate-300 mb-1">CHẾ ĐỘ</label>
+            <select id="mode-select" class="w-full bg-slate-950 border border-violet-500/30 rounded-lg px-3 py-2 text-sm text-violet-200">
+              <option value="1v1" selected>⚔️ Đấu đơn 1v1</option>
+              <option value="2v2">⚔️⚔️ Đấu đội 2v2</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-cyan-400 mb-1">BALL 1 (Đội Xanh)</label>
             <select id="p1-select" class="w-full bg-slate-950 border border-cyan-500/30 rounded-lg px-3 py-2 text-sm text-cyan-200 focus:outline-none focus:border-cyan-400">
               <option value="fire">🔥 Fire Ball</option>
               <option value="ghost">👻 Ghost Ball</option>
@@ -78,7 +85,7 @@
           </div>
 
           <div>
-            <label class="block text-xs font-semibold text-rose-400 mb-1">BALL 2 (Bên Phải)</label>
+            <label class="block text-xs font-semibold text-rose-400 mb-1">BALL 2 (Đội Đỏ)</label>
             <select id="p2-select" class="w-full bg-slate-950 border border-rose-500/30 rounded-lg px-3 py-2 text-sm text-rose-200 focus:outline-none focus:border-rose-400">
               <option value="fire">🔥 Fire Ball</option>
               <option value="ghost">👻 Ghost Ball</option>
@@ -99,6 +106,14 @@
             </select>
           </div>
 
+          <div id="p1b-wrap" class="hidden">
+            <label class="block text-xs font-semibold text-cyan-300 mb-1">BALL 2 (Đội Xanh)</label>
+            <select id="p1b-select" class="w-full bg-slate-950 border border-cyan-500/30 rounded-lg px-3 py-2 text-sm text-cyan-200">              <option value="fire">🔥 Fire Ball</option><option value="ghost">👻 Ghost Ball</option><option value="assassin">🗡️ Assassin Ball</option><option value="bear">🐻 Bear Ball</option><option value="storm">⚡ Storm Ball</option><option value="wanderer">⚔️ Wanderer Ball</option><option value="soul">🔮 Soul Ball</option><option value="marksman">🎯 Marksman Ball</option><option value="ninja">🥷 Ninja Ball</option><option value="reaper">💀 Reaper Ball</option><option value="shen">⛩️ Shen Ball</option><option value="sound">🔊 Sound Ball</option><option value="angel">👼 Angel Ball</option><option value="wukong">🐵 Wukong Ball</option><option value="demon">👿 Demon Ball</option><option value="poseidon">🔱 Poseidon Ball</option></select>
+          </div>
+          <div id="p2b-wrap" class="hidden">
+            <label class="block text-xs font-semibold text-rose-300 mb-1">BALL 2 (Đội Đỏ)</label>
+            <select id="p2b-select" class="w-full bg-slate-950 border border-rose-500/30 rounded-lg px-3 py-2 text-sm text-rose-200">              <option value="fire">🔥 Fire Ball</option><option value="ghost">👻 Ghost Ball</option><option value="assassin">🗡️ Assassin Ball</option><option value="bear">🐻 Bear Ball</option><option value="storm">⚡ Storm Ball</option><option value="wanderer">⚔️ Wanderer Ball</option><option value="soul">🔮 Soul Ball</option><option value="marksman">🎯 Marksman Ball</option><option value="ninja">🥷 Ninja Ball</option><option value="reaper">💀 Reaper Ball</option><option value="shen">⛩️ Shen Ball</option><option value="sound">🔊 Sound Ball</option><option value="angel">👼 Angel Ball</option><option value="wukong">🐵 Wukong Ball</option><option value="demon">👿 Demon Ball</option><option value="poseidon">🔱 Poseidon Ball</option></select>
+          </div>
           <button id="btn-start" class="w-full mt-2 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold py-2.5 px-4 rounded-lg font-orbitron tracking-wider text-sm shadow-lg shadow-cyan-500/20 transition-all active:scale-95">
             ▶ BẮT ĐẦU ĐẤU
           </button>
@@ -111,7 +126,8 @@
         <div class="text-slate-300 leading-relaxed">
           • <span class="text-sky-400 font-semibold">Poseidon:</span> Combo 3 vụ nổ đẩy thẳng chuyền nhịp (9/15/21 dmg), mở rộng +0.65d.<br>
           • <span class="text-teal-400 font-semibold">Sound Ball:</span> Gỡ tăng tốc máu thấp, nâng cấp sóng đa sắc cộng hưởng.<br>
-          • <span class="text-amber-400 font-semibold">16 Chiến Binh:</span> Đại tu toàn bộ hiệu ứng lửa, kiếm khí, sét, linh hồn, gậy Như Ý & bẫy!
+          • <span class="text-amber-400 font-semibold">16 Chiến Binh:</span> Đại tu toàn bộ hiệu ứng lửa, kiếm khí, sét, linh hồn, gậy Như Ý & bẫy!<br>
+          • <span class="text-violet-300 font-semibold">2v2:</span> Chọn 4 Ball khác nhau; đồng minh không gây sát thương/khống chế lẫn nhau.
         </div>
       </div>
     </div>
@@ -219,7 +235,9 @@
       poseidon: { waveTriggerDiam: 3.5, waveRadiusDiam: 3.6, waveDmg: 1, waveSlowDuration: 2.0, waveSlowFactor: 0.75, burstInterval: 4.0 }
     };
 
-    let p1, p2;
+    let p1, p2, p3, p4;
+    let balls = [];
+    let isTeamMode = false;
     let fireTrails = [];
     let assassinShurikens = [];
     let lightningZones = [];
@@ -249,11 +267,53 @@
 
     const p1Select = document.getElementById('p1-select');
     const p2Select = document.getElementById('p2-select');
+    const p1bSelect = document.getElementById('p1b-select');
+    const p2bSelect = document.getElementById('p2b-select');
+    const modeSelect = document.getElementById('mode-select');
+    p1bSelect.value='fire'; p2bSelect.value='ghost';
+    modeSelect.addEventListener('change', () => {
+      const show = modeSelect.value === '2v2';
+      document.getElementById('p1b-wrap').classList.toggle('hidden', !show);
+      document.getElementById('p2b-wrap').classList.toggle('hidden', !show);
+    });
     const btnStart = document.getElementById('btn-start');
     const btnRestart = document.getElementById('btn-restart');
     const winnerOverlay = document.getElementById('winner-overlay');
     const winnerText = document.getElementById('winner-text');
     const battleLog = document.getElementById('battle-log');
+
+    function getTeamMembers(ball, includeSelf = true) {
+      return balls.filter(b => b && b.side === ball.side && (includeSelf || b !== ball));
+    }
+    function getEnemies(ball) {
+      return balls.filter(b => b && b.side !== ball.side && b.hp > 0);
+    }
+    function isAlly(a, b) { return !!(a && b && a.side === b.side); }
+    function nearestOf(ball, list) {
+      return list.slice().sort((a, b) => Math.hypot(a.x-ball.x,a.y-ball.y)-Math.hypot(b.x-ball.x,b.y-ball.y))[0] || null;
+    }
+    function effectCount(b) {
+      if (!b) return 0;
+      return (b.burnTimer>0?1:0)+(b.slowTimer>0?1:0)+(b.stunTimer>0?1:0)+(b.shield>0?1:0)+(b.blessingMarks>0?1:0)+(b.oceanicMarks>0?1:0)+(b.drownedTimer>0?1:0)+(b.wandererShieldActive?1:0)+(b.wukongImmortalTimer>0?1:0)+(b.ninjaInvulnerable?1:0)+(b.reaperSpeedBoostTimer>0?1:0)+(b.typeKey==='demon'?b.demonReviveCount+(b.demonBonusRevives||0):0)+(b.collectedSoulsCount||0)+(b.angelReviveUsed?1:0)+(b.wandererSpeedBoostTimer>0?1:0)+(b.wukongSweepTimer>0?1:0)+(b.poseidonWaveCooldown>0?1:0)+(b.oceanSlowTimer>0?1:0)+(b.shenZoneImmuneSources.size>0?1:0)+(b.isGhosting?1:0)+(b.ninjaComboStep>1?1:0)+(b.angelAllyReviveUsed?1:0);
+    }
+    function preferredEnemy(ball) {
+      const enemies = getEnemies(ball);
+      if (!enemies.length) return null;
+      let ranked = enemies;
+      if (ball.typeKey === 'assassin' || ball.typeKey === 'ninja') ranked = enemies.slice().sort((a,b) => a.hp-b.hp || Math.hypot(a.x-ball.x,a.y-ball.y)-Math.hypot(b.x-ball.x,b.y-ball.y));
+      else if (ball.typeKey === 'poseidon') ranked = enemies.slice().sort((a,b) => effectCount(b)-effectCount(a) || Math.hypot(a.x-ball.x,a.y-ball.y)-Math.hypot(b.x-ball.x,b.y-ball.y));
+      else ranked = enemies.slice().sort((a,b) => Math.hypot(a.x-ball.x,a.y-ball.y)-Math.hypot(b.x-ball.x,b.y-ball.y));
+      return ranked[0];
+    }
+    function aliveTeam(side) { return balls.filter(b => b && b.side === side && b.hp > 0); }
+    function resetStatuses(ball) {
+      ball.burnStacks=0; ball.burnTimer=0; ball.burnOwner=null; ball.slowTimer=0; ball.slowFactor=1; ball.oceanSlowTimer=0; ball.stunTimer=0;
+      ball.drownedTimer=0; ball.shield=0; ball.shieldTimer=0; ball.blessingMarks=0; ball.oceanicMarks=0;
+      ball.ninjaInvulnerable=false; ball.wandererShieldActive=false; ball.wukongImmortalTimer=0;
+      ball.wandererSpeedBoostTimer=0; ball.reaperSpeedBoostTimer=0; ball.wukongSweepTimer=0;
+      ball.dashAnim=null; ball.bladeDashAnim=null; ball.reaperLockedTarget=null; ball.isGhosting=false; ball.activeSlash=null; ball.effectiveHealStored=0; ball.wukongSweepHit=false; ball.ninjaComboStep=1; ball.ninjaComboTarget=null;
+      ball.shenZoneImmuneSources.clear(); ball.shenZoneEntrySources.clear();
+    }
 
     function logMessage(msg, type = 'normal') {
       const entry = document.createElement('div');
@@ -449,15 +509,17 @@
         this.baseSpeed = cfg.speed;
         this.contactDmg = cfg.contactDmg;
         
-        const angle = (Math.random() * Math.PI / 2) - Math.PI / 4 + (side === 'p2' ? Math.PI : 0);
+        const angle = (Math.random() * Math.PI / 2) - Math.PI / 4 + (side === 'red' ? Math.PI : 0);
         this.vx = Math.cos(angle) * this.baseSpeed;
         this.vy = Math.sin(angle) * this.baseSpeed;
         
         this.burnStacks = 0;
         this.burnTimer = 0;
+        this.burnOwner = null;
         this.lastBurnDmgTime = 0;
         this.slowTimer = 0;
         this.slowFactor = 1;
+        this.oceanSlowTimer = 0;
         this.stunTimer = 0;
         this.cooldownTimer = 0;
         this.hitCooldown = 0;
@@ -472,6 +534,7 @@
 
         this.wandererShieldActive = true;
         this.wandererShieldTimer = 0;
+        this.wandererSpeedBoostTimer = 0;
         this.slashCooldown = 0;
         this.slashCount = 0;
         this.activeSlash = null;
@@ -501,6 +564,11 @@
         this.blessingMarks = 0;
         this.angelHealTimer = 0;
         this.angelReviveUsed = false;
+        this.angelAllyReviveUsed = false;
+        this.shenZoneImmuneSources = new Set();
+        this.shenZoneEntrySources = new Set();
+        this.ninjaComboTarget = null;
+        this.reaperLockedTarget = null;
 
         this.wukongSkillTimer = 0;
         this.wukongImmortalTimer = 0;
@@ -508,6 +576,7 @@
         this.wukongSweepHit = false;
 
         this.demonReviveCount = 0;
+        this.demonBonusRevives = 0;
         this.demonHpTimer = 0;
 
         this.poseidonWaveCooldown = 0;
@@ -517,7 +586,7 @@
       }
 
       isImmuneToDebuffs() {
-        if (this.drownedTimer > 0) return true;
+        if (this.drownedTimer > 0 || this.shenZoneImmuneSources.size > 0) return true;
         if (this.typeKey === 'wukong' && this.wukongImmortalTimer > 0) return true;
         if (this.typeKey === 'ninja' && this.ninjaInvulnerable) return true;
         if (this.typeKey === 'wanderer' && this.wandererShieldActive) return true;
@@ -532,8 +601,9 @@
         if (this.drownedTimer > 0 || this.stunTimer > 0) return 0;
         let speed = this.baseSpeed;
         // Đã xóa nội tại tăng tốc khi thấp HP của Sound Ball theo yêu cầu
-        speed *= this.slowFactor;
+        speed *= (isTeamMode && this.oceanSlowTimer>0) ? Math.min(this.slowFactor,0.25) : this.slowFactor;
         if (this.typeKey === 'reaper' && this.reaperSpeedBoostTimer > 0) speed *= SKILL_CONFIG.reaper.speedBoostMult;
+        if (isTeamMode && this.typeKey === 'wanderer' && this.wandererSpeedBoostTimer > 0) speed *= 1.3;
         if (this.typeKey === 'wukong' && this.wukongSweepTimer > 0) speed *= SKILL_CONFIG.wukong.sweepSpeedBonus;
         return speed;
       }
@@ -549,6 +619,7 @@
           this.stunTimer -= 1 / 60;
           if (this.stunTimer <= 0) { this.stunTimer = 0; updateHUD(); }
         }
+        if(this.oceanSlowTimer>0) this.oceanSlowTimer=Math.max(0,this.oceanSlowTimer-1/60);
         if (this.slowTimer > 0) {
           this.slowTimer -= 1 / 60;
           if (this.slowTimer <= 0) { this.slowFactor = 1; this.slowTimer = 0; updateHUD(); }
@@ -565,7 +636,7 @@
           const now = Date.now();
           if (now - this.lastBurnDmgTime >= SKILL_CONFIG.fire.burnTickInterval) {
             const dmg = SKILL_CONFIG.fire.burnDmgPerTick * this.burnStacks;
-            this.takeDamage(dmg, 'Cháy');
+            this.takeDamage(dmg,{label:'Cháy',attacker:this.burnOwner});
             this.lastBurnDmgTime = now;
             createParticles(this.x, this.y, '#f97316', 4);
           }
@@ -576,6 +647,7 @@
         if (this.ghostHitCooldown > 0) this.ghostHitCooldown--;
         if (this.shenSwapCooldown > 0) this.shenSwapCooldown -= 1 / 60;
         if (this.reaperSpeedBoostTimer > 0) this.reaperSpeedBoostTimer -= 1 / 60;
+        if (this.wandererSpeedBoostTimer > 0) this.wandererSpeedBoostTimer = Math.max(0,this.wandererSpeedBoostTimer-1/60);
         if (this.poseidonWaveCooldown > 0) this.poseidonWaveCooldown -= 1 / 60;
 
         if (this.bladeDashAnim) {
@@ -635,7 +707,7 @@
           else if (this.y + this.radius >= canvas.height) { this.y = canvas.height - this.radius; this.vy = -Math.abs(this.vy); hitWall = true; }
 
           if (hitWall && this.typeKey === 'sound') {
-            soundWaves.push({ x: this.x, y: this.y, currentRadius: this.radius, owner: this, hitTarget: false, hueOffset: Math.random() * 360 });
+            soundWaves.push({ x:this.x,y:this.y,currentRadius:this.radius,owner:this,hitTargets:[],damageScale:1,hueOffset:Math.random()*360 });
           }
         }
       }
@@ -679,7 +751,7 @@
 
         const distGhostEnemy = Math.hypot(this.ghostX - enemy.x, this.ghostY - enemy.y);
         if (distGhostEnemy < this.radius + enemy.radius && this.ghostHitCooldown === 0) {
-          enemy.takeDamage(SKILL_CONFIG.ghost.ghostDmg, 'Hồn Lướt Qua');
+          enemy.takeDamage(SKILL_CONFIG.ghost.ghostDmg,{label:'Hồn Lướt Qua',attacker:this});
           enemy.applySlow(SKILL_CONFIG.ghost.ghostSlowDuration);
           this.ghostHitCooldown = 45;
           createParticles(enemy.x, enemy.y, '#c084fc', 10);
@@ -689,7 +761,7 @@
         let shouldRecall = (Math.hypot(this.x - enemy.x, this.y - enemy.y) <= this.radius + enemy.radius);
         if (!shouldRecall) {
           for (const clone of wukongClones) {
-            if (clone.owner !== this && Math.hypot(this.x - clone.x, this.y - clone.y) <= this.radius + clone.radius) {
+            if (clone.owner !== this && clone.owner.side !== this.side && Math.hypot(this.x - clone.x, this.y - clone.y) <= this.radius + clone.radius) {
               shouldRecall = true;
               break;
             }
@@ -741,6 +813,7 @@
           state: 'flying',
           hitOnThrow: false,
           hitOnReturn: false,
+          hitTargets: [],
           trail: []
         });
       }
@@ -809,7 +882,9 @@
             startAngle: aimAngle - Math.PI,
             isUltimate: isThirdHit
           };
-          enemy.takeDamage(dmg, isThirdHit ? 'Trảm Cực Hạn' : 'Kiếm Khí');
+          enemy.takeDamage(dmg,{label:isThirdHit?'Trảm Cực Hạn':'Kiếm Khí',attacker:this});
+          if(isTeamMode) this.wandererSpeedBoostTimer=2.0;
+          if(isTeamMode && !this.wandererShieldActive) this.wandererShieldTimer=Math.min(SKILL_CONFIG.wanderer.shieldCooldown,this.wandererShieldTimer+1.0);
           createParticles(enemy.x, enemy.y, isThirdHit ? '#c084fc' : '#818cf8', isThirdHit ? 16 : 8, 1.3);
 
           if (isThirdHit) {
@@ -831,7 +906,7 @@
           soulOrbs.push({
             x: Math.random() * (canvas.width - 60) + 30,
             y: Math.random() * (canvas.height - 60) + 30,
-            radius: 11,
+            radius: 11, owner: this,
             phase: Math.random() * Math.PI * 2
           });
         }
@@ -840,10 +915,8 @@
         if (this.soulBeamTimer >= SKILL_CONFIG.soul.beamInterval) {
           this.soulBeamTimer = 0;
           const aimAngle = Math.atan2(enemy.y - this.y, enemy.x - this.x);
-          const angleDeg = Math.min(
-            SKILL_CONFIG.soul.maxBeamAngleDeg,
-            SKILL_CONFIG.soul.baseBeamAngleDeg + this.collectedSoulsCount * SKILL_CONFIG.soul.bonusAnglePerSoulDeg
-          );
+          const baseAngle = isTeamMode ? SKILL_CONFIG.soul.baseBeamAngleDeg * 0.5 : SKILL_CONFIG.soul.baseBeamAngleDeg;
+          const angleDeg = Math.min(SKILL_CONFIG.soul.maxBeamAngleDeg, baseAngle + this.collectedSoulsCount * SKILL_CONFIG.soul.bonusAnglePerSoulDeg);
           const spreadRad = (angleDeg * Math.PI) / 180;
           const beamDmg = SKILL_CONFIG.soul.baseBeamDmg + this.collectedSoulsCount * SKILL_CONFIG.soul.bonusDmgPerSoul;
 
@@ -875,7 +948,7 @@
           let diff = Math.abs(angleToEnemy - aimAngle);
           if (diff > Math.PI) diff = 2 * Math.PI - diff;
           if (diff <= spreadRad / 2 + 0.1) {
-            enemy.takeDamage(beamDmg, `Chùm Sáng (${this.collectedSoulsCount} Hồn)`);
+            enemy.takeDamage(beamDmg,{label:`Chùm Sáng (${this.collectedSoulsCount} Hồn)`,attacker:this});
             createParticles(enemy.x, enemy.y, '#f472b6', 12);
           }
         }
@@ -887,7 +960,7 @@
         if (this.marksmanShootTimer >= SKILL_CONFIG.marksman.normalShootInterval) {
           this.marksmanShootTimer = 0;
           marksmanBullets.push({
-            x: this.x, y: this.y, target: enemy,
+            x: this.x, y: this.y, target: enemy, owner: this,
             speed: BASE_SPEED * 4.0, damage: SKILL_CONFIG.marksman.normalBulletDmg,
             isCrit: false, trail: []
           });
@@ -903,6 +976,8 @@
       }
 
       updateNinja(enemy) {
+        if(this.ninjaComboStep>1 && this.ninjaComboTarget && this.ninjaComboTarget.hp>0) enemy=this.ninjaComboTarget;
+        else if(this.ninjaComboStep>1){this.ninjaComboStep=1;this.ninjaComboTarget=null;}
         if (!enemy || this.stunTimer > 0 || this.dashAnim) return;
         this.ninjaComboTimer += 1 / 60;
         if (this.ninjaComboTimer >= SKILL_CONFIG.ninja.stepInterval) {
@@ -926,10 +1001,11 @@
             this.dashAnim = {
               startX: this.x, startY: this.y, endX: behindX, endY: behindY, progress: 0, duration: 0.16,
               callback: () => {
-                enemy.takeDamage(SKILL_CONFIG.ninja.step2DashDmg, 'Đột Kích');
+                enemy.takeDamage(SKILL_CONFIG.ninja.step2DashDmg,{label:'Đột Kích',attacker:this});
                 reaperSlashes.push({ x: enemy.x, y: enemy.y, angle: enemyAngle + Math.PI / 4, radius: 34, timer: 0.25, maxTimer: 0.25, color: '#e2e8f0' });
                 this.ninjaInvulnerable = false;
                 this.ninjaComboStep = 3;
+                if(enemy.hp<=0) this.ninjaComboTarget=null;
               }
             };
           } else if (this.ninjaComboStep === 3) {
@@ -947,11 +1023,11 @@
                 if (distToSeg <= this.radius + enemy.radius + 6) {
                   const missingHp = enemy.maxHp - enemy.hp;
                   const dmg = SKILL_CONFIG.ninja.step3BaseDmg + Math.round(missingHp * SKILL_CONFIG.ninja.step3MissingHpPct);
-                  enemy.takeDamage(dmg, 'Ảnh Trảm');
+                  enemy.takeDamage(dmg,{label:'Ảnh Trảm',attacker:this});
                   reaperSlashes.push({ x: enemy.x, y: enemy.y, angle: angle, radius: 44, timer: 0.3, maxTimer: 0.3, color: '#38bdf8' });
-                  this.ninjaComboStep = 1;
+                  this.ninjaComboStep = 1; this.ninjaComboTarget=null;
                 } else {
-                  this.ninjaComboStep = 1;
+                  this.ninjaComboStep = 1; this.ninjaComboTarget=null;
                   const retryAng = Math.atan2(enemy.y - this.y, enemy.x - this.x);
                   ninjaProjectiles.push({
                     x: this.x, y: this.y,
@@ -971,21 +1047,21 @@
         if (!enemy) return;
         const now = Date.now();
         this.illusionSpawnTimer += 1 / 60;
-        if (this.illusionSpawnTimer >= SKILL_CONFIG.reaper.trailSpawnInterval) {
-          this.illusionSpawnTimer = 0;
-          reaperIllusions.push({
-            x: enemy.x, y: enemy.y,
-            createdAt: now,
-            lifespan: SKILL_CONFIG.reaper.trailLifespan,
-            radius: enemy.radius,
-            wobble: Math.random() * Math.PI * 2
-          });
+        if(this.illusionSpawnTimer>=SKILL_CONFIG.reaper.trailSpawnInterval){
+          this.illusionSpawnTimer=0;
+          getEnemies(this).forEach(target=>reaperIllusions.push({
+            x:target.x,y:target.y,createdAt:now,
+            lifespan:SKILL_CONFIG.reaper.trailLifespan,
+            radius:target.radius,target,owner:this,
+            wobble:Math.random()*Math.PI*2
+          }));
         }
 
         for (let i = reaperIllusions.length - 1; i >= 0; i--) {
           const ill = reaperIllusions[i];
           if (now - ill.createdAt >= ill.lifespan) { reaperIllusions.splice(i, 1); continue; }
-          if (Math.hypot(this.x - ill.x, this.y - ill.y) < this.radius + ill.radius) {
+          if(this.reaperSpeedBoostTimer<=0 && ill.target && ill.target.side!==this.side && Math.hypot(this.x-ill.x,this.y-ill.y)<this.radius+ill.radius){
+            this.reaperLockedTarget = ill.target;
             this.reaperSpeedBoostTimer = 2.5;
             createParticles(ill.x, ill.y, '#cbd5e1', 6);
             reaperIllusions.splice(i, 1);
@@ -994,15 +1070,18 @@
         }
 
         if (this.reaperSpeedBoostTimer > 0) {
-          const angle = Math.atan2(enemy.y - this.y, enemy.x - this.x);
+          const chaseTarget=this.reaperLockedTarget;
+          if(!chaseTarget || chaseTarget.hp<=0 || chaseTarget.side===this.side){this.reaperSpeedBoostTimer=0;this.reaperLockedTarget=null;return;}
+          const angle = Math.atan2(chaseTarget.y - this.y, chaseTarget.x - this.x);
           const chaseSpd = this.baseSpeed * SKILL_CONFIG.reaper.speedBoostMult;
           this.vx = Math.cos(angle) * chaseSpd;
           this.vy = Math.sin(angle) * chaseSpd;
 
-          if (Math.hypot(this.x - enemy.x, this.y - enemy.y) <= this.radius * 3) {
+          if (Math.hypot(this.x - chaseTarget.x, this.y - chaseTarget.y) <= this.radius * 3) {
+            const enemy = chaseTarget;
             const missingHp = enemy.maxHp - enemy.hp;
             const slashDmg = SKILL_CONFIG.reaper.slashBaseDmg + Math.floor(missingHp * SKILL_CONFIG.reaper.slashMissingHpPct);
-            enemy.takeDamage(slashDmg, 'Nhát Chém Tử Thần');
+            enemy.takeDamage(slashDmg,{label:'Nhát Chém Tử Thần',attacker:this});
             
             // Hiệu ứng lưỡi hái tử thần chém cực lực
             reaperSlashes.push({ x: enemy.x, y: enemy.y, angle: angle, radius: 52, timer: 0.35, maxTimer: 0.35, color: '#f87171' });
@@ -1010,6 +1089,7 @@
             createParticles(enemy.x, enemy.y, '#ef4444', 14, 1.4);
 
             this.reaperSpeedBoostTimer = 0;
+            this.reaperLockedTarget = null;
             const randAngle = Math.random() * Math.PI * 2;
             this.vx = Math.cos(randAngle) * this.baseSpeed;
             this.vy = Math.sin(randAngle) * this.baseSpeed;
@@ -1018,6 +1098,9 @@
       }
 
       updateShen(enemy) {
+        const bladeRadius=this.radius*SKILL_CONFIG.shen.zoneRadiusMult;
+        const enemiesInZone=getEnemies(this).filter(e=>Math.hypot(e.x-this.spiritBladeX,e.y-this.spiritBladeY)<=bladeRadius);
+        if(enemiesInZone.length) enemy=nearestOf(this,enemiesInZone);
         if (!enemy) return;
         this.pullBladeTimer += 1 / 60;
         if (this.pullBladeTimer >= SKILL_CONFIG.shen.pullBladeInterval && !this.bladeDashAnim) {
@@ -1035,7 +1118,20 @@
           };
         }
 
-        const bladeRadius = this.radius * SKILL_CONFIG.shen.zoneRadiusMult;
+        getTeamMembers(this, false).forEach(ally => {
+          if(ally.hp<=0){ally.shenZoneImmuneSources.delete(this.id);ally.shenZoneEntrySources.delete(this.id);return;}
+          const inside = Math.hypot(ally.x-this.spiritBladeX,ally.y-this.spiritBladeY) <= bladeRadius;
+          const sourceKey = this.id;
+          const had = ally.shenZoneEntrySources.has(sourceKey);
+          if (inside && !had) {
+            ally.shenZoneEntrySources.add(sourceKey);
+            ally.shield += SKILL_CONFIG.shen.shieldAmount;
+            ally.shieldTimer = Math.max(ally.shieldTimer,4.0);
+            createShockwave(ally.x,ally.y,34,'#22d3ee',2);
+          } else if (!inside && had) ally.shenZoneEntrySources.delete(sourceKey);
+          if (inside) ally.shenZoneImmuneSources.add(sourceKey);
+          else ally.shenZoneImmuneSources.delete(sourceKey);
+        });
         const isInsideNow = (Math.hypot(this.x - this.spiritBladeX, this.y - this.spiritBladeY) <= bladeRadius);
 
         if (isInsideNow && !this.wasInsideBladeZone) {
@@ -1054,7 +1150,7 @@
           const endShenX = this.spiritBladeX, endShenY = this.spiritBladeY;
           this.dashAnim = {
             startX: startShenX, startY: startShenY, endX: endShenX, endY: endShenY, progress: 0, duration: 0.12,
-            callback: () => { enemy.takeDamage(SKILL_CONFIG.shen.swapDmg, 'Vùng Kiếm Hồn'); }
+            callback: () => { enemy.takeDamage(SKILL_CONFIG.shen.swapDmg,{label:'Vùng Kiếm Hồn',attacker:this}); }
           };
           this.bladeDashAnim = {
             startX: endShenX, startY: endShenY, endX: startShenX, endY: startShenY, progress: 0, duration: 0.12
@@ -1068,7 +1164,7 @@
           this.dashAnim = {
             startX: this.x, startY: this.y, endX: this.spiritBladeX, endY: this.spiritBladeY, progress: 0, duration: 0.1,
             callback: () => {
-              enemy.takeDamage(ropeDmg, 'Lướt Dây Linh Hồn');
+              enemy.takeDamage(ropeDmg,{label:'Lướt Dây Linh Hồn',attacker:this});
               createShockwave(enemy.x, enemy.y, 42, '#06b6d4', 2.5);
             }
           };
@@ -1076,11 +1172,20 @@
       }
 
       updateAngel(enemy) {
-        if (!enemy) return;
         this.angelHealTimer += 1 / 60;
         if (this.angelHealTimer >= SKILL_CONFIG.angel.passiveHealInterval) {
           this.angelHealTimer = 0;
-          enemy.receiveHealingFromAngel(SKILL_CONFIG.angel.passiveHealAmount, this);
+          let actualEnemyHealing = 0;
+          getEnemies(this).forEach(target => {
+            actualEnemyHealing += target.receiveHealingFromAngel(SKILL_CONFIG.angel.passiveHealAmount, this, true);
+          });
+          if (isTeamMode && actualEnemyHealing > 0) {
+            getTeamMembers(this,false).forEach(ally => {
+              const healed=Math.min(actualEnemyHealing,ally.maxHp-ally.hp);
+              if (healed>0) { ally.hp+=healed; createFloatingText(ally.x,ally.y-10,`+${healed}`,'#4ade80'); createParticles(ally.x,ally.y,'#4ade80',3); }
+            });
+            updateHUD();
+          }
         }
       }
 
@@ -1142,7 +1247,7 @@
             } else if (choice === 4) {
               wukongStaffs.push({
                 x: this.x, y: this.y,
-                target: enemy,
+                owner: this, target: enemy,
                 speed: BASE_SPEED * 4.5,
                 length: (this.radius * 2) * SKILL_CONFIG.wukong.staffLengthDiamMult,
                 rotation: 0,
@@ -1167,7 +1272,7 @@
             timer: 0.32,
             maxTimer: 0.32
           });
-          enemy.takeDamage(SKILL_CONFIG.wukong.sweepDmg, 'Quét Gậy Hình Quạt');
+          enemy.takeDamage(SKILL_CONFIG.wukong.sweepDmg,{label:'Quét Gậy Hình Quạt',attacker:this});
           createShockwave(enemy.x, enemy.y, 65, '#f97316', 4);
           createParticles(enemy.x, enemy.y, '#fbbf24', 18, 1.5);
         }
@@ -1201,7 +1306,7 @@
             x: this.x, y: this.y, currentRadius: this.radius, maxRadius: waveRadius, owner: this
           });
 
-          enemy.takeDamage(SKILL_CONFIG.poseidon.waveDmg, 'Sóng Nước');
+          enemy.takeDamage(SKILL_CONFIG.poseidon.waveDmg,{label:'Sóng Nước',attacker:this});
           enemy.slowFactor = SKILL_CONFIG.poseidon.waveSlowFactor;
           enemy.applySlow(SKILL_CONFIG.poseidon.waveSlowDuration);
 
@@ -1216,14 +1321,14 @@
 
           if (enemy.oceanicMarks >= 4) {
             enemy.oceanicMarks = 0;
-            oceanEnvironmentTimer = 2.0;
+            oceanEnvironmentTimer = 2.0 + Math.max(0,getEnemies(this).length-1)*0.5;
             enemy.drownedTimer = 2.0;
             enemy.burnStacks = 0; enemy.burnTimer = 0;
             enemy.slowTimer = 0; enemy.slowFactor = 1;
             enemy.stunTimer = 0;
             enemy.shield = 0; enemy.shieldTimer = 0;
             createParticles(canvas.width / 2, canvas.height / 2, '#0284c7', 45);
-            logMessage(`🌊 HẢI THẦN THỨC TỈNH! Map biến thành ĐẠI DƯƠNG trong 2s! ${enemy.name} trúng ĐUỐI NƯỚC, xoá toàn bộ hiệu ứng & bất động!`, 'poseidon');
+            logMessage(`🌊 HẢI THẦN THỨC TỈNH! Đại Dương tồn tại ${oceanEnvironmentTimer.toFixed(1)}s! ${enemy.name} trúng ĐUỐI NƯỚC, xoá hiệu ứng & bất động!`, 'poseidon');
           }
         }
 
@@ -1254,8 +1359,9 @@
         }
       }
 
-      applyBurn() {
+      applyBurn(owner = null) {
         if (this.isImmuneToDebuffs()) return;
+        if(owner) this.burnOwner=owner;
         this.burnStacks = Math.min(this.burnStacks + 1, SKILL_CONFIG.fire.maxBurnStacks);
         this.burnTimer = SKILL_CONFIG.fire.burnDuration;
         updateHUD();
@@ -1274,78 +1380,84 @@
         updateHUD();
       }
 
-      takeDamage(amount, source) {
-        if (this.typeKey === 'wukong' && this.wukongImmortalTimer > 0) return;
-        if (this.typeKey === 'ninja' && this.ninjaInvulnerable) return;
-        if (this.typeKey === 'shen') {
-          if (Math.hypot(this.x - this.spiritBladeX, this.y - this.spiritBladeY) <= this.radius * SKILL_CONFIG.shen.zoneRadiusMult) return;
-        }
+      takeDamage(amount, source, skipBearShare = false, skipDemonReflect = false) {
+        if (!this || this.hp <= 0 || amount <= 0) return 0;
+        const sourceLabel = (source && typeof source === 'object') ? source.label : source;
+        const sourceAttacker = (source && typeof source === 'object') ? source.attacker : null;
+        if (this.typeKey === 'wukong' && this.wukongImmortalTimer > 0) return 0;
+        if (this.typeKey === 'ninja' && this.ninjaInvulnerable) return 0;
+        if (this.shenZoneImmuneSources.size > 0) return 0;
+        if (this.typeKey === 'shen' && Math.hypot(this.x-this.spiritBladeX,this.y-this.spiritBladeY) <= this.radius*SKILL_CONFIG.shen.zoneRadiusMult) return 0;
         if (this.typeKey === 'wanderer' && this.wandererShieldActive) {
-          this.wandererShieldActive = false;
-          this.wandererShieldTimer = 0;
-          createShockwave(this.x, this.y, 45, '#818cf8', 3);
-          createParticles(this.x, this.y, '#818cf8', 12);
-          updateHUD();
-          return;
+          this.wandererShieldActive=false; this.wandererShieldTimer=0;
+          createShockwave(this.x,this.y,45,'#818cf8',3); createParticles(this.x,this.y,'#818cf8',12); updateHUD(); return 0;
+        }
+
+        // Bear gánh thay 40% sát thương cho đồng đội; nếu có nhiều Bear thì phần gánh được chia đều giữa họ.
+        if (isTeamMode && !skipBearShare && this.typeKey !== 'bear') {
+          const bears=getTeamMembers(this,false).filter(a=>a.typeKey==='bear' && a.hp>0);
+          if(bears.length){
+            const bearShare=amount*0.4; amount*=0.6;
+            const each=bearShare/bears.length;
+            bears.forEach(b=>b.takeDamage(each,{label:`Gánh Đỡ: ${sourceLabel||source}`,attacker:sourceAttacker},true,true));
+          }
         }
 
         if (this.typeKey === 'angel' && !this.angelReviveUsed && this.hp - amount <= 0) {
-          this.angelReviveUsed = true;
-          this.hp = 1;
-          const enemy = (this === p1) ? p2 : p1;
-          if (enemy) enemy.receiveHealingFromAngel(15, this);
-          createShockwave(this.x, this.y, 70, '#fef08a', 4);
-          createParticles(this.x, this.y, '#eab308', 25);
-          logMessage(`👼 Angel Ball kích hoạt Phước Thần Hồi Sinh: Giữ 1 HP & hồi 15 HP cho địch!`, 'angel');
-          updateHUD();
-          return;
+          this.angelReviveUsed=true; this.hp=1;
+          const enemies=getEnemies(this); enemies.forEach(e=>e.receiveHealingFromAngel(15,this));
+          createShockwave(this.x,this.y,70,'#fef08a',4); createParticles(this.x,this.y,'#eab308',25);
+          logMessage(`👼 ${this.name} kích hoạt Phước Thần Hồi Sinh: giữ lại 1 HP!`,'angel'); updateHUD(); return 0;
         }
 
         let finalIncomingDmg = amount;
-        const enemy = (this === p1) ? p2 : p1;
         if (this.typeKey === 'demon') {
           finalIncomingDmg = amount * SKILL_CONFIG.demon.incomingDmgMult;
-          if (enemy && source !== 'Phản Đòn Demon') {
+          if (!skipDemonReflect && sourceLabel !== 'Phản Đòn Demon') {
+            const directAttacker = sourceAttacker && sourceAttacker.side !== this.side ? sourceAttacker : nearestOf(this,getEnemies(this));
             const shieldBonus = 1 + (this.shield * SKILL_CONFIG.demon.reflectBonusPerShield);
             const reflectedDmg = Math.round(amount * SKILL_CONFIG.demon.reflectBaseMult * shieldBonus);
-            enemy.takeDamage(reflectedDmg, 'Phản Đòn Demon');
-            logMessage(`👿 Demon Ball phản ${reflectedDmg} dmg gốc (+${Math.round(this.shield * 6)}%) lên ${enemy.name}!`, 'demon');
+            if (directAttacker && directAttacker.side !== this.side) directAttacker.takeDamage(reflectedDmg,{label:'Phản Đòn Demon',attacker:this},true,true);
+            const splashTargets = getEnemies(this).filter(e => e !== directAttacker && e.hp > 0);
+            if (isTeamMode && splashTargets.length) {
+              const splashPool = reflectedDmg * 0.5;
+              const each = splashPool / splashTargets.length;
+              splashTargets.forEach(e => e.takeDamage(each,{label:'Demon Phản Chấn',attacker:this},true,true));
+            }
+            logMessage(`👿 Demon phản ${reflectedDmg} sát thương và lan chấn động sang ${splashTargets.length} địch!`,'demon');
           }
         }
 
-        let remainingDmg = finalIncomingDmg;
-        if (this.shield > 0) {
-          if (this.shield >= remainingDmg) {
-            this.shield -= remainingDmg;
-            remainingDmg = 0;
-          } else {
-            remainingDmg -= this.shield;
-            this.shield = 0;
-            this.shieldTimer = 0;
+        let remainingDmg=finalIncomingDmg;
+        if (this.shield>0) {
+          const absorbed=Math.min(this.shield,remainingDmg); this.shield-=absorbed; remainingDmg-=absorbed;
+          if (this.shield<=0) { this.shield=0; this.shieldTimer=0; }
+        }
+        // Angel chỉ cứu đồng minh khi sát thương còn lại sau khi trừ khiên thật sự đủ hạ gục họ.
+        if(this.hp-remainingDmg<=0){
+          const angel=isTeamMode?getTeamMembers(this,false).find(a=>a.typeKey==='angel' && a.hp>0 && !this.angelAllyReviveUsed):null;
+          if(angel){
+            this.angelAllyReviveUsed=true; this.hp=1; resetStatuses(this);
+            if(this.typeKey==='demon') this.demonBonusRevives++;
+            createShockwave(this.x,this.y,66,'#fef08a',4); createParticles(this.x,this.y,'#fef08a',22);
+            logMessage(`👼 Angel cứu ${this.name}: hồi sinh với 1 HP, xóa mọi hiệu ứng!`,'angel'); updateHUD(); return 0;
           }
         }
+        const actualHpDamage=Math.min(this.hp,remainingDmg);
+        this.hp=Math.max(0,this.hp-remainingDmg);
 
-        if (remainingDmg > 0) {
-          this.hp = Math.max(0, this.hp - remainingDmg);
+        if (this.hp<=0 && this.typeKey==='demon' && this.demonReviveCount<SKILL_CONFIG.demon.maxRevives+this.demonBonusRevives) {
+          this.demonReviveCount++; this.hp=this.maxHp;
+          logMessage(`👿 Demon Ball hồi sinh lần ${this.demonReviveCount}/${SKILL_CONFIG.demon.maxRevives + this.demonBonusRevives}!`,'demon');
+          createShockwave(this.x,this.y,65,'#ef4444',4); createParticles(this.x,this.y,'#ef4444',20); updateHUD(); return actualHpDamage;
         }
-
-        if (this.hp <= 0 && this.typeKey === 'demon' && this.demonReviveCount < SKILL_CONFIG.demon.maxRevives) {
-          this.demonReviveCount++;
-          this.hp = this.maxHp;
-          logMessage(`👿 Demon Ball hồi sinh lần ${this.demonReviveCount}/${SKILL_CONFIG.demon.maxRevives}!`, 'demon');
-          createShockwave(this.x, this.y, 65, '#ef4444', 4);
-          createParticles(this.x, this.y, '#ef4444', 20);
-          updateHUD();
-          return;
-        }
-
         updateHUD();
-        if (this.hp <= 0 && !gameOver) {
-          endGame(this);
-        }
+        if(this.hp<=0){ balls.forEach(b=>{b.shenZoneImmuneSources.delete(this.id);b.shenZoneEntrySources.delete(this.id);}); }
+        if (this.hp<=0 && !gameOver) endGame(this);
+        return actualHpDamage;
       }
 
-      receiveHealingFromAngel(baseAmount, angelHealer) {
+      receiveHealingFromAngel(baseAmount, angelHealer, allowBlessing = true) {
         const missingAngelHp = Math.max(0, angelHealer.maxHp - angelHealer.hp);
         const healMultiplier = 1 + (missingAngelHp * SKILL_CONFIG.angel.healBonusPerMissingHp);
         const totalHeal = Math.round(baseAmount * healMultiplier);
@@ -1357,28 +1469,29 @@
         createParticles(this.x, this.y, '#fef08a', 4);
         createFloatingText(this.x, this.y - 10, `+${actualHealed}`, '#fef08a');
 
-        if (overheal > 0) {
-          this.blessingMarks += overheal;
-          logMessage(`👼 Angel hồi dư +${overheal} HP -> Đặt ${overheal} Phước Thần lên ${this.name} (Tổng: ${this.blessingMarks})!`, 'angel');
-          
-          const selfShare = Math.round(overheal * SKILL_CONFIG.angel.selfHealShareFromOverheal);
-          if (selfShare > 0) {
-            angelHealer.hp = Math.min(angelHealer.maxHp, angelHealer.hp + selfShare);
-            createFloatingText(angelHealer.x, angelHealer.y - 10, `+${selfShare}`, '#4ade80');
+        if(overheal>0){
+          if(allowBlessing){
+            this.blessingMarks+=overheal;
+            logMessage(`👼 Angel hồi dư +${overheal} HP -> Đặt ${overheal} Phước Thần lên ${this.name} (Tổng: ${this.blessingMarks})!`,'angel');
+          }
+          const selfShare=Math.round(overheal*SKILL_CONFIG.angel.selfHealShareFromOverheal);
+          if(selfShare>0){
+            angelHealer.hp=Math.min(angelHealer.maxHp,angelHealer.hp+selfShare);
+            createFloatingText(angelHealer.x,angelHealer.y-10,`+${selfShare}`,'#4ade80');
           }
         }
 
         updateHUD();
 
-        if (this.blessingMarks >= this.hp && this.hp > 0 && !gameOver) {
+        if (allowBlessing && this.blessingMarks >= this.hp && this.hp > 0 && !gameOver) {
           logMessage(`👼 PHÁN QUYẾT PHƯỚC THẦN! Địch đã tích đủ ${this.blessingMarks} Phước Thần (${this.hp} HP)!`, 'angel');
 
-          if (this.typeKey === 'demon' && this.demonReviveCount < SKILL_CONFIG.demon.maxRevives) {
+          if (this.typeKey === 'demon' && this.demonReviveCount < SKILL_CONFIG.demon.maxRevives + this.demonBonusRevives) {
             this.demonReviveCount++;
             this.hp = this.maxHp;
             this.blessingMarks = 0;
             createParticles(this.x, this.y, '#ef4444', 30);
-            logMessage(`👿 Demon Ball kháng Phán Quyết! Tiêu hao 1 mạng hồi sinh (Còn ${SKILL_CONFIG.demon.maxRevives - this.demonReviveCount} mạng)!`, 'demon');
+            logMessage(`👿 Demon Ball kháng Phán Quyết! Tiêu hao 1 mạng hồi sinh (Còn ${SKILL_CONFIG.demon.maxRevives + this.demonBonusRevives - this.demonReviveCount} mạng)!`, 'demon');
             updateHUD();
             return;
           }
@@ -1387,6 +1500,7 @@
           updateHUD();
           endGame(this);
         }
+        return actualHealed;
       }
 
       draw() {
@@ -1583,62 +1697,59 @@
     }
 
     function checkAllCollisions(b1, b2) {
-      if (resolveElasticCollision(b1, b2)) {
-        if (b1.typeKey === 'angel') {
-          b1.hp = Math.min(b1.maxHp, b1.hp + SKILL_CONFIG.angel.collisionSelfHeal);
-          createFloatingText(b1.x, b1.y - 10, `+${SKILL_CONFIG.angel.collisionSelfHeal}`, '#4ade80');
-          b2.receiveHealingFromAngel(SKILL_CONFIG.angel.collisionEnemyHeal, b1);
+      if (!b1 || !b2 || b1.hp<=0 || b2.hp<=0) return;
+      const allied = isAlly(b1,b2);
+      if (resolveElasticCollision(b1,b2)) {
+        if (b1.typeKey==='angel') {
+          b1.hp=Math.min(b1.maxHp,b1.hp+SKILL_CONFIG.angel.collisionSelfHeal);
+          createFloatingText(b1.x,b1.y-10,`+${SKILL_CONFIG.angel.collisionSelfHeal}`,'#4ade80');
+          b2.receiveHealingFromAngel(SKILL_CONFIG.angel.collisionEnemyHeal,b1,!allied);
         }
-        if (b2.typeKey === 'angel') {
-          b2.hp = Math.min(b2.maxHp, b2.hp + SKILL_CONFIG.angel.collisionSelfHeal);
-          createFloatingText(b2.x, b2.y - 10, `+${SKILL_CONFIG.angel.collisionSelfHeal}`, '#4ade80');
-          b1.receiveHealingFromAngel(SKILL_CONFIG.angel.collisionEnemyHeal, b2);
+        if (b2.typeKey==='angel') {
+          b2.hp=Math.min(b2.maxHp,b2.hp+SKILL_CONFIG.angel.collisionSelfHeal);
+          createFloatingText(b2.x,b2.y-10,`+${SKILL_CONFIG.angel.collisionSelfHeal}`,'#4ade80');
+          b1.receiveHealingFromAngel(SKILL_CONFIG.angel.collisionEnemyHeal,b2,!allied);
         }
-
-        if (b1.hitCooldown === 0) {
-          let dmg1 = b1.contactDmg;
-          if (b1.typeKey === 'bear') {
-            if (b1.effectiveHealStored > 0) {
-              createShockwave(b2.x, b2.y, 65, '#f59e0b', 4);
-              createParticles(b2.x, b2.y, '#fbbf24', 18, 1.5);
-              createFloatingText(b2.x, b2.y - 18, `💥 GẦM THÉT -${dmg1 + b1.effectiveHealStored}!`, '#f59e0b');
+        // Đồng minh vẫn va chạm vật lý nhưng không gây sát thương, kích hoạt Bear hay nội tại tấn công.
+        if (!allied) {
+          if (b1.hitCooldown===0) {
+            let dmg=b1.contactDmg;
+            if (b1.typeKey==='bear') {
+              if (b1.effectiveHealStored>0) { createShockwave(b2.x,b2.y,65,'#f59e0b',4); createParticles(b2.x,b2.y,'#fbbf24',18,1.5); }
+              dmg+=b1.effectiveHealStored; b1.effectiveHealStored=0;
             }
-            dmg1 += b1.effectiveHealStored;
-            b1.effectiveHealStored = 0;
+            if (b1.typeKey==='shen') dmg=Math.round(b2.maxHp*0.05+(b2.maxHp-b2.hp)*0.05+(b1.maxHp-b1.hp)*0.05);
+            if (dmg>0) { b2.takeDamage(dmg,{label:'Va Chạm',attacker:b1}); b1.hitCooldown=15; }
           }
-          if (b1.typeKey === 'shen') dmg1 = Math.round(b2.maxHp * 0.05 + (b2.maxHp - b2.hp) * 0.05 + (b1.maxHp - b1.hp) * 0.05);
-          if (dmg1 > 0) { b2.takeDamage(dmg1, 'Va Chạm'); b1.hitCooldown = 15; }
-        }
-        if (b2.hitCooldown === 0) {
-          let dmg2 = b2.contactDmg;
-          if (b2.typeKey === 'bear') {
-            if (b2.effectiveHealStored > 0) {
-              createShockwave(b1.x, b1.y, 65, '#f59e0b', 4);
-              createParticles(b1.x, b1.y, '#fbbf24', 18, 1.5);
-              createFloatingText(b1.x, b1.y - 18, `💥 GẦM THÉT -${dmg2 + b2.effectiveHealStored}!`, '#f59e0b');
+          if (b2.hitCooldown===0) {
+            let dmg=b2.contactDmg;
+            if (b2.typeKey==='bear') {
+              if (b2.effectiveHealStored>0) { createShockwave(b1.x,b1.y,65,'#f59e0b',4); createParticles(b1.x,b1.y,'#fbbf24',18,1.5); }
+              dmg+=b2.effectiveHealStored; b2.effectiveHealStored=0;
             }
-            dmg2 += b2.effectiveHealStored;
-            b2.effectiveHealStored = 0;
+            if (b2.typeKey==='shen') dmg=Math.round(b1.maxHp*0.05+(b1.maxHp-b1.hp)*0.05+(b2.maxHp-b2.hp)*0.05);
+            if (dmg>0) { b1.takeDamage(dmg,{label:'Va Chạm',attacker:b2}); b2.hitCooldown=15; }
           }
-          if (b2.typeKey === 'shen') dmg2 = Math.round(b1.maxHp * 0.05 + (b1.maxHp - b1.hp) * 0.05 + (b2.maxHp - b2.hp) * 0.05);
-          if (dmg2 > 0) { b1.takeDamage(dmg2, 'Va Chạm'); b2.hitCooldown = 15; }
         }
-        createParticles((b1.x + b2.x) / 2, (b1.y + b2.y) / 2, '#ffffff', 6);
+        createParticles((b1.x+b2.x)/2,(b1.y+b2.y)/2,'#ffffff',6);
       }
+    }
 
-      for (let i = 0; i < wukongClones.length; i++) {
-        const c1 = wukongClones[i];
-        const enemy = (c1.owner === b1) ? b2 : b1;
-
-        if (resolveElasticCollision(c1, enemy) && c1.hitCooldown === 0) {
-          enemy.takeDamage(SKILL_CONFIG.wukong.cloneContactDmg, 'Phân Thân Wukong');
-          c1.hitCooldown = 15;
-          createParticles(enemy.x, enemy.y, '#fb923c', 5);
-        }
-        resolveElasticCollision(c1, c1.owner);
-        for (let j = i + 1; j < wukongClones.length; j++) {
-          resolveElasticCollision(c1, wukongClones[j]);
-        }
+    function checkAllTeamCollisions() {
+      for (let i=0;i<balls.length;i++) for (let j=i+1;j<balls.length;j++) checkAllCollisions(balls[i],balls[j]);
+      // Clone vật lý với mọi Ball, nhưng chỉ gây sát thương lên địch của chủ nhân.
+      for (let i=0;i<wukongClones.length;i++) {
+        const c=wukongClones[i];
+        balls.forEach(target=>{
+          if (target.hp<=0) return;
+          if (isAlly(c.owner,target)) resolveElasticCollision(c,target);
+          else if (resolveElasticCollision(c,target) && c.hitCooldown===0) {
+            target.takeDamage(SKILL_CONFIG.wukong.cloneContactDmg,{label:'Phân Thân Wukong',attacker:c.owner});
+            c.hitCooldown=15; createParticles(target.x,target.y,'#fb923c',5);
+          }
+        });
+        resolveElasticCollision(c,c.owner);
+        for (let j=i+1;j<wukongClones.length;j++) resolveElasticCollision(c,wukongClones[j]);
       }
     }
 
@@ -1686,6 +1797,13 @@
         oceanBubbles = [];
       }
 
+      // Đại Dương làm chậm 75% toàn bộ địch chưa bị Đuối Nước; đồng minh không bị ảnh hưởng.
+      if (isTeamMode && oceanEnvironmentTimer > 0) {
+        balls.filter(b=>b.hp>0 && b.drownedTimer<=0 && !b.isImmuneToDebuffs() && balls.some(o=>o.typeKey==='poseidon' && o.side!==b.side)).forEach(b=>{
+          b.oceanSlowTimer=0.12;
+        });
+      }
+
       // 2. Poseidon Sóng Nước Mềm Mại & Êm Dịu (Nhiều lớp sóng lan tỏa)
       for (let i = poseidonWaves.length - 1; i >= 0; i--) {
         const w = poseidonWaves[i];
@@ -1715,6 +1833,7 @@
       // 3. Poseidon Chuỗi 3 Vụ Nổ Nước Đẩy Chuyền Thẳng Hàng + Hiệu Ứng Nước Nổ Mạnh Mẽ
       for (let i = poseidonBursts.length - 1; i >= 0; i--) {
         const b = poseidonBursts[i];
+        if(!b.enemy || b.enemy.side===b.owner.side || b.enemy.hp<=0){poseidonBursts.splice(i,1);continue;}
         b.timer += 1 / 60;
         const stageProgress = Math.min(1, b.timer / 0.3);
 
@@ -1769,7 +1888,7 @@
 
           if (!b.hit1 && Math.hypot(b.enemy.x - b.x1, b.enemy.y - b.y1) <= b.enemy.radius + b.r1) {
             b.hit1 = true;
-            b.enemy.takeDamage(b.dmg1, 'Vụ Nổ Nước 1');
+            b.enemy.takeDamage(b.dmg1,{label:'Vụ Nổ Nước 1',attacker:b.owner});
 
             // Làm chậm 50% trong 0.5s & Đẩy thẳng chính xác tới tâm Vụ Nổ 2!
             b.enemy.slowFactor = 0.5;
@@ -1787,7 +1906,7 @@
 
           if (!b.hit2 && Math.hypot(b.enemy.x - b.x2, b.enemy.y - b.y2) <= b.enemy.radius + b.r2) {
             b.hit2 = true;
-            b.enemy.takeDamage(b.dmg2, 'Vụ Nổ Nước 2');
+            b.enemy.takeDamage(b.dmg2,{label:'Vụ Nổ Nước 2',attacker:b.owner});
 
             // Đẩy thẳng tiếp tới tâm Vụ Nổ 3!
             b.enemy.x = Math.max(b.enemy.radius, Math.min(canvas.width - b.enemy.radius, b.x3));
@@ -1803,7 +1922,7 @@
 
           if (!b.hit3 && Math.hypot(b.enemy.x - b.x3, b.enemy.y - b.y3) <= b.enemy.radius + b.r3) {
             b.hit3 = true;
-            b.enemy.takeDamage(b.dmg3, 'Vụ Nổ Nước 3');
+            b.enemy.takeDamage(b.dmg3,{label:'Vụ Nổ Nước 3',attacker:b.owner});
             createShockwave(b.x3, b.y3, b.r3 * 1.2, '#bae6fd', 4.5);
             createParticles(b.enemy.x, b.enemy.y, '#e0f2fe', 25, 1.7);
             logMessage(`🔱 Vụ Nổ 3 kích nổ cực đại lên ${b.enemy.name}!`, 'poseidon');
@@ -1843,16 +1962,16 @@
         ctx.beginPath(); ctx.ellipse(t.x, t.y + r * 0.12, r * 0.22, r * 0.48, 0, 0, Math.PI * 2); ctx.fill();
         ctx.restore();
 
-        const enemy = (t.owner === p1) ? p2 : p1;
-        if (enemy && Math.hypot(enemy.x - t.x, enemy.y - t.y) < enemy.radius + t.radius) {
-          enemy.applyBurn();
-        }
+        getEnemies(t.owner).forEach(enemy => {
+          if (Math.hypot(enemy.x-t.x,enemy.y-t.y)<enemy.radius+t.radius) enemy.applyBurn(t.owner);
+        });
       }
 
       // 5. Assassin Ball: Shuriken sắc nét kèm vệt xé gió trên đường bay đi và thu về
       for (let i = assassinShurikens.length - 1; i >= 0; i--) {
         const s = assassinShurikens[i];
-        const enemy = (s.owner === p1) ? p2 : p1;
+        const enemies = getEnemies(s.owner);
+        if (!s.hitTargets) s.hitTargets=[];
 
         if (s.state !== 'stuck') {
           s.trail.push({ x: s.x, y: s.y });
@@ -1862,11 +1981,12 @@
         if (s.state === 'flying') {
           s.x += s.vx; s.y += s.vy;
           s.angle += 0.45;
-          if (enemy && !s.hitOnThrow && Math.hypot(enemy.x - s.x, enemy.y - s.y) <= enemy.radius + 7) {
-            enemy.takeDamage(SKILL_CONFIG.assassin.shurikenDmg, 'Phi Tiêu');
-            s.hitOnThrow = true;
-            createParticles(enemy.x, enemy.y, '#10b981', 7);
-          }
+          enemies.forEach(enemy=>{
+            if(!s.hitTargets.includes(enemy.id) && Math.hypot(enemy.x-s.x,enemy.y-s.y)<=enemy.radius+7){
+              enemy.takeDamage(SKILL_CONFIG.assassin.shurikenDmg,{label:'Phi Tiêu',attacker:s.owner});
+              s.hitTargets.push(enemy.id); createParticles(enemy.x,enemy.y,'#10b981',7);
+            }
+          });
           if (s.x <= 6 || s.x >= canvas.width - 6 || s.y <= 6 || s.y >= canvas.height - 6) {
             s.x = Math.max(6, Math.min(canvas.width - 6, s.x));
             s.y = Math.max(6, Math.min(canvas.height - 6, s.y));
@@ -1880,18 +2000,17 @@
           s.y += Math.sin(ang) * retSpd;
           s.angle += 0.55;
 
-          if (enemy && !s.hitOnReturn && Math.hypot(enemy.x - s.x, enemy.y - s.y) <= enemy.radius + 7) {
-            enemy.takeDamage(SKILL_CONFIG.assassin.shurikenDmg, 'Thu Hồi Phi Tiêu');
-            s.hitOnReturn = true;
-            createParticles(enemy.x, enemy.y, '#34d399', 8);
-          }
+          enemies.forEach(enemy=>{
+            if(!s.hitTargets.includes(enemy.id) && Math.hypot(enemy.x-s.x,enemy.y-s.y)<=enemy.radius+7){
+              enemy.takeDamage(SKILL_CONFIG.assassin.shurikenDmg,{label:'Thu Hồi Phi Tiêu',attacker:s.owner});
+              s.hitTargets.push(enemy.id); createParticles(enemy.x,enemy.y,'#34d399',8);
+            }
+          });
 
           if (Math.hypot(s.owner.x - s.x, s.owner.y - s.y) <= s.owner.radius + 6) {
-            const missed = !s.hitOnReturn;
-            assassinShurikens.splice(i, 1);
-            if (missed && enemy) {
-              s.owner.throwAssassinShuriken(enemy);
-            }
+            const hasHit = s.hitTargets.length>0;
+            assassinShurikens.splice(i,1);
+            if(!hasHit){ const next=preferredEnemy(s.owner); if(next) s.owner.throwAssassinShuriken(next); }
             continue;
           }
         }
@@ -1987,12 +2106,12 @@
           lightningBolts.push({ x: z.x, y: z.y, radius: z.radius, timer: 0.25, maxTimer: 0.25 });
           createShockwave(z.x, z.y, z.radius, '#38bdf8', 3);
 
-          const enemy = (z.owner === p1) ? p2 : p1;
-          if (enemy && Math.hypot(z.x - enemy.x, z.y - enemy.y) <= z.radius + enemy.radius) {
-            enemy.takeDamage(SKILL_CONFIG.storm.lightningDmg, 'Sấm Sét');
-            enemy.applySlow(SKILL_CONFIG.storm.slowDuration);
-            createParticles(enemy.x, enemy.y, '#7dd3fc', 14, 1.4);
-          }
+          getEnemies(z.owner).forEach(enemy=>{
+            if(Math.hypot(z.x-enemy.x,z.y-enemy.y)<=z.radius+enemy.radius){
+              enemy.takeDamage(SKILL_CONFIG.storm.lightningDmg,{label:'Sấm Sét',attacker:z.owner});
+              enemy.applySlow(SKILL_CONFIG.storm.slowDuration); createParticles(enemy.x,enemy.y,'#7dd3fc',14,1.4);
+            }
+          });
           lightningZones.splice(i, 1);
         }
       }
@@ -2043,7 +2162,7 @@
       }
 
       // 7. Wanderer Ball: Kiếm khí 360 độ xoáy cực ngầu
-      [p1, p2].forEach(b => {
+      balls.forEach(b => {
         if (b && b.activeSlash) {
           b.activeSlash.timer -= 1 / 60;
           const p = 1 - Math.max(0, b.activeSlash.timer / b.activeSlash.maxTimer);
@@ -2093,16 +2212,15 @@
         ctx.fill();
         ctx.restore();
 
-        [p1, p2].forEach(b => {
-          if (b && b.typeKey === 'soul' && Math.hypot(b.x - orb.x, b.y - orb.y) < b.radius + orb.radius) {
-            b.collectedSoulsCount++;
-            b.maxHp += SKILL_CONFIG.soul.orbMaxHpBonus;
-            b.hp = Math.min(b.maxHp, b.hp + SKILL_CONFIG.soul.orbHeal);
-            createShockwave(orb.x, floatY, 32, '#f472b6', 2);
-            soulOrbs.splice(i, 1);
-            updateHUD();
-          }
-        });
+        const collector=balls.filter(b=>b.hp>0 && b.typeKey==='soul' && (b===orb.owner || !isAlly(b,orb.owner)) && Math.hypot(b.x-orb.x,b.y-orb.y)<b.radius+orb.radius)
+          .sort((a,b)=>Math.hypot(a.x-orb.x,a.y-orb.y)-Math.hypot(b.x-orb.x,b.y-orb.y))[0];
+        if(collector){
+          collector.collectedSoulsCount++;
+          collector.maxHp+=SKILL_CONFIG.soul.orbMaxHpBonus;
+          collector.hp=Math.min(collector.maxHp,collector.hp+SKILL_CONFIG.soul.orbHeal);
+          createShockwave(orb.x,floatY,32,'#f472b6',2);
+          soulOrbs.splice(i,1); updateHUD();
+        }
       }
 
       // Chùm sáng lung linh lấp lánh sang trọng của Soul Ball
@@ -2195,16 +2313,12 @@
         }
         ctx.restore();
 
-        const enemy = (trap.owner === p1) ? p2 : p1;
-        if (enemy && Math.hypot(enemy.x - trap.x, enemy.y - trap.y) < enemy.radius + trap.radius) {
-          enemy.applyStun(SKILL_CONFIG.marksman.trapStunDuration);
-          createShockwave(trap.x, trap.y, 40, '#ef4444', 3);
-          marksmanBullets.push({
-            x: trap.owner.x, y: trap.owner.y, target: enemy,
-            speed: BASE_SPEED * 4.8, damage: SKILL_CONFIG.marksman.trapBonusBulletDmg,
-            isCrit: true, trail: []
-          });
-          marksmanTraps.splice(i, 1);
+        const trapped=getEnemies(trap.owner).filter(enemy=>Math.hypot(enemy.x-trap.x,enemy.y-trap.y)<enemy.radius+trap.radius)
+          .sort((a,b)=>Math.hypot(a.x-trap.x,a.y-trap.y)-Math.hypot(b.x-trap.x,b.y-trap.y))[0];
+        if(trapped){
+          trapped.applyStun(SKILL_CONFIG.marksman.trapStunDuration); createShockwave(trap.x,trap.y,40,'#ef4444',3);
+          marksmanBullets.push({x:trap.owner.x,y:trap.owner.y,target:trapped,owner:trap.owner,speed:BASE_SPEED*4.8,damage:SKILL_CONFIG.marksman.trapBonusBulletDmg,isCrit:true,trail:[]});
+          marksmanTraps.splice(i,1);
         }
       }
 
@@ -2213,6 +2327,7 @@
         b.trail.push({ x: b.x, y: b.y });
         if (b.trail.length > (b.isCrit ? 12 : 6)) b.trail.shift();
 
+        if(!b.target || b.target.side===b.owner.side || b.target.hp<=0){ marksmanBullets.splice(i,1); continue; }
         const ang = Math.atan2(b.target.y - b.y, b.target.x - b.x);
         b.x += Math.cos(ang) * b.speed;
         b.y += Math.sin(ang) * b.speed;
@@ -2273,7 +2388,7 @@
         ctx.restore();
 
         if (Math.hypot(b.target.x - b.x, b.target.y - b.y) <= b.target.radius + 6) {
-          b.target.takeDamage(b.damage, b.isCrit ? 'Đạn Chí Mạng!' : 'Đạn Bắn Tỉa');
+          b.target.takeDamage(b.damage,{label:b.isCrit?'Đạn Chí Mạng!':'Đạn Bắn Tỉa',attacker:b.owner});
           if (b.isCrit) {
             createShockwave(b.target.x, b.target.y, 50, '#ef4444', 3.5);
             createParticles(b.target.x, b.target.y, '#ef4444', 16, 1.5);
@@ -2328,12 +2443,12 @@
         for (let edge = 0; edge < 4; edge++) { ctx.rotate(Math.PI / 2); ctx.beginPath(); ctx.moveTo(0, -9); ctx.lineTo(0, -2); ctx.stroke(); }
         ctx.restore();
 
-        if (Math.hypot(p.target.x - p.x, p.target.y - p.y) <= p.target.radius + 6) {
-          p.target.takeDamage(SKILL_CONFIG.ninja.step1ShurikenDmg, 'Phi Tiêu Ninja');
-          p.owner.ninjaComboStep = 2;
-          createParticles(p.target.x, p.target.y, '#e2e8f0', 8);
-          ninjaProjectiles.splice(i, 1);
-          continue;
+        const struck=getEnemies(p.owner).filter(target=>Math.hypot(target.x-p.x,target.y-p.y)<=target.radius+6)
+          .sort((a,b)=>Math.hypot(a.x-p.x,a.y-p.y)-Math.hypot(b.x-p.x,b.y-p.y))[0];
+        if(struck){
+          struck.takeDamage(SKILL_CONFIG.ninja.step1ShurikenDmg,{label:'Phi Tiêu Ninja',attacker:p.owner});
+          p.owner.ninjaComboTarget=struck; p.owner.ninjaComboStep=2;
+          createParticles(struck.x,struck.y,'#e2e8f0',8); ninjaProjectiles.splice(i,1); continue;
         }
         if (p.x < 0 || p.x > canvas.width || p.y < 0 || p.y > canvas.height) {
           ninjaProjectiles.splice(i, 1);
@@ -2431,17 +2546,19 @@
         }
         ctx.restore();
 
-        const enemy = (w.owner === p1) ? p2 : p1;
-        if (enemy && !w.hitTarget) {
-          const distToEnemy = Math.hypot(enemy.x - w.x, enemy.y - w.y);
-          if (Math.abs(distToEnemy - w.currentRadius) <= enemy.radius + 5) {
-            w.hitTarget = true;
-            const ratio = Math.max(0, Math.min(1, 1 - (distToEnemy / ARENA_DIAGONAL)));
-            const dmg = Math.round(SKILL_CONFIG.sound.minWaveDmg + ratio * (SKILL_CONFIG.sound.maxWaveDmg - SKILL_CONFIG.sound.minWaveDmg));
-            enemy.takeDamage(dmg, 'Sóng Âm');
-            createParticles(enemy.x, enemy.y, '#2dd4bf', 10);
+        if(!w.hitTargets) w.hitTargets=[];
+        getEnemies(w.owner).forEach(enemy=>{
+          if(w.hitTargets.includes(enemy.id)) return;
+          const distToEnemy=Math.hypot(enemy.x-w.x,enemy.y-w.y);
+          if(Math.abs(distToEnemy-w.currentRadius)<=enemy.radius+5){
+            const ratio=Math.max(0,Math.min(1,1-distToEnemy/ARENA_DIAGONAL));
+            const baseDmg=Math.round(SKILL_CONFIG.sound.minWaveDmg+ratio*(SKILL_CONFIG.sound.maxWaveDmg-SKILL_CONFIG.sound.minWaveDmg));
+            const dmg=Math.max(1,Math.round(baseDmg*w.damageScale));
+            enemy.takeDamage(dmg,{label:'Sóng Âm',attacker:w.owner});
+            w.hitTargets.push(enemy.id); w.damageScale=Math.max(0.25,w.damageScale*0.5);
+            createParticles(enemy.x,enemy.y,'#2dd4bf',10);
           }
-        }
+        });
         if (w.currentRadius > ARENA_DIAGONAL) soundWaves.splice(i, 1);
       }
 
@@ -2492,6 +2609,7 @@
         st.trail.push({ x: st.x, y: st.y, rot: st.rotation });
         if (st.trail.length > 5) st.trail.shift();
 
+        if(!st.target || st.target.side===st.owner.side || st.target.hp<=0){ wukongStaffs.splice(i,1); continue; }
         const ang = Math.atan2(st.target.y - st.y, st.target.x - st.x);
         st.x += Math.cos(ang) * st.speed;
         st.y += Math.sin(ang) * st.speed;
@@ -2541,7 +2659,7 @@
         ctx.restore();
 
         if (Math.hypot(st.target.x - st.x, st.target.y - st.y) <= st.target.radius + 12) {
-          st.target.takeDamage(SKILL_CONFIG.wukong.staffDmg, 'Gậy Như Ý');
+          st.target.takeDamage(SKILL_CONFIG.wukong.staffDmg,{label:'Gậy Như Ý',attacker:st.owner});
           const enemySpd = st.target.currentSpeed || st.target.baseSpeed;
           st.target.vx = Math.cos(ang) * enemySpd;
           st.target.vy = Math.sin(ang) * enemySpd;
@@ -2623,134 +2741,100 @@
       if (ball.typeKey === 'wukong' && ball.wukongSweepTimer > 0) badges.innerHTML += `<span class="bg-orange-950 text-orange-300 border border-orange-400 px-1 rounded">⚡ Tăng Tốc (+40%)</span>`;
       if (ball.typeKey === 'ninja' && ball.ninjaInvulnerable) badges.innerHTML += `<span class="bg-slate-800 text-slate-200 border border-slate-500 px-1 rounded">🥷 Vô Địch (Lướt)</span>`;
       if (ball.typeKey === 'reaper' && ball.reaperSpeedBoostTimer > 0) badges.innerHTML += `<span class="bg-slate-700 text-slate-100 border border-slate-400 px-1 rounded">💀 Tăng Tốc (+60%)</span>`;
-      if (ball.typeKey === 'demon') badges.innerHTML += `<span class="bg-red-950 text-red-300 border border-red-500/40 px-1 rounded">👿 Hồi Sinh: ${ball.demonReviveCount}/7</span>`;
+      if (ball.typeKey === 'demon') badges.innerHTML += `<span class="bg-red-950 text-red-300 border border-red-500/40 px-1 rounded">👿 Hồi Sinh: ${ball.demonReviveCount}/${SKILL_CONFIG.demon.maxRevives+ball.demonBonusRevives}</span>`;
     }
 
     function updateHUD() {
-      updateHUDForPlayer(p1, 'p1');
-      updateHUDForPlayer(p2, 'p2');
+      const blue=balls.filter(b=>b.side==='blue');
+      const red=balls.filter(b=>b.side==='red');
+      const updateTeam=(members,prefix,teamName)=>{
+        const name=document.getElementById(`${prefix}-name`), hpText=document.getElementById(`${prefix}-hp-text`), bar=document.getElementById(`${prefix}-hp-bar`), badges=document.getElementById(`${prefix}-badges`);
+        if (!members.length) return;
+        const totalHp=members.reduce((n,b)=>n+Math.max(0,b.hp),0), totalMax=members.reduce((n,b)=>n+b.maxHp,0);
+        name.innerText=members.map(b=>`${b.icon} ${b.name}`).join(' + ');
+        hpText.innerText=`${Math.ceil(totalHp)}/${totalMax}`;
+        bar.style.width=`${Math.max(0,totalHp/totalMax*100)}%`;
+        badges.innerHTML='';
+        members.forEach(b=>{
+          const states=[];
+          if(b.hp<=0) states.push('☠️');
+          if(b.drownedTimer>0) states.push('🌊 Đuối');
+          if(b.burnTimer>0) states.push(`🔥${b.burnStacks}`);
+          if(b.slowTimer>0) states.push('❄️ Chậm');
+          if(b.stunTimer>0) states.push('💫 Choáng');
+          if(b.shield>0) states.push(`🛡️${Math.round(b.shield)}`);
+          if(b.blessingMarks>0) states.push(`✨${b.blessingMarks}`);
+          if(b.typeKey==='soul') states.push(`🔮${b.collectedSoulsCount}`);
+          if(b.typeKey==='demon') states.push(`👿${b.demonReviveCount}/${SKILL_CONFIG.demon.maxRevives+b.demonBonusRevives}`);
+          if(b.angelAllyReviveUsed) states.push('👼 Đã được cứu');
+          if(b.typeKey==='angel' && b.angelReviveUsed) states.push('👼 Hồi sinh');
+          const tag=document.createElement('span'); tag.className='bg-slate-800/90 text-slate-200 border border-slate-600/60 px-1 rounded'; tag.textContent=`${b.name}: ${states.join(' ')||'Ổn định'}`; badges.appendChild(tag);
+        });
+      };
+      updateTeam(blue,'p1','Đội Xanh'); updateTeam(red,'p2','Đội Đỏ');
     }
 
     function initGame() {
       if (animationFrameId) cancelAnimationFrame(animationFrameId);
-      gameOver = false;
-      oceanEnvironmentTimer = 0;
-      globalTick = 0;
-      winnerOverlay.classList.add('hidden');
-
-      p1 = new Ball('p1', p1Select.value, 80, canvas.height / 2, 'p1');
-      p2 = new Ball('p2', p2Select.value, canvas.width - 80, canvas.height / 2, 'p2');
-
-      fireTrails = []; assassinShurikens = []; lightningZones = []; lightningBolts = [];
-      soulOrbs = []; activeSoulBeams = []; marksmanTraps = []; marksmanBullets = [];
-      ninjaProjectiles = []; reaperIllusions = []; reaperSlashes = []; soundWaves = [];
-      wukongClones = []; wukongStaffs = []; activeWukongSweeps = []; wukongAfterimages = [];
-      poseidonWaves = []; poseidonBursts = []; oceanBubbles = []; shockwaves = [];
-      particles = []; floatingTexts = [];
-      
-      battleLog.innerHTML = '';
-      logMessage(`Bắt đầu trận đấu: ${p1.name} VS ${p2.name}!`);
-      updateHUD();
-      gameLoop();
+      gameOver=false; oceanEnvironmentTimer=0; globalTick=0; winnerOverlay.classList.add('hidden');
+      isTeamMode=modeSelect.value==='2v2';
+      const picks=isTeamMode?[p1Select.value,p1bSelect.value,p2Select.value,p2bSelect.value]:[p1Select.value,p2Select.value];
+      if (isTeamMode && new Set(picks).size!==picks.length) {
+        logMessage('⚠️ Mỗi Ball trong trận phải khác nhau, không được chọn trùng!');
+        return;
+      }
+      const cy=canvas.height/2;
+      balls=[];
+      p1=new Ball('p1',p1Select.value,80,isTeamMode?cy-92:cy,'blue'); balls.push(p1);
+      if(isTeamMode){ p3=new Ball('p3',p1bSelect.value,128,cy+92,'blue'); balls.push(p3); } else p3=null;
+      p2=new Ball('p2',p2Select.value,canvas.width-80,isTeamMode?cy-92:cy,'red'); balls.push(p2);
+      if(isTeamMode){ p4=new Ball('p4',p2bSelect.value,canvas.width-128,cy+92,'red'); balls.push(p4); } else p4=null;
+      fireTrails=[]; assassinShurikens=[]; lightningZones=[]; lightningBolts=[];
+      soulOrbs=[]; activeSoulBeams=[]; marksmanTraps=[]; marksmanBullets=[];
+      ninjaProjectiles=[]; reaperIllusions=[]; reaperSlashes=[]; soundWaves=[];
+      wukongClones=[]; wukongStaffs=[]; activeWukongSweeps=[]; wukongAfterimages=[];
+      poseidonWaves=[]; poseidonBursts=[]; oceanBubbles=[]; shockwaves=[]; particles=[]; floatingTexts=[];
+      battleLog.innerHTML='';
+      logMessage(isTeamMode?`Bắt đầu 2v2: ${p1.name} + ${p3.name} VS ${p2.name} + ${p4.name}!`:`Bắt đầu 1v1: ${p1.name} VS ${p2.name}!`);
+      updateHUD(); gameLoop();
     }
 
     function endGame(loser) {
       if (gameOver) return;
-      gameOver = true;
-      const winner = (loser === p1) ? p2 : p1;
-      winnerText.innerText = `🏆 ${winner.name.toUpperCase()} CHIẾN THẮNG!`;
+      if (aliveTeam(loser.side).length>0) return;
+      gameOver=true;
+      const winnerSide=loser.side==='blue'?'red':'blue';
+      const winner=balls.filter(b=>b.side===winnerSide).map(b=>b.name).join(' + ');
+      winnerText.innerText=`🏆 ${winner.toUpperCase()} CHIẾN THẮNG!`;
       winnerOverlay.classList.remove('hidden');
-      logMessage(`TRẬN ĐẤU KẾT THÚC! ${winner.name} giành chiến thắng!`, winner.side);
+      logMessage(`TRẬN ĐẤU KẾT THÚC! Đội ${winner} giành chiến thắng!`,winnerSide==='blue'?'p1':'p2');
     }
 
     function gameLoop() {
       globalTick++;
-      ctx.fillStyle = '#030712';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      ctx.strokeStyle = 'rgba(30, 41, 59, 0.4)'; ctx.lineWidth = 1;
-      for (let x = 0; x < canvas.width; x += 40) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke(); }
-      for (let y = 0; y < canvas.height; y += 40) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke(); }
-
-      // Vẽ Vùng Kiếm Hồn & Dây Liên Kết Phát Quang của Shen Ball
-      [p1, p2].forEach(ball => {
-        if (ball && ball.typeKey === 'shen') {
-          const zRadius = ball.radius * SKILL_CONFIG.shen.zoneRadiusMult;
+      ctx.fillStyle='#030712'; ctx.fillRect(0,0,canvas.width,canvas.height);
+      ctx.strokeStyle='rgba(30, 41, 59, 0.4)'; ctx.lineWidth=1;
+      for(let x=0;x<canvas.width;x+=40){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,canvas.height);ctx.stroke();}
+      for(let y=0;y<canvas.height;y+=40){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(canvas.width,y);ctx.stroke();}
+      balls.forEach(ball=>{
+        if(ball.typeKey==='shen'){
+          const zRadius=ball.radius*SKILL_CONFIG.shen.zoneRadiusMult;
           ctx.save();
-
-          // Năng lượng phát quang mờ ảo quanh Kiếm Hồn
-          const shenAura = ctx.createRadialGradient(ball.spiritBladeX, ball.spiritBladeY, 6, ball.spiritBladeX, ball.spiritBladeY, zRadius);
-          shenAura.addColorStop(0, 'rgba(34, 211, 238, 0.28)');
-          shenAura.addColorStop(0.65, 'rgba(6, 182, 212, 0.12)');
-          shenAura.addColorStop(1, 'rgba(8, 145, 178, 0)');
-          ctx.fillStyle = shenAura;
-          ctx.beginPath();
-          ctx.arc(ball.spiritBladeX, ball.spiritBladeY, zRadius, 0, Math.PI * 2);
-          ctx.fill();
-
-          // Vòng năng lượng xoay nhẹ quanh vùng kiếm
-          ctx.translate(ball.spiritBladeX, ball.spiritBladeY);
-          ctx.rotate(globalTick * 0.02);
-          ctx.beginPath();
-          ctx.arc(0, 0, zRadius, 0, Math.PI * 2);
-          ctx.strokeStyle = 'rgba(34, 211, 238, 0.55)';
-          ctx.lineWidth = 2;
-          ctx.setLineDash([12, 6]);
-          ctx.stroke();
-          ctx.setLineDash([]);
-          ctx.rotate(-globalTick * 0.02);
-          ctx.translate(-ball.spiritBladeX, -ball.spiritBladeY);
-
-          // Sợi dây liên kết năng lượng phát sáng sắc nét giữa Shen và Kiếm Hồn
-          const linkGrad = ctx.createLinearGradient(ball.x, ball.y, ball.spiritBladeX, ball.spiritBladeY);
-          linkGrad.addColorStop(0, 'rgba(6, 182, 212, 0.85)');
-          linkGrad.addColorStop(0.5, 'rgba(165, 243, 252, 0.95)');
-          linkGrad.addColorStop(1, 'rgba(34, 211, 238, 0.85)');
-
-          ctx.beginPath();
-          ctx.moveTo(ball.x, ball.y);
-          ctx.lineTo(ball.spiritBladeX, ball.spiritBladeY);
-          ctx.strokeStyle = linkGrad;
-          ctx.lineWidth = 2.5;
-          ctx.shadowColor = '#22d3ee';
-          ctx.shadowBlur = 10;
-          ctx.stroke();
-          // Ba hạt linh lực tuần hoàn trên dây, làm rõ hướng liên kết.
-          for (let mote = 0; mote < 3; mote++) {
-            const q = (globalTick * 0.018 + mote / 3) % 1;
-            const mx = ball.x + (ball.spiritBladeX - ball.x) * q;
-            const my = ball.y + (ball.spiritBladeY - ball.y) * q;
-            ctx.beginPath(); ctx.arc(mx, my, 2.2 + Math.sin(globalTick * 0.12 + mote) * 0.7, 0, Math.PI * 2);
-            ctx.fillStyle = '#ecfeff'; ctx.shadowColor = '#67e8f9'; ctx.shadowBlur = 12; ctx.fill();
-          }
-
-          // Biểu tượng Kiếm Hồn phát sáng
-          ctx.font = '18px sans-serif';
-          ctx.textAlign = 'center';
-          ctx.textBaseline = 'middle';
-          ctx.fillText('🗡️', ball.spiritBladeX, ball.spiritBladeY);
-          ctx.beginPath(); ctx.arc(ball.spiritBladeX, ball.spiritBladeY, 11 + Math.sin(globalTick * 0.09) * 1.5, 0, Math.PI * 2);
-          ctx.strokeStyle = 'rgba(207,250,254,0.8)'; ctx.lineWidth = 1; ctx.stroke();
-          ctx.beginPath(); ctx.arc(ball.spiritBladeX, ball.spiritBladeY, 16, globalTick * 0.025, globalTick * 0.025 + Math.PI * 1.2);
-          ctx.strokeStyle = 'rgba(34,211,238,0.65)'; ctx.lineWidth = 1.5; ctx.stroke();
-          ctx.restore();
+          const aura=ctx.createRadialGradient(ball.spiritBladeX,ball.spiritBladeY,6,ball.spiritBladeX,ball.spiritBladeY,zRadius);
+          aura.addColorStop(0,'rgba(34,211,238,0.28)'); aura.addColorStop(0.65,'rgba(6,182,212,0.12)'); aura.addColorStop(1,'rgba(8,145,178,0)');
+          ctx.fillStyle=aura; ctx.beginPath(); ctx.arc(ball.spiritBladeX,ball.spiritBladeY,zRadius,0,Math.PI*2); ctx.fill();
+          ctx.translate(ball.spiritBladeX,ball.spiritBladeY); ctx.rotate(globalTick*0.02); ctx.beginPath(); ctx.arc(0,0,zRadius,0,Math.PI*2); ctx.strokeStyle='rgba(34,211,238,0.55)'; ctx.lineWidth=2; ctx.setLineDash([12,6]); ctx.stroke(); ctx.setLineDash([]); ctx.restore();
+          ctx.save(); ctx.beginPath(); ctx.moveTo(ball.x,ball.y); ctx.lineTo(ball.spiritBladeX,ball.spiritBladeY); ctx.strokeStyle='rgba(103,232,249,0.85)'; ctx.lineWidth=2.5; ctx.shadowColor='#22d3ee'; ctx.shadowBlur=10; ctx.stroke(); ctx.font='18px sans-serif'; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText('🗡️',ball.spiritBladeX,ball.spiritBladeY); ctx.restore();
         }
       });
-
-      if (!gameOver && p1 && p2) {
-        p1.update(p2);
-        p2.update(p1);
-        checkAllCollisions(p1, p2);
+      if(!gameOver){
+        balls.filter(b=>b.hp>0).forEach(ball=>ball.update(preferredEnemy(ball)));
+        checkAllTeamCollisions();
       }
-
       updateAndDrawEntities();
-
-      if (p1) p1.draw();
-      if (p2) p2.draw();
-
-      if (!gameOver) {
-        animationFrameId = requestAnimationFrame(gameLoop);
-      }
+      balls.forEach(ball=>ball.draw());
+      updateHUD();
+      if(!gameOver) animationFrameId=requestAnimationFrame(gameLoop);
     }
 
     btnStart.addEventListener('click', initGame);
