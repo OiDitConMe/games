@@ -207,7 +207,7 @@
       wukong:   { name: 'Wukong Ball',   color: '#fb923c', secondaryColor: '#b45309', hp: 102, maxHp: 102, radius: 18, speed: BASE_SPEED * 1.32, contactDmg: 7,  icon: '🐵' },
       demon:    { name: 'Demon Ball',    color: '#ef4444', secondaryColor: '#991b1b', hp: 12,  maxHp: 12,  radius: 18, speed: BASE_SPEED * 1.06, contactDmg: 6,  icon: '👿' },
       poseidon: { name: 'Poseidon Ball', color: '#0ea5e9', secondaryColor: '#0369a1', hp: 100, maxHp: 100, radius: 18, speed: BASE_SPEED,        contactDmg: 0,  icon: '🔱' },
-      ronin:    { name: 'Ronin Ball',    color: '#a5f3fc', secondaryColor: '#334155', hp: 100, maxHp: 100, radius: 18, speed: BASE_SPEED,        contactDmg: 5,  icon: '⚔️' },
+      ronin:    { name: 'Ronin Ball',    color: '#a5f3fc', secondaryColor: '#334155', hp: 110, maxHp: 110, radius: 18, speed: BASE_SPEED,        contactDmg: 5,  icon: '⚔️' },
       hades:    { name: 'Hades Ball',    color: '#5b2b20', secondaryColor: '#160d0b', hp: 100, maxHp: 100, radius: 18, speed: BASE_SPEED,        contactDmg: 0,  icon: '👑' },
       dragon:   { name: 'Dragon Ball',   color: '#d97706', secondaryColor: '#451a03', hp: 90,  maxHp: 90,  radius: 18, speed: BASE_SPEED * 1.25, contactDmg: 5, icon: '🐉' }
     };
@@ -229,9 +229,9 @@
       wukong: { skillInterval: 2.15, cloneDuration: 3.1, cloneContactDmg: 7, peachHeal: 10, peachImmortalDur: 2.15, sweepSpeedBonus: 1.4, sweepSpeedDur: 2.0, sweepTriggerDiamMult: 2.5, sweepRadiusDiamMult: 2.55, sweepAngleDeg: 150, sweepDmg: 24, staffLengthDiamMult: 1.5, staffDmg: 10 },
       demon: { maxRevives: 7, incomingDmgMult: 2.0, reflectBaseMult: 1.0, hpConvertInterval: 0.7, normalShieldGain: 1, lowHpShieldGain: 4, reflectBonusPerShield: 0.06 },
       poseidon: { waveTriggerDiam: 3.5, waveRadiusDiam: 3.6, waveDmg: 1, waveSlowDuration: 2.0, waveSlowFactor: 0.75, burstInterval: 4.0 },
-      ronin: { stackInterval: 0.95, speedPerStack: 0.07, stacksPerDash: 4, dashDistanceDiam: 3, dashDuration: 0.18, scrapeDmg: 4, spinDmg: 18, spinRadiusDiam: 1.65, thrustLengthDiam: 3, thrustDmg: 15, sealsForStorm: 2, stormShield: 15, stormShieldDuration: 3, tornadoDmg: 22, tornadoKnockup: 0.4, tornadoAngleDeg: 25, tornadoSpeedMult: 1,75 },
-      hades: { drainInterval: 1, drainHp: 1, cerberusSpeedMult: 1.25, cerberusContactDmg: 4, cerberusSlowFactor: 0.8, cerberusSlowDuration: 3, spearDmg: 1, spearMaxHpSteal: 10, spearSpeedMult: 8.5, cerberusDamageStep: 8, hellDuration: 5.75, hellCooldown: 5,5, hellInterruptedCooldown: 3, hellSpeedMult: 1.3, hellHeal: 13 },
-      dragon: { cleanseInterval: 4, invulnerableDuration: 1.25, form1Seals: 2, form2Seals: 4, form3Seals: 8, attackInterval: 1, form1Damage: 3, form2Damage: 5, form3Damage: 8, burnDuration: 5, burnDamage: 5, burnTick: 0.25, burnRadiusDiam: 3, burnSlowFactor: 0.65, form2Heal: 14, form3Shield: 100, form3ShieldDuration: 2.5, skySlowFactor: 0.84, skyWindMult: 0.2, groundFireDuration: 1, groundFireDamage: 3, groundFireTick: 0.5, permanentShieldPerAttack: 3 }
+      ronin: { stackInterval: 0.75, speedPerStack: 0.07, stacksPerDash: 4, dashDistanceDiam: 3, dashDuration: 0.18, scrapeDmg: 5, spinDmg: 20, spinRadiusDiam: 1.65, thrustLengthDiam: 3, thrustDmg: 15, sealsForStorm: 2, stormShield: 20, stormShieldDuration: 3, tornadoDmg: 25, tornadoKnockup: 0.4, tornadoAngleDeg: 25, tornadoSpeedMult: 2.5 },
+      hades: { drainInterval: 0.6, drainHp: 1, cerberusSpeedMult: 1.4, cerberusContactDmg: 10, cerberusSlowFactor: 0.8, cerberusSlowDuration: 3, spearDmg: 16, spearMaxHpSteal: 3, spearSpeedMult: 8.5, cerberusDamageStep: 8, hellDuration: 7, hellCooldown: 5, hellInterruptedCooldown: 3, hellSpeedMult: 1.3, hellHeal: 20 },
+      dragon: { cleanseInterval: 4, invulnerableDuration: 1.25, form1Seals: 2, form2Seals: 5, form3Seals: 8, attackInterval: 1, form1Damage: 3, form2Damage: 5, form3Damage: 8, burnDuration: 5, burnDamage: 5, burnTick: 0.25, burnRadiusDiam: 3, burnSlowFactor: 0.65, form2Heal: 14, form3Shield: 100, form3ShieldDuration: 2.5, skySlowFactor: 0.84, skyWindMult: 0.2, groundFireDuration: 1, groundFireDamage: 3, groundFireTick: 0.5, permanentShieldPerAttack: 3 }
     };
 
     let p1, p2;
@@ -3552,4 +3552,3 @@
   </script>
 </body>
 </html>
- 
