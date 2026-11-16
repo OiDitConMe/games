@@ -74,6 +74,8 @@
               <option value="wukong">🐵 Wukong Ball</option>
               <option value="demon">👿 Demon Ball</option>
               <option value="poseidon" selected>🔱 Poseidon Ball</option>
+              <option value="ronin">🌪️ Ronin Ball</option>
+              <option value="hades">👑 Hades Ball</option>
             </select>
           </div>
 
@@ -96,6 +98,8 @@
               <option value="wukong" selected>🐵 Wukong Ball</option>
               <option value="demon">👿 Demon Ball</option>
               <option value="poseidon">🔱 Poseidon Ball</option>
+              <option value="ronin">🌪️ Ronin Ball</option>
+              <option value="hades">👑 Hades Ball</option>
             </select>
           </div>
 
@@ -111,7 +115,9 @@
         <div class="text-slate-300 leading-relaxed">
           • <span class="text-sky-400 font-semibold">Poseidon:</span> Combo 3 vụ nổ đẩy thẳng chuyền nhịp (9/15/21 dmg), mở rộng +0.65d.<br>
           • <span class="text-teal-400 font-semibold">Sound Ball:</span> Gỡ tăng tốc máu thấp, nâng cấp sóng đa sắc cộng hưởng.<br>
-          • <span class="text-amber-400 font-semibold">16 Chiến Binh:</span> Đại tu toàn bộ hiệu ứng lửa, kiếm khí, sét, linh hồn, gậy Như Ý & bẫy!
+          • <span class="text-amber-400 font-semibold">16 Chiến Binh:</span> Đại tu toàn bộ hiệu ứng lửa, kiếm khí, sét, linh hồn, gậy Như Ý & bẫy!<br>
+          • <span class="text-violet-300 font-semibold">Ronin:</span> Tích tốc độ, kiếm vũ 360°, Ấn Cuồng Phong & Lốc Xoáy.<br>
+          • <span class="text-rose-300 font-semibold">Hades:</span> Aura đoạt HP tối đa, Tàng Hình khai trận & Cerberus hộ vệ.
         </div>
       </div>
     </div>
@@ -197,7 +203,9 @@
       angel:    { name: 'Angel Ball',    color: '#fef08a', secondaryColor: '#eab308', hp: 80,  maxHp: 80,  radius: 18, speed: BASE_SPEED * 0.9,  contactDmg: 0,  icon: '👼' },
       wukong:   { name: 'Wukong Ball',   color: '#fb923c', secondaryColor: '#b45309', hp: 102, maxHp: 102, radius: 18, speed: BASE_SPEED * 1.32, contactDmg: 7,  icon: '🐵' },
       demon:    { name: 'Demon Ball',    color: '#ef4444', secondaryColor: '#991b1b', hp: 12,  maxHp: 12,  radius: 18, speed: BASE_SPEED * 1.06, contactDmg: 6,  icon: '👿' },
-      poseidon: { name: 'Poseidon Ball', color: '#0ea5e9', secondaryColor: '#0369a1', hp: 100, maxHp: 100, radius: 18, speed: BASE_SPEED,        contactDmg: 0,  icon: '🔱' }
+      poseidon: { name: 'Poseidon Ball', color: '#0ea5e9', secondaryColor: '#0369a1', hp: 100, maxHp: 100, radius: 18, speed: BASE_SPEED,        contactDmg: 0,  icon: '🔱' },
+      ronin:    { name: 'Ronin Ball',    color: '#a5f3fc', secondaryColor: '#334155', hp: 110, maxHp: 110, radius: 18, speed: BASE_SPEED,        contactDmg: 5,  icon: '⚔️' },
+      hades:    { name: 'Hades Ball',    color: '#c4b5fd', secondaryColor: '#4c1d95', hp: 100, maxHp: 100, radius: 18, speed: BASE_SPEED,        contactDmg: 0,  icon: '👑' }
     };
 
     const SKILL_CONFIG = {
@@ -216,7 +224,9 @@
       angel: { passiveHealInterval: 1.0, passiveHealAmount: 1, collisionSelfHeal: 11, collisionEnemyHeal: 10, healBonusPerMissingHp: 0.013, selfHealShareFromOverheal: 0.25 },
       wukong: { skillInterval: 2.15, cloneDuration: 3.1, cloneContactDmg: 7, peachHeal: 10, peachImmortalDur: 2.15, sweepSpeedBonus: 1.4, sweepSpeedDur: 2.0, sweepTriggerDiamMult: 2.5, sweepRadiusDiamMult: 2.55, sweepAngleDeg: 150, sweepDmg: 24, staffLengthDiamMult: 1.5, staffDmg: 10 },
       demon: { maxRevives: 7, incomingDmgMult: 2.0, reflectBaseMult: 1.0, hpConvertInterval: 0.7, normalShieldGain: 1, lowHpShieldGain: 4, reflectBonusPerShield: 0.06 },
-      poseidon: { waveTriggerDiam: 3.5, waveRadiusDiam: 3.6, waveDmg: 1, waveSlowDuration: 2.0, waveSlowFactor: 0.75, burstInterval: 4.0 }
+      poseidon: { waveTriggerDiam: 3.5, waveRadiusDiam: 3.6, waveDmg: 1, waveSlowDuration: 2.0, waveSlowFactor: 0.75, burstInterval: 4.0 },
+      ronin: { stackInterval: 0.75, speedPerStack: 0.07, stacksPerDash: 4, dashDistanceDiam: 3, dashDuration: 0.18, scrapeDmg: 5, spinDmg: 20, spinRadiusDiam: 1.65, thrustLengthDiam: 2, thrustDmg: 15, sealsForStorm: 2, stormShield: 20, stormShieldDuration: 3, tornadoDmg: 25, tornadoKnockup: 0.4, tornadoAngleDeg: 25, tornadoSpeedMult: 2.5 },
+      hades: { stealthDuration: 2, drainInterval: 0.6, drainHp: 1, cerberusSpeedMult: 1.4, cerberusContactDmg: 10, cerberusSlowFactor: 0.8, cerberusSlowDuration: 3, spearDmg: 16, spearMaxHpSteal: 3, spearSpeedMult: 5.2, cerberusDamageStep: 8 }
     };
 
     let p1, p2;
@@ -239,6 +249,11 @@
     let poseidonWaves = [];
     let poseidonBursts = [];
     let oceanBubbles = [];
+    let roninTornadoes = [];
+    let roninSlashEffects = [];
+    let roninThrustEffects = [];
+    let hadesSpears = [];
+    let hadesSiphonEffects = [];
     let shockwaves = [];
     let particles = [];
     let floatingTexts = [];
@@ -265,7 +280,7 @@
         soul: 'text-pink-400', marksman: 'text-lime-400', ninja: 'text-slate-200',
         reaper: 'text-slate-400', shen: 'text-cyan-400', sound: 'text-teal-400',
         angel: 'text-yellow-300', wukong: 'text-orange-400', demon: 'text-red-500',
-        poseidon: 'text-sky-300', p1: 'text-cyan-400', p2: 'text-rose-400', normal: 'text-slate-300'
+        poseidon: 'text-sky-300', ronin: 'text-cyan-200', hades: 'text-violet-300', p1: 'text-cyan-400', p2: 'text-rose-400', normal: 'text-slate-300'
       };
       entry.innerHTML = `<span class="text-slate-600">[${time}]</span> <span class="${colorMap[type] || 'text-slate-300'}">${msg}</span>`;
       battleLog.appendChild(entry);
@@ -424,6 +439,26 @@
         ctx.strokeStyle = 'rgba(125,211,252,0.48)'; ctx.lineWidth = 1.5;
         ctx.beginPath(); ctx.ellipse(0, 0, r + 11, r + 5, 0, 0, Math.PI * 2); ctx.stroke();
         for (let i = 0; i < 3; i++) { const a = t * 0.035 + i * Math.PI * 2 / 3; drawSpark(ctx, Math.cos(a) * (r + 9), Math.sin(a) * (r + 7), 2, '#bae6fd', 0.7); }
+      } else if (ball.typeKey === 'ronin') {
+        ctx.translate(x, y); ctx.rotate(-t * 0.035);
+        const pulse = 0.5 + Math.sin(t * 0.13) * 0.5;
+        ctx.shadowColor = '#67e8f9'; ctx.shadowBlur = 12;
+        ctx.strokeStyle = `rgba(207,250,254,${0.28 + pulse * 0.35})`; ctx.lineWidth = 1.4;
+        ctx.beginPath(); ctx.arc(0, 0, r + 7 + pulse * 2, 0.2, Math.PI * 1.85); ctx.stroke();
+        for (let i = 0; i < Math.min(4, ball.roninStacks || 0); i++) {
+          const a = t * 0.04 + i * Math.PI / 2;
+          drawSpark(ctx, Math.cos(a) * (r + 13), Math.sin(a) * (r + 13), 2.2, '#cffafe', 0.9);
+        }
+      } else if (ball.typeKey === 'hades') {
+        ctx.translate(x, y); ctx.rotate(t * 0.012);
+        const pulse = 0.5 + Math.sin(t * 0.08) * 0.5;
+        ctx.shadowColor = '#a78bfa'; ctx.shadowBlur = 20;
+        ctx.strokeStyle = `rgba(196,181,253,${0.35 + pulse * 0.3})`; ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.ellipse(0, 0, r + 12 + pulse * 3, r + 7, 0, 0, Math.PI * 2); ctx.stroke();
+        for (let i = 0; i < 5; i++) {
+          const a = -Math.PI * 0.85 + i * Math.PI * 0.42;
+          drawSpark(ctx, Math.cos(a) * (r + 12), Math.sin(a) * (r + 12), 2.3, '#f5d0fe', 0.85);
+        }
       }
       ctx.restore();
     }
@@ -514,6 +549,31 @@
         this.poseidonBurstTimer = 0;
         this.oceanicMarks = 0;
         this.drownedTimer = 0;
+
+        // Ronin: tốc độ cộng dồn; khi tiêu hao stack, lá chắn đã nhận vẫn được giữ vĩnh viễn.
+        this.roninStacks = 0;
+        this.roninPermanentShield = 0;
+        this.roninStackTimer = 0;
+        this.roninSpeedMult = 1;
+        this.roninSeals = 0;
+        this.roninTempShield = 0;
+        this.roninTempShieldTimer = 0;
+        this.roninDashData = null;
+
+        // Hades & Cerberus.
+        this.hadesStealthTimer = typeKey === 'hades' ? SKILL_CONFIG.hades.stealthDuration : 0;
+        this.hadesDrainTimer = 0;
+        this.hadesHpLostTotal = 0;
+        this.hadesCerberus = typeKey === 'hades' ? {
+          x: startX + (side === 'p1' ? 24 : -24), y: startY + 20,
+          radius: 13, vx: 0, vy: 0, speed: BASE_SPEED * SKILL_CONFIG.hades.cerberusSpeedMult,
+          contactDmg: SKILL_CONFIG.hades.cerberusContactDmg, hitCooldown: 0,
+          owner: this, trail: []
+        } : null;
+      }
+
+      isHadesUntargetable() {
+        return this.typeKey === 'hades' && this.hadesStealthTimer > 0;
       }
 
       isImmuneToDebuffs() {
@@ -535,6 +595,7 @@
         speed *= this.slowFactor;
         if (this.typeKey === 'reaper' && this.reaperSpeedBoostTimer > 0) speed *= SKILL_CONFIG.reaper.speedBoostMult;
         if (this.typeKey === 'wukong' && this.wukongSweepTimer > 0) speed *= SKILL_CONFIG.wukong.sweepSpeedBonus;
+        if (this.typeKey === 'ronin') speed *= this.roninSpeedMult;
         return speed;
       }
 
@@ -577,6 +638,23 @@
         if (this.shenSwapCooldown > 0) this.shenSwapCooldown -= 1 / 60;
         if (this.reaperSpeedBoostTimer > 0) this.reaperSpeedBoostTimer -= 1 / 60;
         if (this.poseidonWaveCooldown > 0) this.poseidonWaveCooldown -= 1 / 60;
+        if (this.typeKey === 'hades' && this.hadesStealthTimer > 0) {
+          this.hadesStealthTimer = Math.max(0, this.hadesStealthTimer - 1 / 60);
+          if (this.hadesStealthTimer === 0) {
+            createShockwave(this.x, this.y, 74, '#a78bfa', 4);
+            createParticles(this.x, this.y, '#c4b5fd', 26, 1.5);
+            logMessage('👑 Hades hiện thân — Cerberus thức tỉnh!', 'hades');
+          }
+        }
+        if (this.typeKey === 'ronin' && this.roninTempShieldTimer > 0) {
+          this.roninTempShieldTimer -= 1 / 60;
+          if (this.roninTempShieldTimer <= 0) {
+            this.shield = Math.max(0, this.shield - this.roninTempShield);
+            this.roninTempShield = 0;
+            this.roninTempShieldTimer = 0;
+            updateHUD();
+          }
+        }
 
         if (this.bladeDashAnim) {
           this.bladeDashAnim.progress += 1 / 60;
@@ -616,6 +694,8 @@
           case 'wukong':   this.updateWukong(enemy); break;
           case 'demon':    this.updateDemon(); break;
           case 'poseidon': this.updatePoseidon(enemy); break;
+          case 'ronin':    this.updateRonin(enemy); break;
+          case 'hades':    this.updateHades(enemy); break;
         }
 
         if (!this.isGhosting && this.stunTimer <= 0) {
@@ -1254,27 +1334,162 @@
         }
       }
 
+      updateRonin(enemy) {
+        if (!enemy) return;
+        this.roninStackTimer += 1 / 60;
+        if (this.roninStackTimer >= SKILL_CONFIG.ronin.stackInterval) {
+          this.roninStackTimer -= SKILL_CONFIG.ronin.stackInterval;
+          this.roninStacks++;
+          this.roninSpeedMult = 1 + this.roninStacks * SKILL_CONFIG.ronin.speedPerStack;
+          this.shield += 1;
+          this.roninPermanentShield++;
+          // Stack shield is permanent; the 4-stack reset only consumes the speed stacks.
+          createParticles(this.x, this.y, '#cffafe', 4, 0.65);
+          createFloatingText(this.x, this.y - 24, `+7% TỐC • +1 🛡️`, '#a5f3fc');
+          if (this.roninStacks >= SKILL_CONFIG.ronin.stacksPerDash) {
+            this.roninStacks = 0;
+            this.roninSpeedMult = 1;
+            const angle = Math.atan2(enemy.y - this.y, enemy.x - this.x);
+            const dashDist = this.radius * 2 * SKILL_CONFIG.ronin.dashDistanceDiam;
+            const endX = Math.max(this.radius, Math.min(canvas.width - this.radius, this.x + Math.cos(angle) * dashDist));
+            const endY = Math.max(this.radius, Math.min(canvas.height - this.radius, this.y + Math.sin(angle) * dashDist));
+            this.roninDashData = { startX: this.x, startY: this.y, endX, endY, angle, enemy };
+            this.dashAnim = {
+              startX: this.x, startY: this.y, endX, endY, progress: 0, duration: SKILL_CONFIG.ronin.dashDuration,
+              callback: () => this.finishRoninDash()
+            };
+            createShockwave(this.x, this.y, 48, '#67e8f9', 2.5);
+            logMessage('🌪️ Ronin tiêu hao 4 tầng tốc độ — Tốc Ảnh xuất kiếm!', 'ronin');
+          }
+          updateHUD();
+        }
+      }
+
+      finishRoninDash() {
+        const data = this.roninDashData;
+        this.roninDashData = null;
+        if (!data || !data.enemy || data.enemy.hp <= 0) return;
+        const enemy = data.enemy;
+        const start = { x: data.startX, y: data.startY };
+        const end = { x: data.endX, y: data.endY };
+        const hitDash = distToSegment({ x: enemy.x, y: enemy.y }, start, end) <= enemy.radius + this.radius * 0.9;
+        if (hitDash) {
+          // Lướt xuyên qua mục tiêu, dừng ở phía sau địch theo đúng hướng kiếm.
+          this.x = Math.max(this.radius, Math.min(canvas.width - this.radius, enemy.x + Math.cos(data.angle) * (enemy.radius + this.radius + 5)));
+          this.y = Math.max(this.radius, Math.min(canvas.height - this.radius, enemy.y + Math.sin(data.angle) * (enemy.radius + this.radius + 5)));
+          enemy.takeDamage(SKILL_CONFIG.ronin.scrapeDmg, 'Phong Nhận');
+          enemy.takeDamage(SKILL_CONFIG.ronin.spinDmg, 'Kiếm Vũ 360°');
+          roninSlashEffects.push({ x: enemy.x, y: enemy.y, radius: this.radius * 2 * SKILL_CONFIG.ronin.spinRadiusDiam, angle: data.angle, timer: 0.42, maxTimer: 0.42 });
+          createShockwave(enemy.x, enemy.y, this.radius * 3.6, '#a5f3fc', 3.5);
+          createParticles(enemy.x, enemy.y, '#cffafe', 24, 1.8);
+          createFloatingText(enemy.x, enemy.y - 24, '⚔️ PHONG TRẢM -25', '#a5f3fc');
+        } else {
+          const thrustEnd = { x: end.x + Math.cos(data.angle) * (this.radius * 2 * SKILL_CONFIG.ronin.thrustLengthDiam), y: end.y + Math.sin(data.angle) * (this.radius * 2 * SKILL_CONFIG.ronin.thrustLengthDiam) };
+          const hitThrust = distToSegment({ x: enemy.x, y: enemy.y }, end, thrustEnd) <= enemy.radius + 5;
+          roninThrustEffects.push({ x1: end.x, y1: end.y, x2: thrustEnd.x, y2: thrustEnd.y, angle: data.angle, timer: 0.26, maxTimer: 0.26 });
+          if (hitThrust) {
+            enemy.takeDamage(SKILL_CONFIG.ronin.thrustDmg, 'Thương Phong');
+            createParticles(enemy.x, enemy.y, '#bae6fd', 17, 1.4);
+            createFloatingText(enemy.x, enemy.y - 20, '⚔️ THƯƠNG PHONG -15', '#bae6fd');
+          }
+        }
+        this.roninSeals++;
+        createParticles(this.x, this.y, '#67e8f9', 12, 1.2);
+        if (this.roninSeals >= SKILL_CONFIG.ronin.sealsForStorm) this.releaseRoninTornado(enemy);
+      }
+
+      releaseRoninTornado(enemy) {
+        this.roninSeals = 0;
+        this.shield += SKILL_CONFIG.ronin.stormShield;
+        this.roninTempShield += SKILL_CONFIG.ronin.stormShield;
+        this.roninTempShieldTimer = SKILL_CONFIG.ronin.stormShieldDuration;
+        const angle = Math.atan2(enemy.y - this.y, enemy.x - this.x);
+        roninTornadoes.push({
+          x: this.x, y: this.y, originX: this.x, originY: this.y,
+          vx: Math.cos(angle) * BASE_SPEED * SKILL_CONFIG.ronin.tornadoSpeedMult,
+          vy: Math.sin(angle) * BASE_SPEED * SKILL_CONFIG.ronin.tornadoSpeedMult,
+          angle, travelled: 0, hit: false, owner: this,
+          initialWidth: this.radius * 2, maxDistance: Math.hypot(canvas.width, canvas.height) + 100,
+          spin: Math.random() * Math.PI * 2
+        });
+        createShockwave(this.x, this.y, 90, '#67e8f9', 4);
+        createParticles(this.x, this.y, '#e0f2fe', 30, 2);
+        createFloatingText(this.x, this.y - 32, '🌪️ CUỒNG PHONG!', '#a5f3fc');
+        logMessage('🌪️ Hai Ấn Cuồng Phong hợp nhất — Lốc Xoáy quét ngang chiến trường!', 'ronin');
+        updateHUD();
+      }
+
+      updateHades(enemy) {
+        if (!enemy || enemy.hp <= 0) return;
+        this.hadesDrainTimer += 1 / 60;
+        if (this.hadesDrainTimer >= SKILL_CONFIG.hades.drainInterval) {
+          this.hadesDrainTimer -= SKILL_CONFIG.hades.drainInterval;
+          if (enemy.maxHp > 0 && enemy.hp > 0) {
+            enemy.maxHp = Math.max(0, enemy.maxHp - SKILL_CONFIG.hades.drainHp);
+            enemy.hp = Math.max(0, Math.min(enemy.hp - SKILL_CONFIG.hades.drainHp, enemy.maxHp));
+            // Theo mô tả: mỗi HP tối đa bị tước sẽ để lại một điểm khiên vĩnh viễn trên mục tiêu.
+            enemy.shield += 1;
+            if (enemy.typeKey === 'ronin') enemy.roninPermanentShield = (enemy.roninPermanentShield || 0) + 1;
+            hadesSiphonEffects.push({ x1: enemy.x, y1: enemy.y, x2: this.x, y2: this.y, timer: 0.42, maxTimer: 0.42 });
+            createParticles(enemy.x, enemy.y, '#a78bfa', 5, 0.8);
+            createFloatingText(enemy.x, enemy.y - 18, '−1 HP tối đa', '#c4b5fd');
+            if (enemy.hp <= 0) {
+              if (enemy.typeKey === 'demon' && enemy.demonReviveCount < SKILL_CONFIG.demon.maxRevives) {
+                enemy.demonReviveCount++;
+                enemy.hp = enemy.maxHp;
+                logMessage(`👿 Demon chống lại lời nguyền Hades bằng lần hồi sinh ${enemy.demonReviveCount}/7!`, 'demon');
+              } else {
+                endGame(enemy);
+              }
+            }
+            updateHUD();
+            logMessage(`👑 Hades rút 1 HP tối đa từ ${enemy.name}; mục tiêu nhận 1 lá chắn vĩnh viễn.`, 'hades');
+          }
+        }
+
+        const cerb = this.hadesCerberus;
+        if (!cerb || this.hp <= 0 || enemy.hp <= 0) return;
+        if (cerb.hitCooldown > 0) cerb.hitCooldown--;
+        const angle = Math.atan2(enemy.y - cerb.y, enemy.x - cerb.x);
+        cerb.vx = Math.cos(angle) * cerb.speed;
+        cerb.vy = Math.sin(angle) * cerb.speed;
+        cerb.x += cerb.vx;
+        cerb.y += cerb.vy;
+        cerb.x = Math.max(cerb.radius, Math.min(canvas.width - cerb.radius, cerb.x));
+        cerb.y = Math.max(cerb.radius, Math.min(canvas.height - cerb.radius, cerb.y));
+        if (Math.hypot(enemy.x - cerb.x, enemy.y - cerb.y) <= enemy.radius + cerb.radius && cerb.hitCooldown <= 0) {
+          cerb.hitCooldown = 38;
+          enemy.takeDamage(cerb.contactDmg, 'Cerberus Cắn Xé');
+          enemy.applySlow(SKILL_CONFIG.hades.cerberusSlowDuration, SKILL_CONFIG.hades.cerberusSlowFactor);
+          hadesSpears.push({ x: this.x, y: this.y, vx: Math.cos(Math.atan2(enemy.y - this.y, enemy.x - this.x)) * BASE_SPEED * SKILL_CONFIG.hades.spearSpeedMult, vy: Math.sin(Math.atan2(enemy.y - this.y, enemy.x - this.x)) * BASE_SPEED * SKILL_CONFIG.hades.spearSpeedMult, owner: this, hit: false, trail: [] });
+          createShockwave(enemy.x, enemy.y, 42, '#a78bfa', 2.5);
+          createParticles(enemy.x, enemy.y, '#c4b5fd', 14, 1.4);
+          logMessage(`🐺 Cerberus cắn trúng ${enemy.name}, làm chậm 20% và Hades phóng Thần Thương!`, 'hades');
+        }
+      }
+
       applyBurn() {
-        if (this.isImmuneToDebuffs()) return;
+        if (this.isHadesUntargetable() || this.isImmuneToDebuffs()) return;
         this.burnStacks = Math.min(this.burnStacks + 1, SKILL_CONFIG.fire.maxBurnStacks);
         this.burnTimer = SKILL_CONFIG.fire.burnDuration;
         updateHUD();
       }
 
-      applySlow(duration) {
-        if (this.isImmuneToDebuffs()) return;
-        if (this.slowTimer <= 0) this.slowFactor = 0.7;
+      applySlow(duration, factor = 0.7) {
+        if (this.isHadesUntargetable() || this.isImmuneToDebuffs()) return;
+        this.slowFactor = this.slowTimer <= 0 ? factor : Math.min(this.slowFactor, factor);
         this.slowTimer = Math.max(this.slowTimer, duration);
         updateHUD();
       }
 
       applyStun(duration) {
-        if (this.isImmuneToDebuffs()) return;
+        if (this.isHadesUntargetable() || this.isImmuneToDebuffs()) return;
         this.stunTimer = Math.max(this.stunTimer, duration);
         updateHUD();
       }
 
       takeDamage(amount, source) {
+        if (this.isHadesUntargetable()) return;
         if (this.typeKey === 'wukong' && this.wukongImmortalTimer > 0) return;
         if (this.typeKey === 'ninja' && this.ninjaInvulnerable) return;
         if (this.typeKey === 'shen') {
@@ -1315,18 +1530,30 @@
 
         let remainingDmg = finalIncomingDmg;
         if (this.shield > 0) {
-          if (this.shield >= remainingDmg) {
-            this.shield -= remainingDmg;
-            remainingDmg = 0;
-          } else {
-            remainingDmg -= this.shield;
-            this.shield = 0;
+          const absorbed = Math.min(this.shield, remainingDmg);
+          this.shield -= absorbed;
+          remainingDmg -= absorbed;
+          // Với Ronin, sát thương tiêu hao khiên tạm trước; khiên vĩnh viễn không bị trừ nhầm khi hết 3 giây.
+          if (this.typeKey === 'ronin') {
+            this.roninTempShield = Math.max(0, this.roninTempShield - absorbed);
+            this.roninPermanentShield = Math.max(0, this.shield - this.roninTempShield);
+          } else if (this.shield <= 0) {
             this.shieldTimer = 0;
           }
         }
 
+        let actualHpLoss = 0;
         if (remainingDmg > 0) {
+          const oldHp = this.hp;
           this.hp = Math.max(0, this.hp - remainingDmg);
+          actualHpLoss = oldHp - this.hp;
+        }
+        if (this.typeKey === 'hades' && actualHpLoss > 0) {
+          this.hadesHpLostTotal += actualHpLoss;
+          if (this.hadesCerberus) {
+            const bonus = Math.floor(this.hadesHpLostTotal / SKILL_CONFIG.hades.cerberusDamageStep);
+            this.hadesCerberus.contactDmg = SKILL_CONFIG.hades.cerberusContactDmg + bonus;
+          }
         }
 
         if (this.hp <= 0 && this.typeKey === 'demon' && this.demonReviveCount < SKILL_CONFIG.demon.maxRevives) {
@@ -1390,6 +1617,7 @@
       }
 
       draw() {
+        if (this.isHadesUntargetable()) return;
         ctx.save();
         drawBallSignatureVFX(this);
 
@@ -1478,6 +1706,45 @@
         if (this.typeKey === 'ninja' && this.ninjaInvulnerable) {
           ctx.beginPath(); ctx.arc(this.x, this.y, this.radius + 8, 0, Math.PI * 2);
           ctx.strokeStyle = '#94a3b8'; ctx.lineWidth = 3; ctx.stroke();
+        }
+
+        // Ronin: Tốc Ảnh để lại hai dải phong nhận khi lướt.
+        if (this.typeKey === 'ronin' && this.dashAnim) {
+          const dashAngle = Math.atan2(this.dashAnim.endY - this.dashAnim.startY, this.dashAnim.endX - this.dashAnim.startX);
+          const dashProgress = Math.min(1, this.dashAnim.progress / this.dashAnim.duration);
+          ctx.save(); ctx.globalAlpha = 0.72 * (1 - dashProgress * 0.35);
+          ctx.lineCap = 'round'; ctx.shadowColor = '#67e8f9'; ctx.shadowBlur = 18;
+          for (let ribbon = -1; ribbon <= 1; ribbon++) {
+            const ox = Math.cos(dashAngle + Math.PI / 2) * ribbon * 7;
+            const oy = Math.sin(dashAngle + Math.PI / 2) * ribbon * 7;
+            ctx.beginPath(); ctx.moveTo(this.dashAnim.startX + ox, this.dashAnim.startY + oy);
+            ctx.quadraticCurveTo((this.dashAnim.startX + this.x) / 2 + ox * 1.8, (this.dashAnim.startY + this.y) / 2 + oy * 1.8, this.x + ox * 0.4, this.y + oy * 0.4);
+            ctx.strokeStyle = ribbon === 0 ? '#ecfeff' : '#67e8f9'; ctx.lineWidth = ribbon === 0 ? 3.2 : 1.7; ctx.stroke();
+          }
+          ctx.restore();
+        }
+
+        // Ronin: các ấn kiếm khí và lớp giáp phong linh.
+        if (this.typeKey === 'ronin') {
+          ctx.save(); ctx.translate(this.x, this.y); ctx.rotate(globalTick * 0.045);
+          for (let i = 0; i < 4; i++) {
+            const a = i * Math.PI / 2;
+            ctx.save(); ctx.rotate(a);
+            ctx.beginPath(); ctx.moveTo(0, -this.radius - 5); ctx.lineTo(3, -this.radius - 13); ctx.lineTo(0, -this.radius - 20); ctx.lineTo(-3, -this.radius - 13); ctx.closePath();
+            ctx.fillStyle = i < this.roninStacks ? 'rgba(207,250,254,0.95)' : 'rgba(103,232,249,0.28)';
+            ctx.shadowColor = '#67e8f9'; ctx.shadowBlur = 12; ctx.fill(); ctx.restore();
+          }
+          ctx.restore();
+        }
+        if (this.typeKey === 'hades') {
+          const aura = ctx.createRadialGradient(this.x, this.y, this.radius * 0.7, this.x, this.y, this.radius + 28);
+          aura.addColorStop(0, 'rgba(139,92,246,0.28)'); aura.addColorStop(0.55, 'rgba(91,33,182,0.22)'); aura.addColorStop(1, 'rgba(30,10,60,0)');
+          ctx.fillStyle = aura; ctx.beginPath(); ctx.arc(this.x, this.y, this.radius + 28, 0, Math.PI * 2); ctx.fill();
+          ctx.save(); ctx.translate(this.x, this.y); ctx.rotate(globalTick * 0.025);
+          ctx.strokeStyle = 'rgba(221,214,254,0.78)'; ctx.lineWidth = 2; ctx.shadowColor = '#a78bfa'; ctx.shadowBlur = 16;
+          ctx.beginPath(); ctx.arc(0, 0, this.radius + 13, 0.15, Math.PI * 1.85); ctx.stroke();
+          ctx.beginPath(); ctx.arc(0, 0, this.radius + 19, Math.PI * 1.1, Math.PI * 1.9); ctx.stroke();
+          ctx.restore();
         }
 
         // Thân Ball chính
@@ -1583,6 +1850,7 @@
     }
 
     function checkAllCollisions(b1, b2) {
+      if (b1.isHadesUntargetable() || b2.isHadesUntargetable()) return;
       if (resolveElasticCollision(b1, b2)) {
         if (b1.typeKey === 'angel') {
           b1.hp = Math.min(b1.maxHp, b1.hp + SKILL_CONFIG.angel.collisionSelfHeal);
@@ -2594,13 +2862,185 @@
       }
     }
 
+    function updateAndDrawRoninHadesEntities() {
+      // Ronin's expanding wind fan: a visible cyclone, never a debug hitbox/cone.
+      for (let i = roninTornadoes.length - 1; i >= 0; i--) {
+        const t = roninTornadoes[i];
+        const step = Math.hypot(t.vx, t.vy);
+        t.x += t.vx; t.y += t.vy; t.travelled += step; t.spin += 0.22;
+        const dx = t.x - t.originX, dy = t.y - t.originY;
+        const len = Math.hypot(dx, dy) || 1;
+        const ux = dx / len, uy = dy / len;
+        const nx = -uy, ny = ux;
+        const maxWidth = Math.max(t.initialWidth * 0.5, t.travelled * Math.tan((SKILL_CONFIG.ronin.tornadoAngleDeg * Math.PI / 180) / 2));
+        const enemy = (t.owner === p1) ? p2 : p1;
+        if (!t.hit && enemy && !enemy.isHadesUntargetable()) {
+          const ex = enemy.x - t.originX, ey = enemy.y - t.originY;
+          const along = ex * ux + ey * uy;
+          const lateral = Math.abs(ex * nx + ey * ny);
+          const localWidth = Math.max(t.initialWidth * 0.5, along * Math.tan((SKILL_CONFIG.ronin.tornadoAngleDeg * Math.PI / 180) / 2));
+          if (along >= -enemy.radius && along <= t.travelled + enemy.radius && lateral <= localWidth + enemy.radius) {
+            t.hit = true;
+            enemy.takeDamage(SKILL_CONFIG.ronin.tornadoDmg, 'Lốc Xoáy Cuồng Phong');
+            // Hất Tung là khóa di chuyển trực tiếp trong 0,4s, không phụ thuộc kháng khống chế thông thường.
+            enemy.stunTimer = Math.max(enemy.stunTimer, SKILL_CONFIG.ronin.tornadoKnockup);
+            updateHUD();
+            createShockwave(enemy.x, enemy.y, 72, '#67e8f9', 4);
+            createParticles(enemy.x, enemy.y, '#cffafe', 28, 1.8);
+            createFloatingText(enemy.x, enemy.y - 25, '🌪️ HẤT TUNG -25', '#a5f3fc');
+            logMessage(`🌪️ Lốc Xoáy Ronin cuốn ${enemy.name} lên không trung!`, 'ronin');
+          }
+        }
+
+        ctx.save();
+        // Multiple helical wind ribbons; the fan widens naturally with travel distance.
+        const drawLength = Math.max(24, t.travelled);
+        const bands = 4;
+        for (let band = 0; band < bands; band++) {
+          ctx.beginPath();
+          const segments = 28;
+          for (let q = 0; q <= segments; q++) {
+            const f = q / segments;
+            const along = f * drawLength;
+            const width = Math.max(5, Math.min(maxWidth, t.initialWidth * 0.48 + along * Math.tan((SKILL_CONFIG.ronin.tornadoAngleDeg * Math.PI / 180) / 2)));
+            const phase = t.spin + f * 10 + band * Math.PI / 2;
+            const lateral = Math.sin(phase) * width * (0.42 + 0.08 * Math.cos(phase * 0.5));
+            const px = t.originX + ux * along + nx * lateral;
+            const py = t.originY + uy * along + ny * lateral;
+            if (q === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+          }
+          const grad = ctx.createLinearGradient(t.originX, t.originY, t.x, t.y);
+          grad.addColorStop(0, 'rgba(224,242,254,0.08)');
+          grad.addColorStop(0.45, band % 2 ? 'rgba(103,232,249,0.68)' : 'rgba(207,250,254,0.82)');
+          grad.addColorStop(1, 'rgba(34,211,238,0.2)');
+          ctx.strokeStyle = grad; ctx.lineWidth = band % 2 ? 3.2 : 1.7;
+          ctx.lineCap = 'round'; ctx.shadowColor = '#67e8f9'; ctx.shadowBlur = 13; ctx.stroke();
+        }
+        // Rotating vortex rings along the growing body of the cyclone.
+        for (let ring = 1; ring <= 6; ring++) {
+          const f = ring / 7;
+          const along = drawLength * f;
+          const width = Math.max(6, Math.min(maxWidth, t.initialWidth * 0.48 + along * Math.tan((SKILL_CONFIG.ronin.tornadoAngleDeg * Math.PI / 180) / 2)));
+          const cx = t.originX + ux * along, cy = t.originY + uy * along;
+          ctx.save(); ctx.translate(cx, cy); ctx.rotate(t.angle + t.spin + ring * 0.55);
+          ctx.beginPath(); ctx.ellipse(0, 0, width, Math.max(5, width * 0.25), 0, 0.1, Math.PI * 1.85);
+          ctx.strokeStyle = `rgba(224,242,254,${0.58 - f * 0.28})`; ctx.lineWidth = 1.6; ctx.shadowColor = '#22d3ee'; ctx.shadowBlur = 10; ctx.stroke();
+          ctx.restore();
+        }
+        ctx.restore();
+        if (t.travelled >= t.maxDistance || t.x < -maxWidth - 30 || t.x > canvas.width + maxWidth + 30 || t.y < -maxWidth - 30 || t.y > canvas.height + maxWidth + 30) roninTornadoes.splice(i, 1);
+      }
+
+      for (let i = roninSlashEffects.length - 1; i >= 0; i--) {
+        const fx = roninSlashEffects[i]; fx.timer -= 1 / 60;
+        const progress = 1 - Math.max(0, fx.timer / fx.maxTimer);
+        const alpha = Math.sin(progress * Math.PI);
+        drawCrescentSlash(ctx, fx.x, fx.y, fx.radius, fx.angle - Math.PI + progress * Math.PI * 2, Math.PI * 1.55, '#cffafe', '#22d3ee', alpha);
+        // A second razor-thin edge follows the first arc for a crisp wind-cut finish.
+        drawCrescentSlash(ctx, fx.x, fx.y, fx.radius * 0.82, fx.angle + progress * Math.PI * 2, Math.PI * 1.18, '#67e8f9', '#e0f2fe', alpha * 0.7);
+        if (fx.timer <= 0) roninSlashEffects.splice(i, 1);
+      }
+      for (let i = roninThrustEffects.length - 1; i >= 0; i--) {
+        const fx = roninThrustEffects[i]; fx.timer -= 1 / 60;
+        const alpha = Math.max(0, fx.timer / fx.maxTimer);
+        ctx.save(); ctx.globalAlpha = alpha; ctx.lineCap = 'round';
+        const dx = fx.x2 - fx.x1, dy = fx.y2 - fx.y1;
+        ctx.shadowColor = '#67e8f9'; ctx.shadowBlur = 18;
+        ctx.strokeStyle = '#ecfeff'; ctx.lineWidth = 4;
+        ctx.beginPath(); ctx.moveTo(fx.x1, fx.y1); ctx.lineTo(fx.x2, fx.y2); ctx.stroke();
+        ctx.strokeStyle = '#22d3ee'; ctx.lineWidth = 11; ctx.globalAlpha = alpha * 0.34;
+        ctx.beginPath(); ctx.moveTo(fx.x1, fx.y1); ctx.lineTo(fx.x2, fx.y2); ctx.stroke();
+        for (let k = 1; k <= 4; k++) {
+          const q = k / 5; drawSpark(ctx, fx.x1 + dx * q, fx.y1 + dy * q, 2.5, '#e0f2fe', alpha);
+        }
+        ctx.restore();
+        if (fx.timer <= 0) roninThrustEffects.splice(i, 1);
+      }
+
+      // Hades' immortal, untargetable Cerberus companion.
+      [p1, p2].forEach(hades => {
+        if (!hades || hades.typeKey !== 'hades' || hades.hp <= 0 || !hades.hadesCerberus) return;
+        const c = hades.hadesCerberus;
+        c.trail.push({ x: c.x, y: c.y }); if (c.trail.length > 9) c.trail.shift();
+        ctx.save();
+        for (let i = 1; i < c.trail.length; i++) {
+          const q = i / c.trail.length;
+          ctx.beginPath(); ctx.moveTo(c.trail[i - 1].x, c.trail[i - 1].y); ctx.lineTo(c.trail[i].x, c.trail[i].y);
+          ctx.strokeStyle = `rgba(167,139,250,${q * 0.36})`; ctx.lineWidth = q * 7; ctx.lineCap = 'round'; ctx.stroke();
+        }
+        const aura = ctx.createRadialGradient(c.x, c.y, 2, c.x, c.y, c.radius * 2.3);
+        aura.addColorStop(0, 'rgba(196,181,253,0.42)'); aura.addColorStop(0.5, 'rgba(109,40,217,0.28)'); aura.addColorStop(1, 'rgba(30,10,60,0)');
+        ctx.fillStyle = aura; ctx.beginPath(); ctx.arc(c.x, c.y, c.radius * 2.3, 0, Math.PI * 2); ctx.fill();
+        ctx.translate(c.x, c.y); ctx.rotate(Math.atan2(c.vy, c.vx));
+        ctx.shadowColor = '#a78bfa'; ctx.shadowBlur = 16;
+        ctx.fillStyle = '#312e81'; ctx.strokeStyle = '#c4b5fd'; ctx.lineWidth = 1.8;
+        ctx.beginPath(); ctx.ellipse(0, 2, c.radius * 1.2, c.radius * 0.78, 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+        // Three spectral heads, each with a pair of burning eyes.
+        for (let h = -1; h <= 1; h++) {
+          const hx = c.radius * 0.48, hy = h * c.radius * 0.55 - 3;
+          ctx.beginPath(); ctx.arc(hx, hy, c.radius * 0.43, 0, Math.PI * 2); ctx.fillStyle = h === 0 ? '#4c1d95' : '#3730a3'; ctx.fill(); ctx.stroke();
+          ctx.fillStyle = '#fef08a'; ctx.shadowColor = '#f59e0b'; ctx.shadowBlur = 9;
+          ctx.beginPath(); ctx.arc(hx + 3, hy - 3, 1.7, 0, Math.PI * 2); ctx.arc(hx + 3, hy + 3, 1.7, 0, Math.PI * 2); ctx.fill();
+        }
+        ctx.restore();
+      });
+
+      // Hades' piercing divine spear. It crosses the arena and permanently lowers max HP by 3.
+      for (let i = hadesSpears.length - 1; i >= 0; i--) {
+        const sp = hadesSpears[i];
+        sp.trail.push({ x: sp.x, y: sp.y }); if (sp.trail.length > 8) sp.trail.shift();
+        sp.x += sp.vx; sp.y += sp.vy;
+        ctx.save();
+        for (let k = 1; k < sp.trail.length; k++) {
+          const a = k / sp.trail.length; ctx.beginPath(); ctx.moveTo(sp.trail[k - 1].x, sp.trail[k - 1].y); ctx.lineTo(sp.trail[k].x, sp.trail[k].y);
+          ctx.strokeStyle = `rgba(196,181,253,${a * 0.65})`; ctx.lineWidth = a * 5; ctx.lineCap = 'round'; ctx.stroke();
+        }
+        ctx.translate(sp.x, sp.y); ctx.rotate(Math.atan2(sp.vy, sp.vx));
+        ctx.shadowColor = '#c4b5fd'; ctx.shadowBlur = 18;
+        ctx.fillStyle = '#ddd6fe'; ctx.strokeStyle = '#7c3aed'; ctx.lineWidth = 1.5;
+        ctx.beginPath(); ctx.moveTo(15, 0); ctx.lineTo(-7, -4); ctx.lineTo(-3, 0); ctx.lineTo(-7, 4); ctx.closePath(); ctx.fill(); ctx.stroke();
+        ctx.fillStyle = '#6d28d9'; ctx.fillRect(-18, -2, 17, 4);
+        ctx.restore();
+        const enemy = (sp.owner === p1) ? p2 : p1;
+        if (!sp.hit && enemy && !enemy.isHadesUntargetable() && Math.hypot(enemy.x - sp.x, enemy.y - sp.y) <= enemy.radius + 8) {
+          sp.hit = true; enemy.takeDamage(SKILL_CONFIG.hades.spearDmg, 'Thần Thương Hades');
+          const oldMax = enemy.maxHp; enemy.maxHp = Math.max(0, enemy.maxHp - SKILL_CONFIG.hades.spearMaxHpSteal);
+          if (enemy.hp > enemy.maxHp) enemy.hp = enemy.maxHp;
+          if (enemy.maxHp <= 0 || enemy.hp <= 0) endGame(enemy);
+          createShockwave(enemy.x, enemy.y, 55, '#a78bfa', 3.5); createParticles(enemy.x, enemy.y, '#ddd6fe', 20, 1.5);
+          createFloatingText(enemy.x, enemy.y - 24, `−${oldMax - enemy.maxHp} HP TỐI ĐA`, '#c4b5fd');
+          updateHUD();
+          logMessage(`👑 Thần Thương xuyên trúng ${enemy.name}, tước vĩnh viễn 3 HP tối đa!`, 'hades');
+        }
+        if (sp.x < -30 || sp.x > canvas.width + 30 || sp.y < -30 || sp.y > canvas.height + 30) hadesSpears.splice(i, 1);
+      }
+
+      for (let i = hadesSiphonEffects.length - 1; i >= 0; i--) {
+        const fx = hadesSiphonEffects[i]; fx.timer -= 1 / 60;
+        const alpha = Math.max(0, fx.timer / fx.maxTimer);
+        ctx.save(); ctx.globalAlpha = alpha; ctx.lineWidth = 3; ctx.shadowColor = '#a78bfa'; ctx.shadowBlur = 14;
+        const grad = ctx.createLinearGradient(fx.x1, fx.y1, fx.x2, fx.y2);
+        grad.addColorStop(0, 'rgba(244,114,182,0.1)'); grad.addColorStop(0.5, '#c4b5fd'); grad.addColorStop(1, '#fef3c7');
+        ctx.strokeStyle = grad; ctx.beginPath(); ctx.moveTo(fx.x1, fx.y1);
+        const mx = (fx.x1 + fx.x2) / 2 + Math.sin(globalTick * 0.22) * 13;
+        const my = (fx.y1 + fx.y2) / 2 + Math.cos(globalTick * 0.22) * 13;
+        ctx.quadraticCurveTo(mx, my, fx.x2, fx.y2); ctx.stroke();
+        for (let mote = 0; mote < 3; mote++) {
+          const q = (globalTick * 0.025 + mote / 3) % 1;
+          drawSpark(ctx, fx.x1 + (fx.x2 - fx.x1) * q, fx.y1 + (fx.y2 - fx.y1) * q, 2.2, '#f5d0fe', alpha);
+        }
+        ctx.restore();
+        if (fx.timer <= 0) hadesSiphonEffects.splice(i, 1);
+      }
+    }
+
     function updateHUDForPlayer(ball, prefix) {
       let shieldText = ball.shield > 0 ? ` (🛡️${Math.round(ball.shield)})` : '';
       if (ball.typeKey === 'demon') shieldText = ` (🛡️${Math.round(ball.shield)} | Phản: +${Math.round(ball.shield * 6)}%)`;
       
       document.getElementById(`${prefix}-name`).innerText = `${ball.icon} ${ball.name}`;
       document.getElementById(`${prefix}-hp-text`).innerText = `${Math.ceil(ball.hp)}/${ball.maxHp}${shieldText}`;
-      document.getElementById(`${prefix}-hp-bar`).style.width = `${Math.max(0, (ball.hp / ball.maxHp) * 100)}%`;
+      document.getElementById(`${prefix}-hp-bar`).style.width = `${Math.max(0, ball.maxHp > 0 ? (ball.hp / ball.maxHp) * 100 : 0)}%`;
 
       const badges = document.getElementById(`${prefix}-badges`);
       badges.innerHTML = '';
@@ -2624,6 +3064,15 @@
       if (ball.typeKey === 'ninja' && ball.ninjaInvulnerable) badges.innerHTML += `<span class="bg-slate-800 text-slate-200 border border-slate-500 px-1 rounded">🥷 Vô Địch (Lướt)</span>`;
       if (ball.typeKey === 'reaper' && ball.reaperSpeedBoostTimer > 0) badges.innerHTML += `<span class="bg-slate-700 text-slate-100 border border-slate-400 px-1 rounded">💀 Tăng Tốc (+60%)</span>`;
       if (ball.typeKey === 'demon') badges.innerHTML += `<span class="bg-red-950 text-red-300 border border-red-500/40 px-1 rounded">👿 Hồi Sinh: ${ball.demonReviveCount}/7</span>`;
+      if (ball.typeKey === 'ronin') {
+        badges.innerHTML += `<span class="bg-cyan-950 text-cyan-200 border border-cyan-500/40 px-1 rounded">🌪️ Tốc: ${ball.roninStacks}/4</span>`;
+        badges.innerHTML += `<span class="bg-sky-950 text-sky-200 border border-sky-500/40 px-1 rounded">Ấn Cuồng Phong: ${ball.roninSeals}/2</span>`;
+        if (ball.roninTempShield > 0) badges.innerHTML += `<span class="bg-cyan-950 text-cyan-200 border border-cyan-500/40 px-1 rounded">🛡️ Phong Giáp: ${Math.ceil(ball.roninTempShieldTimer)}s</span>`;
+      }
+      if (ball.typeKey === 'hades') {
+        if (ball.hadesStealthTimer > 0) badges.innerHTML += `<span class="bg-violet-950 text-violet-200 border border-violet-500/40 px-1 rounded">👑 Tàng Hình: ${ball.hadesStealthTimer.toFixed(1)}s</span>`;
+        badges.innerHTML += `<span class="bg-purple-950 text-purple-200 border border-purple-500/40 px-1 rounded">🐺 Cerberus: ${ball.hadesCerberus ? ball.hadesCerberus.contactDmg : 0} dmg</span>`;
+      }
     }
 
     function updateHUD() {
@@ -2646,6 +3095,7 @@
       ninjaProjectiles = []; reaperIllusions = []; reaperSlashes = []; soundWaves = [];
       wukongClones = []; wukongStaffs = []; activeWukongSweeps = []; wukongAfterimages = [];
       poseidonWaves = []; poseidonBursts = []; oceanBubbles = []; shockwaves = [];
+      roninTornadoes = []; roninSlashEffects = []; roninThrustEffects = []; hadesSpears = []; hadesSiphonEffects = [];
       particles = []; floatingTexts = [];
       
       battleLog.innerHTML = '';
@@ -2738,8 +3188,9 @@
       });
 
       if (!gameOver && p1 && p2) {
-        p1.update(p2);
-        p2.update(p1);
+        // During Hades' opening stealth, the opponent cannot acquire him as a target.
+        p1.update(p2.isHadesUntargetable() ? null : p2);
+        p2.update(p1.isHadesUntargetable() ? null : p1);
         checkAllCollisions(p1, p2);
       }
 
@@ -2747,6 +3198,7 @@
 
       if (p1) p1.draw();
       if (p2) p2.draw();
+      updateAndDrawRoninHadesEntities();
 
       if (!gameOver) {
         animationFrameId = requestAnimationFrame(gameLoop);
