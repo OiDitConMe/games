@@ -77,6 +77,7 @@
               <option value="ronin">🌪️ Ronin Ball</option>
               <option value="hades">👑 Hades Ball</option>
               <option value="dragon">🐉 Dragon Ball</option>
+              <option value="viper">🐍 Viper Ball</option>
             </select>
           </div>
 
@@ -102,6 +103,7 @@
               <option value="ronin">🌪️ Ronin Ball</option>
               <option value="hades">👑 Hades Ball</option>
               <option value="dragon">🐉 Dragon Ball</option>
+              <option value="viper">🐍 Viper Ball</option>
             </select>
           </div>
 
@@ -120,7 +122,8 @@
           • <span class="text-amber-400 font-semibold">16 Chiến Binh:</span> Đại tu toàn bộ hiệu ứng lửa, kiếm khí, sét, linh hồn, gậy Như Ý & bẫy!<br>
           • <span class="text-violet-300 font-semibold">Ronin:</span> Tích tốc độ, kiếm vũ 360°, Ấn Cuồng Phong & Lốc Xoáy.<br>
           • <span class="text-rose-300 font-semibold">Hades:</span> Cerberus bất tử, Địa Ngục & Thần Thương tước HP tối đa, trao khiên vĩnh viễn.<br>
-          • <span class="text-amber-300 font-semibold">Dragon:</span> Long Khí thanh tẩy, 3 lần thức tỉnh, Thần Thụ & Bầu Trời.
+          • <span class="text-amber-300 font-semibold">Dragon:</span> Long Khí thanh tẩy, 3 lần thức tỉnh, Thần Thụ & Bầu Trời.<br>
+          • <span class="text-emerald-300 font-semibold">Viper:</span> Độc Chướng cộng dồn, làm trượt đòn và Nanh Độc xuyên khiên.
         </div>
       </div>
     </div>
@@ -206,10 +209,11 @@
       angel:    { name: 'Angel Ball',    color: '#fef08a', secondaryColor: '#eab308', hp: 80,  maxHp: 80,  radius: 18, speed: BASE_SPEED * 0.9,  contactDmg: 0,  icon: '👼' },
       wukong:   { name: 'Wukong Ball',   color: '#fb923c', secondaryColor: '#b45309', hp: 102, maxHp: 102, radius: 18, speed: BASE_SPEED * 1.32, contactDmg: 7,  icon: '🐵' },
       demon:    { name: 'Demon Ball',    color: '#ef4444', secondaryColor: '#991b1b', hp: 12,  maxHp: 12,  radius: 18, speed: BASE_SPEED * 1.06, contactDmg: 6,  icon: '👿' },
-      poseidon: { name: 'Poseidon Ball', color: '#0ea5e9', secondaryColor: '#0369a1', hp: 100, maxHp: 100, radius: 18, speed: BASE_SPEED,        contactDmg: 0,  icon: '🔱' },
+      poseidon: { name: 'Poseidon Ball', color: '#0ea5e9', secondaryColor: '#0369a1', hp: 95, maxHp: 95, radius: 18, speed: BASE_SPEED,        contactDmg: 0,  icon: '🔱' },
       ronin:    { name: 'Ronin Ball',    color: '#a5f3fc', secondaryColor: '#334155', hp: 99, maxHp: 99, radius: 18, speed: BASE_SPEED,        contactDmg: 5,  icon: '⚔️' },
       hades:    { name: 'Hades Ball',    color: '#5b2b20', secondaryColor: '#160d0b', hp: 96, maxHp: 96, radius: 18, speed: BASE_SPEED,        contactDmg: 0,  icon: '👑' },
-      dragon:   { name: 'Dragon Ball',   color: '#d97706', secondaryColor: '#451a03', hp: 90,  maxHp: 90,  radius: 18, speed: BASE_SPEED * 1.25, contactDmg: 5, icon: '🐉' }
+      dragon:   { name: 'Dragon Ball',   color: '#d97706', secondaryColor: '#451a03', hp: 90,  maxHp: 90,  radius: 18, speed: BASE_SPEED * 1.25, contactDmg: 5, icon: '🐉' },
+      viper:    { name: 'Viper Ball',    color: '#0f6b45', secondaryColor: '#052e25', hp: 100, maxHp: 100, radius: 18, speed: BASE_SPEED * 1.15, contactDmg: 4, icon: '🐍' }
     };
 
     const SKILL_CONFIG = {
@@ -231,7 +235,8 @@
       poseidon: { waveTriggerDiam: 3.5, waveRadiusDiam: 3.6, waveDmg: 1, waveSlowDuration: 2.0, waveSlowFactor: 0.75, burstInterval: 4.0 },
       ronin: { stackInterval: 1, speedPerStack: 0.07, stacksPerDash: 4, dashDistanceDiam: 3, dashDuration: 0.18, scrapeDmg: 2, spinDmg: 18, spinRadiusDiam: 1.65, thrustLengthDiam: 3, thrustDmg: 15, sealsForStorm: 2, stormShield: 15, stormShieldDuration: 3, tornadoDmg: 21, tornadoKnockup: 0.4, tornadoAngleDeg: 25, tornadoSpeedMult: 1.75 },
       hades: { drainInterval: 0.95, drainHp: 1, cerberusSpeedMult: 1.25, cerberusContactDmg: 0, cerberusMaxHpSteal: 4, cerberusPermanentShield: 4, cerberusSlowFactor: 0.8, cerberusSlowDuration: 3, spearDmg: 0, spearMaxHpSteal: 12, spearPermanentShield: 12, spearSpeedMult: 8.5, cerberusDamageStep: 8, hellDuration: 5.3, hellCooldown: 5.5, hellInterruptedCooldown: 3, hellSpeedMult: 1.3, hellHeal: 13 },
-      dragon: { cleanseInterval: 4, invulnerableDuration: 1.25, form1Seals: 2, form2Seals: 4, form3Seals: 8, attackInterval: 1, form1Damage: 3, form2Damage: 5, form3Damage: 8, burnDuration: 5, burnDamage: 5, burnTick: 0.5, burnRadiusDiam: 3, burnSlowFactor: 0.65, form2Heal: 14, form3Shield: 100, form3ShieldDuration: 2.5, skySlowFactor: 0.84, skyWindMult: 0.2, groundFireDuration: 1, groundFireDamage: 3, groundFireTick: 0.5, permanentShieldPerAttack: 3 }
+      dragon: { cleanseInterval: 4, invulnerableDuration: 1.25, form1Seals: 2, form2Seals: 4, form3Seals: 8, attackInterval: 1, form1Damage: 3, form2Damage: 5, form3Damage: 8, burnDuration: 5, burnDamage: 5, burnTick: 0.5, burnRadiusDiam: 3, burnSlowFactor: 0.65, form2Heal: 14, form3Shield: 100, form3ShieldDuration: 2.5, skySlowFactor: 0.84, skyWindMult: 0.2, groundFireDuration: 1, groundFireDamage: 3, groundFireTick: 0.5, permanentShieldPerAttack: 3 },
+      viper: { poisonTick: 0.5, poisonDuration: 2, poisonDamage: 1, poisonMissPerStack: 0.045, maxMissChance: 0.80, strikeRangeDiam: 1, strikeDelay: 0.25, strikeCooldown: 0.72, strikeBaseDamage: 3, strikeMissingHpPct: 0.06, strikeBonusStackChance: 0.5, collisionHealCooldown: 0.3 }
     };
 
     let p1, p2;
@@ -270,6 +275,8 @@
     let dragonBurnZones = [];
     let dragonAshTrees = [];
     let dragonGroundFires = [];
+    let viperPoisonMotes = [];
+    let viperStrikes = [];
     let gameOver = false;
     let animationFrameId = null;
     let globalTick = 0;
@@ -340,60 +347,63 @@
         g.addColorStop(0, 'rgba(3,105,161,0.28)'); g.addColorStop(0.5, 'rgba(14,165,233,0.20)'); g.addColorStop(1, 'rgba(2,132,199,0.32)');
         ctx.fillStyle = g; ctx.fillRect(0, 0, canvas.width, canvas.height);
       } else if (type === 'sky') {
-        // Bầu Trời Thiên Long: tầng trời xanh sâu, mặt trời xa, mây nhiều lớp và luồng gió xiên theo hướng ngẫu nhiên.
+        // Sơn Hải Kinh: thiên không cổ hoạ lạnh, mây mực dày, nguyệt quang nhợt và núi xa chìm trong sương.
         const sky = ctx.createLinearGradient(0, 0, 0, canvas.height);
-        sky.addColorStop(0, '#38a9e8'); sky.addColorStop(0.38, '#8bd4f4'); sky.addColorStop(0.72, '#c6ecfa'); sky.addColorStop(1, '#f0fbff');
+        sky.addColorStop(0, '#172a2b'); sky.addColorStop(0.34, '#34494a'); sky.addColorStop(0.68, '#647574'); sky.addColorStop(1, '#a0aaa0');
         ctx.fillStyle = sky; ctx.fillRect(0, 0, canvas.width, canvas.height);
+        const moonX = canvas.width * 0.73, moonY = canvas.height * 0.22;
+        const moonGlow = ctx.createRadialGradient(moonX, moonY, 5, moonX, moonY, canvas.width * 0.34);
+        moonGlow.addColorStop(0, 'rgba(218,224,202,0.22)'); moonGlow.addColorStop(0.35, 'rgba(177,194,177,0.10)'); moonGlow.addColorStop(1, 'rgba(12,28,29,0)');
+        ctx.fillStyle = moonGlow; ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = 'rgba(211,218,197,0.52)'; ctx.beginPath(); ctx.arc(moonX, moonY, 23, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = 'rgba(38,55,53,0.24)'; ctx.beginPath(); ctx.arc(moonX + 7, moonY - 4, 21, 0, Math.PI * 2); ctx.fill();
 
-        const sunX = canvas.width * 0.76, sunY = canvas.height * 0.19;
-        const halo = ctx.createRadialGradient(sunX, sunY, 4, sunX, sunY, 150);
-        halo.addColorStop(0, 'rgba(255,255,238,0.72)'); halo.addColorStop(0.18, 'rgba(255,250,210,0.30)'); halo.addColorStop(1, 'rgba(255,255,255,0)');
-        ctx.fillStyle = halo; ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = 'rgba(255,255,239,0.82)'; ctx.beginPath(); ctx.arc(sunX, sunY, 15, 0, Math.PI * 2); ctx.fill();
-
-        const wx = Math.cos(skyWindAngle), wy = Math.sin(skyWindAngle);
-        // Các dải gió mảnh chạy cùng hướng gió, có độ cong và độ trong suốt thay đổi.
-        for (let i = 0; i < 18; i++) {
-          const phase = (globalTick * (0.75 + (i % 4) * 0.18) + i * 47) % 620 - 90;
-          const baseX = ((i * 83 + phase * wx) % (canvas.width + 160)) - 80;
-          const baseY = ((i * 59 + phase * wy + canvas.height) % (canvas.height + 140)) - 70;
-          const length = 34 + (i % 5) * 17;
-          ctx.beginPath(); ctx.moveTo(baseX, baseY);
-          ctx.bezierCurveTo(baseX + wx * length * 0.35 - wy * 8, baseY + wy * length * 0.35 + wx * 8,
-            baseX + wx * length * 0.72 - wy * 13, baseY + wy * length * 0.72 + wx * 13,
-            baseX + wx * length, baseY + wy * length);
-          ctx.strokeStyle = i % 3 === 0 ? 'rgba(255,255,255,0.52)' : 'rgba(224,247,255,0.30)';
-          ctx.lineWidth = i % 4 === 0 ? 2.1 : 1.1; ctx.lineCap = 'round'; ctx.stroke();
+        // Núi xa dạng thuỷ mặc, nhiều lớp mờ để tạo chiều sâu cổ hoạ.
+        for (let layer = 0; layer < 3; layer++) {
+          const baseY = canvas.height * (0.68 + layer * 0.105);
+          const shift = Math.cos(skyWindAngle) * globalTick * (0.035 + layer * 0.018);
+          ctx.beginPath(); ctx.moveTo(0, canvas.height);
+          for (let x = -80; x <= canvas.width + 100; x += 8) {
+            const xx = x + shift;
+            const ridge = baseY - Math.abs(Math.sin((x + layer * 71) * 0.006)) * (48 + layer * 19) - Math.abs(Math.sin((x + 30) * 0.013)) * 17;
+            if (x === -80) ctx.lineTo(xx, ridge); else ctx.lineTo(xx, ridge);
+          }
+          ctx.lineTo(canvas.width, canvas.height); ctx.closePath();
+          ctx.fillStyle = ['rgba(17,35,35,0.25)','rgba(27,46,44,0.32)','rgba(37,57,53,0.38)'][layer]; ctx.fill();
         }
 
-        // Mây trắng nhiều tầng: chuyển động trôi theo hướng gió, tạo chiều sâu thay vì các đường kẻ phẳng.
-        for (let layer = 0; layer < 3; layer++) {
-          const speed = 0.20 + layer * 0.13;
-          const alpha = 0.22 + layer * 0.12;
-          for (let i = 0; i < 5; i++) {
-            const seedX = i * 112 - 35 + layer * 29;
-            const seedY = 62 + layer * 112 + (i % 2) * 28;
-            const drift = globalTick * speed;
-            const cx = ((seedX + drift * wx + canvas.width + 100) % (canvas.width + 200)) - 100;
-            const cy = ((seedY + drift * wy + canvas.height + 100) % (canvas.height + 200)) - 100;
-            const scale = 0.72 + (i % 3) * 0.22;
-            ctx.save(); ctx.translate(cx, cy); ctx.scale(scale, scale);
-            ctx.globalAlpha = alpha;
-            const cloud = ctx.createRadialGradient(0, 0, 5, 0, 0, 58);
-            cloud.addColorStop(0, 'rgba(255,255,255,0.94)'); cloud.addColorStop(0.58, 'rgba(245,252,255,0.78)'); cloud.addColorStop(1, 'rgba(219,241,250,0)');
-            ctx.fillStyle = cloud;
-            [[-25,5,31],[0,-7,37],[29,4,30],[8,15,35]].forEach(([x,y,r]) => { ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill(); });
-            ctx.globalAlpha = alpha * 0.42;
-            ctx.fillStyle = 'rgba(115,178,207,0.30)';
-            ctx.beginPath(); ctx.ellipse(5, 20, 53, 12, 0, 0, Math.PI * 2); ctx.fill();
+        const wx = Math.cos(skyWindAngle), wy = Math.sin(skyWindAngle);
+        // Mảng mây cuộn lớn như mực tàu loang trên lụa, dịch chuyển theo hướng gió ngẫu nhiên.
+        for (let layer = 0; layer < 4; layer++) {
+          const speed = 0.12 + layer * 0.075;
+          for (let i = 0; i < 7; i++) {
+            const travel = globalTick * speed + i * 137 + layer * 53;
+            const rawX = i * 151 - 90 + travel * wx;
+            const rawY = 48 + layer * 73 + i % 3 * 24 + travel * wy * 0.22;
+            const x = ((rawX % (canvas.width + 360)) + canvas.width + 360) % (canvas.width + 360) - 180;
+            const y = ((rawY % (canvas.height + 180)) + canvas.height + 180) % (canvas.height + 180) - 90;
+            const scale = 0.72 + (i % 3) * 0.25 + layer * 0.08;
+            ctx.save(); ctx.translate(x, y); ctx.scale(scale, scale);
+            const cloud = ctx.createLinearGradient(0, -30, 0, 36);
+            cloud.addColorStop(0, layer % 2 ? 'rgba(207,216,202,0.24)' : 'rgba(20,39,39,0.34)');
+            cloud.addColorStop(0.48, layer % 2 ? 'rgba(143,160,149,0.28)' : 'rgba(65,82,78,0.34)');
+            cloud.addColorStop(1, 'rgba(12,28,29,0.02)');
+            ctx.fillStyle = cloud; ctx.beginPath();
+            ctx.moveTo(-105, 10); ctx.bezierCurveTo(-94,-20,-65,-25,-43,-10);
+            ctx.bezierCurveTo(-28,-48,17,-48,35,-13); ctx.bezierCurveTo(63,-35,102,-17,105,8);
+            ctx.bezierCurveTo(82,27,47,24,23,18); ctx.bezierCurveTo(-9,38,-63,34,-105,10); ctx.closePath(); ctx.fill();
+            ctx.strokeStyle = 'rgba(220,226,207,0.10)'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(-72,4); ctx.bezierCurveTo(-35,-16,13,-12,67,2); ctx.stroke();
             ctx.restore();
           }
         }
-
-        // Lớp mây xa và ánh sáng thể tích ở chân trời.
-        const horizon = ctx.createLinearGradient(0, canvas.height * 0.55, 0, canvas.height);
-        horizon.addColorStop(0, 'rgba(255,255,255,0)'); horizon.addColorStop(1, 'rgba(255,255,255,0.30)');
-        ctx.fillStyle = horizon; ctx.fillRect(0, canvas.height * 0.45, canvas.width, canvas.height * 0.55);
+        // Gió lạnh và bụi sáng bạc rất thưa, tạo cảm giác điềm gở thay vì bầu trời tươi sáng.
+        for (let i = 0; i < 24; i++) {
+          const phase = (globalTick * (0.35 + (i % 4) * 0.09) + i * 61) % (canvas.width + 100);
+          const x = (phase * wx + i * 47 + canvas.width * 2) % (canvas.width + 60) - 30;
+          const y = (i * 53 + phase * wy * 0.35 + canvas.height) % canvas.height;
+          ctx.strokeStyle = i % 4 === 0 ? 'rgba(215,225,211,0.22)' : 'rgba(180,197,187,0.12)';
+          ctx.lineWidth = i % 5 === 0 ? 1.8 : 0.8; ctx.beginPath(); ctx.moveTo(x, y); ctx.quadraticCurveTo(x + wx * 18, y + wy * 10 - 4, x + wx * 39, y + wy * 19); ctx.stroke();
+        }
       }
       ctx.restore();
     }
@@ -586,6 +596,15 @@
         ctx.strokeStyle = 'rgba(120,53,15,0.75)'; ctx.lineWidth = 1.4;
         for (let i = 0; i < 4; i++) { const a = t * 0.012 + i * Math.PI / 2; ctx.beginPath(); ctx.moveTo(Math.cos(a) * (r + 4), Math.sin(a) * (r + 4)); ctx.lineTo(Math.cos(a) * (r + 12), Math.sin(a) * (r + 12)); ctx.stroke(); }
         for (let i = 0; i < 4; i++) { const a = -Math.PI * 0.75 + i * Math.PI * 0.5; drawSpark(ctx, Math.cos(a) * (r + 10), Math.sin(a) * (r + 10), 2.2, '#fb923c', 0.8); }
+      } else if (ball.typeKey === 'viper') {
+        ctx.translate(x, y); ctx.rotate(-t * 0.012);
+        const pulse = 0.5 + Math.sin(t * 0.09) * 0.5;
+        ctx.shadowColor = '#34d399'; ctx.shadowBlur = 18;
+        const gem = ctx.createRadialGradient(-5, -7, 1, 0, 0, r + 13);
+        gem.addColorStop(0, 'rgba(209,250,229,0.62)'); gem.addColorStop(0.22, 'rgba(52,211,153,0.24)'); gem.addColorStop(1, 'rgba(4,47,36,0)');
+        ctx.fillStyle = gem; ctx.beginPath(); ctx.arc(0, 0, r + 13 + pulse * 3, 0, Math.PI * 2); ctx.fill();
+        for (let i = 0; i < 3; i++) { ctx.strokeStyle = `rgba(110,231,183,${0.22 + pulse * 0.25})`; ctx.lineWidth = 1.2 + i * 0.35; ctx.beginPath(); ctx.ellipse(0, 0, r + 5 + i * 5, r + 2 + i * 3, i * 0.45 + t * 0.004, 0, Math.PI * 2); ctx.stroke(); }
+        for (let i = 0; i < 6; i++) { const a = t * 0.025 + i * Math.PI / 3; drawSpark(ctx, Math.cos(a) * (r + 12), Math.sin(a) * (r + 12), 2.2 + pulse, i % 2 ? '#a7f3d0' : '#d1fae5', 0.75); }
       } else if (ball.typeKey === 'dragon') {
         ctx.translate(x, y); ctx.rotate(-t * 0.012);
         const pulse = 0.5 + Math.sin(t * 0.11) * 0.5;
@@ -593,7 +612,51 @@
         ctx.beginPath(); ctx.arc(0, 0, r + 6 + pulse * 4, 0.2, Math.PI * 1.8); ctx.stroke();
         for (let i = 0; i < Math.min(8, ball.dragonSeals || 0); i++) { const a = i * Math.PI / 4 + t * 0.018; drawSpark(ctx, Math.cos(a) * (r + 12), Math.sin(a) * (r + 12), 2.4, '#fde68a', 0.85); }
       }
+      if ((ball.viperPoisonStacks || 0) > 0) {
+        const stacks = ball.viperPoisonStacks;
+        ctx.save(); ctx.translate(x, y); ctx.rotate(t * 0.008);
+        const pulse = 0.5 + Math.sin(t * 0.12) * 0.5;
+        ctx.strokeStyle = `rgba(52,211,153,${0.24 + pulse * 0.25})`; ctx.lineWidth = 1.2; ctx.shadowColor = '#10b981'; ctx.shadowBlur = 12;
+        ctx.beginPath(); ctx.arc(0, 0, r + 8 + pulse * 3, 0, Math.PI * 2); ctx.stroke();
+        for (let i = 0; i < Math.min(8, stacks); i++) { const a = t * 0.018 + i * Math.PI * 2 / Math.min(8, stacks); drawSpark(ctx, Math.cos(a) * (r + 13), Math.sin(a) * (r + 13), 1.8, '#6ee7b7', 0.72); }
+        ctx.restore();
+      }
       ctx.restore();
+    }
+
+    function shouldViperMiss(target) {
+      if (!target || target.typeKey !== 'viper') return false;
+      const attacker = target === p1 ? p2 : p1;
+      const stacks = attacker ? (attacker.viperPoisonStacks || 0) : 0;
+      const chance = Math.min(SKILL_CONFIG.viper.maxMissChance, stacks * SKILL_CONFIG.viper.poisonMissPerStack);
+      if (target.viperMissTick !== globalTick) {
+        target.viperMissTick = globalTick;
+        target.viperMissResult = chance > 0 && Math.random() < chance;
+        if (target.viperMissResult) {
+          createFloatingText(target.x, target.y - 25, 'TRƯỢT!', '#a7f3d0');
+          createParticles(target.x, target.y, '#6ee7b7', 8, 1.0);
+        }
+      }
+      return target.viperMissResult;
+    }
+
+    function applyViperPoison(target, stacks = 1) {
+      if (!target || target.hp <= 0) return;
+      target.viperPoisonStacks = (target.viperPoisonStacks || 0) + stacks;
+      if (!(target.viperPoisonTimer > 0)) target.viperPoisonTickTimer = 0;
+      target.viperPoisonTimer = Math.max(target.viperPoisonTimer || 0, SKILL_CONFIG.viper.poisonDuration);
+      createParticles(target.x, target.y, '#34d399', 7, 0.9);
+      createFloatingText(target.x, target.y - 20, `ĐỘC CHƯỚNG ${target.viperPoisonStacks}`, '#6ee7b7');
+    }
+
+    function registerViperPassive(target) {
+      if (!target || target.typeKey !== 'viper') return;
+      if (target.viperPassiveTick === globalTick) return;
+      target.viperPassiveTick = globalTick;
+      const attacker = target === p1 ? p2 : p1;
+      if (attacker && attacker.hp > 0) {
+        applyViperPoison(attacker, 1);
+      }
     }
 
     class Ball {
@@ -703,6 +766,9 @@
         this.dragonSeals = 0; this.dragonForm = 0; this.dragonCleanseTimer = 0;
         this.dragonInvulnerableTimer = 0; this.dragonAttackTimer = 0;
         this.dragonPermanentShield = 0; this.dragonTempShield = 0; this.dragonTempShieldTimer = 0;
+        this.viperPoisonStacks = 0; this.viperPoisonTimer = 0; this.viperPoisonTickTimer = 0;
+        this.viperStrikeCooldown = 0; this.viperStrike = null; this.viperCollisionHealCooldown = 0;
+        this.viperMissTick = -1; this.viperMissResult = false; this.viperPassiveTick = -1;
         if (typeKey === 'hades') {
           let cx = 0, cy = 0, attempts = 0;
           do {
@@ -782,7 +848,22 @@
           }
           if (this.burnTimer <= 0) this.burnStacks = 0;
         }
+        if (this.viperPoisonTimer > 0) {
+          this.viperPoisonTimer -= 1 / 60; this.viperPoisonTickTimer += 1 / 60;
+          if (this.viperPoisonTickTimer >= SKILL_CONFIG.viper.poisonTick) {
+            this.viperPoisonTickTimer -= SKILL_CONFIG.viper.poisonTick;
+            const attacker = this === p1 ? p2 : p1;
+            if (!shouldViperMiss(this)) {
+              this.takeDamage(SKILL_CONFIG.viper.poisonDamage, 'Độc Chướng');
+              if (attacker && attacker.typeKey === 'viper') { this.viperPoisonStacks++; createFloatingText(this.x, this.y - 18, `ĐỘC CHƯỚNG ${this.viperPoisonStacks}`, '#6ee7b7'); }
+              createParticles(this.x, this.y, '#34d399', 3, 0.8);
+            }
+          }
+          if (this.viperPoisonTimer <= 0) this.viperPoisonTickTimer = 0;
+        }
 
+        if (this.viperStrikeCooldown > 0) this.viperStrikeCooldown -= 1 / 60;
+        if (this.viperCollisionHealCooldown > 0) this.viperCollisionHealCooldown -= 1 / 60;
         if (this.hitCooldown > 0) this.hitCooldown--;
         if (this.ghostHitCooldown > 0) this.ghostHitCooldown--;
         if (this.shenSwapCooldown > 0) this.shenSwapCooldown -= 1 / 60;
@@ -844,6 +925,7 @@
           case 'ronin':    this.updateRonin(enemy); break;
           case 'hades':    this.updateHades(enemy); break;
           case 'dragon':   this.updateDragon(enemy); break;
+          case 'viper':    this.updateViper(enemy); break;
         }
 
         if (!this.isGhosting && this.stunTimer <= 0) {
@@ -1470,6 +1552,52 @@
         // Hades' Hell cycle. Other environments interrupt it; the cooldown is handled by setEnvironment().
       }
 
+      updateViper(enemy) {
+        if (!enemy || enemy.hp <= 0) return;
+        const cfg = SKILL_CONFIG.viper;
+        const dx = enemy.x - this.x, dy = enemy.y - this.y;
+        const dist = Math.hypot(dx, dy);
+        if (dist <= this.radius * 2 * cfg.strikeRangeDiam && this.viperStrikeCooldown <= 0 && !this.viperStrike) {
+          const angle = Math.atan2(dy, dx);
+          this.vx = Math.cos(angle) * this.currentSpeed; this.vy = Math.sin(angle) * this.currentSpeed;
+          this.viperStrikeCooldown = cfg.strikeCooldown;
+          enemy.viperPoisonStacks = (enemy.viperPoisonStacks || 0) + 1;
+          if (!(enemy.viperPoisonTimer > 0)) enemy.viperPoisonTickTimer = 0;
+          enemy.viperPoisonTimer = Math.max(enemy.viperPoisonTimer || 0, cfg.poisonDuration);
+          this.viperStrike = { target: enemy, timer: cfg.strikeDelay, angle };
+          viperStrikes.push({ owner: this, target: enemy, x: this.x, y: this.y, timer: cfg.strikeDelay, angle });
+          createShockwave(this.x, this.y, 34, '#34d399', 1.8);
+          createParticles(this.x, this.y, '#6ee7b7', 12, 1.1);
+          createFloatingText(enemy.x, enemy.y - 24, `+1 ĐỘC CHƯỚNG (${enemy.viperPoisonStacks})`, '#6ee7b7');
+        }
+        if (this.viperStrike) {
+          this.viperStrike.timer -= 1 / 60;
+          if (this.viperStrike.timer <= 0) {
+            const target = this.viperStrike.target;
+            if (target && target.hp > 0) {
+              const stacks = target.viperPoisonStacks || 0;
+              const bonus = Math.max(0, target.maxHp - target.hp) * cfg.strikeMissingHpPct * stacks;
+              target.takeDamage(cfg.strikeBaseDamage, 'Nanh Viper');
+              // Phần sát thương theo HP đã mất xuyên thẳng qua lá chắn.
+              if (!shouldViperMiss(target)) {
+                const bypass = Math.min(target.hp, bonus);
+                target.hp -= bypass;
+                if (bypass > 0) { createFloatingText(target.x, target.y - 12, `-${Math.ceil(bypass)} XUYÊN KHIÊN`, '#a7f3d0'); createParticles(target.x, target.y, '#10b981', 14, 1.3); }
+                if (Math.random() < cfg.strikeBonusStackChance) {
+                  target.viperPoisonStacks = (target.viperPoisonStacks || 0) + 1;
+                  if (!(target.viperPoisonTimer > 0)) target.viperPoisonTickTimer = 0;
+                  target.viperPoisonTimer = Math.max(target.viperPoisonTimer || 0, cfg.poisonDuration);
+                  createFloatingText(target.x, target.y - 30, `+1 ĐỘC CHƯỚNG (${target.viperPoisonStacks})`, '#6ee7b7');
+                }
+                if (target.hp <= 0 && !gameOver) endGame(target);
+              }
+              updateHUD();
+            }
+            this.viperStrike = null;
+          }
+        }
+      }
+
       updatePoseidon(enemy) {
         if (!enemy) return;
         const dist = Math.hypot(this.x - enemy.x, this.y - enemy.y);
@@ -1683,6 +1811,8 @@
       }
 
       applyBurn() {
+        if (this.typeKey === 'viper') registerViperPassive(this);
+        if (shouldViperMiss(this)) return;
         if (this.isHadesUntargetable() || this.isImmuneToDebuffs()) return;
         this.burnStacks = Math.min(this.burnStacks + 1, SKILL_CONFIG.fire.maxBurnStacks);
         this.burnTimer = SKILL_CONFIG.fire.burnDuration;
@@ -1690,6 +1820,8 @@
       }
 
       applySlow(duration, factor = 0.7) {
+        if (this.typeKey === 'viper') registerViperPassive(this);
+        if (shouldViperMiss(this)) return;
         if (this.isHadesUntargetable() || this.isImmuneToDebuffs()) return;
         this.slowFactor = this.slowTimer <= 0 ? factor : Math.min(this.slowFactor, factor);
         this.slowTimer = Math.max(this.slowTimer, duration);
@@ -1697,12 +1829,16 @@
       }
 
       applyStun(duration) {
+        if (this.typeKey === 'viper') registerViperPassive(this);
+        if (shouldViperMiss(this)) return;
         if (this.isHadesUntargetable() || this.isImmuneToDebuffs()) return;
         this.stunTimer = Math.max(this.stunTimer, duration);
         updateHUD();
       }
 
       takeDamage(amount, source) {
+        if (this.typeKey === 'viper') registerViperPassive(this);
+        if (shouldViperMiss(this)) return;
         if (this.isHadesUntargetable()) return;
         if (this.typeKey === 'dragon' && this.dragonInvulnerableTimer > 0) return;
         if (this.typeKey === 'wukong' && this.wukongImmortalTimer > 0) return;
@@ -2078,6 +2214,8 @@
     function checkAllCollisions(b1, b2) {
       if (b1.isHadesUntargetable() || b2.isHadesUntargetable()) return;
       if (resolveElasticCollision(b1, b2)) {
+        if (b1.typeKey === 'viper') registerViperPassive(b1);
+        if (b2.typeKey === 'viper') registerViperPassive(b2);
         if (b1.typeKey === 'angel') {
           b1.hp = Math.min(b1.maxHp, b1.hp + SKILL_CONFIG.angel.collisionSelfHeal);
           createFloatingText(b1.x, b1.y - 10, `+${SKILL_CONFIG.angel.collisionSelfHeal}`, '#4ade80');
@@ -2117,6 +2255,8 @@
           if (b2.typeKey === 'shen') dmg2 = Math.round(b1.maxHp * 0.05 + (b1.maxHp - b1.hp) * 0.05 + (b2.maxHp - b2.hp) * 0.05);
           if (dmg2 > 0) { b1.takeDamage(dmg2, 'Va Chạm'); b2.hitCooldown = 15; }
         }
+        if (b1.typeKey === 'viper' && b1.viperCollisionHealCooldown <= 0) { const heal = b2.viperPoisonStacks || 0; if (heal > 0) { const actual = Math.min(heal, b1.maxHp - b1.hp); b1.hp += actual; createFloatingText(b1.x, b1.y - 22, `+${actual} HP`, '#6ee7b7'); createParticles(b1.x, b1.y, '#34d399', 10, 1.0); updateHUD(); } b1.viperCollisionHealCooldown = SKILL_CONFIG.viper.collisionHealCooldown; }
+        if (b2.typeKey === 'viper' && b2.viperCollisionHealCooldown <= 0) { const heal = b1.viperPoisonStacks || 0; if (heal > 0) { const actual = Math.min(heal, b2.maxHp - b2.hp); b2.hp += actual; createFloatingText(b2.x, b2.y - 22, `+${actual} HP`, '#6ee7b7'); createParticles(b2.x, b2.y, '#34d399', 10, 1.0); updateHUD(); } b2.viperCollisionHealCooldown = SKILL_CONFIG.viper.collisionHealCooldown; }
         createParticles((b1.x + b2.x) / 2, (b1.y + b2.y) / 2, '#ffffff', 6);
       }
 
@@ -3101,6 +3241,34 @@
       updateHUD();
     }
 
+    function updateAndDrawViperEntities() {
+      const dt = 1 / 60;
+      for (let i = viperStrikes.length - 1; i >= 0; i--) {
+        const fx = viperStrikes[i];
+        if (!fx.owner || fx.owner.hp <= 0 || !fx.target || fx.target.hp <= 0) { viperStrikes.splice(i, 1); continue; }
+        fx.timer -= dt; fx.x = fx.owner.x; fx.y = fx.owner.y;
+        const progress = 1 - Math.max(0, fx.timer / SKILL_CONFIG.viper.strikeDelay);
+        ctx.save(); ctx.translate(fx.x, fx.y); ctx.rotate(fx.angle);
+        ctx.globalAlpha = 0.88 * (1 - progress * 0.25);
+        ctx.shadowColor = '#34d399'; ctx.shadowBlur = 18;
+        const blade = ctx.createLinearGradient(0, -7, 0, 7);
+        blade.addColorStop(0, '#d1fae5'); blade.addColorStop(0.35, '#34d399'); blade.addColorStop(1, '#064e3b');
+        ctx.fillStyle = blade; ctx.beginPath(); ctx.moveTo(8, 0); ctx.quadraticCurveTo(23 + progress * 14, -8, 42 + progress * 18, 0); ctx.quadraticCurveTo(23 + progress * 14, 8, 8, 0); ctx.fill();
+        ctx.strokeStyle = 'rgba(209,250,229,0.85)'; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(10, 0); ctx.quadraticCurveTo(26 + progress * 13, -1, 48 + progress * 18, 0); ctx.stroke();
+        for (let k = 0; k < 4; k++) { const a = globalTick * 0.08 + k * Math.PI / 2; drawSpark(ctx, 22 + progress * 14 + Math.cos(a) * 7, Math.sin(a) * 8, 2, '#a7f3d0', 0.9); }
+        ctx.restore();
+        if (Math.random() < 0.75) viperPoisonMotes.push({ x: fx.target.x + (Math.random() - 0.5) * 22, y: fx.target.y + (Math.random() - 0.5) * 22, vx: (Math.random() - 0.5) * 0.7, vy: -0.4 - Math.random() * 0.8, life: 0.55, maxLife: 0.55 });
+        if (fx.timer <= 0) viperStrikes.splice(i, 1);
+      }
+      for (let i = viperPoisonMotes.length - 1; i >= 0; i--) {
+        const m = viperPoisonMotes[i]; m.life -= dt; m.x += m.vx; m.y += m.vy;
+        ctx.save(); ctx.globalAlpha = Math.max(0, m.life / m.maxLife); ctx.shadowColor = '#10b981'; ctx.shadowBlur = 10;
+        ctx.fillStyle = '#6ee7b7'; ctx.beginPath(); ctx.arc(m.x, m.y, 1.5 + (m.life / m.maxLife), 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = 'rgba(209,250,229,0.7)'; ctx.beginPath(); ctx.arc(m.x - 1, m.y - 1, 0.7, 0, Math.PI * 2); ctx.fill(); ctx.restore();
+        if (m.life <= 0) viperPoisonMotes.splice(i, 1);
+      }
+    }
+
     function updateAndDrawDragonEntities() {
       const dt = 1 / 60;
       const balls = [p1, p2];
@@ -3113,24 +3281,38 @@
         shot.x = shot.sx + (shot.target.x - shot.sx) * q;
         shot.y = shot.sy + (shot.target.y - shot.sy) * q;
         ctx.save();
-        const r = 5 + Math.sin(globalTick * 0.7) * 1.2;
-        const flame = ctx.createRadialGradient(shot.x, shot.y, 1, shot.x, shot.y, r * 2.8);
-        flame.addColorStop(0, '#fff7ed'); flame.addColorStop(0.28, '#fbbf24'); flame.addColorStop(0.65, '#ea580c'); flame.addColorStop(1, 'rgba(127,29,29,0)');
-        ctx.fillStyle = flame; ctx.beginPath(); ctx.arc(shot.x, shot.y, r * 2.8, 0, Math.PI * 2); ctx.fill();
-        ctx.fillStyle = '#fde68a'; ctx.beginPath(); ctx.arc(shot.x, shot.y, r * 0.65, 0, Math.PI * 2); ctx.fill();
-        for (let k = 0; k < 3; k++) { ctx.strokeStyle = `rgba(251,146,60,${0.65 - k * 0.16})`; ctx.lineWidth = 2 - k * 0.4; ctx.beginPath(); ctx.moveTo(shot.x - 5 - k * 3, shot.y + (k - 1) * 2); ctx.lineTo(shot.x - 12 - k * 4, shot.y + (k - 1) * 4); ctx.stroke(); }
+        const r = 7 + Math.sin(globalTick * 0.62) * 1.4;
+        const travelAngle = Math.atan2(shot.y - shot.sy, shot.x - shot.sx);
+        ctx.translate(shot.x, shot.y); ctx.rotate(travelAngle);
+        // Long Hỏa như hoả lưu tinh: lõi vàng trắng, lớp lửa hổ phách, viền đỏ sẫm và ánh kim.
+        const flame = ctx.createRadialGradient(0, 0, 1, 0, 0, r * 4.2);
+        flame.addColorStop(0, 'rgba(255,255,235,0.98)'); flame.addColorStop(0.16, 'rgba(255,220,125,0.96)'); flame.addColorStop(0.42, 'rgba(245,132,35,0.82)'); flame.addColorStop(0.72, 'rgba(154,49,18,0.42)'); flame.addColorStop(1, 'rgba(50,18,12,0)');
+        ctx.fillStyle = flame; ctx.beginPath(); ctx.ellipse(0, 0, r * 4.2, r * 2.6, 0, 0, Math.PI * 2); ctx.fill();
+        for (let k = 0; k < 4; k++) {
+          const flick = Math.sin(globalTick * 0.34 + k * 1.7) * 3;
+          ctx.beginPath(); ctx.moveTo(-r * 0.4, (k - 1.5) * 2); ctx.bezierCurveTo(-r * 2, (k - 1.5) * 5 - flick, -r * 3.4, (k - 1.5) * 3 + flick, -r * (4.2 + k * 0.25), (k - 1.5) * 1.5);
+          ctx.strokeStyle = k % 2 ? 'rgba(255,174,72,0.72)' : 'rgba(255,226,153,0.58)'; ctx.lineWidth = 2.8 - k * 0.35; ctx.shadowColor = '#f59e0b'; ctx.shadowBlur = 11; ctx.stroke();
+        }
+        ctx.shadowColor = '#fff1b8'; ctx.shadowBlur = 15; ctx.fillStyle = '#fff8d8'; ctx.beginPath(); ctx.arc(0, 0, r * 0.72, 0, Math.PI * 2); ctx.fill();
+        ctx.strokeStyle = 'rgba(255,231,166,0.82)'; ctx.lineWidth = 1.1; ctx.beginPath(); ctx.ellipse(0, 0, r * 2.2, r * 1.45, globalTick * 0.08, 0.2, Math.PI * 1.65); ctx.stroke();
+        for (let k = 0; k < 5; k++) { const a = globalTick * 0.11 + k * Math.PI * 2 / 5; const sx = Math.cos(a) * r * 2.7, sy = Math.sin(a) * r * 1.7; ctx.fillStyle = k % 2 ? '#fff0b5' : '#d6a75c'; ctx.shadowColor = '#fbbf24'; ctx.shadowBlur = 8; ctx.beginPath(); ctx.arc(sx, sy, k % 2 ? 1.8 : 1.2, 0, Math.PI * 2); ctx.fill(); }
         ctx.restore();
         if (shot.timer <= 0) {
-          shot.target.takeDamage(shot.damage, `Long Hỏa Dạng ${shot.form}`);
-          createParticles(shot.target.x, shot.target.y, '#fb923c', 9, 1.4);
-          if (shot.form >= 3) {
-            dragonGroundFires.push({ x: shot.target.x, y: shot.target.y, radius: 28, timer: SKILL_CONFIG.dragon.groundFireDuration, tick: 0, owner: shot.owner, target: shot.target });
-            cleanseEnemySelfBuffs(shot.target);
-            shot.owner.dragonPermanentShield += SKILL_CONFIG.dragon.permanentShieldPerAttack;
-            shot.owner.shield += SKILL_CONFIG.dragon.permanentShieldPerAttack;
-            createFloatingText(shot.owner.x, shot.owner.y - 24, '+3 Khiên', '#fde68a');
+          const attackMissed = shouldViperMiss(shot.target);
+          if (!attackMissed) {
+            shot.target.takeDamage(shot.damage, `Long Hỏa Dạng ${shot.form}`);
+            createShockwave(shot.target.x, shot.target.y, 54 + shot.form * 12, '#fbbf24', 2.8);
+            createParticles(shot.target.x, shot.target.y, '#fff0b5', 12 + shot.form * 4, 1.7);
+            createParticles(shot.target.x, shot.target.y, '#f97316', 18 + shot.form * 5, 1.5);
+            if (shot.form >= 3) {
+              dragonGroundFires.push({ x: shot.target.x, y: shot.target.y, radius: 28, timer: SKILL_CONFIG.dragon.groundFireDuration, tick: 0, owner: shot.owner, target: shot.target });
+              cleanseEnemySelfBuffs(shot.target);
+              shot.owner.dragonPermanentShield += SKILL_CONFIG.dragon.permanentShieldPerAttack;
+              shot.owner.shield += SKILL_CONFIG.dragon.permanentShieldPerAttack;
+              createFloatingText(shot.owner.x, shot.owner.y - 24, '+3 Khiên', '#fde68a');
+            }
+            if (shot.form >= 2) { shot.owner.hp = Math.min(shot.owner.maxHp, shot.owner.hp + 1); shot.target.applySlow(1, 0.65); }
           }
-          if (shot.form >= 2) { shot.owner.hp = Math.min(shot.owner.maxHp, shot.owner.hp + 1); shot.target.applySlow(1, 0.65); }
           updateHUD(); dragonFireShots.splice(i, 1);
         }
       }
@@ -3593,6 +3775,7 @@
       }
 
       updateAndDrawEntities();
+      updateAndDrawViperEntities();
       updateAndDrawDragonEntities();
 
       if (p1) p1.draw();
