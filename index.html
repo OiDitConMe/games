@@ -124,6 +124,7 @@
               <option value="viper">🐍 Viper Ball</option>
               <option value="gamber">🎲 Gamber Ball</option>
               <option value="moonshot">🌙 Moonshot Ball</option>
+              <option value="aegis">🛡️ Aegis Ball</option>
             </select>
           </div>
 
@@ -152,6 +153,7 @@
               <option value="viper">🐍 Viper Ball</option>
               <option value="gamber">🎲 Gamber Ball</option>
               <option value="moonshot">🌙 Moonshot Ball</option>
+              <option value="aegis">🛡️ Aegis Ball</option>
             </select>
           </div>
 
@@ -544,6 +546,11 @@
       moonshot: {
         name: 'Moonshot Ball', color: '#e8edf4', secondaryColor: '#8995a8',
         hp: 95, maxHp: 95, radius: 18, speed: BASE_SPEED * 0.85, contactDmg: 5, icon: '🌙'
+      },
+      // Aegis Ball – thành trì thần thánh, chuyển sát thương thành thiêu đốt và phản chế khống chế.
+      aegis: {
+        name: 'Aegis Ball', color: '#f4d98b', secondaryColor: '#8b6428',
+        hp: 120, maxHp: 120, radius: 19, speed: BASE_SPEED * 1.2, contactDmg: 5, icon: '🛡️'
       }
     };
 
@@ -796,6 +803,11 @@
         gun2SpeedBonus: 1.2, gun2BulletSpeedBonus: 1.3, gun2HitSpeedBonus: 1.2, gun2HitSpeedDuration: 1.75,
         gun3BaseDamage: 4, gun3CloseBonus: 2, gun3CloseDiameters: 1, gun3ReturnSpeed: 0.5,
         gun4Damage: 2, gun4Stun: 0.25, gun4GuardRefresh: 0.25
+      },
+      aegis: {
+        burnDps: 1, burnSecondsPerDamage: 1, slashCooldown: 1.25, slashDamage: 5,
+        slashRangeDiameters: 6, slashAngleDeg: 140, triggerRadiusMult: 2,
+        healBlockDuration: 6, barrierDuration: 2, fearDurationScale: 1
       }
     };
 
@@ -839,6 +851,7 @@
     let viperStrikes = [];
     let gamberCards = [];
     let moonshotShots = [];
+    let aegisSlashEffects = [];
     let gameOver = false;
     let gamePaused = false;
     let animationFrameId = null;
@@ -867,7 +880,8 @@
       dragon:{role:'Sát Thủ',desc:'Tích Linh Long, thức tỉnh nhiều tầng và bùng nổ sức mạnh.'},
       viper:{role:'Sát Thủ',desc:'Độc Chướng cộng dồn, gây sát thương theo thời gian và Nanh Độc.'},
       gamber:{role:'Đấu Sĩ',desc:'Xúc xắc định mệnh và bài phép tạo chuỗi hiệu ứng khó đoán.'},
-      moonshot:{role:'Xạ Thủ',desc:'Bốn vũ khí luân phiên, tự động nhắm mục tiêu và giữ khoảng cách.'}
+      moonshot:{role:'Xạ Thủ',desc:'Bốn vũ khí luân phiên, tự động nhắm mục tiêu và giữ khoảng cách.'},
+      aegis:{role:'Đỡ Đòn',desc:'Chuyển toàn bộ sát thương nhận vào thành thiêu đốt cộng dồn; phản chế kẻ khống chế, thanh tẩy trạng thái khi va chạm và quét kiếm thần thánh để cấm hồi máu, tước khiên.'}
     };
     const BALL_SKINS = [
       {id:'brutal',name:'Bạo Liệt',tag:'Thô bạo • Lực • Tàn bạo',desc:'Vòng gai, vệt năng lượng mạnh và những tia va đập dứt khoát.'},
@@ -1024,7 +1038,7 @@
       entry.className = 'py-0.5 border-b border-slate-800/50 leading-tight';
       const time = new Date().toLocaleTimeString('vi-VN', { minute: '2-digit', second: '2-digit' });
       const colorMap = {
-        moonshot: 'text-slate-100', fire: 'text-amber-400', ghost: 'text-purple-400', assassin: 'text-emerald-400',
+        moonshot: 'text-slate-100', aegis: 'text-amber-200', fire: 'text-amber-400', ghost: 'text-purple-400', assassin: 'text-emerald-400',
         bear: 'text-amber-500', storm: 'text-sky-400', wanderer: 'text-indigo-400',
         soul: 'text-pink-400', marksman: 'text-lime-400', ninja: 'text-slate-200',
         reaper: 'text-slate-400', shen: 'text-cyan-400', sound: 'text-teal-400',
@@ -1145,6 +1159,18 @@
         }
         ctx.restore();
         return;
+      } else if (ball.typeKey === 'aegis') {
+        ctx.translate(x, y); ctx.rotate(-t * 0.006);
+        const pulse = 0.5 + Math.sin(t * 0.10) * 0.5;
+        const aura = ctx.createRadialGradient(0,0,r*0.55,0,0,r+22);
+        aura.addColorStop(0,'rgba(255,239,184,0.25)'); aura.addColorStop(0.55,'rgba(214,166,73,0.16)'); aura.addColorStop(1,'rgba(140,91,24,0)');
+        ctx.fillStyle=aura; ctx.beginPath(); ctx.arc(0,0,r+22,0,Math.PI*2); ctx.fill();
+        ctx.shadowColor='#f7d98b'; ctx.shadowBlur=18; ctx.strokeStyle=`rgba(255,232,169,${0.42+pulse*0.38})`; ctx.lineWidth=2;
+        ctx.beginPath(); ctx.arc(0,0,r+7+pulse*2,0,Math.PI*2); ctx.stroke();
+        ctx.strokeStyle='rgba(185,135,49,0.62)'; ctx.lineWidth=1; ctx.setLineDash([3,5]); ctx.beginPath(); ctx.arc(0,0,r+14,0,Math.PI*2); ctx.stroke(); ctx.setLineDash([]);
+        for(let i=0;i<8;i++){const a=t*0.018+i*Math.PI/4;drawSpark(ctx,Math.cos(a)*(r+13),Math.sin(a)*(r+13),2.3+pulse,'#fff1bd',0.62+pulse*0.3);}
+        if ((ball.aegisBurnLayers||[]).length) { ctx.strokeStyle='rgba(255,133,66,0.75)'; ctx.shadowColor='#ff8a3d'; ctx.shadowBlur=10; ctx.lineWidth=1.6; ctx.beginPath(); ctx.arc(0,0,r+4+Math.sin(t*0.2)*2,0,Math.PI*2); ctx.stroke(); }
+        if (ball.aegisBarrier>0) { ctx.strokeStyle='rgba(255,244,198,0.92)'; ctx.shadowColor='#ffe6a0'; ctx.shadowBlur=17; ctx.lineWidth=2.4; ctx.beginPath(); ctx.arc(0,0,r+11,0,Math.PI*2); ctx.stroke(); }
       } else if (ball.typeKey === 'fire') {
         for (let i = 0; i < 7; i++) {
           const a = t * 0.055 + i * Math.PI * 2 / 7;
@@ -1374,6 +1400,41 @@
       return removed;
     }
 
+    function applyAegisFear(controller, duration) {
+      if (!controller || controller.hp<=0 || duration<=0) return;
+      controller.aegisFearedTimer=Math.max(controller.aegisFearedTimer||0,duration*SKILL_CONFIG.aegis.fearDurationScale);
+      controller.aegisFearedBy='Aegis';
+      createParticles(controller.x,controller.y,'#f7e5ad',12,0.9);
+      createFloatingText(controller.x,controller.y-controller.radius-18,'☼ KHIẾP ĐẢM','#ffe6a0');
+      logMessage(`☼ ${controller.name} bị Aegis áp đặt Khiếp Đảm: không thể hành động trong ${duration.toFixed(2)} giây!`,'aegis');
+      updateHUD();
+    }
+
+    function aegisCleanseOneStatus(target) {
+      if (!target) return;
+      const choices=[];
+      if ((target.burnStacks||0)>0 || (target.burnTimer||0)>0) choices.push('burn');
+      if ((target.slowTimer||0)>0) choices.push('slow');
+      if ((target.stunTimer||0)>0) choices.push('stun');
+      if ((target.viperPoisonStacks||0)>0 || (target.viperPoisonTimer||0)>0) choices.push('poison');
+      if ((target.drownedTimer||0)>0) choices.push('drowned');
+      if ((target.oceanicMarks||0)>0) choices.push('ocean');
+      if ((target.blessingMarks||0)>0) choices.push('blessing');
+      if (!choices.length) return;
+      const status=choices[Math.floor(Math.random()*choices.length)];
+      if(status==='burn'){target.burnStacks=0;target.burnTimer=0;target.burnTickTimer=0;}
+      if(status==='slow'){target.slowTimer=0;target.slowFactor=1;}
+      if(status==='stun') target.stunTimer=0;
+      if(status==='poison'){target.viperPoisonStacks=0;target.viperPoisonTimer=0;target.viperPoisonTickTimer=0;}
+      if(status==='drowned') target.drownedTimer=0;
+      if(status==='ocean') target.oceanicMarks=0;
+      if(status==='blessing') target.blessingMarks=0;
+      createParticles(target.x,target.y,'#f6df9b',13,1.0);
+      createFloatingText(target.x,target.y-target.radius-12,'✧ THANH TẨY','#ffe7a8');
+      logMessage(`🛡️ Aegis thanh tẩy trạng thái ${status.toUpperCase()} khỏi ${target.name}!`,'aegis');
+      updateHUD();
+    }
+
     class Ball {
       constructor(id, typeKey, startX, startY, side) {
         const cfg = BALL_TYPES[typeKey];
@@ -1506,6 +1567,12 @@
         this.moonshotShurikenReturning = false;
         this.moonshotShuriken = null;
         this.moonshotFacingAngle = side === 'p1' ? 0 : Math.PI;
+        // Aegis: mỗi đòn nhận vào trở thành một lớp thiêu đốt 1 DPS; khiên cướp được tách riêng để không chặn tự thiêu.
+        this.aegisBurnLayers = []; this.aegisBurnTimer = 0;
+        this.aegisBarrier = 0; this.aegisBarrierTimer = 0;
+        this.aegisSlashCooldown = 0; this.aegisFacingAngle = side === 'p1' ? 0 : Math.PI;
+        this.aegisHealBlockTimer = 0; this.aegisFearedTimer = 0; this.aegisFearedBy = null;
+        this.aegisCollisionWasTouching = false;
         if (typeKey === 'hades') {
           let cx = 0, cy = 0, attempts = 0;
           do {
@@ -1560,6 +1627,13 @@
       }
 
       update(enemy) {
+        if(this.aegisHealBlockTimer>0) this.aegisHealBlockTimer=Math.max(0,this.aegisHealBlockTimer-FIXED_STEP_SECONDS);
+        if (this.typeKey === 'aegis' && this.updateAegis(enemy)) return;
+        const aegisFeared = this.aegisFearedTimer > 0;
+        if (aegisFeared) {
+          this.aegisFearedTimer = Math.max(0, this.aegisFearedTimer - FIXED_STEP_SECONDS);
+          if (this.aegisFearedTimer <= 0) { this.aegisFearedTimer = 0; this.aegisFearedBy = null; updateHUD(); }
+        }
         const moonshotGuard = this.typeKey === 'moonshot' && this.moonshotGun === 3 && this.moonshotControlGuardTimer > 0;
         if (moonshotGuard) { this.drownedTimer = 0; this.stunTimer = 0; this.slowTimer = 0; this.slowFactor = 1; }
         if (this.drownedTimer > 0) {
@@ -1628,7 +1702,7 @@
           }
         }
 
-        if (this.bladeDashAnim) {
+        if (this.bladeDashAnim && !aegisFeared) {
           this.bladeDashAnim.progress += FIXED_STEP_SECONDS;
           const t = Math.min(1, this.bladeDashAnim.progress / this.bladeDashAnim.duration);
           this.spiritBladeX = this.bladeDashAnim.startX + (this.bladeDashAnim.endX - this.bladeDashAnim.startX) * t;
@@ -1638,7 +1712,7 @@
             this.bladeDashAnim = null;
           }
         }
-        if (this.dashAnim) {
+        if (this.dashAnim && !aegisFeared) {
           this.dashAnim.progress += FIXED_STEP_SECONDS;
           const t = Math.min(1, this.dashAnim.progress / this.dashAnim.duration);
           this.x = this.dashAnim.startX + (this.dashAnim.endX - this.dashAnim.startX) * t;
@@ -1650,6 +1724,7 @@
           return;
         }
 
+        if (!aegisFeared) {
         switch (this.typeKey) {
           case 'fire':     this.updateFire(); break;
           case 'ghost':    this.updateGhost(enemy); break;
@@ -1673,8 +1748,9 @@
           case 'gamber':   this.updateGamber(enemy); break;
           case 'moonshot': this.updateMoonshot(enemy); break;
         }
+        }
 
-        if (!this.isGhosting && this.stunTimer <= 0) {
+        if (!aegisFeared && !this.isGhosting && this.stunTimer <= 0) {
           const currentMag = Math.hypot(this.vx, this.vy);
           const targetSpd = this.currentSpeed;
           if (currentMag > 0) {
@@ -1809,7 +1885,7 @@
         this.healTimer += FIXED_STEP_SECONDS;
         if (this.healTimer >= interval) {
           this.healTimer -= interval;
-          if (this.hp < this.maxHp) {
+          if (this.hp < this.maxHp && this.aegisHealBlockTimer<=0) {
             const actualHeal = Math.min(1, this.maxHp - this.hp);
             this.hp += actualHeal;
             this.effectiveHealStored += actualHeal;
@@ -2180,7 +2256,7 @@
               createShockwave(this.x, this.y, 50, '#fb923c', 2.5);
               logMessage(`🐵 Wukong phân thân 3 bản sao!`, 'wukong');
             } else if (choice === 2) {
-              this.hp = Math.min(this.maxHp, this.hp + SKILL_CONFIG.wukong.peachHeal);
+              if(this.aegisHealBlockTimer<=0) this.hp = Math.min(this.maxHp, this.hp + SKILL_CONFIG.wukong.peachHeal);
               this.wukongImmortalTimer = SKILL_CONFIG.wukong.peachImmortalDur;
               this.burnStacks = 0;
               this.burnTimer = 0;
@@ -2245,6 +2321,60 @@
           updateHUD();
         }
       }
+      updateAegis(enemy) {
+        const cfg = SKILL_CONFIG.aegis;
+        if (this.aegisBarrierTimer > 0) {
+          this.aegisBarrierTimer = Math.max(0, this.aegisBarrierTimer - FIXED_STEP_SECONDS);
+          if (this.aegisBarrierTimer <= 0) { this.aegisBarrier = 0; createParticles(this.x,this.y,'#ffe9a8',8,0.8); updateHUD(); }
+        }
+        if (this.aegisSlashCooldown > 0) this.aegisSlashCooldown = Math.max(0, this.aegisSlashCooldown - FIXED_STEP_SECONDS);
+        // Mỗi lớp gây 1 sát thương/giây trong số giây bằng lượng sát thương đã chuyển hóa.
+        for (let i=this.aegisBurnLayers.length-1;i>=0;i--) {
+          const layer=this.aegisBurnLayers[i];
+          layer.timer += FIXED_STEP_SECONDS;
+          const interval=Math.min(1,layer.remaining);
+          if (layer.remaining>0 && layer.timer>=interval) {
+            layer.timer-=interval;
+            const dmg=Math.min(cfg.burnDps,layer.remaining);
+            layer.remaining-=dmg;
+            this.hp=Math.max(0,this.hp-dmg);
+            createParticles(this.x+(Math.random()-0.5)*this.radius,this.y+(Math.random()-0.5)*this.radius,'#f6a35b',2,0.7);
+            createFloatingText(this.x,this.y-this.radius-12,`-${Number(dmg.toFixed(1))} 🔥`,'#f3a46a');
+            if (layer.remaining<=0.0001) this.aegisBurnLayers.splice(i,1);
+            updateHUD();
+            if (this.hp<=0 && !gameOver) { endGame(this); return true; }
+          }
+        }
+        if (!enemy || enemy.hp<=0) return false;
+        const dx=enemy.x-this.x, dy=enemy.y-this.y, dist=Math.hypot(dx,dy);
+        if (dist>0.001) this.aegisFacingAngle=Math.atan2(dy,dx);
+        if (dist<=this.radius*cfg.triggerRadiusMult && this.aegisSlashCooldown<=0) {
+          this.aegisSlashCooldown=cfg.slashCooldown;
+          const angle=this.aegisFacingAngle, maxRange=this.radius*2*cfg.slashRangeDiameters;
+          const diff=Math.atan2(Math.sin(Math.atan2(dy,dx)-angle),Math.cos(Math.atan2(dy,dx)-angle));
+          if (dist<=maxRange && Math.abs(diff)<=cfg.slashAngleDeg*Math.PI/360) {
+            enemy.takeDamage(cfg.slashDamage,'Aegis • Thánh Kiếm');
+            enemy.aegisHealBlockTimer=Math.max(enemy.aegisHealBlockTimer||0,cfg.healBlockDuration);
+            const stolen=Math.max(0,(enemy.shield||0)+(enemy.typeKey==='aegis'?(enemy.aegisBarrier||0):0));
+            if (stolen>0) {
+              enemy.shield=0; enemy.shieldTimer=0;
+              if(enemy.typeKey==='aegis'){enemy.aegisBarrier=0;enemy.aegisBarrierTimer=0;}
+              if (enemy.typeKey==='ronin') { enemy.roninTempShield=0; enemy.roninPermanentShield=0; enemy.roninTempShieldTimer=0; }
+              if (enemy.typeKey==='dragon') { enemy.dragonTempShield=0; enemy.dragonPermanentShield=0; enemy.dragonTempShieldTimer=0; }
+              this.aegisBarrier+=stolen; this.aegisBarrierTimer=cfg.barrierDuration;
+            }
+            aegisSlashEffects.push({owner:this,angle,timer:0.34,maxTimer:0.34,range:maxRange});
+            createShockwave(enemy.x,enemy.y,Math.min(88,maxRange*0.55),'#f5d47d',3.5);
+            createParticles(enemy.x,enemy.y,'#fff0b7',24,1.7);
+            createFloatingText(enemy.x,enemy.y-enemy.radius-17,`✦ -${cfg.slashDamage} · CẤM HỒI HP`,'#ffe6a0');
+            if(stolen>0){createFloatingText(this.x,this.y-this.radius-24,`+${Math.round(stolen)} KHIÊN`,'#fff0bd');createParticles(this.x,this.y,'#ffe6a0',18,1.2);}
+            logMessage(`🛡️ Aegis tung Thánh Kiếm: gây ${cfg.slashDamage} sát thương, cấm hồi máu 6 giây và tước ${Math.round(stolen)} khiên!`,'aegis');
+            updateHUD();
+          }
+        }
+        return false;
+      }
+
       updateDragon(enemy) {
         const cfg = SKILL_CONFIG.dragon;
         this.dragonCleanseTimer += FIXED_STEP_SECONDS;
@@ -2270,7 +2400,7 @@
         }
         if (this.dragonForm < 2 && this.dragonSeals >= cfg.form2Seals) {
           this.dragonForm = 2;
-          this.hp = Math.min(this.maxHp, this.hp + cfg.form2Heal);
+          if(this.aegisHealBlockTimer<=0) this.hp = Math.min(this.maxHp, this.hp + cfg.form2Heal);
           if (enemy && enemy.hp > 0) enemy.applySlow(1, 0.5);
           createShockwave(this.x, this.y, 130, '#fbbf24', 5); createParticles(this.x, this.y, '#fde68a', 36, 2);
           createFloatingText(this.x, this.y - 32, '+14 HP • DẠNG 2', '#fde68a');
@@ -2357,8 +2487,9 @@
       beginGamberSequence(isBonus = false) {
         const cfg = SKILL_CONFIG.gamber;
         this.gamberSequence = { stage: 'duel', timer: 0, firstRoll: true, isBonus };
-        const healed = Math.min(cfg.healPerCast, this.maxHp - this.hp);
-        this.hp += healed;
+        let healed = Math.min(cfg.healPerCast, this.maxHp - this.hp);
+        if(this.aegisHealBlockTimer<=0) this.hp += healed;
+        else healed=0;
         if (healed > 0) createFloatingText(this.x, this.y - 28, `+${healed} HP`, '#f7d98a');
         createShockwave(this.x, this.y, 48, '#d6a84b', 2.2);
         createParticles(this.x, this.y, '#f6d889', 13, 1.25);
@@ -2536,6 +2667,7 @@
             setEnvironment('ocean', 2.0, this);
             oceanEnvironmentTimer = 2.0;
             enemy.drownedTimer = 2.0;
+            if (enemy.typeKey==='aegis') applyAegisFear(this,2.0);
             enemy.burnStacks = 0; enemy.burnTimer = 0;
             enemy.slowTimer = 0; enemy.slowFactor = 1;
             enemy.stunTimer = 0;
@@ -2691,7 +2823,7 @@
           this.hadesHellCooldownTimer -= FIXED_STEP_SECONDS;
           if (this.hadesHellCooldownTimer <= 0) {
             this.hadesHellActive = true;
-            this.hp = Math.min(this.maxHp, this.hp + SKILL_CONFIG.hades.hellHeal);
+            if(this.aegisHealBlockTimer<=0) this.hp = Math.min(this.maxHp, this.hp + SKILL_CONFIG.hades.hellHeal);
             this.hadesCerberusClones = [];
             if (this.hadesCerberus) {
               this.hadesCerberus.radius = 18;
@@ -2736,6 +2868,7 @@
         if (this.typeKey === 'viper') registerViperPassive(this, 'Hiệu ứng làm chậm');
         if (shouldViperMiss(this)) return;
         if (this.isHadesUntargetable() || this.isImmuneToDebuffs()) return;
+        if (this.typeKey==='aegis') applyAegisFear(attacker,duration);
         spreadViperPoison(this, attackerHadPoison, 'Làm chậm');
         this.slowFactor = this.slowTimer <= 0 ? factor : Math.min(this.slowFactor, factor);
         this.slowTimer = Math.max(this.slowTimer, duration);
@@ -2748,6 +2881,7 @@
         if (this.typeKey === 'viper') registerViperPassive(this, 'Hiệu ứng choáng');
         if (shouldViperMiss(this)) return;
         if (this.isHadesUntargetable() || this.isImmuneToDebuffs()) return;
+        if (this.typeKey==='aegis') applyAegisFear(attacker,duration);
         spreadViperPoison(this, attackerHadPoison, 'Choáng');
         this.stunTimer = Math.max(this.stunTimer, duration);
         updateHUD();
@@ -2771,6 +2905,12 @@
         }
         // Chỉ truyền độc nếu kẻ tấn công đã có Độc Chướng từ trước và đòn này không bị Trượt.
         spreadViperPoison(this, attackerHadPoison, source);
+        if (this.typeKey==='aegis' && source!=='Aegis • Thiêu Đốt') {
+          let converted=Math.max(0,Number(amount)||0);
+          if(this.aegisBarrier>0){const absorbed=Math.min(this.aegisBarrier,converted);this.aegisBarrier-=absorbed;converted-=absorbed;if(this.aegisBarrier<=0){this.aegisBarrier=0;this.aegisBarrierTimer=0;}}
+          if(converted>0){this.aegisBurnLayers.push({remaining:converted,timer:0});createParticles(this.x,this.y,'#f4a15d',Math.min(18,5+Math.ceil(converted)),1.1);createFloatingText(this.x,this.y-this.radius-14,`+${Number(converted.toFixed(1))} THIÊU ĐỐT`,'#ffb36d');logMessage(`🛡️ Aegis chuyển ${Number(converted.toFixed(1))} sát thương thành thiêu đốt 1 DPS trong ${Number(converted.toFixed(1))} giây!`,'aegis');}
+          updateHUD(); return;
+        }
         if (this.typeKey === 'wanderer' && this.wandererShieldActive) {
           this.wandererShieldActive = false;
           this.wandererShieldTimer = 0;
@@ -2855,6 +2995,7 @@
       }
 
       receiveHealingFromAngel(baseAmount, angelHealer) {
+        if (this.aegisHealBlockTimer>0) { createFloatingText(this.x,this.y-this.radius-10,'CẤM HỒI HP','#f5d58d'); return; }
         const missingAngelHp = Math.max(0, angelHealer.maxHp - angelHealer.hp);
         const healMultiplier = 1 + (missingAngelHp * SKILL_CONFIG.angel.healBonusPerMissingHp);
         const totalHeal = Math.round(baseAmount * healMultiplier);
@@ -2872,7 +3013,7 @@
           
           const selfShare = Math.round(overheal * SKILL_CONFIG.angel.selfHealShareFromOverheal);
           if (selfShare > 0) {
-            angelHealer.hp = Math.min(angelHealer.maxHp, angelHealer.hp + selfShare);
+            if(angelHealer.aegisHealBlockTimer<=0) angelHealer.hp = Math.min(angelHealer.maxHp, angelHealer.hp + selfShare);
             createFloatingText(angelHealer.x, angelHealer.y - 10, `+${selfShare}`, '#4ade80');
           }
         }
@@ -2902,6 +3043,8 @@
         if (this.isHadesUntargetable()) return;
         ctx.save();
         drawBallSignatureVFX(this);
+        if(this.aegisFearedTimer>0){ctx.save();ctx.translate(this.x,this.y);ctx.rotate(globalTick*0.025);ctx.strokeStyle='rgba(255,232,174,0.85)';ctx.shadowColor='#f5d58d';ctx.shadowBlur=14;ctx.lineWidth=1.6;ctx.beginPath();ctx.arc(0,0,this.radius+13,0,Math.PI*2);ctx.stroke();for(let k=0;k<4;k++){const a=k*Math.PI/2;drawSpark(ctx,Math.cos(a)*(this.radius+14),Math.sin(a)*(this.radius+14),3,'#fff0bf',0.9);}ctx.restore();}
+        if(this.typeKey==='aegis' && this.aegisBurnLayers.length){ctx.save();ctx.globalAlpha=0.35;ctx.strokeStyle='#ffad65';ctx.shadowColor='#ff873f';ctx.shadowBlur=12;ctx.lineWidth=2;ctx.beginPath();ctx.arc(this.x,this.y,this.radius+3+Math.sin(globalTick*0.22)*2,0,Math.PI*2);ctx.stroke();ctx.restore();}
 
         // Bear Ball: Hào quang gầm thét tích tụ đòn đánh cực mạnh
         if (this.typeKey === 'bear' && this.effectiveHealStored > 0) {
@@ -3145,8 +3288,12 @@
       if (!ballsCollided) {
         if (b1.typeKey === 'viper') b1.viperCollisionWasTouching = false;
         if (b2.typeKey === 'viper') b2.viperCollisionWasTouching = false;
+        if (b1.typeKey === 'aegis') b1.aegisCollisionWasTouching=false;
+        if (b2.typeKey === 'aegis') b2.aegisCollisionWasTouching=false;
       }
       if (ballsCollided) {
+        if(b1.typeKey==='aegis' && !b1.aegisCollisionWasTouching){aegisCleanseOneStatus(b2);b1.aegisCollisionWasTouching=true;}
+        if(b2.typeKey==='aegis' && !b2.aegisCollisionWasTouching){aegisCleanseOneStatus(b1);b2.aegisCollisionWasTouching=true;}
         // Chỉ tính một lần khi bắt đầu tiếp xúc, không cộng độc/hồi máu lặp từng frame.
         const b1ViperNewContact = b1.typeKey === 'viper' && !b1.viperCollisionWasTouching;
         const b2ViperNewContact = b2.typeKey === 'viper' && !b2.viperCollisionWasTouching;
@@ -3155,18 +3302,18 @@
         if (b1.typeKey === 'viper') b1.viperCollisionWasTouching = true;
         if (b2.typeKey === 'viper') b2.viperCollisionWasTouching = true;
         if (b1.typeKey === 'angel') {
-          b1.hp = Math.min(b1.maxHp, b1.hp + SKILL_CONFIG.angel.collisionSelfHeal);
+          if(b1.aegisHealBlockTimer<=0) b1.hp = Math.min(b1.maxHp, b1.hp + SKILL_CONFIG.angel.collisionSelfHeal);
           createFloatingText(b1.x, b1.y - 10, `+${SKILL_CONFIG.angel.collisionSelfHeal}`, '#4ade80');
           b2.receiveHealingFromAngel(SKILL_CONFIG.angel.collisionEnemyHeal, b1);
         }
         if (b2.typeKey === 'angel') {
-          b2.hp = Math.min(b2.maxHp, b2.hp + SKILL_CONFIG.angel.collisionSelfHeal);
+          if(b2.aegisHealBlockTimer<=0) b2.hp = Math.min(b2.maxHp, b2.hp + SKILL_CONFIG.angel.collisionSelfHeal);
           createFloatingText(b2.x, b2.y - 10, `+${SKILL_CONFIG.angel.collisionSelfHeal}`, '#4ade80');
           b1.receiveHealingFromAngel(SKILL_CONFIG.angel.collisionEnemyHeal, b2);
         }
 
         if (b1.hitCooldown === 0) {
-          let dmg1 = b1.contactDmg;
+          let dmg1 = b1.aegisFearedTimer>0 ? 0 : b1.contactDmg;
           if (b1.typeKey === 'bear') {
             if (b1.effectiveHealStored > 0) {
               createShockwave(b2.x, b2.y, 65, '#f59e0b', 4);
@@ -3180,7 +3327,7 @@
           if (dmg1 > 0) { b2.takeDamage(dmg1, 'Va Chạm'); b1.hitCooldown = 15; }
         }
         if (b2.hitCooldown === 0) {
-          let dmg2 = b2.contactDmg;
+          let dmg2 = b2.aegisFearedTimer>0 ? 0 : b2.contactDmg;
           if (b2.typeKey === 'bear') {
             if (b2.effectiveHealStored > 0) {
               createShockwave(b1.x, b1.y, 65, '#f59e0b', 4);
@@ -3196,12 +3343,12 @@
         if (b1ViperNewContact) {
           const heal = (b2.viperPoisonStacks || 0) * SKILL_CONFIG.viper.collisionHealPerStack;
           const actual = Math.min(heal, b1.maxHp - b1.hp);
-          if (actual > 0) { b1.hp += actual; createFloatingText(b1.x, b1.y - 22, `+${Number(actual.toFixed(1))} HP`, '#6ee7b7'); createParticles(b1.x, b1.y, '#34d399', 10, 1.0); updateHUD(); }
+          if (actual > 0 && b1.aegisHealBlockTimer<=0) { b1.hp += actual; createFloatingText(b1.x, b1.y - 22, `+${Number(actual.toFixed(1))} HP`, '#6ee7b7'); createParticles(b1.x, b1.y, '#34d399', 10, 1.0); updateHUD(); }
         }
         if (b2ViperNewContact) {
           const heal = (b1.viperPoisonStacks || 0) * SKILL_CONFIG.viper.collisionHealPerStack;
           const actual = Math.min(heal, b2.maxHp - b2.hp);
-          if (actual > 0) { b2.hp += actual; createFloatingText(b2.x, b2.y - 22, `+${Number(actual.toFixed(1))} HP`, '#6ee7b7'); createParticles(b2.x, b2.y, '#34d399', 10, 1.0); updateHUD(); }
+          if (actual > 0 && b2.aegisHealBlockTimer<=0) { b2.hp += actual; createFloatingText(b2.x, b2.y - 22, `+${Number(actual.toFixed(1))} HP`, '#6ee7b7'); createParticles(b2.x, b2.y, '#34d399', 10, 1.0); updateHUD(); }
         }
         createParticles((b1.x + b2.x) / 2, (b1.y + b2.y) / 2, '#ffffff', 6);
       }
@@ -3344,7 +3491,7 @@
               const missing=Math.max(0,target.maxHp-target.hp), dmg=cfg.gun2BaseDamage+missing*cfg.gun2MissingHpDamagePct;
               target.takeDamage(dmg,'Moonshot • Ngân Vũ');
               const heal=cfg.gun2Heal+(owner.maxHp-owner.hp)*cfg.gun2HealMissingPct;
-              owner.hp=Math.min(owner.maxHp,owner.hp+heal);
+              if(owner.aegisHealBlockTimer<=0) owner.hp=Math.min(owner.maxHp,owner.hp+heal);
               owner.moonshotHitSpeedTimer=cfg.gun2HitSpeedDuration;
               createFloatingText(owner.x,owner.y-owner.radius-10,`+${heal.toFixed(1)} HP`,'#eaf3ff');
               createFloatingText(target.x,target.y-18,`-${dmg.toFixed(1)}`,'#dce8f8');
@@ -3392,6 +3539,26 @@
           const wave=Math.sin(shot.age*24)*3.2;ctx.shadowColor='#e5efff';ctx.shadowBlur=8;ctx.strokeStyle='#eaf2ff';ctx.lineWidth=1.35;ctx.beginPath();ctx.moveTo(-10,wave);ctx.bezierCurveTo(-5,-wave*1.7,2,wave*1.8,9,-wave);ctx.stroke();
           ctx.strokeStyle='rgba(255,255,255,0.55)';ctx.lineWidth=0.65;ctx.beginPath();ctx.moveTo(-7,-wave);ctx.quadraticCurveTo(0,wave*2,7,wave);ctx.stroke();
         }
+        ctx.restore();
+      }
+    }
+
+    function updateAndDrawAegisEntities() {
+      for(let i=aegisSlashEffects.length-1;i>=0;i--){
+        const fx=aegisSlashEffects[i], owner=fx.owner; fx.timer-=FIXED_STEP_SECONDS;
+        if(!owner || fx.timer<=0){aegisSlashEffects.splice(i,1);continue;}
+        const progress=1-fx.timer/fx.maxTimer, alpha=Math.sin(progress*Math.PI)*0.92;
+        const a1=fx.angle-SKILL_CONFIG.aegis.slashAngleDeg*Math.PI/360, a2=fx.angle+SKILL_CONFIG.aegis.slashAngleDeg*Math.PI/360;
+        const sweep=a1+(a2-a1)*progress;
+        ctx.save(); ctx.globalCompositeOperation='lighter';
+        const grad=ctx.createRadialGradient(owner.x,owner.y,owner.radius,owner.x,owner.y,fx.range);
+        grad.addColorStop(0,`rgba(255,236,170,${0.08*alpha})`);grad.addColorStop(0.72,`rgba(244,198,104,${0.15*alpha})`);grad.addColorStop(1,'rgba(255,225,151,0)');
+        ctx.fillStyle=grad;ctx.beginPath();ctx.moveTo(owner.x,owner.y);ctx.arc(owner.x,owner.y,fx.range,a1,a2);ctx.closePath();ctx.fill();
+        ctx.beginPath();ctx.arc(owner.x,owner.y,fx.range*(0.42+0.58*progress),a1,sweep);
+        ctx.strokeStyle=`rgba(255,246,210,${alpha})`;ctx.lineWidth=5*(1-progress)+1;ctx.shadowColor='#ffe29a';ctx.shadowBlur=22;ctx.stroke();
+        ctx.beginPath();ctx.arc(owner.x,owner.y,fx.range*(0.39+0.58*progress),a1,sweep);
+        ctx.strokeStyle=`rgba(221,170,70,${alpha*0.7})`;ctx.lineWidth=1.6;ctx.shadowBlur=8;ctx.stroke();
+        for(let k=0;k<9;k++){const q=(k/9+progress*0.85)%1,ang=a1+(a2-a1)*q,rr=fx.range*(0.45+0.5*progress);drawSpark(ctx,owner.x+Math.cos(ang)*rr,owner.y+Math.sin(ang)*rr,1.7+alpha*2,'#fff2c6',alpha);}
         ctx.restore();
       }
     }
@@ -3528,6 +3695,7 @@
             // Làm chậm 50% trong 0.5s & Đẩy thẳng chính xác tới tâm Vụ Nổ 2!
             b.enemy.slowFactor = 0.5;
             b.enemy.slowTimer = Math.max(b.enemy.slowTimer, 0.5);
+            if(b.enemy.typeKey==='aegis') applyAegisFear(b.owner,0.5);
             b.enemy.x = Math.max(b.enemy.radius, Math.min(canvas.width - b.enemy.radius, b.x2));
             b.enemy.y = Math.max(b.enemy.radius, Math.min(canvas.height - b.enemy.radius, b.y2));
 
@@ -3851,7 +4019,7 @@
           if (b && b.typeKey === 'soul' && Math.hypot(b.x - orb.x, b.y - orb.y) < b.radius + orb.radius) {
             b.collectedSoulsCount++;
             b.maxHp += SKILL_CONFIG.soul.orbMaxHpBonus;
-            b.hp = Math.min(b.maxHp, b.hp + SKILL_CONFIG.soul.orbHeal);
+            if(b.aegisHealBlockTimer<=0) b.hp = Math.min(b.maxHp, b.hp + SKILL_CONFIG.soul.orbHeal);
             createShockwave(orb.x, floatY, 32, '#f472b6', 2);
             soulOrbs.splice(i, 1);
             updateHUD();
@@ -4440,7 +4608,7 @@
               shot.owner.shield += SKILL_CONFIG.dragon.permanentShieldPerAttack;
               createFloatingText(shot.owner.x, shot.owner.y - 24, '+3 Khiên', '#fde68a');
             }
-            if (shot.form >= 2) { shot.owner.hp = Math.min(shot.owner.maxHp, shot.owner.hp + 1); shot.target.applySlow(1, 0.65); }
+            if (shot.form >= 2) { if(shot.owner.aegisHealBlockTimer<=0) shot.owner.hp = Math.min(shot.owner.maxHp, shot.owner.hp + 1); shot.target.applySlow(1, 0.65); }
           }
           updateHUD(); dragonFireShots.splice(i, 1);
         }
@@ -4452,6 +4620,7 @@
         const enemy = z.owner === p1 ? p2 : p1;
         if (enemy && enemy.hp > 0 && Math.hypot(enemy.x - z.x, enemy.y - z.y) <= z.radius + enemy.radius) {
           enemy.slowFactor = Math.min(enemy.slowFactor, SKILL_CONFIG.dragon.burnSlowFactor); enemy.slowTimer = Math.max(enemy.slowTimer, 0.28);
+          if(enemy.typeKey==='aegis') applyAegisFear(z.owner,0.28);
           if (z.tick >= SKILL_CONFIG.dragon.burnTick) { z.tick -= SKILL_CONFIG.dragon.burnTick; enemy.takeDamage(SKILL_CONFIG.dragon.burnDamage, 'Long Hỏa'); createParticles(enemy.x, enemy.y, '#f97316', 5, 1.1); }
         }
         ctx.save();
@@ -4476,7 +4645,7 @@
         if (tree.fruitTimer <= 0) { tree.fruitReady = true; tree.fruitTimer = 6; }
         const dragon = tree.owner;
         if (tree.fruitReady && dragon && dragon.hp > 0 && Math.hypot(dragon.x - tree.x, dragon.y - tree.y) <= tree.radius + dragon.radius) {
-          tree.fruitReady = false; dragon.hp = Math.min(dragon.maxHp, dragon.hp + 10); dragon.dragonSeals++;
+          tree.fruitReady = false; if(dragon.aegisHealBlockTimer<=0) dragon.hp = Math.min(dragon.maxHp, dragon.hp + 10); dragon.dragonSeals++;
           createParticles(tree.x, tree.y, '#fde68a', 22, 1.6); createFloatingText(dragon.x, dragon.y - 26, '+10 HP • +1 LINH LONG', '#fde68a');
           logMessage('🌳 Dragon hấp thụ Thần Quả: hồi 10 HP và nhận thêm 1 ấn Linh Long!', 'dragon'); updateHUD();
           if (dragon.dragonForm < 1 && dragon.dragonSeals >= SKILL_CONFIG.dragon.form1Seals) {
@@ -4571,6 +4740,7 @@
             enemy.takeDamage(SKILL_CONFIG.ronin.tornadoDmg, 'Lốc Xoáy Cuồng Phong');
             // Hất Tung là khóa di chuyển trực tiếp trong 0,4s, không phụ thuộc kháng khống chế thông thường.
             enemy.stunTimer = Math.max(enemy.stunTimer, SKILL_CONFIG.ronin.tornadoKnockup);
+            if(enemy.typeKey==='aegis') applyAegisFear(t.owner,SKILL_CONFIG.ronin.tornadoKnockup);
             updateHUD();
             createShockwave(enemy.x, enemy.y, 72, '#67e8f9', 4);
             createParticles(enemy.x, enemy.y, '#cffafe', 28, 1.8);
@@ -4734,7 +4904,7 @@
     }
 
     function updateHUDForPlayer(ball, prefix) {
-      let shieldText = ball.shield > 0 ? ` (🛡️${Math.round(ball.shield)})` : '';
+      let shieldText = (ball.shield > 0 || ball.aegisBarrier>0) ? ` (🛡️${Math.round((ball.shield||0)+(ball.aegisBarrier||0))})` : '';
       if (ball.typeKey === 'demon') shieldText = ` (🛡️${Math.round(ball.shield)} | Phản: +${Math.round(ball.shield * 6)}%)`;
       
       document.getElementById(`${prefix}-name`).innerText = `${ball.icon} ${ball.name}`;
@@ -4751,6 +4921,12 @@
       if (ball.burnTimer > 0) badges.innerHTML += `<span class="bg-amber-950 text-amber-400 border border-amber-500/40 px-1 rounded">🔥 Cháy (${ball.burnStacks})</span>`;
       if ((ball.viperPoisonStacks || 0) > 0) badges.innerHTML += `<span class="bg-emerald-950 text-emerald-300 border border-emerald-500/40 px-1 rounded">☠ Độc Chướng: ${ball.viperPoisonStacks}</span>`;
       if (ball.shield > 0) badges.innerHTML += `<span class="bg-cyan-950 text-cyan-300 border border-cyan-500/40 px-1 rounded">🛡️ Khiên (${Math.round(ball.shield)})</span>`;
+      if (ball.typeKey==='aegis') {
+        const burnDps=(ball.aegisBurnLayers||[]).length; if(burnDps>0) badges.innerHTML+=`<span class="bg-orange-950 text-orange-300 border border-orange-500/40 px-1 rounded">🔥 Tự thiêu: ${burnDps} DPS</span>`;
+        if(ball.aegisBarrier>0) badges.innerHTML+=`<span class="bg-yellow-950 text-yellow-200 border border-yellow-400/50 px-1 rounded">✦ Khiên Thánh ${Math.ceil(ball.aegisBarrierTimer)}s · ${Math.round(ball.aegisBarrier)}</span>`;
+      }
+      if (ball.aegisHealBlockTimer>0) badges.innerHTML+=`<span class="bg-amber-950 text-amber-200 border border-amber-400/40 px-1 rounded">🚫 Cấm hồi HP ${ball.aegisHealBlockTimer.toFixed(1)}s</span>`;
+      if (ball.aegisFearedTimer>0) badges.innerHTML+=`<span class="bg-yellow-950 text-yellow-100 border border-yellow-300/50 px-1 rounded">☼ Khiếp Đảm</span>`;
       if (ball.typeKey === 'wanderer' && ball.wandererShieldActive) badges.innerHTML += `<span class="bg-indigo-950 text-indigo-300 border border-indigo-400 px-1 rounded">⚔️ Khiên Chặn Dmg</span>`;
       if (ball.typeKey === 'soul') badges.innerHTML += `<span class="bg-pink-950 text-pink-300 border border-pink-500/40 px-1 rounded">🔮 Hồn: ${ball.collectedSoulsCount}</span>`;
       if (ball.blessingMarks > 0) badges.innerHTML += `<span class="bg-yellow-900 text-yellow-200 border border-yellow-400 px-1 rounded">✨ Phước Thần: ${ball.blessingMarks}</span>`;
@@ -4848,7 +5024,7 @@
       wukongClones = []; wukongStaffs = []; activeWukongSweeps = []; wukongAfterimages = [];
       poseidonWaves = []; poseidonBursts = []; oceanBubbles = []; shockwaves = [];
       roninTornadoes = []; roninSlashEffects = []; roninThrustEffects = []; hadesSpears = []; hadesSiphonEffects = [];
-      particles = []; floatingTexts = []; gamberCards = []; moonshotShots = [];
+      particles = []; floatingTexts = []; gamberCards = []; moonshotShots = []; aegisSlashEffects = [];
       
       battleLog.innerHTML = '';
       logMessage(`Bắt đầu trận đấu: ${p1.name} VS ${p2.name}!`);
@@ -4956,6 +5132,7 @@
       updateAndDrawDragonEntities();
       updateAndDrawGamberEntities();
       updateAndDrawMoonshotEntities();
+      updateAndDrawAegisEntities();
 
       if (p1) p1.draw();
       if (p2) p2.draw();
