@@ -33,6 +33,50 @@
       background: #334155;
       border-radius: 2px;
     }
+
+    :root { color-scheme: dark; }
+    body { background: radial-gradient(ellipse at 50% 0%, #33271d 0%, #17110d 42%, #0c0907 100%) !important; color:#eee2d0 !important; font-family: Inter, system-ui, sans-serif !important; }
+    header h1 { background-image:linear-gradient(100deg,#f0dfc6,#bfa27c,#f6e8d3) !important; filter:drop-shadow(0 3px 14px rgba(190,150,105,.18)); }
+    header p { color:#b8a58d !important; }
+    .arena-panel, .bg-slate-900\/90, .bg-slate-900\/80 { background:linear-gradient(145deg,rgba(48,36,27,.96),rgba(25,19,15,.97)) !important; border-color:#5a4735 !important; box-shadow:0 14px 36px rgba(0,0,0,.28),inset 0 1px rgba(255,235,210,.035) !important; }
+    select, .arena-input { background:#211912 !important; border:1px solid #81694c !important; color:#f0e1cc !important; border-radius:10px; }
+    select:focus,.arena-input:focus { outline:none; border-color:#d2b58e !important; box-shadow:0 0 0 2px rgba(210,181,142,.13); }
+    button { transition:filter .18s ease,transform .18s ease,border-color .18s ease; }
+    #btn-start { background:linear-gradient(110deg,#b99a73,#806345) !important; color:#17100b !important; box-shadow:0 8px 22px rgba(149,111,70,.18) !important; }
+    #btn-restart { background:linear-gradient(110deg,#d5b88f,#98734d) !important; color:#1b120b !important; }
+    .arena-btn { border:1px solid #8a7357; border-radius:9px; padding:9px 10px; background:linear-gradient(145deg,#d9c3a4,#bda17d); color:#2a1d13; font-size:10px; font-weight:900; letter-spacing:.07em; }
+    .arena-btn:hover { filter:brightness(1.09); transform:translateY(-1px); }
+    canvas { border-color:#735a40 !important; box-shadow:0 0 0 1px rgba(226,200,164,.08),0 20px 55px rgba(0,0,0,.62) !important; }
+    .custom-scrollbar::-webkit-scrollbar-track { background:#1a130e !important; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background:#80674c !important; }
+    #battle-log { color:#d8c7b0; }
+    .library-shell { background:linear-gradient(145deg,#241a13,#120d09); border:1px solid #70583e; border-radius:18px; box-shadow:0 30px 90px rgba(0,0,0,.7); }
+    .arena-input { width:100%; padding:10px 12px; font-size:12px; }
+    .arena-filter { border:1px solid #67523b; color:#cbb99f; background:#211810; border-radius:99px; padding:6px 10px; font-size:10px; }
+    .arena-filter.active { background:#d1b48c; color:#25190f; border-color:#e1c9a7; font-weight:900; }
+    .library-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; align-content:start; }
+    .library-card { min-width:0; display:flex; align-items:center; gap:9px; text-align:left; padding:9px; border:1px solid #55422f; border-radius:11px; background:linear-gradient(135deg,#2a1f17,#1b130e); color:#ead9c1; }
+    .library-card.selected { border-color:#d0b18a; background:linear-gradient(135deg,#473421,#281d14); box-shadow:inset 0 0 0 1px rgba(220,190,151,.12); }
+    .library-card b { display:block; font-size:10px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .library-card small { display:block; color:#ae9b81; font-size:9px; margin-top:3px; }
+    .library-orb,.library-hero-orb { display:flex; flex:none; align-items:center; justify-content:center; border-radius:50%; background:radial-gradient(circle at 32% 25%,var(--orb),var(--orb2) 72%,#0c0907); border:1px solid rgba(238,218,190,.5); box-shadow:0 0 18px color-mix(in srgb,var(--orb),transparent 62%),inset 0 0 12px rgba(255,255,255,.13); }
+    .library-orb { width:34px;height:34px;font-size:17px; }
+    .library-hero-orb { width:62px;height:62px;font-size:30px; }
+    .library-stat { padding:10px 7px; border:1px solid #5b4732; border-radius:10px; background:#211810; text-align:center; }
+    .library-stat b { display:block; color:#f0dfc6; font:700 17px Orbitron,system-ui; }
+    .library-stat small { display:block; margin-top:4px; color:#ae9b81; font-size:9px; }
+    .skin-choice { display:flex; align-items:center; gap:10px; width:100%; padding:10px; border:1px solid #57432e; border-radius:12px; background:#20170f; color:#ead9c1; }
+    .skin-choice.chosen { border-color:#d4b48a; background:linear-gradient(110deg,#493622,#251a11); }
+    .skin-choice b { display:block; font-size:12px; }
+    .skin-choice small,.skin-choice em { display:block; color:#b6a187; font-size:9px; margin-top:2px; font-style:normal; }
+    .skin-choice em { color:#9e8b72; }
+    .skin-check { color:#e4c49b; font-weight:900; }
+    .skin-swatch { position:relative; display:block; flex:none; width:39px;height:39px;border-radius:50%;border:1px solid #9c8262; }
+    .skin-swatch.brutal { background:radial-gradient(circle,#e2b78d 0 12%,#70462d 36%,#1a100b 72%); box-shadow:0 0 13px #9e603d; }
+    .skin-swatch.elegant { background:radial-gradient(circle,#fff1d7 0 10%,#bca98d 34%,#292017 73%); box-shadow:0 0 13px #d7c5a7; }
+    .skin-swatch.mythic { background:radial-gradient(circle,#e2d7ff 0 10%,#71618e 35%,#1c1426 73%); box-shadow:0 0 13px #9a83c8; }
+    .skin-swatch i { position:absolute; width:5px;height:5px;border-radius:50%;background:#fff4df;top:5px;left:17px;box-shadow:0 0 6px white; }
+    @media(max-width:700px){.library-grid{grid-template-columns:repeat(2,minmax(0,1fr));}.library-shell{max-height:95vh}.library-card{padding:7px;gap:6px}.library-orb{width:29px;height:29px;font-size:15px}}
   </style>
 </head>
 <body class="min-h-screen flex flex-col items-center justify-center p-2 sm:p-4">
@@ -114,7 +158,17 @@
           <button id="btn-start" class="w-full mt-2 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold py-2.5 px-4 rounded-lg font-orbitron tracking-wider text-sm shadow-lg shadow-cyan-500/20 transition-all active:scale-95">
             ▶ BẮT ĐẦU ĐẤU
           </button>
+          <div class="grid grid-cols-2 gap-2 mt-2">
+            <button id="btn-pause" class="arena-btn" type="button">Ⅱ TẠM DỪNG</button>
+            <button id="btn-library" class="arena-btn" type="button">✦ THƯ VIỆN</button>
+          </div>
         </div>
+      </div>
+      <div class="arena-panel p-3" id="selected-ball-info">
+        <div class="text-[10px] tracking-[.22em] text-[#bda88c] font-bold mb-2">HỒ SƠ CHIẾN BINH</div>
+        <div class="text-sm text-[#f2e6d5] font-bold" id="selected-ball-title">Chọn một Ball để xem thông tin</div>
+        <div class="text-[11px] text-[#c7b8a4] mt-1" id="selected-ball-stats">HP • Tốc độ • Sát thương va chạm</div>
+        <div class="text-[11px] text-[#a99a86] mt-2 leading-relaxed" id="selected-ball-desc">Mô tả nội tại sẽ hiển thị tại đây.</div>
       </div>
 
       <!-- Skill Guide Info -->
@@ -129,7 +183,7 @@
           • <span class="text-amber-300 font-semibold">Dragon:</span> Long Khí thanh tẩy, 3 lần thức tỉnh, Thần Thụ & Bầu Trời.<br>
           • <span class="text-emerald-300 font-semibold">Viper:</span> Độc Chướng cộng dồn, làm trượt đòn và Nanh Độc xuyên khiên.<br>
           • <span class="text-amber-200 font-semibold">Gamber:</span> Xúc xắc định mệnh, bài phép hoàng kim, choáng và thanh tẩy.<br>
-          • <span class="text-slate-100 font-semibold">Moonshot:</span> 4 khẩu súng bạc luân phiên, đạn truy đuổi và Shuriken hồi hoàn.
+          • <span class="text-slate-100 font-semibold">Moonshot:</span> 4 vũ khí bạc luân phiên, bắn mỗi 0,25s trong tầm 5,5 đường kính.
         </div>
       </div>
     </div>
@@ -165,6 +219,10 @@
         </div>
       </div>
 
+      <div class="w-[440px] max-w-full flex items-center justify-between mb-2 px-1">
+        <span class="text-[10px] tracking-[.2em] text-[#b8a58d]">ARENA • 1V1</span>
+        <span id="match-state" class="text-[10px] text-[#d8c5a9]">SẴN SÀNG</span>
+      </div>
       <!-- Canvas -->
       <div class="relative">
         <canvas id="gameCanvas" width="440" height="440" class="bg-slate-950 border-2 border-slate-800 rounded-2xl block"></canvas>
@@ -190,6 +248,25 @@
       </div>
     </div>
 
+  </div>
+
+  <div id="library-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-3 bg-[#080604]/90 backdrop-blur-md">
+    <section class="library-shell w-full max-w-5xl max-h-[92vh] overflow-hidden flex flex-col">
+      <header class="flex items-center justify-between p-4 border-b border-[#5a4938]">
+        <div><div class="text-[10px] tracking-[.28em] text-[#b9a184]">BALL BATTLE ARENA</div><h2 class="text-xl font-black text-[#f1e2cb] mt-1">THƯ VIỆN CHIẾN BINH</h2><p class="text-[11px] text-[#b7a58e] mt-1">Bộ sưu tập • Hồ sơ • Hiệu ứng trang phục</p></div>
+        <button id="btn-library-close" class="arena-btn px-4">✕ ĐÓNG</button>
+      </header>
+      <div class="grid grid-cols-1 md:grid-cols-[1.05fr_.95fr] min-h-0 flex-1">
+        <div class="p-3 md:p-4 border-b md:border-b-0 md:border-r border-[#514130] min-h-0 flex flex-col">
+          <input id="library-search" class="arena-input mb-3" placeholder="Tìm chiến binh..." />
+          <div id="library-filters" class="flex flex-wrap gap-2 mb-3"></div>
+          <div id="library-grid" class="library-grid overflow-y-auto custom-scrollbar pr-1"></div>
+        </div>
+        <div id="library-detail" class="p-4 overflow-y-auto custom-scrollbar">
+          <div class="text-sm text-[#e9d8c0]">Chọn một chiến binh trong bộ sưu tập để xem hồ sơ và thay đổi hiệu ứng.</div>
+        </div>
+      </div>
+    </section>
   </div>
 
   <script>
@@ -252,8 +329,8 @@
         name: 'Bear Ball',
         color: '#d97706',
         secondaryColor: '#78350f',
-        hp: 120,
-        maxHp: 120,
+        hp: 135,
+        maxHp: 135,
         radius: 19,
         speed: BASE_SPEED,
         contactDmg: 7,
@@ -396,8 +473,8 @@
         name: 'Poseidon Ball',
         color: '#0ea5e9',
         secondaryColor: '#0369a1',
-        hp: 95,
-        maxHp: 95,
+        hp: 90,
+        maxHp: 90,
         radius: 18,
         speed: BASE_SPEED,
         contactDmg: 0,
@@ -444,8 +521,8 @@
         name: 'Viper Ball',
         color: '#0f6b45',
         secondaryColor: '#052e25',
-        hp: 100,
-        maxHp: 100,
+        hp: 95,
+        maxHp: 95,
         radius: 18,
         speed: BASE_SPEED * 1.15,
         contactDmg: 4,
@@ -466,7 +543,7 @@
       // Moonshot Ball – xạ thủ ánh trăng, cơ động và luân phiên bốn vũ khí bạc.
       moonshot: {
         name: 'Moonshot Ball', color: '#e8edf4', secondaryColor: '#8995a8',
-        hp: 95, maxHp: 95, radius: 18, speed: BASE_SPEED * 0.95, contactDmg: 5, icon: '🌙'
+        hp: 85, maxHp: 85, radius: 18, speed: BASE_SPEED * 0.85, contactDmg: 5, icon: '🌙'
       }
     };
 
@@ -631,7 +708,7 @@
       },
       // Hades Ball – hút máu, Cerberus, Thần Thương và Địa Ngục
       hades: {
-        drainInterval: 1,
+        drainInterval: 0.95,
         drainHp: 1,
         cerberusSpeedMult: 1.25,
         cerberusContactDmg: 0,
@@ -643,12 +720,12 @@
         spearMaxHpSteal: 10,
         spearPermanentShield: 12,
         spearSpeedMult: 8.5,
-        cerberusDamageStep: 6,
+        cerberusDamageStep: 8,
         hellDuration: 5.3,
-        hellCooldown: 5.5,
-        hellInterruptedCooldown: 3,
+        hellCooldown: 7.5,
+        hellInterruptedCooldown: 5,
         hellSpeedMult: 1.3,
-        hellHeal: 13
+        hellHeal: 18
       },
       // Dragon Ball – Long Khí, ba dạng thức tỉnh và Bầu Trời
       dragon: {
@@ -712,7 +789,7 @@
         cardSpreadDeg: 20            // Góc lệch của mỗi lá so với lá giữa.
       },
       moonshot: {
-        rangeDiameters: 5,5, gun1RangeBonus: 1.25, fireInterval: 0.25, ammoPerGun: 6,
+        rangeDiameters: 5.5, gun1RangeBonus: 1.25, fireInterval: 0.25, ammoPerGun: 7,
         switchDuration: 0.5, switchShield: 100, switchSpeed: 1.5,
         gun1BaseDamage: 2, gun1MidBonus: 1, gun1FarBonus: 2,
         gun2BaseDamage: 2, gun2MissingHpDamagePct: 0.02, gun2Heal: 2, gun2HealMissingPct: 0.02,
@@ -763,9 +840,51 @@
     let gamberCards = [];
     let moonshotShots = [];
     let gameOver = false;
+    let gamePaused = false;
     let animationFrameId = null;
     let globalTick = 0; // Số bước mô phỏng 1/60 giây đã chạy.
 
+    // Thư viện chiến binh: mô tả, phân loại và skin dùng chung cho mọi Ball hiện tại/tương lai.
+    const BALL_LIBRARY = {
+      fire:{role:'Xạ Thủ',desc:'Duy trì sát thương bằng những đợt đốt liên tục, ép đối thủ phải giữ khoảng cách.'},
+      ghost:{role:'Sát Thủ',desc:'Hóa hồn, áp sát và gây một đòn bùng nổ kèm làm chậm.'},
+      assassin:{role:'Sát Thủ',desc:'Tích phi tiêu và tung chuỗi ám sát khi đủ điều kiện.'},
+      bear:{role:'Đỡ Đòn',desc:'Sức bền cao, tích trữ khả năng hồi phục và trụ lại trong giao tranh dài.'},
+      storm:{role:'Xạ Thủ',desc:'Triệu hồi vùng sét gây sát thương và làm chậm theo nhịp.'},
+      wanderer:{role:'Đấu Sĩ',desc:'Kết hợp khiên, kiếm khí và những nhát chém cận chiến.'},
+      soul:{role:'Đấu Sĩ',desc:'Thu thập linh hồn, hồi phục và mở rộng góc tấn công bằng chùm sáng.'},
+      marksman:{role:'Xạ Thủ',desc:'Bắn đạn ổn định từ xa, kết hợp bẫy để khóa mục tiêu.'},
+      ninja:{role:'Sát Thủ',desc:'Chuỗi phi tiêu và lướt áp sát, dồn sát thương theo từng bước.'},
+      reaper:{role:'Sát Thủ',desc:'Tăng tốc, tạo ảo ảnh và tung nhát chém mạnh theo lượng HP đã mất.'},
+      shen:{role:'Đấu Sĩ',desc:'Kiếm Hồn tạo vùng bảo hộ, liên kết và hoán đổi vị trí.'},
+      sound:{role:'Xạ Thủ',desc:'Sóng âm lan rộng, sát thương thay đổi theo nhịp cộng hưởng.'},
+      angel:{role:'Đấu Sĩ',desc:'Hồi phục và chuyển lượng hồi dư thành Phước Thần.'},
+      wukong:{role:'Đấu Sĩ',desc:'Phân thân, đào tiên và Như Ý giúp linh hoạt giữa công và thủ.'},
+      demon:{role:'Sát Thủ',desc:'Chấp nhận rủi ro để phản đòn, tích khiên và hồi sinh nhiều lần.'},
+      poseidon:{role:'Đấu Sĩ',desc:'Sóng nước đẩy lùi, tích Hải Thần Ấn và thức tỉnh đại dương.'},
+      ronin:{role:'Đấu Sĩ',desc:'Tích tốc độ, lướt chém và gọi Cuồng Phong.'},
+      hades:{role:'Đấu Sĩ',desc:'Cerberus, Thần Thương và Địa Ngục tạo áp lực lâu dài, đánh đổi bằng nhịp hồi chiêu.'},
+      dragon:{role:'Sát Thủ',desc:'Tích Linh Long, thức tỉnh nhiều tầng và bùng nổ sức mạnh.'},
+      viper:{role:'Sát Thủ',desc:'Độc Chướng cộng dồn, gây sát thương theo thời gian và Nanh Độc.'},
+      gamber:{role:'Đấu Sĩ',desc:'Xúc xắc định mệnh và bài phép tạo chuỗi hiệu ứng khó đoán.'},
+      moonshot:{role:'Xạ Thủ',desc:'Bốn vũ khí luân phiên, tự động nhắm mục tiêu và giữ khoảng cách.'}
+    };
+    const BALL_SKINS = [
+      {id:'brutal',name:'Bạo Liệt',tag:'Thô bạo • Lực • Tàn bạo',desc:'Vòng gai, vệt năng lượng mạnh và những tia va đập dứt khoát.'},
+      {id:'elegant',name:'Ngân Hoa',tag:'Thanh lịch • Lấp lánh • Sang trọng',desc:'Quầng sáng mảnh, quỹ đạo tinh thể và bụi sao nhẹ nhàng.'},
+      {id:'mythic',name:'Thần Ảnh',tag:'Huyền ảo • Bay bổng • Thần thoại',desc:'Vòng hào quang, phù văn và những hạt linh quang trôi nổi.'}
+    ];
+    let ballSkinPrefs = {};
+    try { ballSkinPrefs = JSON.parse(localStorage.getItem('bba-ball-skins-v1') || '{}') || {}; } catch(e) { ballSkinPrefs = {}; }
+    function getBallSkin(key) { return BALL_SKINS.some(s=>s.id===ballSkinPrefs[key]) ? ballSkinPrefs[key] : 'elegant'; }
+    function setBallSkin(key, skin) {
+      if (!BALL_SKINS.some(s=>s.id===skin)) return;
+      ballSkinPrefs[key]=skin;
+      try { localStorage.setItem('bba-ball-skins-v1', JSON.stringify(ballSkinPrefs)); } catch(e) {}
+      renderBallLibrary();
+      if (p1 && p1.typeKey===key) p1.skinStyle=skin;
+      if (p2 && p2.typeKey===key) p2.skinStyle=skin;
+    }
     const p1Select = document.getElementById('p1-select');
     const p2Select = document.getElementById('p2-select');
     const btnStart = document.getElementById('btn-start');
@@ -773,6 +892,13 @@
     const winnerOverlay = document.getElementById('winner-overlay');
     const winnerText = document.getElementById('winner-text');
     const battleLog = document.getElementById('battle-log');
+    const btnPause = document.getElementById('btn-pause');
+    const libraryModal = document.getElementById('library-modal');
+    const libraryGrid = document.getElementById('library-grid');
+    const libraryDetail = document.getElementById('library-detail');
+    const librarySearch = document.getElementById('library-search');
+    let libraryRoleFilter = 'Tất cả';
+    let librarySelectedKey = 'moonshot';
 
     function endHadesHell(owner, interrupted = false) {
       if (!owner || owner.typeKey !== 'hades') return;
@@ -1129,6 +1255,49 @@
         for (let i = 0; i < Math.min(8, stacks); i++) { const a = t * 0.018 + i * Math.PI * 2 / Math.min(8, stacks); drawSpark(ctx, Math.cos(a) * (r + 13), Math.sin(a) * (r + 13), 1.8, '#6ee7b7', 0.72); }
         ctx.restore();
       }
+      if (ball.typeKey === 'moonshot') {
+        const range = r * 2 * SKILL_CONFIG.moonshot.rangeDiameters * (ball.moonshotGun === 0 ? SKILL_CONFIG.moonshot.gun1RangeBonus : 1);
+        const pulse = 0.5 + Math.sin(t * 0.045) * 0.5;
+        ctx.save();
+        ctx.strokeStyle = `rgba(238,244,255,${0.10 + pulse * 0.09})`;
+        ctx.lineWidth = 0.8;
+        ctx.setLineDash([2, 7]);
+        ctx.beginPath(); ctx.arc(x, y, range, 0, Math.PI * 2); ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.strokeStyle = `rgba(255,255,255,${0.12 + pulse * 0.12})`;
+        ctx.lineWidth = 0.55;
+        ctx.beginPath(); ctx.arc(x, y, range - 2, t * 0.002, t * 0.002 + Math.PI * 1.7); ctx.stroke();
+        ctx.restore();
+      }
+      drawUniversalSkinVFX(ball);
+      ctx.restore();
+    }
+
+    function drawUniversalSkinVFX(ball) {
+      const style = ball.skinStyle || getBallSkin(ball.typeKey);
+      const x=ball.x, y=ball.y, r=ball.radius, t=globalTick;
+      ctx.save(); ctx.translate(x,y);
+      if (style === 'brutal') {
+        const pulse=0.5+Math.sin(t*0.16)*0.5;
+        ctx.rotate(t*0.008);
+        ctx.strokeStyle=`rgba(226,190,145,${0.22+pulse*0.24})`; ctx.lineWidth=1.4; ctx.shadowColor='#b77948'; ctx.shadowBlur=9;
+        ctx.beginPath(); ctx.arc(0,0,r+7+pulse*2,0,Math.PI*2); ctx.stroke();
+        for(let i=0;i<8;i++){const a=i*Math.PI/4, inner=r+5, outer=r+10+(i%2)*4;ctx.beginPath();ctx.moveTo(Math.cos(a)*inner,Math.sin(a)*inner);ctx.lineTo(Math.cos(a+0.10)*outer,Math.sin(a+0.10)*outer);ctx.stroke();}
+        if(t%9<2){for(let i=0;i<3;i++){const a=t*0.07+i*2.1;drawSpark(ctx,Math.cos(a)*(r+12),Math.sin(a)*(r+12),2.1,'#f5d7bd',0.75);}}
+      } else if (style === 'elegant') {
+        const pulse=0.5+Math.sin(t*0.09)*0.5;
+        ctx.rotate(-t*0.006);
+        ctx.strokeStyle=`rgba(244,235,220,${0.22+pulse*0.2})`;ctx.lineWidth=0.9;ctx.shadowColor='#f2dfc5';ctx.shadowBlur=8;
+        ctx.beginPath();ctx.ellipse(0,0,r+8,r+5,0,0,Math.PI*2);ctx.stroke();
+        for(let i=0;i<4;i++){const a=t*0.018+i*Math.PI/2;drawSpark(ctx,Math.cos(a)*(r+10),Math.sin(a)*(r+10),1.8,'#fff4df',0.58+pulse*0.25);}
+      } else {
+        const pulse=0.5+Math.sin(t*0.075)*0.5;
+        ctx.rotate(t*0.004);
+        ctx.strokeStyle=`rgba(196,174,235,${0.2+pulse*0.2})`;ctx.lineWidth=1;ctx.shadowColor='#b9a2ed';ctx.shadowBlur=11;
+        ctx.beginPath();ctx.arc(0,0,r+9,0,Math.PI*2);ctx.stroke();
+        ctx.setLineDash([2,6]);ctx.beginPath();ctx.arc(0,0,r+14,-t*0.012,-t*0.012+Math.PI*1.55);ctx.stroke();ctx.setLineDash([]);
+        for(let i=0;i<5;i++){const a=-t*0.012+i*Math.PI*2/5, rr=r+13+Math.sin(t*0.06+i)*2;drawSpark(ctx,Math.cos(a)*rr,Math.sin(a)*rr,2.0,'#e6dcff',0.62+pulse*0.2);}
+      }
       ctx.restore();
     }
 
@@ -1211,6 +1380,7 @@
         this.id = id;
         this.side = side;
         this.typeKey = typeKey;
+        this.skinStyle = getBallSkin(typeKey);
         this.name = cfg.name;
         this.color = cfg.color;
         this.secondaryColor = cfg.secondaryColor;
@@ -4616,9 +4786,50 @@
       updateHUDForPlayer(p2, 'p2');
     }
 
+    function renderSelectedBallInfo(key) {
+      const cfg=BALL_TYPES[key], meta=BALL_LIBRARY[key] || {role:'Đấu Sĩ',desc:'Chiến binh mới gia nhập đấu trường.'};
+      if(!cfg) return;
+      document.getElementById('selected-ball-title').textContent=`${cfg.icon} ${cfg.name} · ${meta.role}`;
+      document.getElementById('selected-ball-stats').textContent=`HP ${cfg.maxHp}  ·  Tốc độ ${(cfg.speed/BASE_SPEED).toFixed(2)}×  ·  Va chạm ${cfg.contactDmg} dmg`;
+      document.getElementById('selected-ball-desc').textContent=meta.desc;
+    }
+    function renderBallLibrary() {
+      const keys=Object.keys(BALL_TYPES);
+      const roles=['Tất cả','Xạ Thủ','Sát Thủ','Đấu Sĩ','Hỗ Trợ','Đỡ Đòn'];
+      document.getElementById('library-filters').innerHTML=roles.map(role=>`<button class="arena-filter ${libraryRoleFilter===role?'active':''}" data-role="${role}">${role}</button>`).join('');
+      const q=(librarySearch.value||'').trim().toLowerCase();
+      const filtered=keys.filter(key=>{
+        const cfg=BALL_TYPES[key], meta=BALL_LIBRARY[key]||{role:'Đấu Sĩ',desc:''};
+        return (libraryRoleFilter==='Tất cả'||meta.role===libraryRoleFilter) && `${cfg.name} ${meta.desc} ${meta.role}`.toLowerCase().includes(q);
+      });
+      libraryGrid.innerHTML=filtered.map(key=>{
+        const cfg=BALL_TYPES[key],meta=BALL_LIBRARY[key]||{role:'Đấu Sĩ'};
+        return `<button class="library-card ${librarySelectedKey===key?'selected':''}" data-ball="${key}"><span class="library-orb" style="--orb:${cfg.color};--orb2:${cfg.secondaryColor}">${cfg.icon}</span><span class="min-w-0 text-left"><b>${cfg.name}</b><small>${meta.role} · ${cfg.maxHp} HP</small></span><span class="ml-auto text-[#bda98d]">›</span></button>`;
+      }).join('') || (libraryRoleFilter==='Hỗ Trợ' ? '<div class="text-xs text-[#c7b397] p-3 leading-relaxed">Chưa có chiến binh Hỗ Trợ trong phiên bản hiện tại. Vai trò này sẽ được bổ sung khi game có chế độ đấu đội.</div>' : '<div class="text-xs text-[#b6a38b] p-3">Không tìm thấy chiến binh.</div>');
+      renderLibraryDetail(librarySelectedKey);
+    }
+    function renderLibraryDetail(key) {
+      const cfg=BALL_TYPES[key]; if(!cfg) return;
+      const meta=BALL_LIBRARY[key]||{role:'Đấu Sĩ',desc:'Chiến binh mới gia nhập đấu trường.'};
+      const speed=(cfg.speed/BASE_SPEED).toFixed(2);
+      const skin=getBallSkin(key);
+      libraryDetail.innerHTML=`
+        <div class="flex items-center gap-3 mb-4"><div class="library-hero-orb" style="--orb:${cfg.color};--orb2:${cfg.secondaryColor}">${cfg.icon}</div><div><div class="text-[10px] tracking-[.2em] text-[#b69c7a]">${meta.role.toUpperCase()}</div><h3 class="text-xl font-black text-[#f1e2cb]">${cfg.name}</h3><div class="text-[11px] text-[#bca98e]">Bộ sưu tập chiến binh</div></div></div>
+        <div class="grid grid-cols-3 gap-2 mb-4"><div class="library-stat"><b>${cfg.maxHp}</b><small>HP tối đa</small></div><div class="library-stat"><b>${speed}×</b><small>Tốc độ</small></div><div class="library-stat"><b>${cfg.contactDmg}</b><small>Va chạm</small></div></div>
+        <div class="text-[10px] tracking-[.2em] text-[#b69c7a] mb-1">NỘI TẠI & LỐI CHƠI</div><p class="text-xs leading-relaxed text-[#d3c2aa] mb-5">${meta.desc}</p>
+        <div class="flex items-center justify-between mb-2"><div><div class="text-[10px] tracking-[.2em] text-[#b69c7a]">TRANG PHỤC HIỆU ỨNG</div><div class="text-sm font-bold text-[#f1e2cb]">Chọn phong cách</div></div><span class="text-[10px] text-[#a99579]">Lưu tự động</span></div>
+        <div class="space-y-2">${BALL_SKINS.map(sk=>`<button class="skin-choice ${skin===sk.id?'chosen':''}" data-skin="${sk.id}"><span class="skin-swatch ${sk.id}"><i></i><i></i><i></i></span><span class="text-left flex-1"><b>${sk.name}</b><small>${sk.tag}</small><em>${sk.desc}</em></span><span class="skin-check">${skin===sk.id?'✓':'○'}</span></button>`).join('')}</div>
+        <div class="mt-4 grid grid-cols-2 gap-2"><button class="arena-btn" data-pick="p1">Dùng cho Ball 1</button><button class="arena-btn" data-pick="p2">Dùng cho Ball 2</button></div>`;
+    }
+    function openBallLibrary() { libraryModal.classList.remove('hidden'); libraryModal.classList.add('flex'); renderBallLibrary(); }
+    function closeBallLibrary() { libraryModal.classList.add('hidden'); libraryModal.classList.remove('flex'); }
+
     function initGame() {
       if (animationFrameId) cancelAnimationFrame(animationFrameId);
       gameOver = false;
+      gamePaused = false;
+      btnPause.textContent = 'Ⅱ TẠM DỪNG';
+      document.getElementById('match-state').textContent = 'ĐANG GIAO TRANH';
       oceanEnvironmentTimer = 0;
       activeEnvironment = { type: null, timer: 0, owner: null }; skyEnvironmentUnlocked = false; skyWindAngle = Math.random() * Math.PI * 2;
       dragonFireShots = []; dragonBurnZones = []; dragonAshTrees = []; dragonGroundFires = [];
@@ -4649,6 +4860,7 @@
     function endGame(loser) {
       if (gameOver) return;
       gameOver = true;
+      document.getElementById('match-state').textContent = 'TRẬN ĐẤU KẾT THÚC';
       const winner = (loser === p1) ? p2 : p1;
       winnerText.innerText = `🏆 ${winner.name.toUpperCase()} CHIẾN THẮNG!`;
       winnerOverlay.classList.remove('hidden');
@@ -4756,10 +4968,15 @@
       if (lastFrameTimestamp === null) lastFrameTimestamp = timestamp;
       const elapsedMs = Math.min(Math.max(0, timestamp - lastFrameTimestamp), MAX_FRAME_DELTA_MS);
       lastFrameTimestamp = timestamp;
+      if (gamePaused) {
+        frameAccumulatorMs = 0;
+        if (!gameOver) animationFrameId = requestAnimationFrame(gameLoop);
+        return;
+      }
       frameAccumulatorMs += elapsedMs;
 
       let steps = 0;
-      while (frameAccumulatorMs >= FIXED_STEP_MS && steps < MAX_CATCHUP_STEPS && !gameOver) {
+      while (!gamePaused && frameAccumulatorMs >= FIXED_STEP_MS && steps < MAX_CATCHUP_STEPS && !gameOver) {
         gameStep();
         frameAccumulatorMs -= FIXED_STEP_MS;
         steps++;
@@ -4776,8 +4993,28 @@
 
     btnStart.addEventListener('click', initGame);
     btnRestart.addEventListener('click', initGame);
-    
+    btnPause.addEventListener('click', () => {
+      if (gameOver) return;
+      gamePaused=!gamePaused;
+      btnPause.textContent=gamePaused?'▶ TIẾP TỤC':'Ⅱ TẠM DỪNG';
+      document.getElementById('match-state').textContent=gamePaused?'ĐANG TẠM DỪNG':'ĐANG GIAO TRANH';
+      lastFrameTimestamp=null; frameAccumulatorMs=0;
+    });
+    document.getElementById('btn-library').addEventListener('click',openBallLibrary);
+    document.getElementById('btn-library-close').addEventListener('click',closeBallLibrary);
+    libraryModal.addEventListener('click',e=>{if(e.target===libraryModal)closeBallLibrary();});
+    librarySearch.addEventListener('input',renderBallLibrary);
+    document.getElementById('library-filters').addEventListener('click',e=>{const b=e.target.closest('[data-role]');if(!b)return;libraryRoleFilter=b.dataset.role;renderBallLibrary();});
+    libraryGrid.addEventListener('click',e=>{const b=e.target.closest('[data-ball]');if(!b)return;librarySelectedKey=b.dataset.ball;renderBallLibrary();});
+    libraryDetail.addEventListener('click',e=>{
+      const skin=e.target.closest('[data-skin]'); if(skin){setBallSkin(librarySelectedKey,skin.dataset.skin);return;}
+      const pick=e.target.closest('[data-pick]'); if(pick){const key=librarySelectedKey,select=pick.dataset.pick==='p1'?p1Select:p2Select;select.value=key;renderSelectedBallInfo(key);initGame();closeBallLibrary();}
+    });
+    p1Select.addEventListener('change',()=>renderSelectedBallInfo(p1Select.value));
+    p2Select.addEventListener('change',()=>renderSelectedBallInfo(p2Select.value));
+
     initGame();
+    renderSelectedBallInfo(p1Select.value);
   </script>
 </body>
 </html>
