@@ -543,7 +543,7 @@
       // Moonshot Ball – xạ thủ ánh trăng, cơ động và luân phiên bốn vũ khí bạc.
       moonshot: {
         name: 'Moonshot Ball', color: '#e8edf4', secondaryColor: '#8995a8',
-        hp: 85, maxHp: 85, radius: 18, speed: BASE_SPEED * 0.85, contactDmg: 5, icon: '🌙'
+        hp: 95, maxHp: 95, radius: 18, speed: BASE_SPEED * 0.85, contactDmg: 5, icon: '🌙'
       }
     };
 
@@ -558,8 +558,8 @@
       },
       // Ghost Ball – thời gian hóa hồn, sát thương và làm chậm
       ghost: {
-        cooldownToGhost: 4.0,
-        ghostDmg: 22,
+        cooldownToGhost: 3.5,
+        ghostDmg: 23,
         ghostSlowDuration: 1.5,
         ghostSpeedMult: 1.5
       },
@@ -626,7 +626,7 @@
         trailLifespan: 3000,
         speedBoostMult: 1.6,
         slashBaseDmg: 12,
-        slashMissingHpPct: 0.40
+        slashMissingHpPct: 0.35
       },
       // Shen Ball – vùng Kiếm Hồn, khiên và hoán đổi
       shen: {
@@ -708,7 +708,7 @@
       },
       // Hades Ball – hút máu, Cerberus, Thần Thương và Địa Ngục
       hades: {
-        drainInterval: 0.95,
+        drainInterval: 1.15,
         drainHp: 1,
         cerberusSpeedMult: 1.25,
         cerberusContactDmg: 0,
@@ -739,14 +739,14 @@
         form2Damage: 5,
         form3Damage: 8,
         burnDuration: 5,
-        burnDamage: 5,
+        burnDamage: 4,
         burnTick: 0.5,
         burnRadiusDiam: 3,
         burnSlowFactor: 0.65,
         form2Heal: 14,
-        form3Shield: 100,
+        form3Shield: 8888,
         form3ShieldDuration: 2.5,
-        skySlowFactor: 0.84,
+        skySlowFactor: 0.75,
         skyWindMult: 0.2,
         groundFireDuration: 1,
         groundFireDamage: 3,
@@ -760,41 +760,41 @@
         poisonDamage: 1,
         burnStackInterval: 0.75,
         poisonMissPerStack: 0.045,
-        maxMissChance: 0.80,
+        maxMissChance: 0.75,
         strikeRangeDiam: 1,
         strikeDelay: 0.25,
         strikeCooldown: 0.72,
         strikeBaseDamage: 2,
         strikeMissingHpPct: 0.06,
         strikeBonusStackChance: 0.5,
-        collisionHealPerStack: 1.5
+        collisionHealPerStack: 1.2
       },
       // Gamber Ball – xác suất xúc xắc, nhịp tung chiêu và hiệu ứng 3 lá bài.
       gamber: {
-        skillInterval: 3.0,          // Chuỗi kỹ năng chính: mỗi 3 giây.
+        skillInterval: 3.25,          // Chuỗi kỹ năng chính: mỗi 3 giây.
         diceRepeatDelay: 0.75,       // Khoảng nghỉ giữa các lần đổ xúc xắc bồi.
         bonusCastDelay: 0.75,        // Lá bài hiệu ứng 2: tung thêm một chuỗi kỹ năng sau 0,75 giây.
-        healPerCast: 4,              // Hồi máu mỗi khi bắt đầu một lần tung kỹ năng.
-        diceDamagePerPoint: 5,       // Mỗi điểm xúc xắc thắng gây 5 sát thương.
+        healPerCast: 2,              // Hồi máu mỗi khi bắt đầu một lần tung kỹ năng.
+        diceDamagePerPoint: 3,       // Mỗi điểm xúc xắc thắng gây 5 sát thương.
         enemyDiceDamage: 5,          // Phần 2: sát thương cố định.
-        cardSpeed: 4.8,              // Tốc độ bay của lá bài (nhân Base Speed).
+        cardSpeed: 3,              // Tốc độ bay của lá bài (nhân Base Speed).
         cardLife: 1.65,              // Thời gian tồn tại tối đa của lá bài.
-        cardDamageStun: 10,
+        cardDamageStun: 5,
         cardStunDuration: 1.55,
         cardDamageBonus: 10,
         cardDamageCleanse: 5,
         cardBonusPerStatus: 5,
         cardSlowDuration: 1.25,
         cardSlowFactor: 0.5,
-        cardSpreadDeg: 20            // Góc lệch của mỗi lá so với lá giữa.
+        cardSpreadDeg: 15            // Góc lệch của mỗi lá so với lá giữa.
       },
       moonshot: {
-        rangeDiameters: 5.5, gun1RangeBonus: 1.25, fireInterval: 0.25, ammoPerGun: 7,
-        switchDuration: 0.5, switchShield: 100, switchSpeed: 1.5,
-        gun1BaseDamage: 2, gun1MidBonus: 1, gun1FarBonus: 2,
-        gun2BaseDamage: 2, gun2MissingHpDamagePct: 0.02, gun2Heal: 2, gun2HealMissingPct: 0.02,
+        rangeDiameters: 6, gun1RangeBonus: 1.25, fireInterval: 0.24, ammoPerGun: 7,
+        switchDuration: 0.35, switchShield: 100, switchSpeed: 1.5,
+        gun1BaseDamage: 3, gun1MidBonus: 1, gun1FarBonus: 2,
+        gun2BaseDamage: 3, gun2MissingHpDamagePct: 0.02, gun2Heal: 2, gun2HealMissingPct: 0.02,
         gun2SpeedBonus: 1.2, gun2BulletSpeedBonus: 1.3, gun2HitSpeedBonus: 1.2, gun2HitSpeedDuration: 1.75,
-        gun3BaseDamage: 3, gun3CloseBonus: 2, gun3CloseDiameters: 1, gun3ReturnSpeed: 0.5,
+        gun3BaseDamage: 4, gun3CloseBonus: 2, gun3CloseDiameters: 1, gun3ReturnSpeed: 0.5,
         gun4Damage: 2, gun4Stun: 0.25, gun4GuardRefresh: 0.25
       }
     };
