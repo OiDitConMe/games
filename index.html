@@ -78,6 +78,7 @@
               <option value="hades">👑 Hades Ball</option>
               <option value="dragon">🐉 Dragon Ball</option>
               <option value="viper">🐍 Viper Ball</option>
+              <option value="gamber">🎲 Gamber Ball</option>
             </select>
           </div>
 
@@ -104,6 +105,7 @@
               <option value="hades">👑 Hades Ball</option>
               <option value="dragon">🐉 Dragon Ball</option>
               <option value="viper">🐍 Viper Ball</option>
+              <option value="gamber">🎲 Gamber Ball</option>
             </select>
           </div>
 
@@ -123,7 +125,8 @@
           • <span class="text-violet-300 font-semibold">Ronin:</span> Tích tốc độ, kiếm vũ 360°, Ấn Cuồng Phong & Lốc Xoáy.<br>
           • <span class="text-rose-300 font-semibold">Hades:</span> Cerberus bất tử, Địa Ngục & Thần Thương tước HP tối đa, trao khiên vĩnh viễn.<br>
           • <span class="text-amber-300 font-semibold">Dragon:</span> Long Khí thanh tẩy, 3 lần thức tỉnh, Thần Thụ & Bầu Trời.<br>
-          • <span class="text-emerald-300 font-semibold">Viper:</span> Độc Chướng cộng dồn, làm trượt đòn và Nanh Độc xuyên khiên.
+          • <span class="text-emerald-300 font-semibold">Viper:</span> Độc Chướng cộng dồn, làm trượt đòn và Nanh Độc xuyên khiên.<br>
+          • <span class="text-amber-200 font-semibold">Gamber:</span> Xúc xắc định mệnh, bài phép hoàng kim, choáng và thanh tẩy.
         </div>
       </div>
     </div>
@@ -438,12 +441,24 @@
         name: 'Viper Ball',
         color: '#0f6b45',
         secondaryColor: '#052e25',
-        hp: 95,
-        maxHp: 95,
+        hp: 100,
+        maxHp: 100,
         radius: 18,
         speed: BASE_SPEED * 1.15,
-        contactDmg: 3,
+        contactDmg: 4,
         icon: '🐍'
+      },
+      // Gamber Ball – vận tốc bằng Base Speed chuẩn của toàn bộ đấu trường.
+      gamber: {
+        name: 'Gamber Ball',
+        color: '#b8893d',
+        secondaryColor: '#4b2e16',
+        hp: 100,
+        maxHp: 100,
+        radius: 18,
+        speed: BASE_SPEED,
+        contactDmg: 5,
+        icon: '🎲'
       }
     };
 
@@ -659,15 +674,34 @@
         poisonDuration: 2,
         poisonDamage: 1,
         burnStackInterval: 0.75,
-        poisonMissPerStack: 0.04,
+        poisonMissPerStack: 0.045,
         maxMissChance: 0.80,
         strikeRangeDiam: 1,
         strikeDelay: 0.25,
         strikeCooldown: 0.72,
         strikeBaseDamage: 2,
-        strikeMissingHpPct: 0.055,
+        strikeMissingHpPct: 0.06,
         strikeBonusStackChance: 0.5,
-        collisionHealPerStack: 1.1
+        collisionHealPerStack: 1.5
+      },
+      // Gamber Ball – xác suất xúc xắc, nhịp tung chiêu và hiệu ứng 3 lá bài.
+      gamber: {
+        skillInterval: 3.0,          // Chuỗi kỹ năng chính: mỗi 3 giây.
+        diceRepeatDelay: 0.75,       // Khoảng nghỉ giữa các lần đổ xúc xắc bồi.
+        bonusCastDelay: 0.75,        // Lá bài hiệu ứng 2: tung thêm một chuỗi kỹ năng sau 0,75 giây.
+        healPerCast: 4,              // Hồi máu mỗi khi bắt đầu một lần tung kỹ năng.
+        diceDamagePerPoint: 5,       // Mỗi điểm xúc xắc thắng gây 5 sát thương.
+        enemyDiceDamage: 5,          // Phần 2: sát thương cố định.
+        cardSpeed: 4.8,              // Tốc độ bay của lá bài (nhân Base Speed).
+        cardLife: 1.65,              // Thời gian tồn tại tối đa của lá bài.
+        cardDamageStun: 10,
+        cardStunDuration: 1.55,
+        cardDamageBonus: 10,
+        cardDamageCleanse: 5,
+        cardBonusPerStatus: 5,
+        cardSlowDuration: 1.25,
+        cardSlowFactor: 0.5,
+        cardSpreadDeg: 20            // Góc lệch của mỗi lá so với lá giữa.
       }
     };
 
@@ -709,6 +743,7 @@
     let dragonGroundFires = [];
     let viperPoisonMotes = [];
     let viperStrikes = [];
+    let gamberCards = [];
     let gameOver = false;
     let animationFrameId = null;
     let globalTick = 0; // Số bước mô phỏng 1/60 giây đã chạy.
@@ -850,7 +885,7 @@
         soul: 'text-pink-400', marksman: 'text-lime-400', ninja: 'text-slate-200',
         reaper: 'text-slate-400', shen: 'text-cyan-400', sound: 'text-teal-400',
         angel: 'text-yellow-300', wukong: 'text-orange-400', demon: 'text-red-500',
-        poseidon: 'text-sky-300', ronin: 'text-cyan-200', hades: 'text-rose-300', dragon: 'text-amber-300', p1: 'text-cyan-400', p2: 'text-rose-400', normal: 'text-slate-300'
+        poseidon: 'text-sky-300', ronin: 'text-cyan-200', hades: 'text-rose-300', dragon: 'text-amber-300', gamber: 'text-amber-200', p1: 'text-cyan-400', p2: 'text-rose-400', normal: 'text-slate-300'
       };
       entry.innerHTML = `<span class="text-slate-600">[${time}]</span> <span class="${colorMap[type] || 'text-slate-300'}">${msg}</span>`;
       battleLog.appendChild(entry);
@@ -943,7 +978,30 @@
     function drawBallSignatureVFX(ball) {
       const x = ball.x, y = ball.y, r = ball.radius, t = globalTick;
       ctx.save();
-      if (ball.typeKey === 'fire') {
+      if (ball.typeKey === 'gamber') {
+        ctx.translate(x, y);
+        ctx.rotate(t * 0.012);
+        const pulse = 0.5 + Math.sin(t * 0.105) * 0.5;
+        // Vòng phù văn kim loại cổ, viền vàng sáng và quầng nâu đồng.
+        const aura = ctx.createRadialGradient(0, 0, r * 0.45, 0, 0, r + 19);
+        aura.addColorStop(0, 'rgba(255,231,163,0.24)');
+        aura.addColorStop(0.48, 'rgba(190,139,54,0.20)');
+        aura.addColorStop(1, 'rgba(91,54,22,0)');
+        ctx.fillStyle = aura; ctx.beginPath(); ctx.arc(0, 0, r + 19, 0, Math.PI * 2); ctx.fill();
+        ctx.shadowColor = '#e7bd62'; ctx.shadowBlur = 16;
+        ctx.strokeStyle = `rgba(255,224,150,${0.42 + pulse * 0.42})`; ctx.lineWidth = 1.6;
+        ctx.beginPath(); ctx.arc(0, 0, r + 7 + pulse * 2, 0, Math.PI * 2); ctx.stroke();
+        ctx.strokeStyle = 'rgba(153,105,42,0.85)'; ctx.lineWidth = 1.15; ctx.setLineDash([2, 5]);
+        ctx.beginPath(); ctx.arc(0, 0, r + 13, 0, Math.PI * 2); ctx.stroke(); ctx.setLineDash([]);
+        // Sáu điểm tinh thể lấp lánh chuyển động quanh Ball.
+        for (let i = 0; i < 6; i++) {
+          const a = -t * 0.026 + i * Math.PI / 3;
+          const rr = r + 12 + Math.sin(t * 0.09 + i) * 2;
+          drawSpark(ctx, Math.cos(a) * rr, Math.sin(a) * rr, 2.2 + pulse * 1.3, i % 2 ? '#fff1bd' : '#d6a64e', 0.72 + pulse * 0.25);
+        }
+        ctx.restore();
+        return;
+      } else if (ball.typeKey === 'fire') {
         for (let i = 0; i < 7; i++) {
           const a = t * 0.055 + i * Math.PI * 2 / 7;
           const h = 7 + (Math.sin(t * 0.19 + i * 2) + 1) * 5;
@@ -1109,6 +1167,26 @@
       applyViperPoison(attacker, 1);
     }
 
+    // Thanh tẩy các trạng thái bất lợi; trả về số loại trạng thái khác nhau đã xóa.
+    function cleanseGamberDebuffs(target) {
+      if (!target) return 0;
+      let removed = 0;
+      if ((target.burnStacks || 0) > 0 || (target.burnTimer || 0) > 0) {
+        removed++; target.burnStacks = 0; target.burnTimer = 0; target.burnTickTimer = 0;
+      }
+      if ((target.slowTimer || 0) > 0 || (target.slowFactor || 1) < 1) {
+        removed++; target.slowTimer = 0; target.slowFactor = 1;
+      }
+      if ((target.stunTimer || 0) > 0) { removed++; target.stunTimer = 0; }
+      if ((target.drownedTimer || 0) > 0) { removed++; target.drownedTimer = 0; }
+      if ((target.viperPoisonStacks || 0) > 0 || (target.viperPoisonTimer || 0) > 0) {
+        removed++; target.viperPoisonStacks = 0; target.viperPoisonTimer = 0; target.viperPoisonTickTimer = 0;
+      }
+      if ((target.oceanicMarks || 0) > 0) { removed++; target.oceanicMarks = 0; }
+      if (removed > 0) updateHUD();
+      return removed;
+    }
+
     class Ball {
       constructor(id, typeKey, startX, startY, side) {
         const cfg = BALL_TYPES[typeKey];
@@ -1220,6 +1298,13 @@
         this.viperStrikeCooldown = 0; this.viperStrike = null; this.viperCollisionWasTouching = false;
         this.viperMissTick = -1; this.viperMissResult = false; this.viperPassiveTick = -1; this.viperSpreadTick = -1;
         this.viperBurnStackTimer = 0; this.viperFacingAngle = side === 'p1' ? 0 : Math.PI;
+        // Gamber: đồng hồ 3 giây độc lập với các lần tung chiêu bồi từ xúc xắc/lá bài.
+        this.gamberSkillTimer = 0;
+        this.gamberSequence = null;
+        this.gamberMainQueue = 0;
+        this.gamberBonusQueue = 0;
+        this.gamberBonusTimers = [];
+        this.gamberFacingAngle = side === 'p1' ? 0 : Math.PI;
         if (typeKey === 'hades') {
           let cx = 0, cy = 0, attempts = 0;
           do {
@@ -1375,6 +1460,7 @@
           case 'hades':    this.updateHades(enemy); break;
           case 'dragon':   this.updateDragon(enemy); break;
           case 'viper':    this.updateViper(enemy); break;
+          case 'gamber':   this.updateGamber(enemy); break;
         }
 
         if (!this.isGhosting && this.stunTimer <= 0) {
@@ -2053,6 +2139,112 @@
             }
             this.viperStrike = null;
           }
+        }
+      }
+
+      // Bắt đầu một lượt Gamber. Lượt bồi không đụng vào đồng hồ chu kỳ 3 giây.
+      beginGamberSequence(isBonus = false) {
+        const cfg = SKILL_CONFIG.gamber;
+        this.gamberSequence = { stage: 'duel', timer: 0, firstRoll: true, isBonus };
+        const healed = Math.min(cfg.healPerCast, this.maxHp - this.hp);
+        this.hp += healed;
+        if (healed > 0) createFloatingText(this.x, this.y - 28, `+${healed} HP`, '#f7d98a');
+        createShockwave(this.x, this.y, 48, '#d6a84b', 2.2);
+        createParticles(this.x, this.y, '#f6d889', 13, 1.25);
+        updateHUD();
+        logMessage(`🎲 Gamber ${isBonus ? 'kích hoạt lượt bài bồi' : 'bắt đầu chuỗi Định Mệnh'} — hồi ${healed} HP!`, 'gamber');
+      }
+
+      finishGamberSequence(enemy) {
+        const cfg = SKILL_CONFIG.gamber;
+        if (!enemy || enemy.hp <= 0) { this.gamberSequence = null; return; }
+        // Phần 2: xúc xắc của địch quyết định thời gian choáng.
+        const enemyRoll = 1 + Math.floor(Math.random() * 6);
+        const stunDuration = enemyRoll / 2;
+        enemy.takeDamage(cfg.enemyDiceDamage, 'Xúc Xắc Định Mệnh');
+        enemy.applyStun(stunDuration);
+        createFloatingText(enemy.x, enemy.y - 28, `🎲 ${enemyRoll} • CHOÁNG ${stunDuration.toFixed(1)}s`, '#f8df9b');
+        createShockwave(enemy.x, enemy.y, 52 + enemyRoll * 3, '#d4a64d', 2.5);
+        createParticles(enemy.x, enemy.y, '#f5d78e', 16 + enemyRoll * 2, 1.45);
+        logMessage(`🎲 Gamber đổ ${enemyRoll} cho ${enemy.name}: choáng ${stunDuration.toFixed(1)} giây và nhận ${cfg.enemyDiceDamage} dmg!`, 'gamber');
+
+        // Phần 3: ba lá bài bay theo hình quạt, lá giữa ngắm thẳng mục tiêu.
+        const centerAngle = Math.atan2(enemy.y - this.y, enemy.x - this.x);
+        this.gamberFacingAngle = centerAngle;
+        const spread = cfg.cardSpreadDeg * Math.PI / 180;
+        [-spread, 0, spread].forEach((offset, index) => {
+          const angle = centerAngle + offset;
+          const effect = 1 + Math.floor(Math.random() * 3);
+          const speed = BASE_SPEED * cfg.cardSpeed;
+          gamberCards.push({
+            owner: this, target: enemy, x: this.x + Math.cos(angle) * (this.radius + 5),
+            y: this.y + Math.sin(angle) * (this.radius + 5),
+            vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed,
+            angle, effect, life: cfg.cardLife, spin: (index - 1) * 0.12,
+            trail: [], hit: false, index
+          });
+        });
+        createParticles(this.x, this.y, '#e9c56f', 20, 1.6);
+        this.gamberSequence = null;
+        updateHUD();
+        this.processGamberQueues();
+      }
+
+      processGamberQueues() {
+        if (this.gamberSequence) return;
+        if (this.gamberBonusQueue > 0) {
+          this.gamberBonusQueue--;
+          this.beginGamberSequence(true);
+        } else if (this.gamberMainQueue > 0) {
+          this.gamberMainQueue--;
+          this.beginGamberSequence(false);
+        }
+      }
+
+      updateGamber(enemy) {
+        if (!enemy || enemy.hp <= 0) return;
+        const cfg = SKILL_CONFIG.gamber;
+        // Chu kỳ chính luôn chạy độc lập, kể cả khi có lượt bồi đang diễn ra.
+        this.gamberSkillTimer += FIXED_STEP_SECONDS;
+        if (this.gamberSkillTimer >= cfg.skillInterval) {
+          this.gamberSkillTimer -= cfg.skillInterval;
+          this.gamberMainQueue++;
+        }
+        // Các lượt bồi từ lá bài cũng có bộ đếm riêng.
+        for (let i = this.gamberBonusTimers.length - 1; i >= 0; i--) {
+          this.gamberBonusTimers[i] -= FIXED_STEP_SECONDS;
+          if (this.gamberBonusTimers[i] <= 0) {
+            this.gamberBonusTimers.splice(i, 1);
+            this.gamberBonusQueue++;
+          }
+        }
+        this.processGamberQueues();
+
+        if (!this.gamberSequence || this.gamberSequence.stage !== 'duel') return;
+        this.gamberSequence.timer -= FIXED_STEP_SECONDS;
+        if (this.gamberSequence.timer > 0) return;
+
+        // Xúc xắc Gamber: lần đầu không thể ra 1; từ lần thứ hai không thể ra 1 hoặc 2.
+        const minSelfRoll = this.gamberSequence.firstRoll ? 2 : 3;
+        const selfRoll = minSelfRoll + Math.floor(Math.random() * (7 - minSelfRoll));
+        const enemyRoll = 1 + Math.floor(Math.random() * 6);
+        this.gamberSequence.firstRoll = false;
+        createFloatingText(this.x, this.y - 25, `🎲 ${selfRoll}  VS  ${enemyRoll}`, '#f4d58b');
+        createParticles(this.x, this.y, '#d9b45f', 8, 0.9);
+        logMessage(`🎲 Gamber: xúc xắc ${selfRoll} đối đầu ${enemyRoll}!`, 'gamber');
+
+        if (selfRoll >= enemyRoll) {
+          const damage = (selfRoll - enemyRoll) * cfg.diceDamagePerPoint;
+          if (damage > 0) {
+            enemy.takeDamage(damage, 'Thắng Xúc Xắc');
+            createFloatingText(enemy.x, enemy.y - 18, `-${damage} DMG`, '#f3d17e');
+            createParticles(enemy.x, enemy.y, '#d6a84b', 10 + damage, 1.1);
+          }
+          createShockwave(this.x, this.y, 30 + selfRoll * 3, '#c99b42', 1.6);
+          this.gamberSequence.timer = cfg.diceRepeatDelay;
+          // Không thay đổi gamberSkillTimer: lần tung bồi không đặt lại nhịp 3 giây.
+        } else {
+          this.finishGamberSequence(enemy);
         }
       }
 
@@ -2769,6 +2961,75 @@
         for (let j = i + 1; j < wukongClones.length; j++) {
           resolveElasticCollision(c1, wukongClones[j]);
         }
+      }
+    }
+
+    // Cập nhật và vẽ 3 lá bài Gamber. Mỗi lá tự chọn hiệu ứng khi trúng mục tiêu.
+    function updateAndDrawGamberEntities() {
+      const cfg = SKILL_CONFIG.gamber;
+      for (let i = gamberCards.length - 1; i >= 0; i--) {
+        const card = gamberCards[i];
+        const enemy = card.target;
+        card.life -= FIXED_STEP_SECONDS;
+        card.x += card.vx;
+        card.y += card.vy;
+        card.trail.push({ x: card.x, y: card.y, life: 0.28 });
+        if (card.trail.length > 7) card.trail.shift();
+        for (const mote of card.trail) mote.life -= FIXED_STEP_SECONDS;
+
+        // Vệt sáng vàng kim và bụi lấp lánh phía sau lá bài.
+        ctx.save();
+        for (let j = 0; j < card.trail.length; j++) {
+          const mote = card.trail[j];
+          if (mote.life <= 0) continue;
+          ctx.globalAlpha = Math.max(0, mote.life / 0.28) * 0.42;
+          ctx.fillStyle = j % 2 ? '#f8e5a8' : '#c18a37';
+          ctx.shadowColor = '#f2cf7a'; ctx.shadowBlur = 9;
+          ctx.beginPath(); ctx.arc(mote.x, mote.y, 2.5 + j * 0.18, 0, Math.PI * 2); ctx.fill();
+        }
+        ctx.translate(card.x, card.y); ctx.rotate(card.angle + Math.PI / 2 + Math.sin(globalTick * 0.16 + card.index) * 0.08);
+        ctx.shadowColor = '#e7bd62'; ctx.shadowBlur = 15;
+        const cardGrad = ctx.createLinearGradient(-7, -12, 8, 13);
+        cardGrad.addColorStop(0, '#fff4c7'); cardGrad.addColorStop(0.35, '#d7ad5b'); cardGrad.addColorStop(0.72, '#7b4b22'); cardGrad.addColorStop(1, '#f4d88e');
+        ctx.fillStyle = cardGrad;
+        ctx.beginPath(); ctx.moveTo(0, -13); ctx.lineTo(8, -8); ctx.lineTo(7, 9); ctx.lineTo(0, 13); ctx.lineTo(-7, 9); ctx.lineTo(-8, -8); ctx.closePath(); ctx.fill();
+        ctx.strokeStyle = '#fff0b8'; ctx.lineWidth = 1.2; ctx.stroke();
+        ctx.strokeStyle = 'rgba(91,55,22,0.9)'; ctx.lineWidth = 0.8;
+        ctx.beginPath(); ctx.moveTo(0, -8); ctx.lineTo(4, 0); ctx.lineTo(0, 8); ctx.lineTo(-4, 0); ctx.closePath(); ctx.stroke();
+        ctx.fillStyle = '#fff8dc'; ctx.font = 'bold 10px sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.fillText(card.effect === 1 ? '✦' : card.effect === 2 ? '↗' : '✧', 0, 0);
+        ctx.restore();
+
+        if (!card.hit && enemy && enemy.hp > 0 && Math.hypot(card.x - enemy.x, card.y - enemy.y) <= enemy.radius + 8) {
+          card.hit = true;
+          if (card.effect === 1) {
+            enemy.takeDamage(cfg.cardDamageStun, 'Lá Bài Choáng');
+            enemy.applyStun(cfg.cardStunDuration);
+            createFloatingText(enemy.x, enemy.y - 25, `-${cfg.cardDamageStun} • CHOÁNG`, '#ffe7a1');
+            createShockwave(enemy.x, enemy.y, 58, '#f5d98f', 3);
+            logMessage(`🃏 Lá bài Hoàng Kim: ${enemy.name} choáng ${cfg.cardStunDuration}s và nhận ${cfg.cardDamageStun} dmg!`, 'gamber');
+          } else if (card.effect === 2) {
+            enemy.takeDamage(cfg.cardDamageBonus, 'Lá Bài Bồi Chiêu');
+            createFloatingText(enemy.x, enemy.y - 25, `-${cfg.cardDamageBonus} • BỒI CHIÊU`, '#fff0bd');
+            card.owner.gamberBonusTimers.push(cfg.bonusCastDelay);
+            createParticles(card.owner.x, card.owner.y, '#ffe6a3', 20, 1.5);
+            createShockwave(card.owner.x, card.owner.y, 62, '#d6a84b', 2.8);
+            logMessage(`🃏 Lá bài Bồi Chiêu trúng đích: Gamber sẽ tung thêm một lượt kỹ năng sau ${cfg.bonusCastDelay}s!`, 'gamber');
+          } else {
+            const removed = cleanseGamberDebuffs(enemy);
+            const damage = cfg.cardDamageCleanse + removed * cfg.cardBonusPerStatus;
+            enemy.takeDamage(damage, 'Lá Bài Thanh Tẩy');
+            enemy.applySlow(cfg.cardSlowDuration, cfg.cardSlowFactor);
+            createFloatingText(enemy.x, enemy.y - 25, `-${damage} • THANH TẨY ${removed}`, '#e9c879');
+            createParticles(enemy.x, enemy.y, '#d6ad5e', 18 + removed * 3, 1.25);
+            createShockwave(enemy.x, enemy.y, 48 + removed * 4, '#c69b4c', 2.4);
+            logMessage(`🃏 Lá bài Thanh Tẩy xóa ${removed} loại trạng thái, gây ${damage} dmg và làm chậm 50% trong ${cfg.cardSlowDuration}s!`, 'gamber');
+          }
+          createParticles(card.x, card.y, '#fff0bd', 16, 1.4);
+          updateHUD();
+          if (enemy.hp <= 0 && !gameOver) endGame(enemy);
+        }
+        if (card.life <= 0 || card.hit || card.x < -30 || card.x > canvas.width + 30 || card.y < -30 || card.y > canvas.height + 30) gamberCards.splice(i, 1);
       }
     }
 
@@ -4183,7 +4444,7 @@
       wukongClones = []; wukongStaffs = []; activeWukongSweeps = []; wukongAfterimages = [];
       poseidonWaves = []; poseidonBursts = []; oceanBubbles = []; shockwaves = [];
       roninTornadoes = []; roninSlashEffects = []; roninThrustEffects = []; hadesSpears = []; hadesSiphonEffects = [];
-      particles = []; floatingTexts = [];
+      particles = []; floatingTexts = []; gamberCards = [];
       
       battleLog.innerHTML = '';
       logMessage(`Bắt đầu trận đấu: ${p1.name} VS ${p2.name}!`);
@@ -4288,6 +4549,7 @@
       updateAndDrawEntities();
       updateAndDrawViperEntities();
       updateAndDrawDragonEntities();
+      updateAndDrawGamberEntities();
 
       if (p1) p1.draw();
       if (p2) p2.draw();
