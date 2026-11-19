@@ -125,6 +125,7 @@
               <option value="gamber">🎲 Gamber Ball</option>
               <option value="moonshot">🌙 Moonshot Ball</option>
               <option value="aegis">🛡️ Aegis Ball</option>
+              <option value="pyke">🗡️ Pyke Ball</option>
             </select>
           </div>
 
@@ -154,6 +155,7 @@
               <option value="gamber">🎲 Gamber Ball</option>
               <option value="moonshot">🌙 Moonshot Ball</option>
               <option value="aegis">🛡️ Aegis Ball</option>
+              <option value="pyke">🗡️ Pyke Ball</option>
             </select>
           </div>
 
@@ -550,7 +552,12 @@
       // Aegis Ball – thành trì thần thánh, chuyển sát thương thành thiêu đốt và phản chế khống chế.
       aegis: {
         name: 'Aegis Ball', color: '#f4d98b', secondaryColor: '#8b6428',
-        hp: 125, maxHp: 125, radius: 19, speed: BASE_SPEED * 1.2, contactDmg: 8, icon: '🛡️'
+        hp: 120, maxHp: 120, radius: 19, speed: BASE_SPEED * 1.2, contactDmg: 5, icon: '🛡️'
+      },
+      // Pyke Ball – sát thủ Biển Sâu Thẳm, tích HP xám và biến mất khỏi nhận diện của đối thủ.
+      pyke: {
+        name: 'Pyke Ball', color: '#0f766e', secondaryColor: '#071b22',
+        hp: 95, maxHp: 95, radius: 18, speed: BASE_SPEED * 1.25, contactDmg: 5, icon: '🗡️'
       }
     };
 
@@ -804,10 +811,16 @@
         gun3BaseDamage: 4, gun3CloseBonus: 2, gun3CloseDiameters: 1, gun3ReturnSpeed: 0.5,
         gun4Damage: 2, gun4Stun: 0.25, gun4GuardRefresh: 0.25
       },
+      pyke: {
+        grayRatio: 0.35, lowHpGrayRatio: 0.50, lowHpThreshold: 50, grayDuration: 3.5,
+        cycle: 3.25, environmentDuration: 5, speedStartBonus: 0.65, speedEndBonus: 0.10,
+        hookDamage: 10, hookMissingHpRatio: 0.25, knifeDamage: 10, passDamage: 5, passCooldown: 0.65,
+        hookSpeed: 9.5
+      },
       aegis: {
-        burnDps: 1, burnSecondsPerDamage: 1, slashCooldown: 0.01, slashDamage: 10,
-        slashRangeDiameters: 6.5, slashAngleDeg: 140, triggerRadiusMult: 2.25,
-        healBlockDuration: 10, barrierDuration: 2, fearDurationScale: 1
+        burnDps: 1, burnSecondsPerDamage: 1, slashCooldown: 1.25, slashDamage: 5,
+        slashRangeDiameters: 6, slashAngleDeg: 140, triggerRadiusMult: 2,
+        healBlockDuration: 6, barrierDuration: 2, fearDurationScale: 1
       }
     };
 
@@ -852,6 +865,7 @@
     let gamberCards = [];
     let moonshotShots = [];
     let aegisSlashEffects = [];
+    let pykeHooks = [];
     let gameOver = false;
     let gamePaused = false;
     let animationFrameId = null;
@@ -881,7 +895,8 @@
       viper:{role:'Sát Thủ',desc:'Độc Chướng cộng dồn, gây sát thương theo thời gian và Nanh Độc.'},
       gamber:{role:'Đấu Sĩ',desc:'Xúc xắc định mệnh và bài phép tạo chuỗi hiệu ứng khó đoán.'},
       moonshot:{role:'Xạ Thủ',desc:'Bốn vũ khí luân phiên, tự động nhắm mục tiêu và giữ khoảng cách.'},
-      aegis:{role:'Đỡ Đòn',desc:'Chuyển toàn bộ sát thương nhận vào thành thiêu đốt cộng dồn; phản chế kẻ khống chế, thanh tẩy trạng thái khi va chạm và quét kiếm thần thánh để cấm hồi máu, tước khiên.'}
+      aegis:{role:'Đỡ Đòn',desc:'Chuyển toàn bộ sát thương nhận vào thành thiêu đốt cộng dồn; phản chế kẻ khống chế, thanh tẩy trạng thái khi va chạm và quét kiếm thần thánh để cấm hồi máu, tước khiên.'},
+      pyke:{role:'Sát Thủ',desc:'Tích trữ HP xám rồi biến mất trong Biển Sâu Thẳm; móc kéo mục tiêu, phóng dao và săn đuổi kẻ địch thấp máu từ trạng thái không thể bị nhận diện.'}
     };
     const BALL_SKINS = [
       {id:'brutal',name:'Bạo Liệt',tag:'Thô bạo • Lực • Tàn bạo',desc:'Vòng gai, vệt năng lượng mạnh và những tia va đập dứt khoát.'},
@@ -1159,6 +1174,12 @@
         }
         ctx.restore();
         return;
+      } else if (ball.typeKey === 'pyke') {
+        ctx.translate(x,y);ctx.rotate(-t*0.012);const pulse=0.5+Math.sin(t*0.09)*0.5;
+        const g=ctx.createRadialGradient(0,0,r*0.2,0,0,r+25);g.addColorStop(0,'rgba(26,112,107,0.32)');g.addColorStop(0.62,'rgba(7,55,63,0.25)');g.addColorStop(1,'rgba(1,13,19,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(0,0,r+25,0,Math.PI*2);ctx.fill();
+        ctx.shadowColor='#48e2d1';ctx.shadowBlur=17;ctx.strokeStyle=`rgba(110,255,233,${0.4+pulse*0.4})`;ctx.lineWidth=1.8;ctx.beginPath();ctx.arc(0,0,r+7+pulse*3,0,Math.PI*2);ctx.stroke();
+        ctx.strokeStyle='rgba(212,176,92,0.75)';ctx.lineWidth=1;ctx.setLineDash([2,6]);ctx.beginPath();ctx.arc(0,0,r+14,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);
+        for(let i=0;i<7;i++){const a=t*0.021+i*Math.PI*2/7;drawSpark(ctx,Math.cos(a)*(r+14),Math.sin(a)*(r+14),2.1+pulse,'#b7fff1',0.65+pulse*0.25);}
       } else if (ball.typeKey === 'aegis') {
         ctx.translate(x, y); ctx.rotate(-t * 0.006);
         const pulse = 0.5 + Math.sin(t * 0.10) * 0.5;
@@ -1573,6 +1594,10 @@
         this.aegisSlashCooldown = 0; this.aegisFacingAngle = side === 'p1' ? 0 : Math.PI;
         this.aegisHealBlockTimer = 0; this.aegisFearedTimer = 0; this.aegisFearedBy = null;
         this.aegisCollisionWasTouching = false;
+        // Pyke: HP xám theo từng đòn, chu kỳ móc kéo và trạng thái Biển Sâu Thẳm.
+        this.pykeGrayLayers=[]; this.pykeGrayHp=0; this.pykeCycleTimer=SKILL_CONFIG.pyke.cycle;
+        this.pykeInDeepSea=false; this.pykePermanentSea=false; this.pykeSeaTimer=0; this.pykeSeaElapsed=0;
+        this.pykeHealPool=0; this.pykeHealDone=0; this.pykePassCooldown=0; this.pykeKnifeCooldown=0;
         if (typeKey === 'hades') {
           let cx = 0, cy = 0, attempts = 0;
           do {
@@ -1592,7 +1617,7 @@
         } else this.hadesCerberus = null;
       }
 
-      isHadesUntargetable() { return false; }
+      isHadesUntargetable() { return this.typeKey==='pyke' && this.pykeInDeepSea; }
 
       isImmuneToDebuffs() {
         if (this.typeKey === 'moonshot' && this.moonshotGun === 3 && this.moonshotControlGuardTimer > 0) return true;
@@ -1617,6 +1642,7 @@
           if (this.moonshotSwitchTimer > 0) speed *= SKILL_CONFIG.moonshot.switchSpeed;
         }
         // Đã xóa nội tại tăng tốc khi thấp HP của Sound Ball theo yêu cầu
+        if(this.typeKey==='pyke' && this.pykeInDeepSea){const q=Math.max(0,Math.min(1,this.pykeSeaElapsed/SKILL_CONFIG.pyke.environmentDuration));speed*=1+(SKILL_CONFIG.pyke.speedStartBonus+(SKILL_CONFIG.pyke.speedEndBonus-SKILL_CONFIG.pyke.speedStartBonus)*q);}
         speed *= this.slowFactor;
         if (this.typeKey === 'reaper' && this.reaperSpeedBoostTimer > 0) speed *= SKILL_CONFIG.reaper.speedBoostMult;
         if (this.typeKey === 'wukong' && this.wukongSweepTimer > 0) speed *= SKILL_CONFIG.wukong.sweepSpeedBonus;
@@ -1629,6 +1655,10 @@
       update(enemy) {
         if(this.aegisHealBlockTimer>0) this.aegisHealBlockTimer=Math.max(0,this.aegisHealBlockTimer-FIXED_STEP_SECONDS);
         if (this.typeKey === 'aegis' && this.updateAegis(enemy)) return;
+        if (this.typeKey === 'pyke') {
+          this.updatePyke(enemy);
+          if(this.pykeInDeepSea){this.slowTimer=0;this.slowFactor=1;this.stunTimer=0;this.drownedTimer=0;this.burnStacks=0;this.burnTimer=0;this.burnTickTimer=0;this.viperPoisonStacks=0;this.viperPoisonTimer=0;this.viperPoisonTickTimer=0;}
+        }
         const aegisFeared = this.aegisFearedTimer > 0;
         if (aegisFeared) {
           this.aegisFearedTimer = Math.max(0, this.aegisFearedTimer - FIXED_STEP_SECONDS);
@@ -1747,6 +1777,7 @@
           case 'viper':    this.updateViper(enemy); break;
           case 'gamber':   this.updateGamber(enemy); break;
           case 'moonshot': this.updateMoonshot(enemy); break;
+          case 'pyke': break;
         }
         }
 
@@ -2321,6 +2352,82 @@
           updateHUD();
         }
       }
+      updatePyke(enemy) {
+        const cfg=SKILL_CONFIG.pyke, dt=FIXED_STEP_SECONDS;
+        // HP xám tồn tại 3,5 giây; khi vào Biển Sâu, lượng còn lại được khóa để hồi dần.
+        if(!this.pykeInDeepSea){
+          for(let i=this.pykeGrayLayers.length-1;i>=0;i--){
+            const layer=this.pykeGrayLayers[i]; layer.timer-=dt;
+            if(layer.timer<=0){this.pykeGrayHp=Math.max(0,this.pykeGrayHp-layer.amount);this.pykeGrayLayers.splice(i,1);createParticles(this.x,this.y,'#4ccfc1',2,0.6);}
+          }
+        }
+        this.pykePassCooldown=Math.max(0,this.pykePassCooldown-dt);
+        this.pykeCycleTimer-=dt;
+        if(enemy && enemy.hp>0 && enemy.hp<enemy.maxHp*0.2){
+          if(!this.pykePermanentSea){this.pykePermanentSea=true;this.enterPykeDeepSea(true);}
+        } else if(this.pykePermanentSea && enemy && enemy.hp>enemy.maxHp*0.2){
+          this.pykePermanentSea=false;this.pykeInDeepSea=false;this.pykeSeaTimer=0;this.pykeSeaElapsed=0;
+          createShockwave(this.x,this.y,90,'#3dd6c5',3);createParticles(this.x,this.y,'#9fffee',24,1.4);
+          logMessage('🌊 Pyke rời Biển Sâu Thẳm: mục tiêu đã hồi phục vượt ngưỡng 20%.','pyke');
+        }
+        if(this.pykeCycleTimer<=0){
+          this.pykeCycleTimer=cfg.cycle;
+          if(enemy && enemy.hp>0 && !enemy.isHadesUntargetable()){
+            if(enemy.hp>=enemy.maxHp*0.2){this.launchPykeHook(enemy);}
+            else {this.pykeKnifeCooldown=0;if(!this.pykePermanentSea)this.enterPykeDeepSea(true);this.throwPykeKnife(enemy);}
+          } else if(this.pykePermanentSea && enemy){this.throwPykeKnife(enemy);}
+        }
+        if(this.pykeInDeepSea){
+          this.pykeSeaElapsed=Math.min(cfg.environmentDuration,this.pykeSeaElapsed+dt);
+          if(!this.pykePermanentSea)this.pykeSeaTimer=Math.max(0,this.pykeSeaTimer-dt);
+          const healTarget=this.pykeHealPool*(this.pykeSeaElapsed/cfg.environmentDuration);
+          const healNow=Math.max(0,healTarget-this.pykeHealDone);
+          if(healNow>0){const actual=Math.min(healNow,this.maxHp-this.hp);this.hp+=actual;this.pykeHealDone+=healNow;createParticles(this.x+(Math.random()-0.5)*this.radius,this.y+(Math.random()-0.5)*this.radius,'#65e8d5',2,0.75);}
+          if(!this.pykePermanentSea && this.pykeSeaTimer<=0){this.pykeInDeepSea=false;this.pykeSeaElapsed=0;this.pykeHealPool=0;this.pykeHealDone=0;createShockwave(this.x,this.y,76,'#36b8b0',2.5);logMessage('🌊 Biển Sâu Thẳm tan biến.','pyke');}
+        }
+        if(this.pykeInDeepSea && this.pykePermanentSea){
+          if(enemy && enemy.hp>0){
+            const dist=Math.hypot(enemy.x-this.x,enemy.y-this.y);
+            if(dist<=this.radius+enemy.radius+3 && this.pykePassCooldown<=0){
+              enemy.takeDamage(cfg.passDamage,'Pyke • Xuyên Ảnh');this.pykePassCooldown=cfg.passCooldown;
+              createParticles(enemy.x,enemy.y,'#55dfd0',14,1.25);createFloatingText(enemy.x,enemy.y-enemy.radius-12,'-5 · XUYÊN ẢNH','#a7fff2');
+            }
+          }
+        }
+      }
+
+      enterPykeDeepSea(permanent=false){
+        const cfg=SKILL_CONFIG.pyke,alreadyHidden=this.pykeInDeepSea,wasPermanent=this.pykePermanentSea;
+        this.pykeInDeepSea=true;this.pykePermanentSea=!!permanent;
+        this.pykeSeaTimer=permanent?999999:cfg.environmentDuration;
+        if(!alreadyHidden){
+          this.pykeSeaElapsed=0;this.pykeHealPool=this.pykeGrayHp;this.pykeHealDone=0;
+          this.pykeGrayHp=0;this.pykeGrayLayers=[];
+        }
+        if(!alreadyHidden || (permanent&&!wasPermanent)){
+          createShockwave(this.x,this.y,145,'#0d9488',5);createParticles(this.x,this.y,'#57e6d2',42,2.0);
+          createFloatingText(this.x,this.y-this.radius-24,'🌑 BIỂN SÂU THẲM','#9ffff1');
+          logMessage(permanent?'🌑 PYKE KÍCH HOẠT BIỂN SÂU VĨNH VIỄN: mục tiêu đã dưới 20% HP!':'🌑 Pyke biến mất vào BIỂN SÂU THẲM trong 5 giây!','pyke');
+        }
+        updateHUD();
+      }
+
+      launchPykeHook(enemy){
+        if(!enemy || enemy.hp<=0 || enemy.isHadesUntargetable())return;
+        const dx=enemy.x-this.x,dy=enemy.y-this.y,dist=Math.hypot(dx,dy)||1;
+        const angle=Math.atan2(dy,dx),sx=this.x,sy=this.y;
+        pykeHooks.push({owner:this,target:enemy,x:sx,y:sy,vx:Math.cos(angle)*SKILL_CONFIG.pyke.hookSpeed,vy:Math.sin(angle)*SKILL_CONFIG.pyke.hookSpeed,anchorX:sx,anchorY:sy,angle,life:1.5,hit:false,trail:[]});
+        this.pykeFacingAngle=angle;
+        createParticles(sx,sy,'#5eead4',12,1.1);logMessage('🗡️ Pyke phóng MÓC TỬ THẦN!','pyke');
+      }
+
+      throwPykeKnife(enemy){
+        if(!enemy || enemy.hp<=0 || enemy.isHadesUntargetable())return;
+        const dx=enemy.x-this.x,dy=enemy.y-this.y,dist=Math.hypot(dx,dy)||1,angle=Math.atan2(dy,dx);
+        pykeHooks.push({owner:this,target:enemy,x:this.x,y:this.y,vx:Math.cos(angle)*SKILL_CONFIG.pyke.hookSpeed*1.25,vy:Math.sin(angle)*SKILL_CONFIG.pyke.hookSpeed*1.25,anchorX:this.x,anchorY:this.y,angle,life:1.2,hit:false,knife:true,trail:[]});
+        createParticles(this.x,this.y,'#b5fff3',10,1.0);logMessage('🔪 Pyke phóng dao Biển Sâu!','pyke');
+      }
+
       updateAegis(enemy) {
         const cfg = SKILL_CONFIG.aegis;
         if (this.aegisBarrierTimer > 0) {
@@ -2454,7 +2561,7 @@
           this.viperStrike.timer -= FIXED_STEP_SECONDS;
           if (this.viperStrike.timer <= 0) {
             const target = this.viperStrike.target;
-            if (target && target.hp > 0 && !shouldViperMiss(target)) {
+            if (target && target.hp > 0 && !target.isHadesUntargetable() && !shouldViperMiss(target)) {
               applyViperPoison(target, 1, false); // Tầng Độc Chướng do cú cắn đầu tiên gây ra.
               const stacks = target.viperPoisonStacks || 0;
               const missingHpBonus = Math.max(0, target.maxHp - target.hp) * cfg.strikeMissingHpPct * stacks;
@@ -2650,8 +2757,7 @@
           });
 
           enemy.takeDamage(SKILL_CONFIG.poseidon.waveDmg, 'Sóng Nước');
-          enemy.slowFactor = SKILL_CONFIG.poseidon.waveSlowFactor;
-          enemy.applySlow(SKILL_CONFIG.poseidon.waveSlowDuration);
+          if(!enemy.isHadesUntargetable()){enemy.slowFactor = SKILL_CONFIG.poseidon.waveSlowFactor;enemy.applySlow(SKILL_CONFIG.poseidon.waveSlowDuration);}
 
           const pushAngle = Math.atan2(enemy.y - this.y, enemy.x - this.x);
           const enemySpd = enemy.currentSpeed || enemy.baseSpeed;
@@ -2666,7 +2772,7 @@
             enemy.oceanicMarks = 0;
             setEnvironment('ocean', 2.0, this);
             oceanEnvironmentTimer = 2.0;
-            enemy.drownedTimer = 2.0;
+            if(!enemy.isHadesUntargetable()){enemy.drownedTimer = 2.0;}
             if (enemy.typeKey==='aegis') applyAegisFear(this,2.0);
             enemy.burnStacks = 0; enemy.burnTimer = 0;
             enemy.slowTimer = 0; enemy.slowFactor = 1;
@@ -2790,7 +2896,7 @@
       }
 
       updateHades(enemy) {
-        if (enemy && enemy.hp > 0) {
+        if (enemy && enemy.hp > 0 && !enemy.isHadesUntargetable()) {
           this.hadesDrainTimer += FIXED_STEP_SECONDS;
           if (this.hadesDrainTimer >= SKILL_CONFIG.hades.drainInterval) {
             this.hadesDrainTimer -= SKILL_CONFIG.hades.drainInterval;
@@ -2851,6 +2957,7 @@
       }
 
       applyBurn() {
+        if(this.typeKey==='pyke' && this.pykeInDeepSea)return;
         const attacker = (this === p1) ? p2 : p1;
         const attackerHadPoison = !!(attacker && (attacker.viperPoisonStacks || 0) > 0);
         if (shouldViperMiss(this)) return;
@@ -2863,12 +2970,12 @@
       }
 
       applySlow(duration, factor = 0.7) {
+        if(this.typeKey==='pyke' && this.pykeInDeepSea)return;
         const attacker = (this === p1) ? p2 : p1;
         const attackerHadPoison = !!(attacker && (attacker.viperPoisonStacks || 0) > 0);
         if (this.typeKey === 'viper') registerViperPassive(this, 'Hiệu ứng làm chậm');
         if (shouldViperMiss(this)) return;
         if (this.isHadesUntargetable() || this.isImmuneToDebuffs()) return;
-        if (this.typeKey==='aegis') applyAegisFear(attacker,duration);
         spreadViperPoison(this, attackerHadPoison, 'Làm chậm');
         this.slowFactor = this.slowTimer <= 0 ? factor : Math.min(this.slowFactor, factor);
         this.slowTimer = Math.max(this.slowTimer, duration);
@@ -2876,6 +2983,7 @@
       }
 
       applyStun(duration) {
+        if(this.typeKey==='pyke' && this.pykeInDeepSea)return;
         const attacker = (this === p1) ? p2 : p1;
         const attackerHadPoison = !!(attacker && (attacker.viperPoisonStacks || 0) > 0);
         if (this.typeKey === 'viper') registerViperPassive(this, 'Hiệu ứng choáng');
@@ -2888,6 +2996,7 @@
       }
 
       takeDamage(amount, source) {
+        if(this.typeKey==='pyke' && this.pykeInDeepSea) return;
         const enemy = (this === p1) ? p2 : p1;
         const attackerHadPoison = !!(enemy && (enemy.viperPoisonStacks || 0) > 0);
         // Đòn thường kích hoạt nội tại ngay khi đối thủ ra tay, kể cả khi bị né.
@@ -2963,7 +3072,16 @@
         }
 
         let actualHpLoss = 0;
-        if (remainingDmg > 0) {
+        if (remainingDmg > 0 && this.typeKey==='pyke') {
+          const ratio=this.hp<SKILL_CONFIG.pyke.lowHpThreshold?SKILL_CONFIG.pyke.lowHpGrayRatio:SKILL_CONFIG.pyke.grayRatio;
+          const proposedGray=remainingDmg*ratio,realDmg=remainingDmg-proposedGray,oldHp=this.hp;
+          this.hp=Math.max(0,this.hp-realDmg);actualHpLoss=oldHp-this.hp;
+          const gray=Math.min(proposedGray,Math.max(0,this.maxHp-this.hp-this.pykeGrayHp));
+          this.pykeGrayHp+=gray;
+          if(gray>0)this.pykeGrayLayers.push({amount:gray,timer:SKILL_CONFIG.pyke.grayDuration});
+          if(gray<proposedGray){const extra=proposedGray-gray,old=this.hp;this.hp=Math.max(0,this.hp-extra);actualHpLoss+=old-this.hp;}
+          if(gray>0){createParticles(this.x,this.y,'#58d8c9',Math.min(18,5+Math.ceil(gray)),1.0);createFloatingText(this.x,this.y-this.radius-13,`+${gray.toFixed(1)} HP XÁM`,'#8fffee');}
+        } else if (remainingDmg > 0) {
           const oldHp = this.hp;
           this.hp = Math.max(0, this.hp - remainingDmg);
           actualHpLoss = oldHp - this.hp;
@@ -3544,6 +3662,30 @@
     }
 
     function updateAndDrawAegisEntities() {
+      // Biển Sâu Thẳm: vực nước gần như đen, cột sáng xanh lục lam và phù văn vàng chìm nổi.
+      const pykeOwner=[p1,p2].find(b=>b&&b.typeKey==='pyke'&&b.pykeInDeepSea);
+      if(pykeOwner){
+        ctx.save();const pulse=0.5+Math.sin(globalTick*0.035)*0.5;
+        const deep=ctx.createLinearGradient(0,0,canvas.width,canvas.height);deep.addColorStop(0,'rgba(1,13,20,0.91)');deep.addColorStop(0.48,'rgba(3,35,43,0.88)');deep.addColorStop(1,'rgba(0,7,14,0.94)');ctx.fillStyle=deep;ctx.fillRect(0,0,canvas.width,canvas.height);
+        ctx.globalCompositeOperation='lighter';
+        for(let i=0;i<7;i++){const x=(i*83+globalTick*0.16)% (canvas.width+100)-50;const w=18+Math.sin(globalTick*0.025+i)*8;const beam=ctx.createLinearGradient(x,0,x+w,canvas.height);beam.addColorStop(0,'rgba(41,190,177,0)');beam.addColorStop(0.5,`rgba(42,211,194,${0.035+pulse*0.045})`);beam.addColorStop(1,'rgba(41,190,177,0)');ctx.fillStyle=beam;ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x+w,0);ctx.lineTo(x+w+90,canvas.height);ctx.lineTo(x+90,canvas.height);ctx.closePath();ctx.fill();}
+        for(let i=0;i<26;i++){const x=(i*67+Math.sin(globalTick*0.018+i)*22)%canvas.width,y=(i*113-globalTick*(0.35+(i%4)*0.12))%canvas.height;ctx.globalAlpha=0.18+0.16*Math.sin(globalTick*0.04+i);ctx.fillStyle=i%4===0?'#d8b86b':'#62e8d6';ctx.shadowColor=ctx.fillStyle;ctx.shadowBlur=8;ctx.beginPath();ctx.arc(x,y,1.1+(i%3)*0.55,0,Math.PI*2);ctx.fill();}
+        ctx.globalAlpha=0.45;ctx.strokeStyle='#b69a5c';ctx.lineWidth=1;ctx.setLineDash([4,12]);ctx.lineDashOffset=-globalTick*0.45;ctx.beginPath();ctx.arc(canvas.width/2,canvas.height/2,145+pulse*9,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);ctx.restore();
+      }
+      // Móc kéo / dao phóng. Đòn móc đưa Pyke vào Biển Sâu ngay khi phóng, trước lúc mục tiêu bị kéo.
+      for(let i=pykeHooks.length-1;i>=0;i--){
+        const h=pykeHooks[i],cfg=SKILL_CONFIG.pyke;h.life-=FIXED_STEP_SECONDS;h.x+=h.vx;h.y+=h.vy;h.trail.push({x:h.x,y:h.y});if(h.trail.length>10)h.trail.shift();
+        const target=h.target;
+        if(!h.hit&&target&&target.hp>0&&!target.isHadesUntargetable()&&Math.hypot(target.x-h.x,target.y-h.y)<=target.radius+8){
+          h.hit=true;const base=h.knife?cfg.knifeDamage:cfg.hookDamage;target.takeDamage(base,h.knife?'Pyke • Dao Biển Sâu':'Pyke • Móc Tử Thần');
+          if(!h.knife){const bonus=Math.max(0,target.maxHp-target.hp)*cfg.hookMissingHpRatio;if(bonus>0)target.takeDamage(bonus,'Pyke • Phán Quyết Móc');if(h.owner&&h.owner.hp>0)h.owner.enterPykeDeepSea(false);const a=Math.atan2(target.y-h.anchorY,target.x-h.anchorX),pullDist=target.radius+18;target.x=Math.max(target.radius,Math.min(canvas.width-target.radius,h.anchorX+Math.cos(a)*pullDist));target.y=Math.max(target.radius,Math.min(canvas.height-target.radius,h.anchorY+Math.sin(a)*pullDist));target.vx=Math.cos(a)*-BASE_SPEED*0.7;target.vy=Math.sin(a)*-BASE_SPEED*0.7;createShockwave(target.x,target.y,58,'#4de0ce',3.5);createFloatingText(target.x,target.y-target.radius-18,`MÓC KÉO · -${(base+bonus).toFixed(1)}`,'#aafff0');}
+          else {createShockwave(target.x,target.y,46,'#5eead4',2.8);createFloatingText(target.x,target.y-target.radius-16,`-${base} · DAO SÂU`,'#aafff0');}
+          createParticles(target.x,target.y,'#4de0ce',22,1.7);logMessage(h.knife?'🔪 Dao Biển Sâu xuyên qua mục tiêu!':'🗡️ MÓC TỬ THẦN trúng đích, kéo mục tiêu về vị trí cũ của Pyke!','pyke');
+        }
+        ctx.save();ctx.globalCompositeOperation='lighter';for(let j=1;j<h.trail.length;j++){ctx.globalAlpha=j/h.trail.length*0.55;ctx.strokeStyle=j%2?'#64f3df':'#c5a65c';ctx.lineWidth=1.5+j/h.trail.length*2;ctx.beginPath();ctx.moveTo(h.trail[j-1].x,h.trail[j-1].y);ctx.lineTo(h.trail[j].x,h.trail[j].y);ctx.stroke();}
+        ctx.translate(h.x,h.y);ctx.rotate(h.angle);ctx.shadowColor='#69f5e0';ctx.shadowBlur=18;ctx.fillStyle='#c7fff4';ctx.strokeStyle='#d6b96f';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(13,0);ctx.lineTo(-7,-4);ctx.lineTo(-3,0);ctx.lineTo(-7,4);ctx.closePath();ctx.fill();ctx.stroke();ctx.beginPath();ctx.moveTo(-3,-3);ctx.lineTo(-10,-8);ctx.moveTo(-3,3);ctx.lineTo(-10,8);ctx.stroke();ctx.restore();
+        if(h.life<=0||h.hit||h.x<-30||h.x>canvas.width+30||h.y<-30||h.y>canvas.height+30)pykeHooks.splice(i,1);
+      }
       for(let i=aegisSlashEffects.length-1;i>=0;i--){
         const fx=aegisSlashEffects[i], owner=fx.owner; fx.timer-=FIXED_STEP_SECONDS;
         if(!owner || fx.timer<=0){aegisSlashEffects.splice(i,1);continue;}
@@ -3695,7 +3837,6 @@
             // Làm chậm 50% trong 0.5s & Đẩy thẳng chính xác tới tâm Vụ Nổ 2!
             b.enemy.slowFactor = 0.5;
             b.enemy.slowTimer = Math.max(b.enemy.slowTimer, 0.5);
-            if(b.enemy.typeKey==='aegis') applyAegisFear(b.owner,0.5);
             b.enemy.x = Math.max(b.enemy.radius, Math.min(canvas.width - b.enemy.radius, b.x2));
             b.enemy.y = Math.max(b.enemy.radius, Math.min(canvas.height - b.enemy.radius, b.y2));
 
@@ -4618,9 +4759,8 @@
       for (let i = dragonBurnZones.length - 1; i >= 0; i--) {
         const z = dragonBurnZones[i]; z.timer -= dt; z.tick += dt;
         const enemy = z.owner === p1 ? p2 : p1;
-        if (enemy && enemy.hp > 0 && Math.hypot(enemy.x - z.x, enemy.y - z.y) <= z.radius + enemy.radius) {
+        if (enemy && enemy.hp > 0 && !enemy.isHadesUntargetable() && Math.hypot(enemy.x - z.x, enemy.y - z.y) <= z.radius + enemy.radius) {
           enemy.slowFactor = Math.min(enemy.slowFactor, SKILL_CONFIG.dragon.burnSlowFactor); enemy.slowTimer = Math.max(enemy.slowTimer, 0.28);
-          if(enemy.typeKey==='aegis') applyAegisFear(z.owner,0.28);
           if (z.tick >= SKILL_CONFIG.dragon.burnTick) { z.tick -= SKILL_CONFIG.dragon.burnTick; enemy.takeDamage(SKILL_CONFIG.dragon.burnDamage, 'Long Hỏa'); createParticles(enemy.x, enemy.y, '#f97316', 5, 1.1); }
         }
         ctx.save();
@@ -4679,7 +4819,7 @@
       [p1, p2].forEach(hades => {
         if (!hades || hades.typeKey !== 'hades' || hades.hp <= 0 || !hades.hadesCerberus) return;
         const enemy = hades === p1 ? p2 : p1;
-        if (!enemy || enemy.hp <= 0) return;
+        if (!enemy || enemy.hp <= 0 || enemy.isHadesUntargetable()) return;
         const bodies = [hades.hadesCerberus, ...(hades.hadesCerberusClones || [])];
         bodies.forEach(c => {
           if (c.hitCooldown > 0) c.hitCooldown--;
@@ -4908,7 +5048,8 @@
       if (ball.typeKey === 'demon') shieldText = ` (🛡️${Math.round(ball.shield)} | Phản: +${Math.round(ball.shield * 6)}%)`;
       
       document.getElementById(`${prefix}-name`).innerText = `${ball.icon} ${ball.name}`;
-      document.getElementById(`${prefix}-hp-text`).innerText = `${Math.ceil(ball.hp)}/${ball.maxHp}${shieldText}`;
+      const pykeGray=ball.typeKey==='pyke' && ball.pykeGrayHp>0?` (◈${ball.pykeGrayHp.toFixed(1)})`:'';
+      document.getElementById(`${prefix}-hp-text`).innerText = `${Math.ceil(ball.hp)}/${ball.maxHp}${shieldText}${pykeGray}`;
       document.getElementById(`${prefix}-hp-bar`).style.width = `${Math.max(0, ball.maxHp > 0 ? (ball.hp / ball.maxHp) * 100 : 0)}%`;
 
       const badges = document.getElementById(`${prefix}-badges`);
@@ -4921,6 +5062,7 @@
       if (ball.burnTimer > 0) badges.innerHTML += `<span class="bg-amber-950 text-amber-400 border border-amber-500/40 px-1 rounded">🔥 Cháy (${ball.burnStacks})</span>`;
       if ((ball.viperPoisonStacks || 0) > 0) badges.innerHTML += `<span class="bg-emerald-950 text-emerald-300 border border-emerald-500/40 px-1 rounded">☠ Độc Chướng: ${ball.viperPoisonStacks}</span>`;
       if (ball.shield > 0) badges.innerHTML += `<span class="bg-cyan-950 text-cyan-300 border border-cyan-500/40 px-1 rounded">🛡️ Khiên (${Math.round(ball.shield)})</span>`;
+      if(ball.typeKey==='pyke'){if(ball.pykeGrayHp>0)badges.innerHTML+=`<span class="bg-teal-950 text-teal-200 border border-teal-400/50 px-1 rounded">◈ HP Xám ${ball.pykeGrayHp.toFixed(1)}</span>`;if(ball.pykeInDeepSea)badges.innerHTML+=`<span class="bg-slate-950 text-cyan-100 border border-teal-300/60 px-1 rounded animate-pulse">🌑 Biển Sâu ${ball.pykePermanentSea?'Vĩnh Viễn':ball.pykeSeaTimer.toFixed(1)+'s'}</span>`;}
       if (ball.typeKey==='aegis') {
         const burnDps=(ball.aegisBurnLayers||[]).length; if(burnDps>0) badges.innerHTML+=`<span class="bg-orange-950 text-orange-300 border border-orange-500/40 px-1 rounded">🔥 Tự thiêu: ${burnDps} DPS</span>`;
         if(ball.aegisBarrier>0) badges.innerHTML+=`<span class="bg-yellow-950 text-yellow-200 border border-yellow-400/50 px-1 rounded">✦ Khiên Thánh ${Math.ceil(ball.aegisBarrierTimer)}s · ${Math.round(ball.aegisBarrier)}</span>`;
@@ -5024,7 +5166,7 @@
       wukongClones = []; wukongStaffs = []; activeWukongSweeps = []; wukongAfterimages = [];
       poseidonWaves = []; poseidonBursts = []; oceanBubbles = []; shockwaves = [];
       roninTornadoes = []; roninSlashEffects = []; roninThrustEffects = []; hadesSpears = []; hadesSiphonEffects = [];
-      particles = []; floatingTexts = []; gamberCards = []; moonshotShots = []; aegisSlashEffects = [];
+      particles = []; floatingTexts = []; gamberCards = []; moonshotShots = []; aegisSlashEffects = []; pykeHooks = [];
       
       battleLog.innerHTML = '';
       logMessage(`Bắt đầu trận đấu: ${p1.name} VS ${p2.name}!`);
