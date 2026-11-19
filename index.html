@@ -77,6 +77,22 @@
     .skin-swatch.mythic { background:radial-gradient(circle,#e2d7ff 0 10%,#71618e 35%,#1c1426 73%); box-shadow:0 0 13px #9a83c8; }
     .skin-swatch i { position:absolute; width:5px;height:5px;border-radius:50%;background:#fff4df;top:5px;left:17px;box-shadow:0 0 6px white; }
     @media(max-width:700px){.library-grid{grid-template-columns:repeat(2,minmax(0,1fr));}.library-shell{max-height:95vh}.library-card{padding:7px;gap:6px}.library-orb{width:29px;height:29px;font-size:15px}}
+
+    .notebook-page{background:linear-gradient(135deg,#f6ecd7,#ead9b9);border:1px solid #b89a70;border-radius:8px;padding:22px;color:#493724;box-shadow:inset 0 0 28px rgba(117,78,35,.12),0 10px 35px rgba(0,0,0,.25);min-height:100%;position:relative}
+    .notebook-rule{height:1px;background:repeating-linear-gradient(90deg,#b99c74 0 5px,transparent 5px 9px);opacity:.75}
+    #gameCanvas.aiming{touch-action:none;cursor:crosshair;border-color:#d6b56f;box-shadow:0 0 28px rgba(45,212,191,.2)}
+    #winner-overlay{background:radial-gradient(circle at 50% 38%,rgba(46,30,11,.92),rgba(2,6,15,.97) 72%);border:1px solid rgba(245,194,92,.7);box-shadow:inset 0 0 55px rgba(245,158,11,.16)}
+    .winner-title{font-family:Orbitron,sans-serif;text-shadow:0 0 12px rgba(251,191,36,.85),0 0 35px rgba(245,158,11,.55);letter-spacing:.08em;animation:winnerPulse 1.8s ease-in-out infinite}
+    @keyframes winnerPulse{0%,100%{transform:scale(1);filter:brightness(1)}50%{transform:scale(1.045);filter:brightness(1.35)}}
+
+
+    .notebook-page{background:linear-gradient(135deg,#f6ecd7,#ead9b9);border:1px solid #b89a70;border-radius:8px;padding:22px;color:#493724;box-shadow:inset 0 0 28px rgba(117,78,35,.12),0 10px 35px rgba(0,0,0,.25);min-height:100%;position:relative}
+    .notebook-rule{height:1px;background:repeating-linear-gradient(90deg,#b99c74 0 5px,transparent 5px 9px);opacity:.75}
+    #gameCanvas.aiming{touch-action:none;cursor:crosshair;border-color:#d6b56f;box-shadow:0 0 28px rgba(45,212,191,.2)}
+    #winner-overlay{background:radial-gradient(circle at 50% 38%,rgba(46,30,11,.92),rgba(2,6,15,.97) 72%);border:1px solid rgba(245,194,92,.7);box-shadow:inset 0 0 55px rgba(245,158,11,.16)}
+    .winner-title{font-family:Orbitron,sans-serif;text-shadow:0 0 12px rgba(251,191,36,.85),0 0 35px rgba(245,158,11,.55);letter-spacing:.08em;animation:winnerPulse 1.8s ease-in-out infinite}
+    @keyframes winnerPulse{0%,100%{transform:scale(1);filter:brightness(1)}50%{transform:scale(1.045);filter:brightness(1.35)}}
+
   </style>
 </head>
 <body class="min-h-screen flex flex-col items-center justify-center p-2 sm:p-4">
@@ -162,6 +178,7 @@
           <button id="btn-start" class="w-full mt-2 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold py-2.5 px-4 rounded-lg font-orbitron tracking-wider text-sm shadow-lg shadow-cyan-500/20 transition-all active:scale-95">
             ▶ BẮT ĐẦU ĐẤU
           </button>
+          <div class="grid grid-cols-[1fr_auto] gap-2 mt-2"><button id="btn-music" class="arena-btn" type="button">♫ NHẠC NỀN: TẮT</button><input id="music-volume" aria-label="Âm lượng nhạc" type="range" min="0" max="0.22" step="0.01" value="0.08" class="w-20 accent-amber-400"></div>
           <div class="grid grid-cols-2 gap-2 mt-2">
             <button id="btn-pause" class="arena-btn" type="button">Ⅱ TẠM DỪNG</button>
             <button id="btn-library" class="arena-btn" type="button">✦ THƯ VIỆN</button>
@@ -231,7 +248,7 @@
       <div class="relative">
         <canvas id="gameCanvas" width="440" height="440" class="bg-slate-950 border-2 border-slate-800 rounded-2xl block"></canvas>
         <div id="winner-overlay" class="absolute inset-0 bg-slate-950/80 backdrop-blur-sm rounded-2xl flex flex-col items-center justify-center gap-3 hidden">
-          <div id="winner-text" class="text-2xl font-black font-orbitron text-amber-400 tracking-wider text-center px-4"></div>
+          <div class="text-[10px] tracking-[.45em] text-amber-200/80 font-bold">ARENA CHAMPIONSHIP</div><div id="winner-text" class="winner-title text-2xl sm:text-3xl font-black text-amber-300 text-center px-4"></div><div class="text-xs tracking-[.3em] text-slate-300">VICTORY · MATCH COMPLETE</div>
           <button id="btn-restart" class="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-black py-2 px-6 rounded-lg font-orbitron text-sm shadow-lg shadow-amber-500/20 active:scale-95">
             REMATCH
           </button>
@@ -321,11 +338,11 @@
         name: 'Assassin Ball',
         color: '#10b981',
         secondaryColor: '#059669',
-        hp: 80,
-        maxHp: 80,
+        hp: 77,
+        maxHp: 77,
         radius: 18,
-        speed: BASE_SPEED,
-        contactDmg: 5,
+        speed: BASE_SPEED * 1.15,
+        contactDmg: 0,
         icon: '🗡️'
       },
       // Bear Ball – HP, tốc độ và sát thương va chạm
@@ -552,7 +569,7 @@
       // Aegis Ball – thành trì thần thánh, chuyển sát thương thành thiêu đốt và phản chế khống chế.
       aegis: {
         name: 'Aegis Ball', color: '#f4d98b', secondaryColor: '#8b6428',
-        hp: 120, maxHp: 120, radius: 19, speed: BASE_SPEED * 1.2, contactDmg: 5, icon: '🛡️'
+        hp: 115, maxHp: 115, radius: 19, speed: BASE_SPEED * 1.1, contactDmg: 5, icon: '🛡️'
       },
       // Pyke Ball – sát thủ Biển Sâu Thẳm, tích HP xám và biến mất khỏi nhận diện của đối thủ.
       pyke: {
@@ -620,6 +637,7 @@
       // Marksman Ball – đạn thường và bẫy
       marksman: {
         normalShootInterval: 1.0,
+        trapHasteDuration: 3.0,
         normalBulletDmg: 2,
         trapSpawnInterval: 2.0,
         trapStunDuration: 1.0,
@@ -645,7 +663,7 @@
       // Shen Ball – vùng Kiếm Hồn, khiên và hoán đổi
       shen: {
         zoneRadiusMult: 4.0,
-        shieldAmount: 5,
+        shieldAmount: 5, entryHeal: 4, graceAfterExit: 1.15, entryHeal: 4, graceAfterExit: 1.15,
         shieldDuration: 2,
         pullBladeInterval: 7,
         swapCooldown: 4.0,
@@ -814,8 +832,8 @@
       pyke: {
         grayRatio: 0.35, lowHpGrayRatio: 0.50, lowHpThreshold: 50, grayDuration: 3.5,
         cycle: 3.25, environmentDuration: 5, speedStartBonus: 0.65, speedEndBonus: 0.10,
-        hookDamage: 10, hookMissingHpRatio: 0.25, knifeDamage: 10, passDamage: 5, passCooldown: 0.65,
-        hookSpeed: 9.5
+        hookDamage: 10, hookMissingHpRatio: 0.25, knifeDamage: 15, passDamage: 5, passCooldown: 0.65,
+        hookSpeed: 15.5, executeThreshold: 0.03, executeDamage: 9999, entryHeal: 3
       },
       aegis: {
         burnDps: 1, burnSecondsPerDamage: 1, slashCooldown: 1.25, slashDamage: 5,
@@ -867,7 +885,17 @@
     let aegisSlashEffects = [];
     let pykeHooks = [];
     let gameOver = false;
+    let gameEnding = false;
+    let gameEndTimer = 0;
+    let defeatedBall = null;
     let gamePaused = false;
+    let matchStarted = false;
+    let aimAngles = [0, Math.PI];
+    let aimChosen = [false, false];
+    let aimStage = false;
+    let aimCountdown = 5;
+    let aimPointer = null;
+    let audioCtx = null, musicTimer = null, musicEnabled = false, musicGain = null;
     let animationFrameId = null;
     let globalTick = 0; // Số bước mô phỏng 1/60 giây đã chạy.
 
@@ -887,13 +915,13 @@
       sound:{role:'Xạ Thủ',desc:'Sóng âm lan rộng, sát thương thay đổi theo nhịp cộng hưởng.'},
       angel:{role:'Đấu Sĩ',desc:'Hồi phục và chuyển lượng hồi dư thành Phước Thần.'},
       wukong:{role:'Đấu Sĩ',desc:'Phân thân, đào tiên và Như Ý giúp linh hoạt giữa công và thủ.'},
-      demon:{role:'Sát Thủ',desc:'Chấp nhận rủi ro để phản đòn, tích khiên và hồi sinh nhiều lần.'},
+      demon:{role:'Đấu Sĩ',desc:'Chấp nhận rủi ro để phản đòn, tích khiên và hồi sinh nhiều lần.'},
       poseidon:{role:'Đấu Sĩ',desc:'Sóng nước đẩy lùi, tích Hải Thần Ấn và thức tỉnh đại dương.'},
       ronin:{role:'Đấu Sĩ',desc:'Tích tốc độ, lướt chém và gọi Cuồng Phong.'},
       hades:{role:'Đấu Sĩ',desc:'Cerberus, Thần Thương và Địa Ngục tạo áp lực lâu dài, đánh đổi bằng nhịp hồi chiêu.'},
-      dragon:{role:'Sát Thủ',desc:'Tích Linh Long, thức tỉnh nhiều tầng và bùng nổ sức mạnh.'},
+      dragon:{role:'Xạ Thủ',desc:'Tích Linh Long, thức tỉnh nhiều tầng và bùng nổ sức mạnh.'},
       viper:{role:'Sát Thủ',desc:'Độc Chướng cộng dồn, gây sát thương theo thời gian và Nanh Độc.'},
-      gamber:{role:'Đấu Sĩ',desc:'Xúc xắc định mệnh và bài phép tạo chuỗi hiệu ứng khó đoán.'},
+      gamber:{role:'Xạ Thủ',desc:'Xúc xắc định mệnh và bài phép tạo chuỗi hiệu ứng khó đoán.'},
       moonshot:{role:'Xạ Thủ',desc:'Bốn vũ khí luân phiên, tự động nhắm mục tiêu và giữ khoảng cách.'},
       aegis:{role:'Đỡ Đòn',desc:'Chuyển toàn bộ sát thương nhận vào thành thiêu đốt cộng dồn; phản chế kẻ khống chế, thanh tẩy trạng thái khi va chạm và quét kiếm thần thánh để cấm hồi máu, tước khiên.'},
       pyke:{role:'Sát Thủ',desc:'Tích trữ HP xám rồi biến mất trong Biển Sâu Thẳm; móc kéo mục tiêu, phóng dao và săn đuổi kẻ địch thấp máu từ trạng thái không thể bị nhận diện.'}
@@ -1511,6 +1539,7 @@
 
         this.marksmanShootTimer = 0;
         this.marksmanTrapTimer = 0;
+        this.marksmanTrapHasteTimer = 0;
 
         this.ninjaComboStep = 1;
         this.ninjaComboTimer = 0;
@@ -1526,6 +1555,7 @@
         this.bladeDashAnim = null;
         this.shenSwapCooldown = 0;
         this.wasInsideBladeZone = false;
+        this.shenGraceTimer = 0;
 
         this.blessingMarks = 0;
         this.angelHealTimer = 0;
@@ -1593,7 +1623,7 @@
         this.aegisBarrier = 0; this.aegisBarrierTimer = 0;
         this.aegisSlashCooldown = 0; this.aegisFacingAngle = side === 'p1' ? 0 : Math.PI;
         this.aegisHealBlockTimer = 0; this.aegisFearedTimer = 0; this.aegisFearedBy = null;
-        this.aegisCollisionWasTouching = false;
+        this.aegisCollisionWasTouching = false; this.aegisContactDamageDone = false;
         // Pyke: HP xám theo từng đòn, chu kỳ móc kéo và trạng thái Biển Sâu Thẳm.
         this.pykeGrayLayers=[]; this.pykeGrayHp=0; this.pykeCycleTimer=SKILL_CONFIG.pyke.cycle;
         this.pykeInDeepSea=false; this.pykePermanentSea=false; this.pykeSeaTimer=0; this.pykeSeaElapsed=0;
@@ -1625,6 +1655,7 @@
         if (this.typeKey === 'wukong' && this.wukongImmortalTimer > 0) return true;
         if (this.typeKey === 'ninja' && this.ninjaInvulnerable) return true;
         if (this.typeKey === 'wanderer' && this.wandererShieldActive) return true;
+        if (this.typeKey === 'shen' && this.shenGraceTimer > 0) return true;
         if (this.typeKey === 'shen') {
           const dist = Math.hypot(this.x - this.spiritBladeX, this.y - this.spiritBladeY);
           if (dist <= this.radius * SKILL_CONFIG.shen.zoneRadiusMult) return true;
@@ -1654,6 +1685,8 @@
 
       update(enemy) {
         if(this.aegisHealBlockTimer>0) this.aegisHealBlockTimer=Math.max(0,this.aegisHealBlockTimer-FIXED_STEP_SECONDS);
+        if(this.shenGraceTimer>0) this.shenGraceTimer=Math.max(0,this.shenGraceTimer-FIXED_STEP_SECONDS);
+        if(this.marksmanTrapHasteTimer>0) this.marksmanTrapHasteTimer=Math.max(0,this.marksmanTrapHasteTimer-FIXED_STEP_SECONDS);
         if (this.typeKey === 'aegis' && this.updateAegis(enemy)) return;
         if (this.typeKey === 'pyke') {
           this.updatePyke(enemy);
@@ -2048,7 +2081,8 @@
       updateMarksman(enemy) {
         if (!enemy) return;
         this.marksmanShootTimer += FIXED_STEP_SECONDS;
-        if (this.marksmanShootTimer >= SKILL_CONFIG.marksman.normalShootInterval) {
+        const marksmanInterval=this.marksmanTrapHasteTimer>0?SKILL_CONFIG.marksman.normalShootInterval*0.75:SKILL_CONFIG.marksman.normalShootInterval;
+        if (this.marksmanShootTimer >= marksmanInterval) {
           this.marksmanShootTimer = 0;
           marksmanBullets.push({
             x: this.x, y: this.y, target: enemy,
@@ -2203,11 +2237,15 @@
         const isInsideNow = (Math.hypot(this.x - this.spiritBladeX, this.y - this.spiritBladeY) <= bladeRadius);
 
         if (isInsideNow && !this.wasInsideBladeZone) {
+          if(this.aegisHealBlockTimer<=0) this.hp=Math.min(this.maxHp,this.hp+SKILL_CONFIG.shen.entryHeal);
+          this.shenGraceTimer=0;
+          createFloatingText(this.x,this.y-this.radius-18,'+4 HP · KIẾM HỒN','#a5f3fc');
           this.shield = SKILL_CONFIG.shen.shieldAmount;
           this.shieldTimer = SKILL_CONFIG.shen.shieldDuration;
           createShockwave(this.x, this.y, 38, '#22d3ee', 2);
           updateHUD();
         }
+        if(!isInsideNow && this.wasInsideBladeZone) this.shenGraceTimer=SKILL_CONFIG.shen.graceAfterExit;
         this.wasInsideBladeZone = isInsideNow;
 
         const enemyDistToBlade = Math.hypot(enemy.x - this.spiritBladeX, enemy.y - this.spiritBladeY);
@@ -2354,13 +2392,7 @@
       }
       updatePyke(enemy) {
         const cfg=SKILL_CONFIG.pyke, dt=FIXED_STEP_SECONDS;
-        // HP xám tồn tại 3,5 giây; khi vào Biển Sâu, lượng còn lại được khóa để hồi dần.
-        if(!this.pykeInDeepSea){
-          for(let i=this.pykeGrayLayers.length-1;i>=0;i--){
-            const layer=this.pykeGrayLayers[i]; layer.timer-=dt;
-            if(layer.timer<=0){this.pykeGrayHp=Math.max(0,this.pykeGrayHp-layer.amount);this.pykeGrayLayers.splice(i,1);createParticles(this.x,this.y,'#4ccfc1',2,0.6);}
-          }
-        }
+        // HP xám được giữ vĩnh viễn cho đến khi Pyke bước vào Biển Sâu Thẳm.
         this.pykePassCooldown=Math.max(0,this.pykePassCooldown-dt);
         this.pykeCycleTimer-=dt;
         if(enemy && enemy.hp>0 && enemy.hp<enemy.maxHp*0.2){
@@ -2389,7 +2421,8 @@
           if(enemy && enemy.hp>0){
             const dist=Math.hypot(enemy.x-this.x,enemy.y-this.y);
             if(dist<=this.radius+enemy.radius+3 && this.pykePassCooldown<=0){
-              enemy.takeDamage(cfg.passDamage,'Pyke • Xuyên Ảnh');this.pykePassCooldown=cfg.passCooldown;
+              if(enemy.hp<=enemy.maxHp*cfg.executeThreshold){enemy.shield=0;enemy.takeDamage(cfg.executeDamage,'Pyke • Kết Liễu Xuyên Ảnh');createShockwave(enemy.x,enemy.y,105,'#7fffee',6);createParticles(enemy.x,enemy.y,'#a7fff2',54,2.4);createFloatingText(enemy.x,enemy.y-enemy.radius-26,'9999 · KẾT LIỄU','#d7fff8');}
+              else enemy.takeDamage(cfg.passDamage,'Pyke • Xuyên Ảnh');this.pykePassCooldown=cfg.passCooldown;
               createParticles(enemy.x,enemy.y,'#55dfd0',14,1.25);createFloatingText(enemy.x,enemy.y-enemy.radius-12,'-5 · XUYÊN ẢNH','#a7fff2');
             }
           }
@@ -2402,6 +2435,7 @@
         this.pykeSeaTimer=permanent?999999:cfg.environmentDuration;
         if(!alreadyHidden){
           this.pykeSeaElapsed=0;this.pykeHealPool=this.pykeGrayHp;this.pykeHealDone=0;
+          if(this.aegisHealBlockTimer<=0){const entryHeal=Math.min(cfg.entryHeal,this.maxHp-this.hp);this.hp+=entryHeal;if(entryHeal>0){createFloatingText(this.x,this.y-this.radius-18,`+${entryHeal} HP · BIỂN SÂU`,'#9ffff1');createParticles(this.x,this.y,'#8fffee',18,1.1);}}
           this.pykeGrayHp=0;this.pykeGrayLayers=[];
         }
         if(!alreadyHidden || (permanent&&!wasPermanent)){
@@ -2457,7 +2491,7 @@
         if (dist>0.001) this.aegisFacingAngle=Math.atan2(dy,dx);
         if (dist<=this.radius*cfg.triggerRadiusMult && this.aegisSlashCooldown<=0) {
           this.aegisSlashCooldown=cfg.slashCooldown;
-          const angle=this.aegisFacingAngle, maxRange=this.radius*2*cfg.slashRangeDiameters;
+          const angle=this.aegisFacingAngle, maxRange=this.radius*2*cfg.triggerRadiusMult;
           const diff=Math.atan2(Math.sin(Math.atan2(dy,dx)-angle),Math.cos(Math.atan2(dy,dx)-angle));
           if (dist<=maxRange && Math.abs(diff)<=cfg.slashAngleDeg*Math.PI/360) {
             enemy.takeDamage(cfg.slashDamage,'Aegis • Thánh Kiếm');
@@ -2475,7 +2509,7 @@
             createParticles(enemy.x,enemy.y,'#fff0b7',24,1.7);
             createFloatingText(enemy.x,enemy.y-enemy.radius-17,`✦ -${cfg.slashDamage} · CẤM HỒI HP`,'#ffe6a0');
             if(stolen>0){createFloatingText(this.x,this.y-this.radius-24,`+${Math.round(stolen)} KHIÊN`,'#fff0bd');createParticles(this.x,this.y,'#ffe6a0',18,1.2);}
-            logMessage(`🛡️ Aegis tung Thánh Kiếm: gây ${cfg.slashDamage} sát thương, cấm hồi máu 6 giây và tước ${Math.round(stolen)} khiên!`,'aegis');
+            logMessage(`🛡️ Aegis tung Thánh Kiếm: gây đúng ${cfg.slashDamage} sát thương, cấm hồi máu 6 giây và tước ${Math.round(stolen)} khiên!`,'aegis');
             updateHUD();
           }
         }
@@ -3009,6 +3043,7 @@
         if (this.typeKey === 'dragon' && this.dragonInvulnerableTimer > 0) return;
         if (this.typeKey === 'wukong' && this.wukongImmortalTimer > 0) return;
         if (this.typeKey === 'ninja' && this.ninjaInvulnerable) return;
+        if (this.typeKey === 'shen' && this.shenGraceTimer > 0) return;
         if (this.typeKey === 'shen') {
           if (Math.hypot(this.x - this.spiritBladeX, this.y - this.spiritBladeY) <= this.radius * SKILL_CONFIG.shen.zoneRadiusMult) return;
         }
@@ -3034,8 +3069,8 @@
           this.hp = 1;
           const enemy = (this === p1) ? p2 : p1;
           if (enemy) enemy.receiveHealingFromAngel(15, this);
-          createShockwave(this.x, this.y, 70, '#fef08a', 4);
-          createParticles(this.x, this.y, '#eab308', 25);
+          createShockwave(this.x, this.y, 118, '#fef08a', 6);createShockwave(this.x,this.y,70,'#ffffff',3);
+          createParticles(this.x, this.y, '#eab308', 48,2.1);createParticles(this.x,this.y,'#fff7c2',28,1.7);createFloatingText(this.x,this.y-this.radius-24,'PHƯỚC THẦN HỒI SINH','#fff1a8');
           logMessage(`👼 Angel Ball kích hoạt Phước Thần Hồi Sinh: Giữ 1 HP & hồi 15 HP cho địch!`, 'angel');
           updateHUD();
           return;
@@ -3078,7 +3113,7 @@
           this.hp=Math.max(0,this.hp-realDmg);actualHpLoss=oldHp-this.hp;
           const gray=Math.min(proposedGray,Math.max(0,this.maxHp-this.hp-this.pykeGrayHp));
           this.pykeGrayHp+=gray;
-          if(gray>0)this.pykeGrayLayers.push({amount:gray,timer:SKILL_CONFIG.pyke.grayDuration});
+          if(gray>0)this.pykeGrayLayers.push({amount:gray,timer:Infinity});
           if(gray<proposedGray){const extra=proposedGray-gray,old=this.hp;this.hp=Math.max(0,this.hp-extra);actualHpLoss+=old-this.hp;}
           if(gray>0){createParticles(this.x,this.y,'#58d8c9',Math.min(18,5+Math.ceil(gray)),1.0);createFloatingText(this.x,this.y-this.radius-13,`+${gray.toFixed(1)} HP XÁM`,'#8fffee');}
         } else if (remainingDmg > 0) {
@@ -3100,8 +3135,8 @@
           this.maxHp = Math.max(1, this.maxHp);
           this.hp = this.maxHp;
           logMessage(`👿 Demon Ball hồi sinh lần ${this.demonReviveCount}/${SKILL_CONFIG.demon.maxRevives}!`, 'demon');
-          createShockwave(this.x, this.y, 65, '#ef4444', 4);
-          createParticles(this.x, this.y, '#ef4444', 20);
+          createShockwave(this.x, this.y, 115, '#ef4444', 6);createShockwave(this.x,this.y,68,'#ffd1d1',3);
+          createParticles(this.x, this.y, '#ef4444', 48,2.2);createParticles(this.x,this.y,'#ffd7d7',26,1.8);createFloatingText(this.x,this.y-this.radius-24,'REBORN · DEMON','#fecaca');
           updateHUD();
           return;
         }
@@ -3122,6 +3157,8 @@
         const overheal = Math.max(0, totalHeal - actualHealed);
 
         this.hp += actualHealed;
+        const angelShare = Math.min(angelHealer.maxHp-angelHealer.hp, actualHealed*SKILL_CONFIG.angel.selfHealShareFromOverheal);
+        if(angelShare>0 && angelHealer.aegisHealBlockTimer<=0){angelHealer.hp+=angelShare;createFloatingText(angelHealer.x,angelHealer.y-angelHealer.radius-12,`+${angelShare} HP · THIÊN ÂN`,'#fde68a');createParticles(angelHealer.x,angelHealer.y,'#fef08a',8,0.9);}
         createParticles(this.x, this.y, '#fef08a', 4);
         createFloatingText(this.x, this.y - 10, `+${actualHealed}`, '#fef08a');
 
@@ -3406,8 +3443,8 @@
       if (!ballsCollided) {
         if (b1.typeKey === 'viper') b1.viperCollisionWasTouching = false;
         if (b2.typeKey === 'viper') b2.viperCollisionWasTouching = false;
-        if (b1.typeKey === 'aegis') b1.aegisCollisionWasTouching=false;
-        if (b2.typeKey === 'aegis') b2.aegisCollisionWasTouching=false;
+        if (b1.typeKey === 'aegis') { b1.aegisCollisionWasTouching=false; b1.aegisContactDamageDone=false; }
+        if (b2.typeKey === 'aegis') { b2.aegisCollisionWasTouching=false; b2.aegisContactDamageDone=false; }
       }
       if (ballsCollided) {
         if(b1.typeKey==='aegis' && !b1.aegisCollisionWasTouching){aegisCleanseOneStatus(b2);b1.aegisCollisionWasTouching=true;}
@@ -3430,7 +3467,7 @@
           b1.receiveHealingFromAngel(SKILL_CONFIG.angel.collisionEnemyHeal, b2);
         }
 
-        if (b1.hitCooldown === 0) {
+        if (b1.hitCooldown === 0 && (b1.typeKey !== 'aegis' || !b1.aegisContactDamageDone)) {
           let dmg1 = b1.aegisFearedTimer>0 ? 0 : b1.contactDmg;
           if (b1.typeKey === 'bear') {
             if (b1.effectiveHealStored > 0) {
@@ -3442,9 +3479,9 @@
             b1.effectiveHealStored = 0;
           }
           if (b1.typeKey === 'shen') dmg1 = Math.round(b2.maxHp * 0.05 + (b2.maxHp - b2.hp) * 0.05 + (b1.maxHp - b1.hp) * 0.05);
-          if (dmg1 > 0) { b2.takeDamage(dmg1, 'Va Chạm'); b1.hitCooldown = 15; }
+          if (dmg1 > 0) { b2.takeDamage(dmg1, 'Va Chạm'); b1.hitCooldown = 15; if(b1.typeKey==='aegis')b1.aegisContactDamageDone=true; }
         }
-        if (b2.hitCooldown === 0) {
+        if (b2.hitCooldown === 0 && (b2.typeKey !== 'aegis' || !b2.aegisContactDamageDone)) {
           let dmg2 = b2.aegisFearedTimer>0 ? 0 : b2.contactDmg;
           if (b2.typeKey === 'bear') {
             if (b2.effectiveHealStored > 0) {
@@ -3456,7 +3493,7 @@
             b2.effectiveHealStored = 0;
           }
           if (b2.typeKey === 'shen') dmg2 = Math.round(b1.maxHp * 0.05 + (b1.maxHp - b1.hp) * 0.05 + (b2.maxHp - b2.hp) * 0.05);
-          if (dmg2 > 0) { b1.takeDamage(dmg2, 'Va Chạm'); b2.hitCooldown = 15; }
+          if (dmg2 > 0) { b1.takeDamage(dmg2, 'Va Chạm'); b2.hitCooldown = 15; if(b2.typeKey==='aegis')b2.aegisContactDamageDone=true; }
         }
         if (b1ViperNewContact) {
           const heal = (b2.viperPoisonStacks || 0) * SKILL_CONFIG.viper.collisionHealPerStack;
@@ -3672,19 +3709,45 @@
         for(let i=0;i<26;i++){const x=(i*67+Math.sin(globalTick*0.018+i)*22)%canvas.width,y=(i*113-globalTick*(0.35+(i%4)*0.12))%canvas.height;ctx.globalAlpha=0.18+0.16*Math.sin(globalTick*0.04+i);ctx.fillStyle=i%4===0?'#d8b86b':'#62e8d6';ctx.shadowColor=ctx.fillStyle;ctx.shadowBlur=8;ctx.beginPath();ctx.arc(x,y,1.1+(i%3)*0.55,0,Math.PI*2);ctx.fill();}
         ctx.globalAlpha=0.45;ctx.strokeStyle='#b69a5c';ctx.lineWidth=1;ctx.setLineDash([4,12]);ctx.lineDashOffset=-globalTick*0.45;ctx.beginPath();ctx.arc(canvas.width/2,canvas.height/2,145+pulse*9,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);ctx.restore();
       }
-      // Móc kéo / dao phóng. Đòn móc đưa Pyke vào Biển Sâu ngay khi phóng, trước lúc mục tiêu bị kéo.
+      // Móc/dao Pyke: lưỡi thép thật, dây xích phát quang và hoạt ảnh thu dây kéo mục tiêu.
       for(let i=pykeHooks.length-1;i>=0;i--){
-        const h=pykeHooks[i],cfg=SKILL_CONFIG.pyke;h.life-=FIXED_STEP_SECONDS;h.x+=h.vx;h.y+=h.vy;h.trail.push({x:h.x,y:h.y});if(h.trail.length>10)h.trail.shift();
-        const target=h.target;
-        if(!h.hit&&target&&target.hp>0&&!target.isHadesUntargetable()&&Math.hypot(target.x-h.x,target.y-h.y)<=target.radius+8){
-          h.hit=true;const base=h.knife?cfg.knifeDamage:cfg.hookDamage;target.takeDamage(base,h.knife?'Pyke • Dao Biển Sâu':'Pyke • Móc Tử Thần');
-          if(!h.knife){const bonus=Math.max(0,target.maxHp-target.hp)*cfg.hookMissingHpRatio;if(bonus>0)target.takeDamage(bonus,'Pyke • Phán Quyết Móc');if(h.owner&&h.owner.hp>0)h.owner.enterPykeDeepSea(false);const a=Math.atan2(target.y-h.anchorY,target.x-h.anchorX),pullDist=target.radius+18;target.x=Math.max(target.radius,Math.min(canvas.width-target.radius,h.anchorX+Math.cos(a)*pullDist));target.y=Math.max(target.radius,Math.min(canvas.height-target.radius,h.anchorY+Math.sin(a)*pullDist));target.vx=Math.cos(a)*-BASE_SPEED*0.7;target.vy=Math.sin(a)*-BASE_SPEED*0.7;createShockwave(target.x,target.y,58,'#4de0ce',3.5);createFloatingText(target.x,target.y-target.radius-18,`MÓC KÉO · -${(base+bonus).toFixed(1)}`,'#aafff0');}
-          else {createShockwave(target.x,target.y,46,'#5eead4',2.8);createFloatingText(target.x,target.y-target.radius-16,`-${base} · DAO SÂU`,'#aafff0');}
-          createParticles(target.x,target.y,'#4de0ce',22,1.7);logMessage(h.knife?'🔪 Dao Biển Sâu xuyên qua mục tiêu!':'🗡️ MÓC TỬ THẦN trúng đích, kéo mục tiêu về vị trí cũ của Pyke!','pyke');
+        const h=pykeHooks[i],cfg=SKILL_CONFIG.pyke;const owner=h.owner,target=h.target;
+        h.life-=FIXED_STEP_SECONDS;
+        if(!h.returning&&h.life<=0){h.returning=true;h.pullTarget=false;h.life=1.1;}
+        if(!h.returning&&h.knife&&target&&target.hp>0){const aim=Math.atan2(target.y-h.y,target.x-h.x);h.angle=aim;h.vx=Math.cos(aim)*SKILL_CONFIG.pyke.hookSpeed*1.25;h.vy=Math.sin(aim)*SKILL_CONFIG.pyke.hookSpeed*1.25;}
+        if(!h.returning){h.x+=h.vx;h.y+=h.vy;}
+        else{
+          const tx=owner?owner.x:h.anchorX,ty=owner?owner.y:h.anchorY,dx=tx-h.x,dy=ty-h.y,d=Math.hypot(dx,dy)||1;
+          const spd=BASE_SPEED*7.2;h.vx=dx/d*spd;h.vy=dy/d*spd;h.x+=h.vx;h.y+=h.vy;
+          if(h.pullTarget&&target&&target.hp>0){const pdx=h.anchorX-target.x,pdy=h.anchorY-target.y,pd=Math.hypot(pdx,pdy)||1;const step=Math.min(pd,BASE_SPEED*4.8);target.x+=pdx/pd*step;target.y+=pdy/pd*step;target.vx=pdx/pd*spd*0.55;target.vy=pdy/pd*spd*0.55;}
         }
-        ctx.save();ctx.globalCompositeOperation='lighter';for(let j=1;j<h.trail.length;j++){ctx.globalAlpha=j/h.trail.length*0.55;ctx.strokeStyle=j%2?'#64f3df':'#c5a65c';ctx.lineWidth=1.5+j/h.trail.length*2;ctx.beginPath();ctx.moveTo(h.trail[j-1].x,h.trail[j-1].y);ctx.lineTo(h.trail[j].x,h.trail[j].y);ctx.stroke();}
-        ctx.translate(h.x,h.y);ctx.rotate(h.angle);ctx.shadowColor='#69f5e0';ctx.shadowBlur=18;ctx.fillStyle='#c7fff4';ctx.strokeStyle='#d6b96f';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(13,0);ctx.lineTo(-7,-4);ctx.lineTo(-3,0);ctx.lineTo(-7,4);ctx.closePath();ctx.fill();ctx.stroke();ctx.beginPath();ctx.moveTo(-3,-3);ctx.lineTo(-10,-8);ctx.moveTo(-3,3);ctx.lineTo(-10,8);ctx.stroke();ctx.restore();
-        if(h.life<=0||h.hit||h.x<-30||h.x>canvas.width+30||h.y<-30||h.y>canvas.height+30)pykeHooks.splice(i,1);
+        h.trail.push({x:h.x,y:h.y});if(h.trail.length>14)h.trail.shift();
+        if(!h.hit&&!h.returning&&target&&target.hp>0&&!target.isHadesUntargetable()&&Math.hypot(target.x-h.x,target.y-h.y)<=target.radius+10){
+          h.hit=true;h.returning=true;h.pullTarget=true;h.life=1.15;
+          const execute=target.hp<=target.maxHp*cfg.executeThreshold;
+          const base=h.knife?cfg.knifeDamage:cfg.hookDamage;
+          if(execute){target.shield=0;target.takeDamage(cfg.executeDamage,'Pyke • Kết Liễu Vực Sâu');createShockwave(target.x,target.y,105,'#7fffee',6);createParticles(target.x,target.y,'#a7fff2',58,2.5);createFloatingText(target.x,target.y-target.radius-26,'9999 · KẾT LIỄU','#d7fff8');}
+          else target.takeDamage(base,h.knife?'Pyke • Dao Biển Sâu':'Pyke • Móc Tử Thần');
+          if(!h.knife&&!execute){const bonus=Math.max(0,target.maxHp-target.hp)*cfg.hookMissingHpRatio;if(bonus>0)target.takeDamage(bonus,'Pyke • Phán Quyết Móc');if(owner&&owner.hp>0)owner.enterPykeDeepSea(false);createFloatingText(target.x,target.y-target.radius-18,`MÓC KÉO · -${(base+bonus).toFixed(1)}`,'#aafff0');}
+          else createFloatingText(target.x,target.y-target.radius-16,execute?'KẾT LIỄU · 9999':`-${base} · DAO SÂU`,'#aafff0');
+          createShockwave(target.x,target.y,58,'#4de0ce',3.5);createParticles(target.x,target.y,'#4de0ce',28,1.8);
+          logMessage(h.knife?'🔪 Dao Biển Sâu trúng đích! Pyke giật dây thu dao.':'🗡️ MÓC TỬ THẦN trúng đích — dây xích siết chặt và kéo mục tiêu!','pyke');
+        }
+        // Dây luôn nối lưỡi dao với cổ tay Pyke, kể cả khi dao bay hụt và đang được thu hồi.
+        if(owner){ctx.save();ctx.globalCompositeOperation='lighter';ctx.lineCap='round';
+          const ox=owner.x+Math.cos(h.angle)*owner.radius*0.7,oy=owner.y+Math.sin(h.angle)*owner.radius*0.7;
+          ctx.beginPath();ctx.moveTo(ox,oy);ctx.quadraticCurveTo((ox+h.x)/2+Math.sin(globalTick*.18)*7,(oy+h.y)/2+Math.cos(globalTick*.14)*7,h.x,h.y);
+          ctx.strokeStyle='rgba(44,224,207,.32)';ctx.lineWidth=5;ctx.shadowColor='#39e7d5';ctx.shadowBlur=15;ctx.stroke();
+          ctx.beginPath();ctx.moveTo(ox,oy);ctx.lineTo(h.x,h.y);ctx.strokeStyle='rgba(222,199,132,.95)';ctx.lineWidth=1.15;ctx.setLineDash([3,4]);ctx.lineDashOffset=-globalTick*.9;ctx.stroke();ctx.setLineDash([]);ctx.restore();}
+        ctx.save();ctx.globalCompositeOperation='lighter';for(let j=1;j<h.trail.length;j++){ctx.globalAlpha=j/h.trail.length*.62;ctx.strokeStyle=j%2?'#64f3df':'#d8bc75';ctx.lineWidth=1.3+j/h.trail.length*2.4;ctx.beginPath();ctx.moveTo(h.trail[j-1].x,h.trail[j-1].y);ctx.lineTo(h.trail[j].x,h.trail[j].y);ctx.stroke();}
+        ctx.translate(h.x,h.y);ctx.rotate(h.angle);ctx.shadowColor='#69f5e0';ctx.shadowBlur=22;
+        // Lưỡi dao cong, sống thép, cạnh sắc bạc và chuôi quấn da.
+        ctx.fillStyle='#102c32';ctx.strokeStyle='#b9fff1';ctx.lineWidth=1.4;ctx.beginPath();ctx.moveTo(20,0);ctx.quadraticCurveTo(6,-8,-10,-5);ctx.lineTo(-16,-1);ctx.quadraticCurveTo(2,-2,20,0);ctx.closePath();ctx.fill();ctx.stroke();
+        ctx.strokeStyle='#effffb';ctx.lineWidth=1.2;ctx.beginPath();ctx.moveTo(18,0);ctx.quadraticCurveTo(1,-5,-13,-3);ctx.stroke();
+        ctx.strokeStyle='#c49b52';ctx.lineWidth=2.6;ctx.beginPath();ctx.moveTo(-11,-4);ctx.lineTo(-17,4);ctx.stroke();ctx.strokeStyle='#e8d8b0';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(-14,-4);ctx.lineTo(-20,3);ctx.stroke();
+        ctx.fillStyle='#0b141a';ctx.strokeStyle='#c6a56a';ctx.lineWidth=1;ctx.beginPath();ctx.roundRect(-29,-3,12,6,2);ctx.fill();ctx.stroke();
+        for(let q=0;q<3;q++){ctx.fillStyle=q%2?'#a6fff2':'#d8b66c';ctx.beginPath();ctx.arc(-24+q*3,0,1.05,0,Math.PI*2);ctx.fill();}ctx.restore();
+        if((h.returning&&owner&&Math.hypot(owner.x-h.x,owner.y-h.y)<owner.radius+10)||h.life<=0||h.x<-40||h.x>canvas.width+40||h.y<-40||h.y>canvas.height+40)pykeHooks.splice(i,1);
       }
       for(let i=aegisSlashEffects.length-1;i>=0;i--){
         const fx=aegisSlashEffects[i], owner=fx.owner; fx.timer-=FIXED_STEP_SECONDS;
@@ -4260,6 +4323,9 @@
 
         const enemy = (trap.owner === p1) ? p2 : p1;
         if (enemy && Math.hypot(enemy.x - trap.x, enemy.y - trap.y) < enemy.radius + trap.radius) {
+          trap.owner.marksmanTrapHasteTimer=SKILL_CONFIG.marksman.trapHasteDuration;
+          createFloatingText(trap.owner.x,trap.owner.y-trap.owner.radius-18,'⚡ TỐC ĐỘ BẮN +25%','#d9f99d');
+          createShockwave(trap.owner.x,trap.owner.y,48,'#bef264',2.5);
           enemy.applyStun(SKILL_CONFIG.marksman.trapStunDuration);
           createShockwave(trap.x, trap.y, 40, '#ef4444', 3);
           marksmanBullets.push({
@@ -5075,7 +5141,7 @@
       if (ball.typeKey === 'angel' && ball.angelReviveUsed) badges.innerHTML += `<span class="bg-yellow-950 text-yellow-300 border border-yellow-500/40 px-1 rounded">👼 Đã Hồi Sinh</span>`;
       if (ball.typeKey === 'shen') {
         const dist = Math.hypot(ball.x - ball.spiritBladeX, ball.y - ball.spiritBladeY);
-        if (dist <= ball.radius * SKILL_CONFIG.shen.zoneRadiusMult) badges.innerHTML += `<span class="bg-cyan-950 text-cyan-200 border border-cyan-400 px-1 rounded">⛩️ Bất Tử Vùng Kiếm</span>`;
+        if (dist <= ball.radius * SKILL_CONFIG.shen.zoneRadiusMult || ball.shenGraceTimer>0) badges.innerHTML += `<span class="bg-cyan-950 text-cyan-200 border border-cyan-400 px-1 rounded">⛩️ Bất Tử Vùng Kiếm</span>`;
       }
       if (ball.typeKey === 'wukong' && ball.wukongImmortalTimer > 0) badges.innerHTML += `<span class="bg-amber-950 text-yellow-300 border border-yellow-400 px-1 rounded">🍑 Bất Tử (Đào)</span>`;
       if (ball.typeKey === 'wukong' && ball.wukongSweepTimer > 0) badges.innerHTML += `<span class="bg-orange-950 text-orange-300 border border-orange-400 px-1 rounded">⚡ Tăng Tốc (+40%)</span>`;
@@ -5091,6 +5157,7 @@
         badges.innerHTML += `<span class="bg-red-950 text-red-200 border border-red-500/40 px-1 rounded">🐺 Cerberus: ${ball.hadesCerberus ? ball.hadesCerberus.contactDmg : 0} dmg</span>`;
         if (ball.hadesHellActive) badges.innerHTML += `<span class="bg-orange-950 text-orange-200 border border-orange-500/40 px-1 rounded">🔥 Địa Ngục</span>`;
       }
+      if(ball.typeKey==='marksman'&&ball.marksmanTrapHasteTimer>0)badges.innerHTML+=`<span class="bg-lime-950 text-lime-200 border border-lime-400/50 px-1 rounded">⚡ Tốc bắn +25% · ${ball.marksmanTrapHasteTimer.toFixed(1)}s</span>`;
       if (ball.typeKey === 'dragon') {
         badges.innerHTML += `<span class="bg-amber-950 text-amber-200 border border-amber-500/40 px-1 rounded">🐉 Linh Long: ${ball.dragonSeals}</span>`;
         badges.innerHTML += `<span class="bg-yellow-950 text-yellow-200 border border-yellow-500/40 px-1 rounded">Thức tỉnh: ${ball.dragonForm}/3</span>`;
@@ -5126,6 +5193,34 @@
       }).join('') || (libraryRoleFilter==='Hỗ Trợ' ? '<div class="text-xs text-[#c7b397] p-3 leading-relaxed">Chưa có chiến binh Hỗ Trợ trong phiên bản hiện tại. Vai trò này sẽ được bổ sung khi game có chế độ đấu đội.</div>' : '<div class="text-xs text-[#b6a38b] p-3">Không tìm thấy chiến binh.</div>');
       renderLibraryDetail(librarySelectedKey);
     }
+
+    const BALL_SKILL_DETAILS = {
+      fire:'Nội tại: tích tầng Cháy trên mục tiêu. Mỗi tầng gây sát thương theo nhịp 0,5 giây và duy trì áp lực khi hai Ball tách nhau. Vệt lửa lưu lại trên sân trong 3 giây.',
+      ghost:'Hồn Lướt: sau 3,5 giây tích nhịp, Ghost hóa hồn, tăng tốc, xuyên áp sát và gây 23 sát thương kèm làm chậm 1,5 giây.',
+      assassin:'Ám khí: mỗi 1,5 giây phóng phi tiêu gây 6 sát thương; có thể tích tối đa 3 phi tiêu bám trên mục tiêu. Bản cân bằng mới: 77 HP, tốc độ 1,15×, sát thương va chạm 0.',
+      bear:'Tích trữ hồi phục theo thời gian. Khi đủ lượng hồi dư, chuyển thành sức mạnh cho cú va chạm kế tiếp; tốc độ hồi tăng khi HP thấp.',
+      storm:'Tạo vùng sét liên tục. Tia sét giáng xuống theo nhịp, gây sát thương và làm chậm mục tiêu trong vùng.',
+      wanderer:'Khiên Kiếm chặn đòn đầu tiên; sau đó Wanderer dùng kiếm khí chém theo nhịp, đòn thứ ba mạnh hơn hai đòn đầu.',
+      soul:'Triệu hồi linh hồn theo chu kỳ để hồi phục và tích số Hồn. Chùm sáng tăng sát thương và góc quét theo số Hồn đã thu thập.',
+      marksman:'Bắn đạn tự động mỗi 1 giây; đặt bẫy mỗi 2 giây. Khi đối thủ giẫm bẫy, bị choáng, nhận viên đạn chí mạng 25 sát thương và Marksman tăng 25% tốc độ bắn trong 3 giây (chu kỳ còn 0,75 giây).',
+      ninja:'Chuỗi ba bước: phi tiêu, đột kích áp sát, rồi lướt chém gây sát thương cơ bản cộng 40% lượng HP mục tiêu đã mất. Bước lướt có trạng thái né đòn.',
+      reaper:'Tạo ảo ảnh theo vệt di chuyển, tăng tốc khi săn đuổi và tung nhát chém có sát thương tăng theo lượng HP đối thủ đã mất.',
+      shen:'Kiếm Hồn tạo vùng bảo hộ. Khi bước vào vùng, Shen hồi 4 HP, nhận khiên và bất tử trong vùng; khi rời vùng, hiệu lực bất tử còn kéo dài thêm 1,15 giây. Kiếm Hồn còn hỗ trợ hoán đổi vị trí.',
+      sound:'Phát sóng âm theo nhịp cộng hưởng; sát thương thay đổi theo khoảng cách và cường độ sóng. Sóng không cần khóa mục tiêu trực tiếp.',
+      angel:'Mỗi giây hồi máu cho đối thủ theo nội tại đặc biệt; khi va chạm, Angel tự hồi 11 HP và hồi 10 HP cho đối thủ. Lượng hồi cho đối thủ được nhân theo HP đã mất của Angel; Angel nhận lại 25% lượng HP thực tế đã hồi cho đối thủ. Hồi dư tạo Phước Thần.',
+      wukong:'Luân phiên phân thân, Đào Tiên và Như Ý. Đào Tiên hồi máu và cho bất tử ngắn; Như Ý tăng tốc, quét diện rộng và gây sát thương.',
+      demon:'Nhận sát thương đầu vào gấp đôi, phản đòn dựa trên lượng khiên đang tích trữ. Tích khiên theo thời gian và có tối đa 7 lần hồi sinh.',
+      poseidon:'Sóng Nước đẩy lùi và làm chậm; chuỗi bùng nổ tăng dần sức mạnh, tích Hải Thần Ấn và mở rộng ảnh hưởng đại dương.',
+      ronin:'Tích tốc độ theo thời gian, tiêu hao nhịp để lướt chém, tích Ấn Cuồng Phong và triệu hồi lốc xoáy. Khiên đã tích có thể tồn tại lâu dài.',
+      hades:'Cerberus đồng hành, tăng sức mạnh theo HP Hades đã mất. Thần Thương tước HP tối đa và trao khiên vĩnh viễn; Địa Ngục tạo vùng áp chế.',
+      dragon:'Long Khí định kỳ thanh tẩy trạng thái và tích Linh Long. Đạt các mốc ấn sẽ thức tỉnh ba dạng: Long Hỏa, Kình Phong hồi 14 HP và Bầu Trời với khiên lớn.',
+      viper:'Độc Chướng cộng dồn gây sát thương theo thời gian và tăng tỷ lệ khiến đòn đánh trượt. Nanh Độc gây sát thương theo HP đã mất và có thể cộng thêm độc.',
+      gamber:'Xúc xắc định mệnh quyết định hiệu ứng từng lượt. Gamber hồi máu khi bắt đầu lượt, gây sát thương xúc xắc, làm choáng và tung ba lá bài với hiệu ứng ngẫu nhiên.',
+      moonshot:'Luân phiên bốn vũ khí theo thứ tự ngẫu nhiên đầu trận. Mỗi vũ khí có tầm bắn, sát thương và hiệu ứng riêng; chuyển vũ khí tạo nhịp chiến đấu đặc trưng.',
+      aegis:'Chuyển sát thương nhận vào thành các lớp tự thiêu 1 DPS; lớp kéo dài theo lượng sát thương đã chuyển. Khống chế cứng kích hoạt Khiếp Đảm. Thánh Kiếm chém một lần mỗi 1,25 giây, gây đúng 5 sát thương khi trúng, cấm hồi HP và tước khiên. Vùng chém chỉ là hiệu ứng hình ảnh, không tự gây thêm sát thương khi mục tiêu đi xuyên qua.',
+      pyke:'Mỗi đòn nhận vào chuyển 35% sát thương thành HP xám, hoặc 50% khi HP dưới 50. HP xám không tự mất và chỉ được chuyển thành hồi phục khi Pyke vào Biển Sâu. Mỗi lần vào Biển Sâu hồi thêm 3 HP; trong vùng Pyke ẩn khỏi nhận diện. Móc kéo gây 10 sát thương + 25% HP đã mất; dao phóng gây 15 sát thương. Khi mục tiêu còn ≤3% HP tối đa, đòn tấn công của Pyke có thể kết liễu bằng 9999 sát thương. Dao có dây nối và được thu hồi bằng cú giật dây.'
+    };
+
     function renderLibraryDetail(key) {
       const cfg=BALL_TYPES[key]; if(!cfg) return;
       const meta=BALL_LIBRARY[key]||{role:'Đấu Sĩ',desc:'Chiến binh mới gia nhập đấu trường.'};
@@ -5134,7 +5229,8 @@
       libraryDetail.innerHTML=`
         <div class="flex items-center gap-3 mb-4"><div class="library-hero-orb" style="--orb:${cfg.color};--orb2:${cfg.secondaryColor}">${cfg.icon}</div><div><div class="text-[10px] tracking-[.2em] text-[#b69c7a]">${meta.role.toUpperCase()}</div><h3 class="text-xl font-black text-[#f1e2cb]">${cfg.name}</h3><div class="text-[11px] text-[#bca98e]">Bộ sưu tập chiến binh</div></div></div>
         <div class="grid grid-cols-3 gap-2 mb-4"><div class="library-stat"><b>${cfg.maxHp}</b><small>HP tối đa</small></div><div class="library-stat"><b>${speed}×</b><small>Tốc độ</small></div><div class="library-stat"><b>${cfg.contactDmg}</b><small>Va chạm</small></div></div>
-        <div class="text-[10px] tracking-[.2em] text-[#b69c7a] mb-1">NỘI TẠI & LỐI CHƠI</div><p class="text-xs leading-relaxed text-[#d3c2aa] mb-5">${meta.desc}</p>
+        <div class="text-[10px] tracking-[.2em] text-[#b69c7a] mb-1">NỘI TẠI & LỐI CHƠI</div><p class="text-xs leading-relaxed text-[#d3c2aa] mb-2">${meta.desc}</p>
+        <button class="arena-btn w-full mb-4" data-notebook="${key}">📖 CHI TIẾT BỘ KỸ NĂNG</button>
         <div class="flex items-center justify-between mb-2"><div><div class="text-[10px] tracking-[.2em] text-[#b69c7a]">TRANG PHỤC HIỆU ỨNG</div><div class="text-sm font-bold text-[#f1e2cb]">Chọn phong cách</div></div><span class="text-[10px] text-[#a99579]">Lưu tự động</span></div>
         <div class="space-y-2">${BALL_SKINS.map(sk=>`<button class="skin-choice ${skin===sk.id?'chosen':''}" data-skin="${sk.id}"><span class="skin-swatch ${sk.id}"><i></i><i></i><i></i></span><span class="text-left flex-1"><b>${sk.name}</b><small>${sk.tag}</small><em>${sk.desc}</em></span><span class="skin-check">${skin===sk.id?'✓':'○'}</span></button>`).join('')}</div>
         <div class="mt-4 grid grid-cols-2 gap-2"><button class="arena-btn" data-pick="p1">Dùng cho Ball 1</button><button class="arena-btn" data-pick="p2">Dùng cho Ball 2</button></div>`;
@@ -5142,9 +5238,38 @@
     function openBallLibrary() { libraryModal.classList.remove('hidden'); libraryModal.classList.add('flex'); renderBallLibrary(); }
     function closeBallLibrary() { libraryModal.classList.add('hidden'); libraryModal.classList.remove('flex'); }
 
+    function drawAimFrame(){
+      ctx.fillStyle='#030712';ctx.fillRect(0,0,canvas.width,canvas.height);
+      ctx.strokeStyle='rgba(51,65,85,.55)';ctx.lineWidth=1;for(let x=0;x<canvas.width;x+=40){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,canvas.height);ctx.stroke();}for(let y=0;y<canvas.height;y+=40){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(canvas.width,y);ctx.stroke();}
+      const entries=[{x:80,y:220,a:aimAngles[0],c:'#67e8f9',b:p1},{x:360,y:220,a:aimAngles[1],c:'#fda4af',b:p2}];
+      entries.forEach((e,i)=>{ctx.save();ctx.translate(e.x,e.y);ctx.fillStyle=e.b?.color||e.c;ctx.shadowColor=e.c;ctx.shadowBlur=20;ctx.beginPath();ctx.arc(0,0,19,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;ctx.font='20px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(e.b?.icon||'●',0,1);const len=aimChosen[i]?82:58;ctx.rotate(e.a);ctx.strokeStyle=e.c;ctx.lineWidth=4;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(25,0);ctx.lineTo(len,0);ctx.stroke();ctx.fillStyle=e.c;ctx.beginPath();ctx.moveTo(len+12,0);ctx.lineTo(len-3,-9);ctx.lineTo(len-3,9);ctx.closePath();ctx.fill();ctx.restore();ctx.fillStyle=e.c;ctx.font='bold 10px Orbitron, sans-serif';ctx.textAlign='center';ctx.fillText(aimChosen[i]?'HƯỚNG ĐÃ CHỌN':`BALL ${i+1}`,e.x,260);});
+      ctx.textAlign='center';ctx.fillStyle='#f5e7c9';ctx.font='bold 14px Orbitron, sans-serif';ctx.fillText('CHỌN HƯỚNG XUẤT PHÁT',220,35);ctx.fillStyle='#a8b5c5';ctx.font='11px sans-serif';ctx.fillText('Kéo từ tâm mỗi Ball để chỉnh mũi tên · Chạm giữa sân để bỏ qua',220,56);ctx.fillStyle='#fcd58b';ctx.font='bold 18px Orbitron, sans-serif';ctx.fillText(`${Math.max(0,Math.ceil(aimCountdown))}s`,220,405);
+    }
+    function launchMatchAfterAim(){
+      if(!aimStage)return;aimStage=false;matchStarted=true;canvas.classList.remove('aiming');
+      [p1,p2].forEach((b,i)=>{const a=aimChosen[i]?aimAngles[i]:Math.random()*Math.PI*2;b.vx=Math.cos(a)*b.baseSpeed;b.vy=Math.sin(a)*b.baseSpeed;});
+      document.getElementById('match-state').textContent='ĐANG GIAO TRANH';logMessage(`Bắt đầu trận đấu: ${p1.name} VS ${p2.name}!`);updateHUD();gameStep();
+    }
+    canvas.addEventListener('pointerdown',e=>{
+      if(!aimStage)return;const r=canvas.getBoundingClientRect(),x=(e.clientX-r.left)*canvas.width/r.width,y=(e.clientY-r.top)*canvas.height/r.height;
+      if(x>canvas.width*.34&&x<canvas.width*.66&&y>canvas.height*.28&&y<canvas.height*.72){aimChosen=[false,false];launchMatchAfterAim();return;}
+      const side=x<canvas.width/2?0:1,ox=side===0?80:360,oy=220;aimPointer={side};aimAngles[side]=Math.atan2(y-oy,x-ox);aimChosen[side]=true;canvas.setPointerCapture?.(e.pointerId);drawAimFrame();
+    });
+    canvas.addEventListener('pointermove',e=>{if(!aimStage||!aimPointer)return;const r=canvas.getBoundingClientRect(),x=(e.clientX-r.left)*canvas.width/r.width,y=(e.clientY-r.top)*canvas.height/r.height,ox=aimPointer.side===0?80:360;aimAngles[aimPointer.side]=Math.atan2(y-220,x-ox);drawAimFrame();});
+    canvas.addEventListener('pointerup',()=>{aimPointer=null;});
+
+    function startAmbientMusic(){
+      try{if(!audioCtx)audioCtx=new (window.AudioContext||window.webkitAudioContext)();if(audioCtx.state==='suspended')audioCtx.resume();if(musicTimer)return;
+        musicGain=audioCtx.createGain();musicGain.gain.value=Number(document.getElementById('music-volume').value);musicGain.connect(audioCtx.destination);
+        const notes=[110,146.83,164.81,220,196,164.81,146.83,123.47];let step=0;
+        musicTimer=setInterval(()=>{if(!musicEnabled||!audioCtx)return;const now=audioCtx.currentTime;const f=notes[step++%notes.length];[1,2].forEach((n)=>{const o=audioCtx.createOscillator(),g=audioCtx.createGain(),filter=audioCtx.createBiquadFilter();o.type=n===1?'sine':'triangle';o.frequency.value=f*n;filter.type='lowpass';filter.frequency.value=700;g.gain.setValueAtTime(0,now);g.gain.linearRampToValueAtTime(n===1?0.045:0.012,now+0.8);g.gain.exponentialRampToValueAtTime(0.0001,now+3.2);o.connect(filter);filter.connect(g);g.connect(musicGain);o.start(now);o.stop(now+3.3);});},1800);
+      }catch(e){console.warn('Audio unavailable',e);}
+    }
+    function toggleMusic(){musicEnabled=!musicEnabled;if(musicEnabled){startAmbientMusic();document.getElementById('btn-music').textContent='♫ NHẠC NỀN: BẬT';}else{document.getElementById('btn-music').textContent='♫ NHẠC NỀN: TẮT';}}
+
     function initGame() {
       if (animationFrameId) cancelAnimationFrame(animationFrameId);
-      gameOver = false;
+      gameOver = false; gameEnding=false; gameEndTimer=0; defeatedBall=null; matchStarted=false; aimStage=false;
       gamePaused = false;
       btnPause.textContent = 'Ⅱ TẠM DỪNG';
       document.getElementById('match-state').textContent = 'ĐANG GIAO TRANH';
@@ -5159,6 +5284,7 @@
 
       p1 = new Ball('p1', p1Select.value, 80, canvas.height / 2, 'p1');
       p2 = new Ball('p2', p2Select.value, canvas.width - 80, canvas.height / 2, 'p2');
+      [p1,p2].forEach((b,i)=>{const a=aimChosen[i]?aimAngles[i]:(i===0?Math.random()*Math.PI*2:Math.random()*Math.PI*2);b.vx=Math.cos(a)*b.baseSpeed;b.vy=Math.sin(a)*b.baseSpeed;});
 
       fireTrails = []; assassinShurikens = []; lightningZones = []; lightningBolts = [];
       soulOrbs = []; activeSoulBeams = []; marksmanTraps = []; marksmanBullets = [];
@@ -5169,23 +5295,31 @@
       particles = []; floatingTexts = []; gamberCards = []; moonshotShots = []; aegisSlashEffects = []; pykeHooks = [];
       
       battleLog.innerHTML = '';
-      logMessage(`Bắt đầu trận đấu: ${p1.name} VS ${p2.name}!`);
-      updateHUD();
-      gameStep(); // Vẽ khung đầu tiên ngay lập tức.
-      animationFrameId = requestAnimationFrame(gameLoop);
+      aimAngles=[0,Math.PI];aimChosen=[false,false];aimCountdown=5;aimPointer=null;aimStage=true;matchStarted=false;canvas.classList.add('aiming');
+      document.getElementById('match-state').textContent='CHỌN HƯỚNG';
+      updateHUD();drawAimFrame();
+      animationFrameId=requestAnimationFrame(gameLoop);
     }
 
     function endGame(loser) {
-      if (gameOver) return;
-      gameOver = true;
-      document.getElementById('match-state').textContent = 'TRẬN ĐẤU KẾT THÚC';
-      const winner = (loser === p1) ? p2 : p1;
-      winnerText.innerText = `🏆 ${winner.name.toUpperCase()} CHIẾN THẮNG!`;
+      if (gameOver || gameEnding) return;
+      gameEnding=true;gameEndTimer=1.25;defeatedBall=loser;
+      createShockwave(loser.x,loser.y,150,'#f8d77a',7);createShockwave(loser.x,loser.y,92,'#ffffff',4);
+      createParticles(loser.x,loser.y,loser.color||'#fbbf24',72,3.0);createParticles(loser.x,loser.y,'#fff2c6',38,2.4);
+      logMessage(`✦ ${loser.name} bị kết liễu!`, 'aegis');
+      document.getElementById('match-state').textContent = 'KẾT LIỄU';
+    }
+    function finishEndGame(){
+      if(gameOver)return;gameOver=true;gameEnding=false;
+      const winner=(defeatedBall===p1)?p2:p1;
+      document.getElementById('match-state').textContent='TRẬN ĐẤU KẾT THÚC';
+      winnerText.innerText=`🏆 ${winner.name.toUpperCase()} CHIẾN THẮNG!`;
       winnerOverlay.classList.remove('hidden');
-      logMessage(`TRẬN ĐẤU KẾT THÚC! ${winner.name} giành chiến thắng!`, winner.side);
+      logMessage(`TRẬN ĐẤU KẾT THÚC! ${winner.name} giành chiến thắng!`,winner.side);
     }
 
     function gameStep() {
+      if(aimStage){drawAimFrame();aimCountdown-=FIXED_STEP_SECONDS;if(aimCountdown<=0)launchMatchAfterAim();return;}
       globalTick++;
       simulationTimeMs += FIXED_STEP_MS;
       updateEnvironmentState();
@@ -5262,7 +5396,8 @@
         }
       });
 
-      if (!gameOver && p1 && p2) {
+      if(gameEnding){gameEndTimer-=FIXED_STEP_SECONDS;if(gameEndTimer<=0)finishEndGame();}
+      if (!gameOver && !gameEnding && p1 && p2) {
         p1.update(p2);
         p2.update(p1);
         updateCerberusPhysics();
@@ -5311,6 +5446,8 @@
     });
 
     btnStart.addEventListener('click', initGame);
+    document.getElementById('btn-music').addEventListener('click',toggleMusic);
+    document.getElementById('music-volume').addEventListener('input',e=>{if(musicGain)musicGain.gain.value=Number(e.target.value);});
     btnRestart.addEventListener('click', initGame);
     btnPause.addEventListener('click', () => {
       if (gameOver) return;
@@ -5326,14 +5463,20 @@
     document.getElementById('library-filters').addEventListener('click',e=>{const b=e.target.closest('[data-role]');if(!b)return;libraryRoleFilter=b.dataset.role;renderBallLibrary();});
     libraryGrid.addEventListener('click',e=>{const b=e.target.closest('[data-ball]');if(!b)return;librarySelectedKey=b.dataset.ball;renderBallLibrary();});
     libraryDetail.addEventListener('click',e=>{
+      const notebook=e.target.closest('[data-notebook]'); if(notebook){const key=notebook.dataset.notebook,cfg=BALL_TYPES[key],meta=BALL_LIBRARY[key]||{role:'Đấu Sĩ'};libraryDetail.innerHTML=`<div class="notebook-page"><div class="text-[10px] tracking-[.25em] text-amber-700 font-bold">SỔ TAY CHIẾN BINH · ${meta.role.toUpperCase()}</div><h2 class="text-2xl font-black text-[#3d2b1b] mt-2 mb-1">${cfg.icon} ${cfg.name}</h2><div class="text-[11px] text-[#806344] mb-4">Hồ sơ nội tại & kỹ năng</div><div class="notebook-rule"></div><p class="text-sm leading-7 text-[#493724] whitespace-pre-line">${BALL_SKILL_DETAILS[key]||meta.desc}</p><div class="notebook-rule mt-5 mb-4"></div><div class="text-[10px] tracking-[.2em] font-bold text-amber-800 mb-2">THÔNG SỐ VẬN HÀNH</div><div class="grid grid-cols-2 gap-2 mb-4"><div class="rounded border border-[#c7ad83] bg-[#fff7e7]/50 p-2"><b class="text-lg">${cfg.maxHp}</b><small class="block text-[10px]">HP tối đa</small></div><div class="rounded border border-[#c7ad83] bg-[#fff7e7]/50 p-2"><b class="text-lg">${(cfg.speed/BASE_SPEED).toFixed(2)}×</b><small class="block text-[10px]">Tốc độ</small></div><div class="rounded border border-[#c7ad83] bg-[#fff7e7]/50 p-2"><b class="text-lg">${cfg.contactDmg}</b><small class="block text-[10px]">Sát thương va chạm</small></div><div class="rounded border border-[#c7ad83] bg-[#fff7e7]/50 p-2"><b class="text-lg">${cfg.radius}</b><small class="block text-[10px]">Bán kính</small></div></div><div class="text-[10px] tracking-[.2em] font-bold text-amber-800 mb-2">THAM SỐ KỸ NĂNG</div><div class="grid grid-cols-1 sm:grid-cols-2 gap-2">${Object.entries(SKILL_CONFIG[key]||{}).map(([name,value])=>`<div class="flex justify-between gap-3 border-b border-[#c7ad83]/70 py-1 text-[11px]"><span class="text-[#70563a]">${name.replace(/([A-Z])/g,' $1')}</span><b class="text-[#3d2b1b]">${value}</b></div>`).join('')||'<div class="text-xs">Không có tham số cấu hình riêng.</div>'}</div><div class="notebook-rule mt-5"></div><button class="arena-btn mt-4" data-back-notebook="${key}">← QUAY LẠI HỒ SƠ</button></div>`;return;}
+      const back=e.target.closest('[data-back-notebook]');if(back){renderLibraryDetail(back.dataset.backNotebook);return;}
       const skin=e.target.closest('[data-skin]'); if(skin){setBallSkin(librarySelectedKey,skin.dataset.skin);return;}
       const pick=e.target.closest('[data-pick]'); if(pick){const key=librarySelectedKey,select=pick.dataset.pick==='p1'?p1Select:p2Select;select.value=key;renderSelectedBallInfo(key);initGame();closeBallLibrary();}
     });
     p1Select.addEventListener('change',()=>renderSelectedBallInfo(p1Select.value));
     p2Select.addEventListener('change',()=>renderSelectedBallInfo(p2Select.value));
 
-    initGame();
     renderSelectedBallInfo(p1Select.value);
+    matchStarted=false;
+    ctx.fillStyle='#030712';ctx.fillRect(0,0,canvas.width,canvas.height);
+    ctx.strokeStyle='rgba(30,41,59,.45)';ctx.lineWidth=1;for(let x=0;x<canvas.width;x+=40){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,canvas.height);ctx.stroke();}for(let y=0;y<canvas.height;y+=40){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(canvas.width,y);ctx.stroke();}
+    ctx.fillStyle='#b8a47e';ctx.textAlign='center';ctx.font='bold 15px Orbitron, sans-serif';ctx.fillText('BALL BATTLE ARENA',canvas.width/2,canvas.height/2-10);ctx.font='11px sans-serif';ctx.fillStyle='#94a3b8';ctx.fillText('CHỌN BALL · NHẤN BẮT ĐẦU ĐẤU',canvas.width/2,canvas.height/2+18);
+    document.getElementById('match-state').textContent='SẴN SÀNG';
   </script>
 </body>
 </html>
