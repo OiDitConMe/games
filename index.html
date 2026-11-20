@@ -3586,11 +3586,32 @@
         return;
       }
       const ballsCollided = resolveElasticCollision(b1, b2);
+      let cosmosClearedVictim = null;
       if(ballsCollided && cosmosOverloadOwner){
         const victim=b1.cosmosOverloaded?b1:(b2.cosmosOverloaded?b2:null);
         const other=victim?(victim===b1?b2:b1):null;
-        const canClear=!!(victim&&other&&(other===cosmosOverloadOwner||(other.team===cosmosOverloadOwner.team&&(other.typeKey!=='ghost'||other.typeKey==='cosmos'))));
-        if(canClear){victim.cosmosOverloaded=false;createShockwave(victim.x,victim.y,90,'#c4b5fd',5);createParticles(victim.x,victim.y,'#ddd6fe',35,1.8);createFloatingText(victim.x,victim.y-victim.radius-25,'QUÁ TẢI ĐƯỢC GIẢI','#ddd6fe');logMessage(`🌌 Quá Tải trên ${victim.name} được giải bằng va chạm!`,'cosmos');if(!getAllBalls().some(x=>x.cosmosOverloaded))endCosmosOverload();}
+        let canClear=false;
+        if(victim&&other){
+          if(other===cosmosOverloadOwner){
+            // Cosmos chỉ được tự giải Quá Tải nếu không còn đồng minh sống,
+            // hoặc đồng minh còn sống là Ghost Ball.
+            const livingAlly=getAllies(other).find(ally=>ally.hp>0&&!ally.isDead);
+            canClear=!livingAlly||livingAlly.typeKey==='ghost';
+          }else if(other.team===cosmosOverloadOwner.team){
+            // Đồng minh khác vẫn có thể chủ động va chạm để giải Quá Tải.
+            canClear=other.typeKey!=='ghost';
+          }
+        }
+        if(canClear){
+          cosmosClearedVictim=victim;
+          victim.cosmosOverloaded=false;
+          // Ball vừa được giải không kích hoạt nội tại/hiệu ứng/sát thương va chạm lượt này.
+          victim.hitCooldown=Math.max(victim.hitCooldown||0,15);
+          if(victim.typeKey==='aegis'){victim.aegisCollisionWasTouching=true;victim.aegisContactDamageDone=true;}
+          if(victim.typeKey==='viper')victim.viperCollisionWasTouching=true;
+          createShockwave(victim.x,victim.y,90,'#c4b5fd',5);createParticles(victim.x,victim.y,'#ddd6fe',35,1.8);createFloatingText(victim.x,victim.y-victim.radius-25,'QUÁ TẢI ĐƯỢC GIẢI','#ddd6fe');logMessage(`🌌 Quá Tải trên ${victim.name} được giải bằng va chạm!`,'cosmos');
+          if(!getAllBalls().some(x=>x.cosmosOverloaded))endCosmosOverload();
+        }
       }
       if (isAlly(b1,b2)) {
         if(!ballsCollided){if(b1.typeKey==='viper')b1.viperCollisionWasTouching=false;if(b2.typeKey==='viper')b2.viperCollisionWasTouching=false;}
@@ -3603,29 +3624,29 @@
         if (b2.typeKey === 'aegis') { b2.aegisCollisionWasTouching=false; b2.aegisContactDamageDone=false; }
       }
       if (ballsCollided) {
-        const forceAegisSlash=(owner,target)=>{if(owner.typeKey!=='aegis'||owner.aegisSlashCooldown>0||!target||target.hp<=0)return;const angle=Math.atan2(target.y-owner.y,target.x-owner.x),range=owner.radius*2*SKILL_CONFIG.aegis.slashRangeDiameters;owner.aegisFacingAngle=angle;owner.aegisSlashCooldown=SKILL_CONFIG.aegis.slashCooldown;target.takeDamage(SKILL_CONFIG.aegis.slashDamage,'Aegis • Thánh Kiếm');target.aegisHealBlockTimer=Math.max(target.aegisHealBlockTimer||0,SKILL_CONFIG.aegis.healBlockDuration);const stolen=Math.max(0,(target.shield||0)+(target.typeKey==='aegis'?(target.aegisBarrier||0):0));if(stolen>0){target.shield=0;target.shieldTimer=0;if(target.typeKey==='aegis'){target.aegisBarrier=0;target.aegisBarrierTimer=0;}owner.aegisBarrier=(owner.aegisBarrier||0)+stolen;owner.aegisBarrierTimer=SKILL_CONFIG.aegis.barrierDuration;}aegisSlashEffects.push({owner,angle,timer:.82,maxTimer:.82,range});createShockwave(target.x,target.y,Math.min(88,range*.55),'#f5d47d',4);createParticles(target.x,target.y,'#fff0b7',30,1.9);createFloatingText(target.x,target.y-target.radius-18,`✦ -${SKILL_CONFIG.aegis.slashDamage} · THÁNH KIẾM`,'#ffe6a0');logMessage('🛡️ Aegis kích hoạt Thánh Kiếm ngay khi va chạm!','aegis');updateHUD();};
+        const forceAegisSlash=(owner,target)=>{if(owner===cosmosClearedVictim||owner.typeKey!=='aegis'||owner.aegisSlashCooldown>0||!target||target.hp<=0)return;const angle=Math.atan2(target.y-owner.y,target.x-owner.x),range=owner.radius*2*SKILL_CONFIG.aegis.slashRangeDiameters;owner.aegisFacingAngle=angle;owner.aegisSlashCooldown=SKILL_CONFIG.aegis.slashCooldown;target.takeDamage(SKILL_CONFIG.aegis.slashDamage,'Aegis • Thánh Kiếm');target.aegisHealBlockTimer=Math.max(target.aegisHealBlockTimer||0,SKILL_CONFIG.aegis.healBlockDuration);const stolen=Math.max(0,(target.shield||0)+(target.typeKey==='aegis'?(target.aegisBarrier||0):0));if(stolen>0){target.shield=0;target.shieldTimer=0;if(target.typeKey==='aegis'){target.aegisBarrier=0;target.aegisBarrierTimer=0;}owner.aegisBarrier=(owner.aegisBarrier||0)+stolen;owner.aegisBarrierTimer=SKILL_CONFIG.aegis.barrierDuration;}aegisSlashEffects.push({owner,angle,timer:.82,maxTimer:.82,range});createShockwave(target.x,target.y,Math.min(88,range*.55),'#f5d47d',4);createParticles(target.x,target.y,'#fff0b7',30,1.9);createFloatingText(target.x,target.y-target.radius-18,`✦ -${SKILL_CONFIG.aegis.slashDamage} · THÁNH KIẾM`,'#ffe6a0');logMessage('🛡️ Aegis kích hoạt Thánh Kiếm ngay khi va chạm!','aegis');updateHUD();};
         forceAegisSlash(b1,b2);forceAegisSlash(b2,b1);
-        if(b1.typeKey==='aegis' && !b1.aegisCollisionWasTouching){aegisCleanseOneStatus(b2);b1.aegisCollisionWasTouching=true;}
-        if(b2.typeKey==='aegis' && !b2.aegisCollisionWasTouching){aegisCleanseOneStatus(b1);b2.aegisCollisionWasTouching=true;}
+        if(b1!==cosmosClearedVictim && b1.typeKey==='aegis' && !b1.aegisCollisionWasTouching){aegisCleanseOneStatus(b2);b1.aegisCollisionWasTouching=true;}
+        if(b2!==cosmosClearedVictim && b2.typeKey==='aegis' && !b2.aegisCollisionWasTouching){aegisCleanseOneStatus(b1);b2.aegisCollisionWasTouching=true;}
         // Chỉ tính một lần khi bắt đầu tiếp xúc, không cộng độc/hồi máu lặp từng frame.
-        const b1ViperNewContact = b1.typeKey === 'viper' && !b1.viperCollisionWasTouching;
-        const b2ViperNewContact = b2.typeKey === 'viper' && !b2.viperCollisionWasTouching;
+        const b1ViperNewContact = b1!==cosmosClearedVictim && b1.typeKey === 'viper' && !b1.viperCollisionWasTouching;
+        const b2ViperNewContact = b2!==cosmosClearedVictim && b2.typeKey === 'viper' && !b2.viperCollisionWasTouching;
         if (b1ViperNewContact) registerViperPassive(b1, 'Va Chạm');
         if (b2ViperNewContact) registerViperPassive(b2, 'Va Chạm');
         if (b1.typeKey === 'viper') b1.viperCollisionWasTouching = true;
         if (b2.typeKey === 'viper') b2.viperCollisionWasTouching = true;
-        if (b1.typeKey === 'angel') {
+        if (b1!==cosmosClearedVictim && b1.typeKey === 'angel') {
           if(b1.aegisHealBlockTimer<=0) b1.hp = Math.min(b1.maxHp, b1.hp + SKILL_CONFIG.angel.collisionSelfHeal);
           createFloatingText(b1.x, b1.y - 10, `+${SKILL_CONFIG.angel.collisionSelfHeal}`, '#4ade80');
           b2.receiveHealingFromAngel(SKILL_CONFIG.angel.collisionEnemyHeal, b1);
         }
-        if (b2.typeKey === 'angel') {
+        if (b2!==cosmosClearedVictim && b2.typeKey === 'angel') {
           if(b2.aegisHealBlockTimer<=0) b2.hp = Math.min(b2.maxHp, b2.hp + SKILL_CONFIG.angel.collisionSelfHeal);
           createFloatingText(b2.x, b2.y - 10, `+${SKILL_CONFIG.angel.collisionSelfHeal}`, '#4ade80');
           b1.receiveHealingFromAngel(SKILL_CONFIG.angel.collisionEnemyHeal, b2);
         }
 
-        if (b1.hitCooldown === 0 && (b1.typeKey !== 'aegis' || !b1.aegisContactDamageDone)) {
+        if (b1!==cosmosClearedVictim && b1.hitCooldown === 0 && (b1.typeKey !== 'aegis' || !b1.aegisContactDamageDone)) {
           let dmg1 = b1.aegisFearedTimer>0 ? 0 : b1.contactDmg;
           if (b1.typeKey === 'bear') {
             if (b1.effectiveHealStored > 0) {
@@ -3639,7 +3660,7 @@
           if (b1.typeKey === 'shen') dmg1 = Math.round(b2.maxHp * 0.05 + (b2.maxHp - b2.hp) * 0.05 + (b1.maxHp - b1.hp) * 0.05);
           if (dmg1 > 0) { b2.takeDamage(dmg1, 'Va Chạm'); b1.hitCooldown = 15; if(b1.typeKey==='aegis')b1.aegisContactDamageDone=true; }
         }
-        if (b2.hitCooldown === 0 && (b2.typeKey !== 'aegis' || !b2.aegisContactDamageDone)) {
+        if (b2!==cosmosClearedVictim && b2.hitCooldown === 0 && (b2.typeKey !== 'aegis' || !b2.aegisContactDamageDone)) {
           let dmg2 = b2.aegisFearedTimer>0 ? 0 : b2.contactDmg;
           if (b2.typeKey === 'bear') {
             if (b2.effectiveHealStored > 0) {
@@ -3653,12 +3674,12 @@
           if (b2.typeKey === 'shen') dmg2 = Math.round(b1.maxHp * 0.05 + (b1.maxHp - b1.hp) * 0.05 + (b2.maxHp - b2.hp) * 0.05);
           if (dmg2 > 0) { b1.takeDamage(dmg2, 'Va Chạm'); b2.hitCooldown = 15; if(b2.typeKey==='aegis')b2.aegisContactDamageDone=true; }
         }
-        if (b1ViperNewContact) {
+        if (b1!==cosmosClearedVictim && b1ViperNewContact) {
           const heal = (b2.viperPoisonStacks || 0) * SKILL_CONFIG.viper.collisionHealPerStack;
           const actual = Math.min(heal, b1.maxHp - b1.hp);
           if (actual > 0 && b1.aegisHealBlockTimer<=0) { b1.hp += actual; createFloatingText(b1.x, b1.y - 22, `+${Number(actual.toFixed(1))} HP`, '#6ee7b7'); createParticles(b1.x, b1.y, '#34d399', 10, 1.0); updateHUD(); }
         }
-        if (b2ViperNewContact) {
+        if (b2!==cosmosClearedVictim && b2ViperNewContact) {
           const heal = (b1.viperPoisonStacks || 0) * SKILL_CONFIG.viper.collisionHealPerStack;
           const actual = Math.min(heal, b2.maxHp - b2.hp);
           if (actual > 0 && b2.aegisHealBlockTimer<=0) { b2.hp += actual; createFloatingText(b2.x, b2.y - 22, `+${Number(actual.toFixed(1))} HP`, '#6ee7b7'); createParticles(b2.x, b2.y, '#34d399', 10, 1.0); updateHUD(); }
@@ -5431,7 +5452,7 @@
       moonshot:'Luân phiên bốn vũ khí theo thứ tự ngẫu nhiên đầu trận. Mỗi vũ khí có tầm bắn, sát thương và hiệu ứng riêng; chuyển vũ khí tạo nhịp chiến đấu đặc trưng.',
       aegis:'Chuyển sát thương nhận vào thành các lớp tự thiêu 1 DPS; lớp kéo dài theo lượng sát thương đã chuyển. Khống chế cứng kích hoạt Khiếp Đảm. Thánh Kiếm có tầm quét 6 đường kính Ball, góc chém rộng, gây 5 sát thương, cấm hồi HP và tước khiên; nếu va chạm khi chiêu sẵn sàng, Thánh Kiếm được kích hoạt ngay để tránh bỏ lỡ đòn. Hiệu ứng chém vàng-trắng kéo dài 0,82 giây.',
       bloom:'Hoa Hồng sinh ra mỗi 0,9 giây. Sau 5 giây, hoa có 50% cơ hội thức tỉnh; nếu thất bại sẽ thử lại sau 5 giây, thất bại lần hai thì biến mất. Hoa thường hồi 1 HP và +1 tầng Vạn Hoa; hoa thức tỉnh hồi 3 HP và +2 tầng. Mỗi tầng giảm 1,3% sát thương nhận vào, tối đa 75%. Mốc 15%, 30%, 45% lần lượt mở Khinh Thường Kẻ Yếu, miễn nhiễm 2,25 giây + làm chậm địch 70% trong 1 giây, và một lần hồi sinh với 1 HP + 100 khiên trong 2 giây.',
-      cosmos:'HP 111, tốc độ 1,1×, va chạm 1. Miễn nhiễm khống chế cứng, làm chậm, tước HP tối đa và tăng HP tối đa; không thể hồi HP. Mỗi 4,15 giây vận 1 giây rồi phát nổ Tinh Vân bán kính 3 đường kính Ball. Địch trúng vụ nổ nhận 5 sát thương và Câm Lặng 2,5 giây. Nếu vụ nổ hụt, Cosmos dựng môi trường Vũ Trụ vĩnh viễn, tạm vô hiệu môi trường khác và Quá Tải toàn bộ địch. Quá Tải kết thúc khi địch va chạm với Cosmos hoặc đồng minh; nếu đồng minh là Ghost, Cosmos phải tự va chạm. Khi Vũ Trụ tan, Cosmos hồi 3 HP.',
+      cosmos:'HP 111, tốc độ 1,1×, va chạm 1. Miễn nhiễm khống chế cứng, làm chậm, tước HP tối đa và tăng HP tối đa; không thể hồi HP. Mỗi 4,15 giây vận 1 giây rồi phát nổ Tinh Vân bán kính 3 đường kính Ball. Địch trúng vụ nổ nhận 5 sát thương và Câm Lặng 2,5 giây. Nếu vụ nổ hụt, Cosmos dựng môi trường Vũ Trụ vĩnh viễn, tạm vô hiệu môi trường khác và Quá Tải toàn bộ địch. Quá Tải kết thúc khi địch va chạm với Cosmos hoặc đồng minh. Trong 2v2, Cosmos chỉ tự giải Quá Tải bằng va chạm khi đồng minh đã chết/không còn đồng minh sống hoặc đồng minh còn sống là Ghost Ball; nếu đồng minh sống là Ball khác Ghost, Cosmos không thể tự giải và cần đồng minh giải. Ball vừa được giải Quá Tải không gây hiệu ứng hay sát thương va chạm trong chính lần va chạm giải hiệu ứng, nhưng Ball va vào để giải vẫn gây sát thương bình thường. Khi Vũ Trụ tan, Cosmos hồi 3 HP.',
       pyke:'Mỗi đòn nhận vào chuyển 35% sát thương thành HP xám, hoặc 50% khi HP dưới 50. HP xám không tự mất và chỉ được chuyển thành hồi phục khi Pyke vào Biển Sâu. Mỗi lần vào Biển Sâu hồi thêm 3 HP; trong vùng Pyke ẩn khỏi nhận diện. Móc kéo gây 10 sát thương + 25% HP đã mất; dao phóng gây 15 sát thương. Khi mục tiêu còn ≤3% HP tối đa, đòn tấn công của Pyke có thể kết liễu bằng 9999 sát thương. Dao có dây nối và được thu hồi bằng cú giật dây.'
     };
 
