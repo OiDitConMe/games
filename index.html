@@ -115,8 +115,15 @@
         <h2 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3 font-orbitron">Chọn Đội Hình</h2>
         
         <div class="space-y-3">
+          <div class="mb-2">
+            <label class="block text-xs font-semibold text-amber-300 mb-1">CHẾ ĐỘ ĐẤU</label>
+            <select id="game-mode" class="w-full bg-slate-950 border border-amber-500/30 rounded-lg px-3 py-2 text-sm text-amber-100">
+              <option value="1v1" selected>⚔️ Đấu đơn · 1v1</option>
+              <option value="2v2">🟢🔴 Đấu đội · 2v2</option>
+            </select>
+          </div>
           <div>
-            <label class="block text-xs font-semibold text-cyan-400 mb-1">BALL 1 (Bên Trái)</label>
+            <label class="block text-xs font-semibold text-cyan-400 mb-1">TEAM 1 · BALL A (Bên Trái)</label>
             <select id="p1-select" class="w-full bg-slate-950 border border-cyan-500/30 rounded-lg px-3 py-2 text-sm text-cyan-200 focus:outline-none focus:border-cyan-400">
               <option value="fire">🔥 Fire Ball</option>
               <option value="ghost">👻 Ghost Ball</option>
@@ -146,7 +153,7 @@
           </div>
 
           <div>
-            <label class="block text-xs font-semibold text-rose-400 mb-1">BALL 2 (Bên Phải)</label>
+            <label class="block text-xs font-semibold text-rose-400 mb-1">TEAM 2 · BALL A (Bên Phải)</label>
             <select id="p2-select" class="w-full bg-slate-950 border border-rose-500/30 rounded-lg px-3 py-2 text-sm text-rose-200 focus:outline-none focus:border-rose-400">
               <option value="fire">🔥 Fire Ball</option>
               <option value="ghost">👻 Ghost Ball</option>
@@ -175,10 +182,14 @@
             </select>
           </div>
 
+          <div id="team-extra-selects" class="hidden space-y-3 border-t border-emerald-500/20 pt-3">
+            <div><label class="block text-xs font-semibold text-emerald-300 mb-1">TEAM 1 · BALL B</label><select id="p3-select" class="w-full bg-slate-950 border border-emerald-500/30 rounded-lg px-3 py-2 text-sm text-emerald-100"></select></div>
+            <div><label class="block text-xs font-semibold text-rose-300 mb-1">TEAM 2 · BALL B</label><select id="p4-select" class="w-full bg-slate-950 border border-rose-500/30 rounded-lg px-3 py-2 text-sm text-rose-100"></select></div>
+          </div>
           <button id="btn-start" class="w-full mt-2 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold py-2.5 px-4 rounded-lg font-orbitron tracking-wider text-sm shadow-lg shadow-cyan-500/20 transition-all active:scale-95">
             ▶ BẮT ĐẦU ĐẤU
           </button>
-          <div class="grid grid-cols-[1fr_auto] gap-2 mt-2"><button id="btn-music" class="arena-btn" type="button">♫ NHẠC NỀN: TẮT</button><input id="music-volume" aria-label="Âm lượng nhạc" type="range" min="0" max="0.22" step="0.01" value="0.08" class="w-20 accent-amber-400"></div>
+          <div class="grid grid-cols-[1fr_auto] gap-2 mt-2"><button id="btn-music" class="arena-btn" type="button">♫ NHẠC NỀN: TẮT</button><input id="music-volume" aria-label="Âm lượng nhạc" type="range" min="0" max="0.5" step="0.01" value="0.22" class="w-20 accent-amber-400"></div>
           <div class="grid grid-cols-2 gap-2 mt-2">
             <button id="btn-pause" class="arena-btn" type="button">Ⅱ TẠM DỪNG</button>
             <button id="btn-library" class="arena-btn" type="button">✦ THƯ VIỆN</button>
@@ -241,12 +252,12 @@
       </div>
 
       <div class="w-[440px] max-w-full flex items-center justify-between mb-2 px-1">
-        <span class="text-[10px] tracking-[.2em] text-[#b8a58d]">ARENA • 1V1</span>
+        <span class="text-[10px] tracking-[.2em] text-[#b8a58d]">ARENA • TEAM BATTLE</span>
         <span id="match-state" class="text-[10px] text-[#d8c5a9]">SẴN SÀNG</span>
       </div>
       <!-- Canvas -->
       <div class="relative">
-        <canvas id="gameCanvas" width="440" height="440" class="bg-slate-950 border-2 border-slate-800 rounded-2xl block"></canvas>
+        <canvas id="gameCanvas" width="440" height="440" style="width:min(616px, calc(100vw - 24px));height:auto" class="bg-slate-950 border-2 border-slate-800 rounded-2xl block"></canvas>
         <div id="winner-overlay" class="absolute inset-0 bg-slate-950/80 backdrop-blur-sm rounded-2xl flex flex-col items-center justify-center gap-3 hidden">
           <div class="text-[10px] tracking-[.45em] text-amber-200/80 font-bold">ARENA CHAMPIONSHIP</div><div id="winner-text" class="winner-title text-2xl sm:text-3xl font-black text-amber-300 text-center px-4"></div><div class="text-xs tracking-[.3em] text-slate-300">VICTORY · MATCH COMPLETE</div>
           <button id="btn-restart" class="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-black py-2 px-6 rounded-lg font-orbitron text-sm shadow-lg shadow-amber-500/20 active:scale-95">
@@ -842,7 +853,15 @@
       }
     };
 
-    let p1, p2;
+    let p1, p2, p3, p4;
+    let gameMode = '1v1';
+    function getAllBalls(){ return [p1,p2,p3,p4].filter(Boolean); }
+    function getOpponents(ball){ return getAllBalls().filter(b=>b!==ball && b.hp>0 && !b.isDead && b.team!==ball.team && !(b.isHadesUntargetable&&b.isHadesUntargetable()) && !(gameMode==='2v2'&&b.shenAllyImmortalTimer>0)); }
+    function getAllies(ball){ return getAllBalls().filter(b=>b!==ball && b.hp>0 && b.team===ball.team); }
+    function getNearestEnemy(ball){ const list=getOpponents(ball); if(!list.length)return null; return list.reduce((a,b)=>Math.hypot(a.x-ball.x,a.y-ball.y)<=Math.hypot(b.x-ball.x,b.y-ball.y)?a:b); }
+    function getSkillTarget(ball){ const list=getOpponents(ball); if(!list.length)return null; if((BALL_LIBRARY[ball.typeKey]?.role)==='Sát Thủ') return list.reduce((a,b)=>{const ra=a.hp/a.maxHp,rb=b.hp/b.maxHp;if(Math.abs(ra-rb)<1e-6)return Math.hypot(a.x-ball.x,a.y-ball.y)<=Math.hypot(b.x-ball.x,b.y-ball.y)?a:b;return ra<rb?a:b;}); return getNearestEnemy(ball); }
+    function isAlly(a,b){ return !!a && !!b && a.team===b.team; }
+    function setArenaSize(){const w=gameMode==='2v2'?616:440,h=gameMode==='2v2'?484:440;canvas.width=w;canvas.height=h;canvas.style.width=`min(${w}px, calc(100vw - 24px))`;const hud=document.getElementById('p1-hp-container')?.parentElement?.parentElement?.parentElement;const state=document.getElementById('match-state')?.parentElement;if(hud)hud.style.width=`min(${w}px, calc(100vw - 24px))`;if(state)state.style.width=`min(${w}px, calc(100vw - 24px))`;const extra=document.getElementById('team-hud-extra');if(extra)extra.style.width=`min(${w}px, calc(100vw - 24px))`; }
     let fireTrails = [];
     let assassinShurikens = [];
     let lightningZones = [];
@@ -944,6 +963,14 @@
     }
     const p1Select = document.getElementById('p1-select');
     const p2Select = document.getElementById('p2-select');
+    const p3Select = document.getElementById('p3-select');
+    const p4Select = document.getElementById('p4-select');
+    const gameModeSelect = document.getElementById('game-mode');
+    const teamExtraSelects = document.getElementById('team-extra-selects');
+    const allBallOptions = Array.from(p1Select.options).map(o=>({value:o.value,text:o.textContent}));
+    [p3Select,p4Select].forEach(sel=>allBallOptions.forEach(o=>{const op=document.createElement('option');op.value=o.value;op.textContent=o.text;sel.appendChild(op);}));
+    p3Select.value='angel'; p4Select.value='sound';
+    gameModeSelect.addEventListener('change',()=>{if(animationFrameId)cancelAnimationFrame(animationFrameId);animationFrameId=null;gameOver=true;gameEnding=false;aimStage=false;matchStarted=false;gameMode=gameModeSelect.value;teamExtraSelects.classList.toggle('hidden',gameMode!=='2v2');setArenaSize();winnerOverlay.classList.add('hidden');document.getElementById('match-state').textContent='SẴN SÀNG';drawIdleFrame();});
     const btnStart = document.getElementById('btn-start');
     const btnRestart = document.getElementById('btn-restart');
     const winnerOverlay = document.getElementById('winner-overlay');
@@ -1378,7 +1405,7 @@
 
     function shouldViperMiss(target) {
       if (!target || target.typeKey !== 'viper') return false;
-      const attacker = target === p1 ? p2 : p1;
+      const attacker = getNearestEnemy(target);
       const stacks = attacker ? (attacker.viperPoisonStacks || 0) : 0;
       const chance = Math.min(SKILL_CONFIG.viper.maxMissChance, stacks * SKILL_CONFIG.viper.poisonMissPerStack);
       if (target.viperMissTick !== globalTick) {
@@ -1415,7 +1442,7 @@
     function registerViperPassive(target, source = '') {
       if (!target || target.typeKey !== 'viper') return;
       if (source === 'Độc Chướng') return; // Tick độc không tự kích hoạt lại nội tại.
-      const attacker = target === p1 ? p2 : p1;
+      const attacker = getNearestEnemy(target);
       if (!attacker || attacker.hp <= 0) return;
 
       const isBurnTick = ['Cháy', 'Long Hỏa', 'Hỏa Vực Thiên Không'].includes(String(source));
@@ -1489,6 +1516,8 @@
         const cfg = BALL_TYPES[typeKey];
         this.id = id;
         this.side = side;
+        this.team = (side === 'p1' || side === 'p1b') ? 1 : 2;
+        this.isDead = false;
         this.typeKey = typeKey;
         this.skinStyle = getBallSkin(typeKey);
         this.name = cfg.name;
@@ -1650,6 +1679,7 @@
       isHadesUntargetable() { return this.typeKey==='pyke' && this.pykeInDeepSea; }
 
       isImmuneToDebuffs() {
+        if (gameMode==='2v2' && this.shenAllyImmortalTimer>0) return true;
         if (this.typeKey === 'moonshot' && this.moonshotGun === 3 && this.moonshotControlGuardTimer > 0) return true;
         if (this.drownedTimer > 0) return true;
         if (this.typeKey === 'wukong' && this.wukongImmortalTimer > 0) return true;
@@ -1674,19 +1704,24 @@
         }
         // Đã xóa nội tại tăng tốc khi thấp HP của Sound Ball theo yêu cầu
         if(this.typeKey==='pyke' && this.pykeInDeepSea){const q=Math.max(0,Math.min(1,this.pykeSeaElapsed/SKILL_CONFIG.pyke.environmentDuration));speed*=1+(SKILL_CONFIG.pyke.speedStartBonus+(SKILL_CONFIG.pyke.speedEndBonus-SKILL_CONFIG.pyke.speedStartBonus)*q);}
+        if(this.soundHasteTimer>0)speed*=1+(this.soundHasteStacks||1)*.1;
         speed *= this.slowFactor;
         if (this.typeKey === 'reaper' && this.reaperSpeedBoostTimer > 0) speed *= SKILL_CONFIG.reaper.speedBoostMult;
         if (this.typeKey === 'wukong' && this.wukongSweepTimer > 0) speed *= SKILL_CONFIG.wukong.sweepSpeedBonus;
         if (this.typeKey === 'ronin') speed *= this.roninSpeedMult;
-        const opposing = this === p1 ? p2 : p1;
+        const opposing = getNearestEnemy(this);
         if (this.typeKey !== 'dragon' && opposing && opposing.typeKey === 'dragon' && opposing.dragonForm >= 3) speed *= SKILL_CONFIG.dragon.skySlowFactor;
         return speed;
       }
 
       update(enemy) {
+        if(this.hp<=0 || this.isDead) return;
         if(this.aegisHealBlockTimer>0) this.aegisHealBlockTimer=Math.max(0,this.aegisHealBlockTimer-FIXED_STEP_SECONDS);
         if(this.shenGraceTimer>0) this.shenGraceTimer=Math.max(0,this.shenGraceTimer-FIXED_STEP_SECONDS);
+        if(this.shenAllySlowTimer>0){this.shenAllySlowTimer=Math.max(0,this.shenAllySlowTimer-FIXED_STEP_SECONDS);this.slowFactor=Math.min(this.slowFactor,1-.9*(this.shenAllySlowTimer/2));if(this.shenAllySlowTimer<=0&&this.slowTimer<=0)this.slowFactor=1;}
+        if(this.shenAllyImmortalTimer>0)this.shenAllyImmortalTimer=Math.max(0,this.shenAllyImmortalTimer-FIXED_STEP_SECONDS);
         if(this.marksmanTrapHasteTimer>0) this.marksmanTrapHasteTimer=Math.max(0,this.marksmanTrapHasteTimer-FIXED_STEP_SECONDS);
+        if(this.soundHasteTimer>0){this.soundHasteTimer=Math.max(0,this.soundHasteTimer-FIXED_STEP_SECONDS);if(this.soundHasteTimer<=0)this.soundHasteStacks=0;}
         if (this.typeKey === 'aegis' && this.updateAegis(enemy)) return;
         if (this.typeKey === 'pyke') {
           this.updatePyke(enemy);
@@ -2172,7 +2207,7 @@
         if (this.illusionSpawnTimer >= SKILL_CONFIG.reaper.trailSpawnInterval) {
           this.illusionSpawnTimer = 0;
           reaperIllusions.push({
-            x: enemy.x, y: enemy.y,
+            owner: this, x: enemy.x, y: enemy.y,
             createdAt: now,
             lifespan: SKILL_CONFIG.reaper.trailLifespan,
             radius: enemy.radius,
@@ -2182,6 +2217,8 @@
 
         for (let i = reaperIllusions.length - 1; i >= 0; i--) {
           const ill = reaperIllusions[i];
+          if(ill.owner && (ill.owner.hp<=0 || ill.owner.isDead)){reaperIllusions.splice(i,1);continue;}
+          if (ill.owner && ill.owner!==this) continue;
           if (now - ill.createdAt >= ill.lifespan) { reaperIllusions.splice(i, 1); continue; }
           if (Math.hypot(this.x - ill.x, this.y - ill.y) < this.radius + ill.radius) {
             this.reaperSpeedBoostTimer = 2.5;
@@ -2192,6 +2229,8 @@
         }
 
         if (this.reaperSpeedBoostTimer > 0) {
+          if(this.reaperTargetId){const locked=getOpponents(this).find(b=>b.id===this.reaperTargetId);if(locked)enemy=locked;}
+          else this.reaperTargetId=enemy.id;
           const angle = Math.atan2(enemy.y - this.y, enemy.x - this.x);
           const chaseSpd = this.baseSpeed * SKILL_CONFIG.reaper.speedBoostMult;
           this.vx = Math.cos(angle) * chaseSpd;
@@ -2207,7 +2246,7 @@
             createShockwave(enemy.x, enemy.y, 55, '#94a3b8', 3);
             createParticles(enemy.x, enemy.y, '#ef4444', 14, 1.4);
 
-            this.reaperSpeedBoostTimer = 0;
+            this.reaperSpeedBoostTimer = 0; this.reaperTargetId=null;
             const randAngle = Math.random() * Math.PI * 2;
             this.vx = Math.cos(randAngle) * this.baseSpeed;
             this.vy = Math.sin(randAngle) * this.baseSpeed;
@@ -2248,6 +2287,7 @@
         if(!isInsideNow && this.wasInsideBladeZone) this.shenGraceTimer=SKILL_CONFIG.shen.graceAfterExit;
         this.wasInsideBladeZone = isInsideNow;
 
+        getAllies(this).forEach(ally=>{const ad=Math.hypot(ally.x-this.spiritBladeX,ally.y-this.spiritBladeY);if(ad<=bladeRadius){ally.shenAllyImmortalTimer=Math.max(ally.shenAllyImmortalTimer||0,FIXED_STEP_SECONDS*2);if(!ally.shenAllySlowTimer||ally.shenAllySlowTimer<=0){ally.shenAllySlowTimer=2;ally.slowFactor=.1;}}else if(ally.shenAllyImmortalTimer>0)ally.shenAllyImmortalTimer=0;});
         const enemyDistToBlade = Math.hypot(enemy.x - this.spiritBladeX, enemy.y - this.spiritBladeY);
         if (enemyDistToBlade <= bladeRadius && enemy.hitCooldown === 0 && this.shenSwapCooldown <= 0 && !this.dashAnim && !this.bladeDashAnim) {
           this.shenSwapCooldown = SKILL_CONFIG.shen.swapCooldown;
@@ -2278,11 +2318,12 @@
       }
 
       updateAngel(enemy) {
-        if (!enemy) return;
+        const enemies=getOpponents(this); if(!enemies.length)return;
         this.angelHealTimer += FIXED_STEP_SECONDS;
         if (this.angelHealTimer >= SKILL_CONFIG.angel.passiveHealInterval) {
           this.angelHealTimer = 0;
-          enemy.receiveHealingFromAngel(SKILL_CONFIG.angel.passiveHealAmount, this);
+          getAllies(this).forEach(ally=>{if(ally.aegisHealBlockTimer<=0&&ally.hp>0&&ally.hp<ally.maxHp){ally.hp=Math.min(ally.maxHp,ally.hp+1);createFloatingText(ally.x,ally.y-ally.radius-10,'+1 HP · THIÊN ÂN','#86efac');}});
+          enemies.forEach(target=>{const over=target.receiveHealingFromAngel(SKILL_CONFIG.angel.passiveHealAmount,this)||0;const share=over*.20;getAllies(this).forEach(ally=>{if(share>0&&ally.aegisHealBlockTimer<=0){const h=Math.min(share,ally.maxHp-ally.hp);ally.hp+=h;if(h>0)createFloatingText(ally.x,ally.y-ally.radius-12,`+${h.toFixed(1)} · THIÊN ÂN`,'#86efac');}});});
         }
       }
 
@@ -2627,7 +2668,12 @@
       // Bắt đầu một lượt Gamber. Lượt bồi không đụng vào đồng hồ chu kỳ 3 giây.
       beginGamberSequence(isBonus = false) {
         const cfg = SKILL_CONFIG.gamber;
-        this.gamberSequence = { stage: 'duel', timer: 0, firstRoll: true, isBonus };
+        let sequenceTarget=null;
+        const foes=getOpponents(this);
+        if(isBonus && this.gamberCurrentTargetId) sequenceTarget=foes.find(b=>b.id===this.gamberCurrentTargetId)||null;
+        if(!sequenceTarget){const alternatives=foes.filter(b=>b.id!==this.gamberLastTargetId);sequenceTarget=alternatives[0]||foes[0]||null;}
+        if(sequenceTarget){this.gamberCurrentTargetId=sequenceTarget.id;if(!isBonus)this.gamberQueuedTargetId=sequenceTarget.id;}
+        this.gamberSequence = { stage: 'duel', timer: 0, firstRoll: true, isBonus, targetId: sequenceTarget?.id||null };
         let healed = Math.min(cfg.healPerCast, this.maxHp - this.hp);
         if(this.aegisHealBlockTimer<=0) this.hp += healed;
         else healed=0;
@@ -2668,6 +2714,7 @@
           });
         });
         createParticles(this.x, this.y, '#e9c56f', 20, 1.6);
+        this.gamberLastTargetId=enemy.id;
         this.gamberSequence = null;
         updateHUD();
         this.processGamberQueues();
@@ -2685,6 +2732,7 @@
       }
 
       updateGamber(enemy) {
+        if(this.gamberSequence?.targetId){const locked=getOpponents(this).find(b=>b.id===this.gamberSequence.targetId);if(locked)enemy=locked;}
         if (!enemy || enemy.hp <= 0) return;
         const cfg = SKILL_CONFIG.gamber;
         // Chu kỳ chính luôn chạy độc lập, kể cả khi có lượt bồi đang diễn ra.
@@ -2702,6 +2750,7 @@
           }
         }
         this.processGamberQueues();
+        if(this.gamberSequence?.targetId){const queuedTarget=getOpponents(this).find(b=>b.id===this.gamberSequence.targetId);if(queuedTarget)enemy=queuedTarget;}
 
         if (!this.gamberSequence || this.gamberSequence.stage !== 'duel') return;
         this.gamberSequence.timer -= FIXED_STEP_SECONDS;
@@ -2806,7 +2855,7 @@
             enemy.oceanicMarks = 0;
             setEnvironment('ocean', 2.0, this);
             oceanEnvironmentTimer = 2.0;
-            if(!enemy.isHadesUntargetable()){enemy.drownedTimer = 2.0;}
+            getOpponents(this).forEach(foe=>{if(!foe.isHadesUntargetable()){foe.drownedTimer = foe===enemy?2.0:0;foe.slowFactor=.5;foe.applySlow(2.0,.5);}});
             if (enemy.typeKey==='aegis') applyAegisFear(this,2.0);
             enemy.burnStacks = 0; enemy.burnTimer = 0;
             enemy.slowTimer = 0; enemy.slowFactor = 1;
@@ -2930,30 +2979,12 @@
       }
 
       updateHades(enemy) {
-        if (enemy && enemy.hp > 0 && !enemy.isHadesUntargetable()) {
+        const enemies=getOpponents(this);
+        if(enemies.length){
           this.hadesDrainTimer += FIXED_STEP_SECONDS;
-          if (this.hadesDrainTimer >= SKILL_CONFIG.hades.drainInterval) {
-            this.hadesDrainTimer -= SKILL_CONFIG.hades.drainInterval;
-            if (enemy.maxHp > 0 && enemy.hp > 0) {
-              const oldMax = enemy.maxHp;
-              enemy.maxHp = Math.max(1, enemy.maxHp - SKILL_CONFIG.hades.drainHp);
-              enemy.hp = Math.max(0, Math.min(enemy.hp - SKILL_CONFIG.hades.drainHp, enemy.maxHp));
-              enemy.shield += 1;
-              if (enemy.typeKey === 'ronin') enemy.roninPermanentShield = (enemy.roninPermanentShield || 0) + 1;
-              hadesSiphonEffects.push({ x1: enemy.x, y1: enemy.y, x2: this.x, y2: this.y, timer: 0.42, maxTimer: 0.42 });
-              createParticles(enemy.x, enemy.y, '#991b1b', 7, 1.0);
-              createFloatingText(enemy.x, enemy.y - 18, '−1 HP TỐI ĐA', '#fca5a5');
-              if (enemy.hp <= 0) {
-                if (enemy.typeKey === 'demon' && enemy.demonReviveCount < SKILL_CONFIG.demon.maxRevives) {
-                  enemy.demonReviveCount++;
-                  enemy.maxHp = Math.max(1, enemy.maxHp);
-                  enemy.hp = enemy.maxHp;
-                  logMessage(`👿 Demon chống lại lời nguyền Hades bằng lần hồi sinh ${enemy.demonReviveCount}/7!`, 'demon');
-                } else endGame(enemy);
-              }
-              updateHUD();
-              logMessage(`👑 Hades rút 1 HP tối đa từ ${enemy.name}; mục tiêu nhận 1 lá chắn vĩnh viễn.`, 'hades');
-            }
+          if(this.hadesDrainTimer>=SKILL_CONFIG.hades.drainInterval){
+            this.hadesDrainTimer-=SKILL_CONFIG.hades.drainInterval;
+            enemies.forEach(target=>{if(target.hp<=0||target.isHadesUntargetable())return;const oldMax=target.maxHp;target.maxHp=Math.max(1,target.maxHp-SKILL_CONFIG.hades.drainHp);target.hp=Math.max(0,Math.min(target.hp-SKILL_CONFIG.hades.drainHp,target.maxHp));target.shield+=1;if(target.typeKey==='ronin')target.roninPermanentShield=(target.roninPermanentShield||0)+1;hadesSiphonEffects.push({x1:target.x,y1:target.y,x2:this.x,y2:this.y,timer:.42,maxTimer:.42});createParticles(target.x,target.y,'#991b1b',7,1);createFloatingText(target.x,target.y-18,'−1 HP TỐI ĐA','#fca5a5');if(target.hp<=0){if(target.typeKey==='demon'&&target.demonReviveCount<SKILL_CONFIG.demon.maxRevives){target.demonReviveCount++;target.hp=target.maxHp;logMessage(`👿 Demon chống lại lời nguyền Hades bằng lần hồi sinh ${target.demonReviveCount}/7!`,'demon');}else endGame(target);}logMessage(`👑 Hades rút 1 HP tối đa từ ${target.name}; mục tiêu nhận 1 lá chắn vĩnh viễn.`,'hades');});updateHUD();
           }
         }
 
@@ -2992,7 +3023,7 @@
 
       applyBurn() {
         if(this.typeKey==='pyke' && this.pykeInDeepSea)return;
-        const attacker = (this === p1) ? p2 : p1;
+        const attacker = getNearestEnemy(this);
         const attackerHadPoison = !!(attacker && (attacker.viperPoisonStacks || 0) > 0);
         if (shouldViperMiss(this)) return;
         if (this.isHadesUntargetable() || this.isImmuneToDebuffs()) return;
@@ -3005,7 +3036,7 @@
 
       applySlow(duration, factor = 0.7) {
         if(this.typeKey==='pyke' && this.pykeInDeepSea)return;
-        const attacker = (this === p1) ? p2 : p1;
+        const attacker = getNearestEnemy(this);
         const attackerHadPoison = !!(attacker && (attacker.viperPoisonStacks || 0) > 0);
         if (this.typeKey === 'viper') registerViperPassive(this, 'Hiệu ứng làm chậm');
         if (shouldViperMiss(this)) return;
@@ -3018,7 +3049,7 @@
 
       applyStun(duration) {
         if(this.typeKey==='pyke' && this.pykeInDeepSea)return;
-        const attacker = (this === p1) ? p2 : p1;
+        const attacker = getNearestEnemy(this);
         const attackerHadPoison = !!(attacker && (attacker.viperPoisonStacks || 0) > 0);
         if (this.typeKey === 'viper') registerViperPassive(this, 'Hiệu ứng choáng');
         if (shouldViperMiss(this)) return;
@@ -3030,8 +3061,8 @@
       }
 
       takeDamage(amount, source) {
-        if(this.typeKey==='pyke' && this.pykeInDeepSea) return;
-        const enemy = (this === p1) ? p2 : p1;
+        if((gameMode==='2v2' && this.shenAllyImmortalTimer>0) || (this.typeKey==='pyke' && this.pykeInDeepSea)) return;
+        const enemy = getNearestEnemy(this);
         const attackerHadPoison = !!(enemy && (enemy.viperPoisonStacks || 0) > 0);
         // Đòn thường kích hoạt nội tại ngay khi đối thủ ra tay, kể cả khi bị né.
         // Riêng sát thương đốt chỉ cộng tầng nếu tick đó thật sự không bị Trượt.
@@ -3067,7 +3098,7 @@
         if (this.typeKey === 'angel' && !this.angelReviveUsed && this.hp - amount <= 0) {
           this.angelReviveUsed = true;
           this.hp = 1;
-          const enemy = (this === p1) ? p2 : p1;
+          const enemy = getNearestEnemy(this);
           if (enemy) enemy.receiveHealingFromAngel(15, this);
           createShockwave(this.x, this.y, 118, '#fef08a', 6);createShockwave(this.x,this.y,70,'#ffffff',3);
           createParticles(this.x, this.y, '#eab308', 48,2.1);createParticles(this.x,this.y,'#fff7c2',28,1.7);createFloatingText(this.x,this.y-this.radius-24,'PHƯỚC THẦN HỒI SINH','#fff1a8');
@@ -3192,10 +3223,11 @@
           updateHUD();
           endGame(this);
         }
+        return overheal;
       }
 
       draw() {
-        if (this.isHadesUntargetable()) return;
+        if (this.hp<=0 || this.isDead || this.isHadesUntargetable()) return;
         ctx.save();
         drawBallSignatureVFX(this);
         if(this.aegisFearedTimer>0){ctx.save();ctx.translate(this.x,this.y);ctx.rotate(globalTick*0.025);ctx.strokeStyle='rgba(255,232,174,0.85)';ctx.shadowColor='#f5d58d';ctx.shadowBlur=14;ctx.lineWidth=1.6;ctx.beginPath();ctx.arc(0,0,this.radius+13,0,Math.PI*2);ctx.stroke();for(let k=0;k<4;k++){const a=k*Math.PI/2;drawSpark(ctx,Math.cos(a)*(this.radius+14),Math.sin(a)*(this.radius+14),3,'#fff0bf',0.9);}ctx.restore();}
@@ -3409,6 +3441,19 @@
       }
     }
 
+    function drawTeamAura(ball){
+      if(!ball || ball.hp<=0 || ball.isDead || ball.isHadesUntargetable() || gameMode!=='2v2')return;
+      const c=ball.team===1?'#4ade80':'#fb7185';
+      const pulse=0.55+Math.sin(globalTick*0.12+(ball.team===1?0:1))*0.22;
+      ctx.save();ctx.globalCompositeOperation='lighter';
+      const g=ctx.createRadialGradient(ball.x,ball.y,ball.radius*.55,ball.x,ball.y,ball.radius+18);
+      g.addColorStop(0,ball.team===1?'rgba(74,222,128,0.02)':'rgba(251,113,133,0.02)');
+      g.addColorStop(.72,ball.team===1?`rgba(74,222,128,${.12*pulse})`:`rgba(251,113,133,${.12*pulse})`);g.addColorStop(1,'rgba(0,0,0,0)');
+      ctx.fillStyle=g;ctx.beginPath();ctx.arc(ball.x,ball.y,ball.radius+18,0,Math.PI*2);ctx.fill();
+      ctx.strokeStyle=c;ctx.globalAlpha=.55+pulse*.35;ctx.lineWidth=2.2;ctx.shadowColor=c;ctx.shadowBlur=17;ctx.beginPath();ctx.arc(ball.x,ball.y,ball.radius+7+Math.sin(globalTick*.1)*2,0,Math.PI*2);ctx.stroke();
+      ctx.globalAlpha=.8;ctx.setLineDash([3,5]);ctx.lineDashOffset=-globalTick*.35;ctx.lineWidth=1;ctx.beginPath();ctx.arc(ball.x,ball.y,ball.radius+12,0,Math.PI*2);ctx.stroke();ctx.restore();
+    }
+
     function resolveElasticCollision(a, b) {
       const dx = b.x - a.x;
       const dy = b.y - a.y;
@@ -3440,6 +3485,10 @@
         return;
       }
       const ballsCollided = resolveElasticCollision(b1, b2);
+      if (isAlly(b1,b2)) {
+        if(!ballsCollided){if(b1.typeKey==='viper')b1.viperCollisionWasTouching=false;if(b2.typeKey==='viper')b2.viperCollisionWasTouching=false;}
+        return;
+      }
       if (!ballsCollided) {
         if (b1.typeKey === 'viper') b1.viperCollisionWasTouching = false;
         if (b2.typeKey === 'viper') b2.viperCollisionWasTouching = false;
@@ -3510,7 +3559,11 @@
 
       for (let i = 0; i < wukongClones.length; i++) {
         const c1 = wukongClones[i];
-        const enemy = (c1.owner === b1) ? b2 : b1;
+        if(!c1.owner || c1.owner.hp<=0 || c1.owner.isDead){wukongClones.splice(i,1);i--;continue;}
+        if(c1.lastCollisionTick===globalTick)continue;
+        c1.lastCollisionTick=globalTick;
+        const enemy = getNearestEnemy(c1.owner);
+        if(!enemy)continue;
 
         if (resolveElasticCollision(c1, enemy) && c1.hitCooldown === 0) {
           enemy.takeDamage(SKILL_CONFIG.wukong.cloneContactDmg, 'Phân Thân Wukong');
@@ -3596,7 +3649,7 @@
     // Moonshot: vòng tầm đánh mảnh như sương trăng và bốn kiểu đạn bạc riêng biệt.
     function updateAndDrawMoonshotEntities() {
       const cfg = SKILL_CONFIG.moonshot;
-      for (const owner of [p1, p2]) {
+      for (const owner of getAllBalls()) {
         if (!owner || owner.typeKey !== 'moonshot') continue;
         const range = owner.radius * 2 * cfg.rangeDiameters * (owner.moonshotGun === 0 ? cfg.gun1RangeBonus : 1);
         ctx.save();
@@ -3673,20 +3726,24 @@
         }
         shot.trail.push({x:shot.x,y:shot.y}); if(shot.trail.length>8)shot.trail.shift();
         ctx.save();
-        const alpha=shot.gun===1?0.36:0.55;
+        const alpha=shot.gun===1?0.48:0.68;
+        ctx.globalCompositeOperation='lighter';
+        const halo=ctx.createRadialGradient(shot.x,shot.y,0,shot.x,shot.y,shot.gun===2?18:15);halo.addColorStop(0,'rgba(255,255,255,.95)');halo.addColorStop(.24,'rgba(219,234,254,.72)');halo.addColorStop(.58,'rgba(192,168,111,.30)');halo.addColorStop(1,'rgba(192,168,111,0)');ctx.fillStyle=halo;ctx.beginPath();ctx.arc(shot.x,shot.y,shot.gun===2?18:15,0,Math.PI*2);ctx.fill();
+        for(let k=0;k<4;k++){const a=shot.angle+Math.PI/2*k+shot.age*2.2;const px=shot.x+Math.cos(a)*8,py=shot.y+Math.sin(a)*8;ctx.fillStyle=k%2?'#fff7dc':'#c9b27a';ctx.shadowColor=ctx.fillStyle;ctx.shadowBlur=12;ctx.beginPath();ctx.arc(px,py,1.25,0,Math.PI*2);ctx.fill();}
+        ctx.globalCompositeOperation='source-over';
         for(let j=1;j<shot.trail.length;j++){
           const a=j/shot.trail.length; ctx.beginPath();ctx.moveTo(shot.trail[j-1].x,shot.trail[j-1].y);ctx.lineTo(shot.trail[j].x,shot.trail[j].y);
           ctx.strokeStyle=`rgba(232,241,255,${a*alpha})`;ctx.lineWidth=shot.gun===1?1.2+a:0.7+a*1.3;ctx.stroke();
         }
         ctx.translate(shot.x,shot.y); ctx.rotate(shot.angle);
         if(shot.gun===0){ // Ngân Liên: viên đạn mảnh, gọn, sắc và có đuôi ánh trăng.
-          ctx.shadowColor='#f4f8ff';ctx.shadowBlur=11;ctx.fillStyle='#ffffff';ctx.beginPath();ctx.ellipse(0,0,7,1.7,0,0,Math.PI*2);ctx.fill();
+          ctx.shadowColor='#fff4cf';ctx.shadowBlur=18;ctx.fillStyle='#fffdf5';ctx.beginPath();ctx.moveTo(13,0);ctx.lineTo(-5,-3.2);ctx.lineTo(-12,0);ctx.lineTo(-5,3.2);ctx.closePath();ctx.fill();ctx.strokeStyle='#c5ad77';ctx.lineWidth=1;ctx.stroke();ctx.beginPath();ctx.moveTo(7,0);ctx.lineTo(-8,0);ctx.strokeStyle='#ffffff';ctx.lineWidth=1.2;ctx.stroke();
           ctx.strokeStyle='rgba(255,255,255,0.9)';ctx.lineWidth=0.7;ctx.beginPath();ctx.moveTo(-7,0);ctx.lineTo(-13,0);ctx.stroke();
         } else if(shot.gun===1){ // Ngân Vũ: vệt mềm, hơi xước, tối giản để không rối khi bắn nhanh.
-          ctx.globalAlpha=0.72;ctx.shadowColor='#dbe7f7';ctx.shadowBlur=5;ctx.strokeStyle='#e8eef8';ctx.lineWidth=2.2;ctx.beginPath();ctx.moveTo(-6,-1);ctx.quadraticCurveTo(0,1,6,0);ctx.stroke();
+          ctx.globalAlpha=0.9;ctx.shadowColor='#e8f3ff';ctx.shadowBlur=14;ctx.strokeStyle='#fffdf2';ctx.lineWidth=4.2;ctx.beginPath();ctx.moveTo(-6,-1);ctx.quadraticCurveTo(0,1,6,0);ctx.stroke();
           ctx.strokeStyle='rgba(255,255,255,0.55)';ctx.lineWidth=0.65;ctx.beginPath();ctx.moveTo(-3,2);ctx.lineTo(3,-1);ctx.stroke();
         } else if(shot.gun===2){ // Shuriken hồi về: bạc sáng, xoay thanh thoát với bụi sao.
-          ctx.shadowColor='#f7fbff';ctx.shadowBlur=15;ctx.fillStyle='#f8fbff';ctx.strokeStyle='#9eacbf';ctx.lineWidth=0.8;ctx.beginPath();
+          ctx.shadowColor='#fff4cf';ctx.shadowBlur=22;ctx.fillStyle='#fffdf5';ctx.strokeStyle='#9eacbf';ctx.lineWidth=0.8;ctx.beginPath();
           for(let k=0;k<8;k++){const a=k*Math.PI/4,r=k%2?3:9;ctx.lineTo(Math.cos(a)*r,Math.sin(a)*r);}ctx.closePath();ctx.fill();ctx.stroke();
           ctx.fillStyle='#aab8ca';ctx.beginPath();ctx.arc(0,0,1.7,0,Math.PI*2);ctx.fill();
           if(shot.phase==='return' && Math.random()<0.55){ctx.fillStyle='rgba(255,255,255,0.9)';ctx.beginPath();ctx.arc(-8+Math.random()*16,-8+Math.random()*16,1.2,0,Math.PI*2);ctx.fill();}
@@ -3700,7 +3757,7 @@
 
     function updateAndDrawAegisEntities() {
       // Biển Sâu Thẳm: vực nước gần như đen, cột sáng xanh lục lam và phù văn vàng chìm nổi.
-      const pykeOwner=[p1,p2].find(b=>b&&b.typeKey==='pyke'&&b.pykeInDeepSea);
+      const pykeOwner=getAllBalls().find(b=>b&&b.typeKey==='pyke'&&b.pykeInDeepSea);
       if(pykeOwner){
         ctx.save();const pulse=0.5+Math.sin(globalTick*0.035)*0.5;
         const deep=ctx.createLinearGradient(0,0,canvas.width,canvas.height);deep.addColorStop(0,'rgba(1,13,20,0.91)');deep.addColorStop(0.48,'rgba(3,35,43,0.88)');deep.addColorStop(1,'rgba(0,7,14,0.94)');ctx.fillStyle=deep;ctx.fillRect(0,0,canvas.width,canvas.height);
@@ -3969,7 +4026,7 @@
         ctx.beginPath(); ctx.ellipse(t.x, t.y + r * 0.12, r * 0.22, r * 0.48, 0, 0, Math.PI * 2); ctx.fill();
         ctx.restore();
 
-        const enemy = (t.owner === p1) ? p2 : p1;
+        const enemy = getNearestEnemy(t.owner);
         if (enemy && Math.hypot(enemy.x - t.x, enemy.y - t.y) < enemy.radius + t.radius) {
           enemy.applyBurn();
         }
@@ -3978,7 +4035,7 @@
       // 5. Assassin Ball: Shuriken sắc nét kèm vệt xé gió trên đường bay đi và thu về
       for (let i = assassinShurikens.length - 1; i >= 0; i--) {
         const s = assassinShurikens[i];
-        const enemy = (s.owner === p1) ? p2 : p1;
+        const enemy = getNearestEnemy(s.owner);
 
         if (s.state !== 'stuck') {
           s.trail.push({ x: s.x, y: s.y });
@@ -4113,7 +4170,7 @@
           lightningBolts.push({ x: z.x, y: z.y, radius: z.radius, timer: 0.25, maxTimer: 0.25 });
           createShockwave(z.x, z.y, z.radius, '#38bdf8', 3);
 
-          const enemy = (z.owner === p1) ? p2 : p1;
+          const enemy = getNearestEnemy(z.owner);
           if (enemy && Math.hypot(z.x - enemy.x, z.y - enemy.y) <= z.radius + enemy.radius) {
             enemy.takeDamage(SKILL_CONFIG.storm.lightningDmg, 'Sấm Sét');
             enemy.applySlow(SKILL_CONFIG.storm.slowDuration);
@@ -4169,7 +4226,7 @@
       }
 
       // 7. Wanderer Ball: Kiếm khí 360 độ xoáy cực ngầu
-      [p1, p2].forEach(b => {
+      getAllBalls().forEach(b => {
         if (b && b.activeSlash) {
           b.activeSlash.timer -= FIXED_STEP_SECONDS;
           const p = 1 - Math.max(0, b.activeSlash.timer / b.activeSlash.maxTimer);
@@ -4219,7 +4276,7 @@
         ctx.fill();
         ctx.restore();
 
-        [p1, p2].forEach(b => {
+        getAllBalls().forEach(b => {
           if (b && b.typeKey === 'soul' && Math.hypot(b.x - orb.x, b.y - orb.y) < b.radius + orb.radius) {
             b.collectedSoulsCount++;
             b.maxHp += SKILL_CONFIG.soul.orbMaxHpBonus;
@@ -4321,7 +4378,7 @@
         }
         ctx.restore();
 
-        const enemy = (trap.owner === p1) ? p2 : p1;
+        const enemy = getNearestEnemy(trap.owner);
         if (enemy && Math.hypot(enemy.x - trap.x, enemy.y - trap.y) < enemy.radius + trap.radius) {
           trap.owner.marksmanTrapHasteTimer=SKILL_CONFIG.marksman.trapHasteDuration;
           createFloatingText(trap.owner.x,trap.owner.y-trap.owner.radius-18,'⚡ TỐC ĐỘ BẮN +25%','#d9f99d');
@@ -4560,16 +4617,10 @@
         }
         ctx.restore();
 
-        const enemy = (w.owner === p1) ? p2 : p1;
-        if (enemy && !w.hitTarget) {
-          const distToEnemy = Math.hypot(enemy.x - w.x, enemy.y - w.y);
-          if (Math.abs(distToEnemy - w.currentRadius) <= enemy.radius + 5) {
-            w.hitTarget = true;
-            const ratio = Math.max(0, Math.min(1, 1 - (distToEnemy / ARENA_DIAGONAL)));
-            const dmg = Math.round(SKILL_CONFIG.sound.minWaveDmg + ratio * (SKILL_CONFIG.sound.maxWaveDmg - SKILL_CONFIG.sound.minWaveDmg));
-            enemy.takeDamage(dmg, 'Sóng Âm');
-            createParticles(enemy.x, enemy.y, '#2dd4bf', 10);
-          }
+        if(w.owner){
+          const buffSet=w.buffTargets||(w.buffTargets=[]);getAllies(w.owner).forEach(ally=>{if(buffSet.includes(ally.id))return;const d=Math.hypot(ally.x-w.x,ally.y-w.y);if(Math.abs(d-w.currentRadius)<=ally.radius+5){buffSet.push(ally.id);ally.soundHasteStacks=Math.min(3,(ally.soundHasteStacks||0)+1);ally.soundHasteTimer=3;ally.soundHasteMultiplier=1.1;createFloatingText(ally.x,ally.y-ally.radius-10,'♫ TỐC ĐỘ +10%','#5eead4');}});
+          const hitSet=w.hitTargets||(w.hitTargets=[]);
+          getOpponents(w.owner).forEach(enemy=>{if(hitSet.includes(enemy.id))return;const d=Math.hypot(enemy.x-w.x,enemy.y-w.y);if(Math.abs(d-w.currentRadius)<=enemy.radius+5){hitSet.push(enemy.id);const ratio=Math.max(0,Math.min(1,1-d/ARENA_DIAGONAL));let dmg=Math.round(SKILL_CONFIG.sound.minWaveDmg+ratio*(SKILL_CONFIG.sound.maxWaveDmg-SKILL_CONFIG.sound.minWaveDmg));if(hitSet.length>1)dmg=Math.round(dmg*.5);enemy.takeDamage(dmg,'Sóng Âm');createParticles(enemy.x,enemy.y,'#2dd4bf',10);}});
         }
         if (w.currentRadius > ARENA_DIAGONAL) soundWaves.splice(i, 1);
       }
@@ -4775,7 +4826,7 @@
 
     function updateAndDrawDragonEntities() {
       const dt = FIXED_STEP_SECONDS;
-      const balls = [p1, p2];
+      const balls = getAllBalls();
       // Dragon's delayed but guaranteed-hit fire breath: a fast, visible fire orb follows the target.
       for (let i = dragonFireShots.length - 1; i >= 0; i--) {
         const shot = dragonFireShots[i];
@@ -4824,7 +4875,7 @@
       // First awakening: the five-second scorched ground, then a sacred ash tree that fruits every six seconds.
       for (let i = dragonBurnZones.length - 1; i >= 0; i--) {
         const z = dragonBurnZones[i]; z.timer -= dt; z.tick += dt;
-        const enemy = z.owner === p1 ? p2 : p1;
+        const enemy = getNearestEnemy(z.owner);
         if (enemy && enemy.hp > 0 && !enemy.isHadesUntargetable() && Math.hypot(enemy.x - z.x, enemy.y - z.y) <= z.radius + enemy.radius) {
           enemy.slowFactor = Math.min(enemy.slowFactor, SKILL_CONFIG.dragon.burnSlowFactor); enemy.slowTimer = Math.max(enemy.slowTimer, 0.28);
           if (z.tick >= SKILL_CONFIG.dragon.burnTick) { z.tick -= SKILL_CONFIG.dragon.burnTick; enemy.takeDamage(SKILL_CONFIG.dragon.burnDamage, 'Long Hỏa'); createParticles(enemy.x, enemy.y, '#f97316', 5, 1.1); }
@@ -4882,9 +4933,9 @@
     }
 
     function updateCerberusPhysics() {
-      [p1, p2].forEach(hades => {
+      getAllBalls().forEach(hades => {
         if (!hades || hades.typeKey !== 'hades' || hades.hp <= 0 || !hades.hadesCerberus) return;
-        const enemy = hades === p1 ? p2 : p1;
+        const enemy = getNearestEnemy(hades);
         if (!enemy || enemy.hp <= 0 || enemy.isHadesUntargetable()) return;
         const bodies = [hades.hadesCerberus, ...(hades.hadesCerberusClones || [])];
         bodies.forEach(c => {
@@ -4935,7 +4986,7 @@
         const ux = dx / len, uy = dy / len;
         const nx = -uy, ny = ux;
         const maxWidth = Math.max(t.initialWidth * 0.5, t.travelled * Math.tan((SKILL_CONFIG.ronin.tornadoAngleDeg * Math.PI / 180) / 2));
-        const enemy = (t.owner === p1) ? p2 : p1;
+        const enemy = getNearestEnemy(t.owner);
         if (!t.hit && enemy && !enemy.isHadesUntargetable()) {
           const ex = enemy.x - t.originX, ey = enemy.y - t.originY;
           const along = ex * ux + ey * uy;
@@ -5010,7 +5061,7 @@
       }
 
       // Cerberus and Hell copies: immortal independent physics-balls with a forged hellhound shell.
-      [p1, p2].forEach(hades => {
+      getAllBalls().forEach(hades => {
         if (!hades || hades.typeKey !== 'hades' || hades.hp <= 0 || !hades.hadesCerberus) return;
         const bodies = [hades.hadesCerberus, ...(hades.hadesCerberusClones || [])];
         bodies.forEach((c, idx) => {
@@ -5071,7 +5122,7 @@
         ctx.fillStyle = '#fbbf24'; ctx.shadowColor = '#f97316'; ctx.shadowBlur = 12;
         ctx.beginPath(); ctx.moveTo(25, 0); ctx.lineTo(17, -2); ctx.lineTo(19, 0); ctx.lineTo(17, 2); ctx.closePath(); ctx.fill();
         ctx.restore();
-        const enemy = (sp.owner === p1) ? p2 : p1;
+        const enemy = getNearestEnemy(sp.owner);
         if (!sp.hit && enemy && !enemy.isHadesUntargetable() && distToSegment({ x: enemy.x, y: enemy.y }, { x: sp.prevX, y: sp.prevY }, { x: sp.x, y: sp.y }) <= enemy.radius + 8) {
           sp.hit = true; enemy.takeDamage(SKILL_CONFIG.hades.spearDmg, 'Thần Thương Hades');
           const oldMax = enemy.maxHp; enemy.maxHp = Math.max(1, enemy.maxHp - SKILL_CONFIG.hades.spearMaxHpSteal);
@@ -5169,6 +5220,10 @@
     function updateHUD() {
       updateHUDForPlayer(p1, 'p1');
       updateHUDForPlayer(p2, 'p2');
+      let extra=document.getElementById('team-hud-extra');
+      if(!extra){extra=document.createElement('div');extra.id='team-hud-extra';extra.className='grid grid-cols-2 gap-1 w-full text-[10px] mt-1';const hud=document.getElementById('p1-hp-container').parentElement.parentElement.parentElement;hud.insertAdjacentElement('afterend',extra);}
+      extra.classList.toggle('hidden',gameMode!=='2v2');
+      if(gameMode==='2v2')extra.innerHTML=[p3,p4].map((b,i)=>`<div class="rounded px-2 py-1 border ${i===0?'border-emerald-500/40 text-emerald-200':'border-rose-500/40 text-rose-200'} bg-slate-950/80">${i===0?'🟢':'🔴'} ${b?.name||'—'} · ${b?Math.ceil(b.hp):0}/${b?.maxHp||0} HP</div>`).join('');
     }
 
     function renderSelectedBallInfo(key) {
@@ -5238,6 +5293,13 @@
     function openBallLibrary() { libraryModal.classList.remove('hidden'); libraryModal.classList.add('flex'); renderBallLibrary(); }
     function closeBallLibrary() { libraryModal.classList.add('hidden'); libraryModal.classList.remove('flex'); }
 
+    function drawIdleFrame(){
+      ctx.fillStyle='#030712';ctx.fillRect(0,0,canvas.width,canvas.height);
+      const g=ctx.createRadialGradient(canvas.width/2,canvas.height/2,20,canvas.width/2,canvas.height/2,canvas.width*.72);g.addColorStop(0,'rgba(30,41,59,.42)');g.addColorStop(1,'rgba(2,6,23,0)');ctx.fillStyle=g;ctx.fillRect(0,0,canvas.width,canvas.height);
+      ctx.strokeStyle='rgba(51,65,85,.45)';ctx.lineWidth=1;for(let x=0;x<canvas.width;x+=40){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,canvas.height);ctx.stroke();}for(let y=0;y<canvas.height;y+=40){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(canvas.width,y);ctx.stroke();}
+      ctx.textAlign='center';ctx.fillStyle='#e8d4b5';ctx.font='900 18px Orbitron, sans-serif';ctx.shadowColor='#c69b5b';ctx.shadowBlur=18;ctx.fillText('BALL BATTLE ARENA',canvas.width/2,canvas.height/2-12);ctx.shadowBlur=0;ctx.fillStyle='#94a3b8';ctx.font='12px sans-serif';ctx.fillText(gameMode==='2v2'?'CHỌN 4 BALL · BẮT ĐẦU ĐẤU ĐỘI 2V2':'CHỌN BALL · NHẤN BẮT ĐẦU ĐẤU',canvas.width/2,canvas.height/2+18);
+    }
+
     function drawAimFrame(){
       ctx.fillStyle='#030712';ctx.fillRect(0,0,canvas.width,canvas.height);
       ctx.strokeStyle='rgba(51,65,85,.55)';ctx.lineWidth=1;for(let x=0;x<canvas.width;x+=40){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,canvas.height);ctx.stroke();}for(let y=0;y<canvas.height;y+=40){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(canvas.width,y);ctx.stroke();}
@@ -5259,10 +5321,21 @@
     canvas.addEventListener('pointerup',()=>{aimPointer=null;});
 
     function startAmbientMusic(){
-      try{if(!audioCtx)audioCtx=new (window.AudioContext||window.webkitAudioContext)();if(audioCtx.state==='suspended')audioCtx.resume();if(musicTimer)return;
+      try{
+        if(!audioCtx)audioCtx=new (window.AudioContext||window.webkitAudioContext)();
+        if(audioCtx.state==='suspended')audioCtx.resume();
+        if(musicTimer)return;
         musicGain=audioCtx.createGain();musicGain.gain.value=Number(document.getElementById('music-volume').value);musicGain.connect(audioCtx.destination);
-        const notes=[110,146.83,164.81,220,196,164.81,146.83,123.47];let step=0;
-        musicTimer=setInterval(()=>{if(!musicEnabled||!audioCtx)return;const now=audioCtx.currentTime;const f=notes[step++%notes.length];[1,2].forEach((n)=>{const o=audioCtx.createOscillator(),g=audioCtx.createGain(),filter=audioCtx.createBiquadFilter();o.type=n===1?'sine':'triangle';o.frequency.value=f*n;filter.type='lowpass';filter.frequency.value=700;g.gain.setValueAtTime(0,now);g.gain.linearRampToValueAtTime(n===1?0.045:0.012,now+0.8);g.gain.exponentialRampToValueAtTime(0.0001,now+3.2);o.connect(filter);filter.connect(g);g.connect(musicGain);o.start(now);o.stop(now+3.3);});},1800);
+        // Original ambient piano motif, composed for this game; no sampled/copyrighted melody.
+        const chords=[[110,164.81,220],[98,146.83,196],[87.31,130.81,174.61],[98,146.83,196]];
+        const melody=[440,392,329.63,392,493.88,440,392,329.63,392,349.23,293.66,349.23];let step=0;
+        function piano(freq,when,duration,volume){
+          const osc=audioCtx.createOscillator(),harm=audioCtx.createOscillator(),filter=audioCtx.createBiquadFilter(),env=audioCtx.createGain();
+          osc.type='triangle';osc.frequency.setValueAtTime(freq,when);harm.type='sine';harm.frequency.setValueAtTime(freq*2.01,when);filter.type='lowpass';filter.frequency.setValueAtTime(2400,when);filter.frequency.exponentialRampToValueAtTime(650,when+duration);
+          env.gain.setValueAtTime(.0001,when);env.gain.exponentialRampToValueAtTime(volume,when+.012);env.gain.exponentialRampToValueAtTime(.0001,when+duration);
+          osc.connect(filter);harm.connect(filter);filter.connect(env);env.connect(musicGain);osc.start(when);harm.start(when);osc.stop(when+duration+.03);harm.stop(when+duration+.03);
+        }
+        musicTimer=setInterval(()=>{if(!musicEnabled||!audioCtx)return;const now=audioCtx.currentTime;const chord=chords[Math.floor(step/3)%chords.length];chord.forEach((f,i)=>piano(f,now+i*.035,2.8,.014));piano(melody[step%melody.length],now+.12,1.55,.035);piano(melody[(step+3)%melody.length]*2,now+.72,1.0,.008);step++;},1450);
       }catch(e){console.warn('Audio unavailable',e);}
     }
     function toggleMusic(){musicEnabled=!musicEnabled;if(musicEnabled){startAmbientMusic();document.getElementById('btn-music').textContent='♫ NHẠC NỀN: BẬT';}else{document.getElementById('btn-music').textContent='♫ NHẠC NỀN: TẮT';}}
@@ -5282,9 +5355,14 @@
       frameAccumulatorMs = 0;
       winnerOverlay.classList.add('hidden');
 
-      p1 = new Ball('p1', p1Select.value, 80, canvas.height / 2, 'p1');
-      p2 = new Ball('p2', p2Select.value, canvas.width - 80, canvas.height / 2, 'p2');
-      [p1,p2].forEach((b,i)=>{const a=aimChosen[i]?aimAngles[i]:(i===0?Math.random()*Math.PI*2:Math.random()*Math.PI*2);b.vx=Math.cos(a)*b.baseSpeed;b.vy=Math.sin(a)*b.baseSpeed;});
+      gameMode=gameModeSelect.value;
+      setArenaSize();
+      p1 = new Ball('p1', p1Select.value, gameMode==='2v2'?92:80, gameMode==='2v2'?canvas.height*.34:canvas.height/2, 'p1');
+      p2 = new Ball('p2', p2Select.value, canvas.width-(gameMode==='2v2'?92:80), gameMode==='2v2'?canvas.height*.34:canvas.height/2, 'p2');
+      p3 = gameMode==='2v2'?new Ball('p3',p3Select.value,92,canvas.height*.68,'p1b'):null;
+      p4 = gameMode==='2v2'?new Ball('p4',p4Select.value,canvas.width-92,canvas.height*.68,'p2b'):null;
+      const startBalls=getAllBalls();
+      startBalls.forEach((b)=>{let a;if(gameMode==='2v2'){a=b.team===1?(-Math.PI/2+Math.random()*Math.PI):(Math.PI/2+Math.random()*Math.PI);}else a=Math.random()*Math.PI*2;b.vx=Math.cos(a)*b.baseSpeed;b.vy=Math.sin(a)*b.baseSpeed;});
 
       fireTrails = []; assassinShurikens = []; lightningZones = []; lightningBolts = [];
       soulOrbs = []; activeSoulBeams = []; marksmanTraps = []; marksmanBullets = [];
@@ -5295,27 +5373,30 @@
       particles = []; floatingTexts = []; gamberCards = []; moonshotShots = []; aegisSlashEffects = []; pykeHooks = [];
       
       battleLog.innerHTML = '';
-      aimAngles=[0,Math.PI];aimChosen=[false,false];aimCountdown=5;aimPointer=null;aimStage=true;matchStarted=false;canvas.classList.add('aiming');
-      document.getElementById('match-state').textContent='CHỌN HƯỚNG';
-      updateHUD();drawAimFrame();
+      aimAngles=[0,Math.PI];aimChosen=[false,false];aimCountdown=5;aimPointer=null;aimStage=gameMode!=='2v2';matchStarted=gameMode==='2v2';canvas.classList.toggle('aiming',aimStage);
+      if(aimStage){document.getElementById('match-state').textContent='CHỌN HƯỚNG';updateHUD();drawAimFrame();}
+      else{document.getElementById('match-state').textContent='ĐẤU ĐỘI 2V2';logMessage(`🟢 ${p1.name} + ${p3.name} VS 🔴 ${p2.name} + ${p4.name}`);updateHUD();}
       animationFrameId=requestAnimationFrame(gameLoop);
     }
 
     function endGame(loser) {
-      if (gameOver || gameEnding) return;
-      gameEnding=true;gameEndTimer=1.25;defeatedBall=loser;
-      createShockwave(loser.x,loser.y,150,'#f8d77a',7);createShockwave(loser.x,loser.y,92,'#ffffff',4);
-      createParticles(loser.x,loser.y,loser.color||'#fbbf24',72,3.0);createParticles(loser.x,loser.y,'#fff2c6',38,2.4);
+      if(!loser||loser.isDead)return;loser.isDead=true;
+      const c=loser.team===1?'#4ade80':'#fb7185';
+      createShockwave(loser.x,loser.y,190,'#ffffff',10);createShockwave(loser.x,loser.y,145,c,8);createShockwave(loser.x,loser.y,88,'#fef3c7',6);createShockwave(loser.x,loser.y,52,c,4);
+      createParticles(loser.x,loser.y,c,115,3.8);createParticles(loser.x,loser.y,'#ffffff',65,3.2);createParticles(loser.x,loser.y,'#fef3c7',42,2.6);
+      createFloatingText(loser.x,loser.y-loser.radius-26,'ELIMINATED','#fff1c2');
       logMessage(`✦ ${loser.name} bị kết liễu!`, 'aegis');
-      document.getElementById('match-state').textContent = 'KẾT LIỄU';
+      const survivors=getAllBalls().filter(b=>b.team===loser.team&&b.hp>0&&!b.isDead);
+      if(gameMode==='2v2'&&survivors.length>0){updateHUD();return;}
+      if (gameOver || gameEnding) return;gameEnding=true;gameEndTimer=1.25;defeatedBall=loser;document.getElementById('match-state').textContent='KẾT LIỄU';
     }
     function finishEndGame(){
       if(gameOver)return;gameOver=true;gameEnding=false;
-      const winner=(defeatedBall===p1)?p2:p1;
+      const winnerTeam=defeatedBall?.team===1?2:1;const winners=getAllBalls().filter(b=>b.team===winnerTeam);
       document.getElementById('match-state').textContent='TRẬN ĐẤU KẾT THÚC';
-      winnerText.innerText=`🏆 ${winner.name.toUpperCase()} CHIẾN THẮNG!`;
+      winnerText.innerText=gameMode==='2v2'?`🏆 TEAM ${winnerTeam} CHIẾN THẮNG!\n${winners.map(b=>b.name).join('  +  ')}`:`🏆 ${(defeatedBall===p1?p2:p1).name.toUpperCase()} CHIẾN THẮNG!`;
       winnerOverlay.classList.remove('hidden');
-      logMessage(`TRẬN ĐẤU KẾT THÚC! ${winner.name} giành chiến thắng!`,winner.side);
+      logMessage(gameMode==='2v2'?`TRẬN ĐẤU KẾT THÚC! TEAM ${winnerTeam} GIÀNH CHIẾN THẮNG!`:`TRẬN ĐẤU KẾT THÚC! ${(defeatedBall===p1?p2:p1).name} giành chiến thắng!`,winnerTeam===1?'p1':'p2');
     }
 
     function gameStep() {
@@ -5332,7 +5413,7 @@
       drawEnvironmentEffects();
 
       // Vẽ Vùng Kiếm Hồn & Dây Liên Kết Phát Quang của Shen Ball
-      [p1, p2].forEach(ball => {
+      getAllBalls().forEach(ball => {
         if (ball && ball.typeKey === 'shen') {
           const zRadius = ball.radius * SKILL_CONFIG.shen.zoneRadiusMult;
           ctx.save();
@@ -5398,10 +5479,10 @@
 
       if(gameEnding){gameEndTimer-=FIXED_STEP_SECONDS;if(gameEndTimer<=0)finishEndGame();}
       if (!gameOver && !gameEnding && p1 && p2) {
-        p1.update(p2);
-        p2.update(p1);
+        const live=getAllBalls().filter(b=>b.hp>0&&!b.isDead);
+        live.forEach(ball=>ball.update(getSkillTarget(ball)));
         updateCerberusPhysics();
-        checkAllCollisions(p1, p2);
+        for(let i=0;i<live.length;i++)for(let j=i+1;j<live.length;j++)checkAllCollisions(live[i],live[j]);
       }
 
       updateAndDrawEntities();
@@ -5411,8 +5492,7 @@
       updateAndDrawMoonshotEntities();
       updateAndDrawAegisEntities();
 
-      if (p1) p1.draw();
-      if (p2) p2.draw();
+      getAllBalls().forEach(ball=>{drawTeamAura(ball);ball.draw();});
       updateAndDrawRoninHadesEntities();
 
     }
@@ -5473,9 +5553,7 @@
 
     renderSelectedBallInfo(p1Select.value);
     matchStarted=false;
-    ctx.fillStyle='#030712';ctx.fillRect(0,0,canvas.width,canvas.height);
-    ctx.strokeStyle='rgba(30,41,59,.45)';ctx.lineWidth=1;for(let x=0;x<canvas.width;x+=40){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,canvas.height);ctx.stroke();}for(let y=0;y<canvas.height;y+=40){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(canvas.width,y);ctx.stroke();}
-    ctx.fillStyle='#b8a47e';ctx.textAlign='center';ctx.font='bold 15px Orbitron, sans-serif';ctx.fillText('BALL BATTLE ARENA',canvas.width/2,canvas.height/2-10);ctx.font='11px sans-serif';ctx.fillStyle='#94a3b8';ctx.fillText('CHỌN BALL · NHẤN BẮT ĐẦU ĐẤU',canvas.width/2,canvas.height/2+18);
+    drawIdleFrame();
     document.getElementById('match-state').textContent='SẴN SÀNG';
   </script>
 </body>
