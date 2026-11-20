@@ -149,6 +149,7 @@
               <option value="moonshot">🌙 Moonshot Ball</option>
               <option value="aegis">🛡️ Aegis Ball</option>
               <option value="pyke">🗡️ Pyke Ball</option>
+              <option value="bloom">🌹 Bloom Ball</option>
             </select>
           </div>
 
@@ -179,6 +180,7 @@
               <option value="moonshot">🌙 Moonshot Ball</option>
               <option value="aegis">🛡️ Aegis Ball</option>
               <option value="pyke">🗡️ Pyke Ball</option>
+              <option value="bloom">🌹 Bloom Ball</option>
             </select>
           </div>
 
@@ -583,6 +585,7 @@
         hp: 115, maxHp: 115, radius: 19, speed: BASE_SPEED * 1.1, contactDmg: 5, icon: '🛡️'
       },
       // Pyke Ball – sát thủ Biển Sâu Thẳm, tích HP xám và biến mất khỏi nhận diện của đối thủ.
+      bloom: { name: 'Bloom Ball', color: '#f472b6', secondaryColor: '#7f1d4e', hp: 96, maxHp: 96, radius: 18, speed: BASE_SPEED, contactDmg: 1, icon: '🌹' },
       pyke: {
         name: 'Pyke Ball', color: '#0f766e', secondaryColor: '#071b22',
         hp: 95, maxHp: 95, radius: 18, speed: BASE_SPEED * 1.25, contactDmg: 5, icon: '🗡️'
@@ -902,6 +905,7 @@
     let gamberCards = [];
     let moonshotShots = [];
     let aegisSlashEffects = [];
+    let bloomRoses = []; let bloomSpawnTimer = 0; let bloomRoseId = 0;
     let pykeHooks = [];
     let gameOver = false;
     let gameEnding = false;
@@ -942,6 +946,7 @@
       viper:{role:'Sát Thủ',desc:'Độc Chướng cộng dồn, gây sát thương theo thời gian và Nanh Độc.'},
       gamber:{role:'Xạ Thủ',desc:'Xúc xắc định mệnh và bài phép tạo chuỗi hiệu ứng khó đoán.'},
       moonshot:{role:'Xạ Thủ',desc:'Bốn vũ khí luân phiên, tự động nhắm mục tiêu và giữ khoảng cách.'},
+      bloom:{role:'Hỗ Trợ',desc:'Gieo Hoa Hồng, tích Vạn Hoa để bảo vệ đồng minh và mở khóa những mốc sức mạnh vĩnh viễn.'},
       aegis:{role:'Đỡ Đòn',desc:'Chuyển toàn bộ sát thương nhận vào thành thiêu đốt cộng dồn; phản chế kẻ khống chế, thanh tẩy trạng thái khi va chạm và quét kiếm thần thánh để cấm hồi máu, tước khiên.'},
       pyke:{role:'Sát Thủ',desc:'Tích trữ HP xám rồi biến mất trong Biển Sâu Thẳm; móc kéo mục tiêu, phóng dao và săn đuổi kẻ địch thấp máu từ trạng thái không thể bị nhận diện.'}
     };
@@ -1229,6 +1234,12 @@
         }
         ctx.restore();
         return;
+      } else if (ball.typeKey === 'bloom') {
+        ctx.translate(x,y);const pulse=.5+.5*Math.sin(t*.09);ctx.rotate(t*.004);
+        const aura=ctx.createRadialGradient(0,0,r*.2,0,0,r+25);aura.addColorStop(0,'rgba(249,168,212,.25)');aura.addColorStop(.7,'rgba(190,24,93,.14)');aura.addColorStop(1,'rgba(190,24,93,0)');ctx.fillStyle=aura;ctx.beginPath();ctx.arc(0,0,r+25,0,Math.PI*2);ctx.fill();
+        ctx.strokeStyle=`rgba(251,113,133,${.45+pulse*.35})`;ctx.shadowColor='#fb7185';ctx.shadowBlur=17;ctx.lineWidth=2;ctx.beginPath();ctx.arc(0,0,r+7+pulse*2,0,Math.PI*2);ctx.stroke();
+        for(let i=0;i<5;i++){const a=i*Math.PI*2/5-t*.012;ctx.fillStyle='#f9a8d4';ctx.beginPath();ctx.ellipse(Math.cos(a)*(r+10),Math.sin(a)*(r+10),2.4,4.5,a,0,Math.PI*2);ctx.fill();}
+        if(ball.bloomStacks>0){ctx.fillStyle='#fce7f3';ctx.font='bold 9px sans-serif';ctx.textAlign='center';ctx.fillText(`🌸${ball.bloomStacks}`,0,r+23);}
       } else if (ball.typeKey === 'pyke') {
         ctx.translate(x,y);ctx.rotate(-t*0.012);const pulse=0.5+Math.sin(t*0.09)*0.5;
         const g=ctx.createRadialGradient(0,0,r*0.2,0,0,r+25);g.addColorStop(0,'rgba(26,112,107,0.32)');g.addColorStop(0.62,'rgba(7,55,63,0.25)');g.addColorStop(1,'rgba(1,13,19,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(0,0,r+25,0,Math.PI*2);ctx.fill();
@@ -1456,6 +1467,8 @@
       applyViperPoison(attacker, 1);
     }
 
+    // Mỗi lần bị thanh tẩy, Vạn Hoa chỉ mất tối đa một tầng.
+    function removeOneBloomStack(target){if(target&&target.bloomStacks>0){target.bloomStacks--;target.bloomReduction=target.bloomStacks*1.5;createFloatingText(target.x,target.y-target.radius-10,'-1 VẠN HOA','#f9a8d4');}}
     // Thanh tẩy các trạng thái bất lợi; trả về số loại trạng thái khác nhau đã xóa.
     function cleanseGamberDebuffs(target) {
       if (!target) return 0;
@@ -1472,7 +1485,7 @@
         removed++; target.viperPoisonStacks = 0; target.viperPoisonTimer = 0; target.viperPoisonTickTimer = 0;
       }
       if ((target.oceanicMarks || 0) > 0) { removed++; target.oceanicMarks = 0; }
-      if (removed > 0) updateHUD();
+      if (removed > 0){removeOneBloomStack(target);updateHUD();}
       return removed;
     }
 
@@ -1505,6 +1518,7 @@
       if(status==='drowned') target.drownedTimer=0;
       if(status==='ocean') target.oceanicMarks=0;
       if(status==='blessing') target.blessingMarks=0;
+      removeOneBloomStack(target);
       createParticles(target.x,target.y,'#f6df9b',13,1.0);
       createFloatingText(target.x,target.y-target.radius-12,'✧ THANH TẨY','#ffe7a8');
       logMessage(`🛡️ Aegis thanh tẩy trạng thái ${status.toUpperCase()} khỏi ${target.name}!`,'aegis');
@@ -1653,6 +1667,7 @@
         this.aegisSlashCooldown = 0; this.aegisFacingAngle = side === 'p1' ? 0 : Math.PI;
         this.aegisHealBlockTimer = 0; this.aegisFearedTimer = 0; this.aegisFearedBy = null;
         this.aegisCollisionWasTouching = false; this.aegisContactDamageDone = false;
+        this.bloomStacks=0; this.bloomReduction=0; this.bloomContempt=false; this.bloomImmuneTimer=0; this.bloomReviveUnlocked=false; this.bloomReviveUsed=false; this.bloomReviveShieldTimer=0; this.bloomReviveShield=0;
         // Pyke: HP xám theo từng đòn, chu kỳ móc kéo và trạng thái Biển Sâu Thẳm.
         this.pykeGrayLayers=[]; this.pykeGrayHp=0; this.pykeCycleTimer=SKILL_CONFIG.pyke.cycle;
         this.pykeInDeepSea=false; this.pykePermanentSea=false; this.pykeSeaTimer=0; this.pykeSeaElapsed=0;
@@ -1717,6 +1732,8 @@
       update(enemy) {
         if(this.hp<=0 || this.isDead) return;
         if(this.aegisHealBlockTimer>0) this.aegisHealBlockTimer=Math.max(0,this.aegisHealBlockTimer-FIXED_STEP_SECONDS);
+        if(this.bloomImmuneTimer>0)this.bloomImmuneTimer=Math.max(0,this.bloomImmuneTimer-FIXED_STEP_SECONDS);
+        if(this.bloomReviveShieldTimer>0){this.bloomReviveShieldTimer=Math.max(0,this.bloomReviveShieldTimer-FIXED_STEP_SECONDS);if(this.bloomReviveShieldTimer<=0&&this.bloomReviveShield>0){this.shield=Math.max(0,this.shield-this.bloomReviveShield);this.bloomReviveShield=0;this.shieldTimer=0;}}
         if(this.shenGraceTimer>0) this.shenGraceTimer=Math.max(0,this.shenGraceTimer-FIXED_STEP_SECONDS);
         if(this.shenAllySlowTimer>0){this.shenAllySlowTimer=Math.max(0,this.shenAllySlowTimer-FIXED_STEP_SECONDS);this.slowFactor=Math.min(this.slowFactor,1-.9*(this.shenAllySlowTimer/2));if(this.shenAllySlowTimer<=0&&this.slowTimer<=0)this.slowFactor=1;}
         if(this.shenAllyImmortalTimer>0)this.shenAllyImmortalTimer=Math.max(0,this.shenAllyImmortalTimer-FIXED_STEP_SECONDS);
@@ -2530,9 +2547,10 @@
         if (!enemy || enemy.hp<=0) return false;
         const dx=enemy.x-this.x, dy=enemy.y-this.y, dist=Math.hypot(dx,dy);
         if (dist>0.001) this.aegisFacingAngle=Math.atan2(dy,dx);
-        if (dist<=this.radius*cfg.triggerRadiusMult && this.aegisSlashCooldown<=0) {
+        const maxRange=this.radius*2*cfg.slashRangeDiameters;
+        if (dist<=maxRange && this.aegisSlashCooldown<=0) {
           this.aegisSlashCooldown=cfg.slashCooldown;
-          const angle=this.aegisFacingAngle, maxRange=this.radius*2*cfg.triggerRadiusMult;
+          const angle=Math.atan2(dy,dx); this.aegisFacingAngle=angle;
           const diff=Math.atan2(Math.sin(Math.atan2(dy,dx)-angle),Math.cos(Math.atan2(dy,dx)-angle));
           if (dist<=maxRange && Math.abs(diff)<=cfg.slashAngleDeg*Math.PI/360) {
             enemy.takeDamage(cfg.slashDamage,'Aegis • Thánh Kiếm');
@@ -2545,7 +2563,7 @@
               if (enemy.typeKey==='dragon') { enemy.dragonTempShield=0; enemy.dragonPermanentShield=0; enemy.dragonTempShieldTimer=0; }
               this.aegisBarrier+=stolen; this.aegisBarrierTimer=cfg.barrierDuration;
             }
-            aegisSlashEffects.push({owner:this,angle,timer:0.34,maxTimer:0.34,range:maxRange});
+            aegisSlashEffects.push({owner:this,angle,timer:0.58,maxTimer:0.58,range:maxRange});
             createShockwave(enemy.x,enemy.y,Math.min(88,maxRange*0.55),'#f5d47d',3.5);
             createParticles(enemy.x,enemy.y,'#fff0b7',24,1.7);
             createFloatingText(enemy.x,enemy.y-enemy.radius-17,`✦ -${cfg.slashDamage} · CẤM HỒI HP`,'#ffe6a0');
@@ -2563,7 +2581,7 @@
         if (this.dragonCleanseTimer >= cfg.cleanseInterval) {
           this.dragonCleanseTimer -= cfg.cleanseInterval;
           // Long Khi: cleanse every hostile status/mark, then grant an unremovable seal and brief immunity.
-          this.burnStacks = 0; this.burnTimer = 0; this.slowTimer = 0; this.slowFactor = 1;
+          this.burnStacks = 0; this.burnTimer = 0; this.slowTimer = 0; this.slowFactor = 1; removeOneBloomStack(this);
           this.stunTimer = 0; this.drownedTimer = 0; this.oceanicMarks = 0; this.blessingMarks = 0;
           this.dragonSeals++;
           this.dragonInvulnerableTimer = cfg.invulnerableDuration;
@@ -3061,7 +3079,7 @@
       }
 
       takeDamage(amount, source) {
-        if((gameMode==='2v2' && this.shenAllyImmortalTimer>0) || (this.typeKey==='pyke' && this.pykeInDeepSea)) return;
+        if((gameMode==='2v2' && this.shenAllyImmortalTimer>0) || this.bloomImmuneTimer>0 || (this.typeKey==='pyke' && this.pykeInDeepSea)) return;
         const enemy = getNearestEnemy(this);
         const attackerHadPoison = !!(enemy && (enemy.viperPoisonStacks || 0) > 0);
         // Đòn thường kích hoạt nội tại ngay khi đối thủ ra tay, kể cả khi bị né.
@@ -3078,6 +3096,9 @@
         if (this.typeKey === 'shen') {
           if (Math.hypot(this.x - this.spiritBladeX, this.y - this.spiritBladeY) <= this.radius * SKILL_CONFIG.shen.zoneRadiusMult) return;
         }
+        // Vạn Hoa giảm sát thương nhận vào; Khinh Thường Kẻ Yếu cộng thêm sát thương theo HP đã mất của mục tiêu.
+        if(enemy && enemy.bloomContempt && enemy.team!==this.team && enemy!==this){const missing=Math.max(0,this.maxHp-this.hp);amount+=Math.min(missing,Math.max(0,amount)*0.4);}
+        if(this.bloomStacks>0){amount*=Math.max(0,1-this.bloomStacks*0.015);}
         // Chỉ truyền độc nếu kẻ tấn công đã có Độc Chướng từ trước và đòn này không bị Trượt.
         spreadViperPoison(this, attackerHadPoison, source);
         if (this.typeKey==='aegis' && source!=='Aegis • Thiêu Đốt') {
@@ -3107,6 +3128,7 @@
           return;
         }
 
+        if(this.bloomReviveUnlocked && !this.bloomReviveUsed && this.hp-amount<=0){this.bloomReviveUsed=true;this.hp=1;this.bloomReviveShield=100;this.bloomReviveShieldTimer=2;this.shield+=100;this.shieldTimer=0;createShockwave(this.x,this.y,145,'#f9a8d4',7);createShockwave(this.x,this.y,88,'#fff1f7',4);createParticles(this.x,this.y,'#fb7185',65,2.4);createParticles(this.x,this.y,'#fff1f7',38,2);createFloatingText(this.x,this.y-this.radius-25,'🌹 TÁI SINH · 1 HP + 100 KHIÊN','#fbcfe8');logMessage('🌹 Bloom Ball kích hoạt lần hồi sinh duy nhất: 1 HP và 100 khiên trong 2 giây!','bloom');updateHUD();return;}
         let finalIncomingDmg = amount;
         if (this.typeKey === 'demon') {
           finalIncomingDmg = amount * SKILL_CONFIG.demon.incomingDmgMult;
@@ -3817,11 +3839,36 @@
         grad.addColorStop(0,`rgba(255,236,170,${0.08*alpha})`);grad.addColorStop(0.72,`rgba(244,198,104,${0.15*alpha})`);grad.addColorStop(1,'rgba(255,225,151,0)');
         ctx.fillStyle=grad;ctx.beginPath();ctx.moveTo(owner.x,owner.y);ctx.arc(owner.x,owner.y,fx.range,a1,a2);ctx.closePath();ctx.fill();
         ctx.beginPath();ctx.arc(owner.x,owner.y,fx.range*(0.42+0.58*progress),a1,sweep);
-        ctx.strokeStyle=`rgba(255,246,210,${alpha})`;ctx.lineWidth=5*(1-progress)+1;ctx.shadowColor='#ffe29a';ctx.shadowBlur=22;ctx.stroke();
+        ctx.strokeStyle=`rgba(255,250,224,${alpha})`;ctx.lineWidth=9*(1-progress)+2;ctx.shadowColor='#ffe29a';ctx.shadowBlur=30;ctx.stroke();
         ctx.beginPath();ctx.arc(owner.x,owner.y,fx.range*(0.39+0.58*progress),a1,sweep);
-        ctx.strokeStyle=`rgba(221,170,70,${alpha*0.7})`;ctx.lineWidth=1.6;ctx.shadowBlur=8;ctx.stroke();
+        ctx.strokeStyle=`rgba(221,170,70,${alpha*0.9})`;ctx.lineWidth=3;ctx.shadowBlur=15;ctx.stroke();
         for(let k=0;k<9;k++){const q=(k/9+progress*0.85)%1,ang=a1+(a2-a1)*q,rr=fx.range*(0.45+0.5*progress);drawSpark(ctx,owner.x+Math.cos(ang)*rr,owner.y+Math.sin(ang)*rr,1.7+alpha*2,'#fff2c6',alpha);}
         ctx.restore();
+      }
+    }
+
+    function addBloomStack(ball,count){
+      if(!ball||ball.hp<=0)return; const old=ball.bloomStacks||0; ball.bloomStacks+=count; ball.bloomReduction=ball.bloomStacks*1.5;
+      createParticles(ball.x,ball.y,'#f9a8d4',Math.min(28,8+count*3),1.4);createFloatingText(ball.x,ball.y-ball.radius-18,`🌸 +${count} VẠN HOA`,'#f9a8d4');
+      if(!ball.bloomContempt&&old<10&&ball.bloomStacks>=10){ball.bloomContempt=true;createShockwave(ball.x,ball.y,110,'#f472b6',5);createFloatingText(ball.x,ball.y-34,'KHINH THƯỜNG KẺ YẾU','#fbcfe8');logMessage(`🌹 ${ball.name} đạt 15% Vạn Hoa: mở khóa Khinh Thường Kẻ Yếu vĩnh viễn!`,'bloom');}
+      if(old<20&&ball.bloomStacks>=20){ball.bloomImmuneTimer=2.25;getOpponents(ball).forEach(e=>e.applySlow(1,0.3));createShockwave(ball.x,ball.y,155,'#f9a8d4',7);createParticles(ball.x,ball.y,'#fff1f7',45,2);createFloatingText(ball.x,ball.y-40,'MIỄN NHIỄM · HOA ẢNH','#fce7f3');logMessage(`🌸 ${ball.name} đạt 30% Vạn Hoa: miễn nhiễm 2,25 giây và làm chậm địch 70% trong 1 giây!`,'bloom');}
+      if(old<30&&ball.bloomStacks>=30&&!ball.bloomReviveUsed){ball.bloomReviveUnlocked=true;createFloatingText(ball.x,ball.y-52,'HỒI SINH ĐÃ SẴN SÀNG','#fbcfe8');logMessage(`🌺 ${ball.name} đạt 45% Vạn Hoa: mở khóa một lần hồi sinh!`,'bloom');}
+      updateHUD();
+    }
+    function updateAndDrawBloomRoses(){
+      const hasBloom=getAllBalls().some(b=>b.typeKey==='bloom');
+      if(hasBloom){bloomSpawnTimer+=FIXED_STEP_SECONDS;while(bloomSpawnTimer>=0.65){bloomSpawnTimer-=0.65;bloomRoses.push({id:++bloomRoseId,x:28+Math.random()*(canvas.width-56),y:28+Math.random()*(canvas.height-56),age:0,awake:false,phase:Math.random()*Math.PI*2});}}
+      for(let i=bloomRoses.length-1;i>=0;i--){const r=bloomRoses[i];r.age+=FIXED_STEP_SECONDS;if(!r.awake&&r.age>=5){r.awake=true;createShockwave(r.x,r.y,35,'#fb7185',2);createParticles(r.x,r.y,'#fda4af',10,0.8);}
+        const picker=getAllBalls().find(b=>b.hp>0&&!b.isDead&&b.typeKey!=='bloom'&&b.team===1 /* team ally eligibility handled below */ && Math.hypot(b.x-r.x,b.y-r.y)<=b.radius+13);
+        let picked=picker;
+        if(gameMode==='2v2') picked=getAllBalls().find(b=>b.hp>0&&!b.isDead&&b.typeKey!=='bloom'&&getAllBalls().some(m=>m.typeKey==='bloom'&&m.team===b.team)&&Math.hypot(b.x-r.x,b.y-r.y)<=b.radius+13);
+        else picked=null;
+        if(picked){const heal=r.awake?3:1;const before=picked.hp;if(picked.aegisHealBlockTimer<=0)picked.hp=Math.min(picked.maxHp,picked.hp+heal);const actual=Math.max(0,picked.hp-before);addBloomStack(picked,r.awake?3:1);createFloatingText(picked.x,picked.y-picked.radius-32,`+${heal} HP`,'#86efac');createParticles(r.x,r.y,r.awake?'#fb7185':'#f9a8d4',24,1.7);bloomRoses.splice(i,1);continue;}
+        const pulse=.5+.5*Math.sin(globalTick*.11+r.phase);ctx.save();ctx.translate(r.x,r.y);ctx.globalCompositeOperation='lighter';ctx.shadowColor=r.awake?'#fb7185':'#f9a8d4';ctx.shadowBlur=r.awake?22:12;
+        const glow=ctx.createRadialGradient(0,0,1,0,0,r.awake?23:17);glow.addColorStop(0,r.awake?'rgba(251,113,133,.42)':'rgba(249,168,212,.30)');glow.addColorStop(1,'rgba(249,168,212,0)');ctx.fillStyle=glow;ctx.beginPath();ctx.arc(0,0,r.awake?23:17,0,Math.PI*2);ctx.fill();
+        for(let k=0;k<5;k++){const a=k*Math.PI*2/5+globalTick*.008;ctx.save();ctx.rotate(a);ctx.fillStyle=r.awake?'#fb7185':'#f9a8d4';ctx.beginPath();ctx.ellipse(0,-7-pulse*1.5,4.2,7,0,0,Math.PI*2);ctx.fill();ctx.restore();}
+        ctx.fillStyle=r.awake?'#fde68a':'#fff1f7';ctx.beginPath();ctx.arc(0,0,3.2,0,Math.PI*2);ctx.fill();ctx.strokeStyle=`rgba(255,241,247,${.5+pulse*.4})`;ctx.lineWidth=1.2;ctx.beginPath();ctx.arc(0,0,r.awake?16:12,0,Math.PI*2);ctx.stroke();
+        if(r.awake){ctx.fillStyle='#fda4af';ctx.font='10px sans-serif';ctx.textAlign='center';ctx.fillText('✦',0,-22);}ctx.restore();
       }
     }
 
@@ -5364,6 +5411,7 @@
       const startBalls=getAllBalls();
       startBalls.forEach((b)=>{let a;if(gameMode==='2v2'){a=b.team===1?(-Math.PI/2+Math.random()*Math.PI):(Math.PI/2+Math.random()*Math.PI);}else a=Math.random()*Math.PI*2;b.vx=Math.cos(a)*b.baseSpeed;b.vy=Math.sin(a)*b.baseSpeed;});
 
+      bloomRoses=[];bloomSpawnTimer=0;
       fireTrails = []; assassinShurikens = []; lightningZones = []; lightningBolts = [];
       soulOrbs = []; activeSoulBeams = []; marksmanTraps = []; marksmanBullets = [];
       ninjaProjectiles = []; reaperIllusions = []; reaperSlashes = []; soundWaves = [];
@@ -5485,6 +5533,7 @@
         for(let i=0;i<live.length;i++)for(let j=i+1;j<live.length;j++)checkAllCollisions(live[i],live[j]);
       }
 
+      updateAndDrawBloomRoses();
       updateAndDrawEntities();
       updateAndDrawViperEntities();
       updateAndDrawDragonEntities();
