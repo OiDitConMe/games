@@ -588,7 +588,7 @@
       },
       // Pyke Ball – sát thủ Biển Sâu Thẳm, tích HP xám và biến mất khỏi nhận diện của đối thủ.
       bloom: { name: 'Bloom Ball', color: '#f472b6', secondaryColor: '#7f1d4e', hp: 96, maxHp: 96, radius: 18, speed: BASE_SPEED, contactDmg: 1, icon: '🌹' },
-      cosmos: { name: 'Cosmos Ball', color: '#a78bfa', secondaryColor: '#312e81', hp: 111, maxHp: 111, radius: 18, speed: BASE_SPEED * 1.1, contactDmg: 1, icon: '🌌' },
+      cosmos: { name: 'Cosmos Ball', color: '#6d28d9', secondaryColor: '#17112f', hp: 111, maxHp: 111, radius: 18, speed: BASE_SPEED * 1.1, contactDmg: 1, icon: '🌌' },
       pyke: {
         name: 'Pyke Ball', color: '#0f766e', secondaryColor: '#071b22',
         hp: 95, maxHp: 95, radius: 18, speed: BASE_SPEED * 1.25, contactDmg: 5, icon: '🗡️'
@@ -1032,7 +1032,45 @@
       if (!type) return;
       ctx.save();
       if (type === 'cosmos') {
-        const g=ctx.createRadialGradient(canvas.width*.5,canvas.height*.5,20,canvas.width*.5,canvas.height*.5,canvas.width*.8);g.addColorStop(0,'rgba(49,46,129,.20)');g.addColorStop(.55,'rgba(30,27,75,.26)');g.addColorStop(1,'rgba(3,7,25,.58)');ctx.fillStyle=g;ctx.fillRect(0,0,canvas.width,canvas.height);ctx.globalCompositeOperation='lighter';for(let i=0;i<95;i++){const x=(i*97+Math.sin(globalTick*.013+i)*22)%canvas.width,y=(i*61+Math.cos(globalTick*.017+i)*18)%canvas.height;ctx.globalAlpha=.28+.35*Math.sin(globalTick*.035+i)**2;ctx.fillStyle=i%5===0?'#f5d0fe':'#c4b5fd';ctx.shadowColor=ctx.fillStyle;ctx.shadowBlur=8;ctx.beginPath();ctx.arc(x,y,1+(i%3)*.55,0,Math.PI*2);ctx.fill();}ctx.globalAlpha=.18;ctx.strokeStyle='#c4b5fd';ctx.lineWidth=1;for(let k=0;k<4;k++){ctx.beginPath();ctx.ellipse(canvas.width/2,canvas.height/2,90+k*55,45+k*35,globalTick*.001*(k%2?1:-1),0,Math.PI*2);ctx.stroke();}
+        const w=canvas.width,h=canvas.height,cx=w*.52,cy=h*.48,t=globalTick;
+        // Nền đen tím nhiều lớp, ánh sáng trung tâm và vùng tối ở rìa tạo chiều sâu.
+        const base=ctx.createLinearGradient(0,0,w,h);base.addColorStop(0,'#03030d');base.addColorStop(.42,'#100b27');base.addColorStop(.72,'#08091b');base.addColorStop(1,'#02030a');ctx.fillStyle=base;ctx.fillRect(0,0,w,h);
+        const vignette=ctx.createRadialGradient(cx,cy,10,cx,cy,Math.max(w,h)*.78);vignette.addColorStop(0,'rgba(45,28,93,.10)');vignette.addColorStop(.58,'rgba(13,11,39,.18)');vignette.addColorStop(1,'rgba(0,0,7,.88)');ctx.fillStyle=vignette;ctx.fillRect(0,0,w,h);
+        ctx.save();ctx.globalCompositeOperation='screen';
+        // Các dải tinh vân mờ, trôi chậm theo nhiều lớp parallax.
+        for(let n=0;n<5;n++){
+          const px=w*(.18+n*.17)+Math.sin(t*.002+n*2.4)*w*.035,py=h*(.22+(n%3)*.23)+Math.cos(t*.0025+n)*h*.035;
+          const rr=Math.max(w,h)*(.20+n*.035),ng=ctx.createRadialGradient(px,py,2,px,py,rr);
+          ng.addColorStop(0,n%2?'rgba(167,139,250,.12)':'rgba(103,76,180,.16)');ng.addColorStop(.42,n%2?'rgba(88,55,153,.09)':'rgba(65,47,125,.10)');ng.addColorStop(1,'rgba(20,12,48,0)');ctx.fillStyle=ng;ctx.fillRect(0,0,w,h);
+        }
+        // Sao xa: chuyển động parallax, nhấp nháy tự nhiên và tia lóe tinh tế.
+        for(let i=0;i<190;i++){
+          const x=((i*127.13+Math.sin(t*(.004+(i%5)*.0007)+i)*13+w*2)%(w+30))-15;
+          const y=((i*71.71+Math.cos(t*(.003+(i%7)*.0005)+i*1.7)*10+h*2)%(h+30))-15;
+          const tw=.22+.78*Math.pow(Math.sin(t*.035+i*2.17),2),sz=.45+(i%5)*.22;
+          ctx.globalAlpha=.18+tw*(i%13===0?.78:.48);ctx.fillStyle=i%11===0?'#fff':'#c4c6ff';ctx.shadowColor=ctx.fillStyle;ctx.shadowBlur=i%13===0?10:3;
+          ctx.beginPath();ctx.arc(x,y,sz,0,Math.PI*2);ctx.fill();
+          if(i%29===0){ctx.globalAlpha*=.65;drawSpark(ctx,x,y,2.2+tw*2,'#f5f3ff',ctx.globalAlpha);}
+        }
+        ctx.globalAlpha=1;
+        // Hố đen với chân trời sự kiện tối tuyệt đối và đĩa bồi tụ xoáy.
+        const bhx=w*.76+Math.sin(t*.002)*w*.025,bhy=h*.29+Math.cos(t*.0024)*h*.025,br=Math.min(w,h)*.085;
+        ctx.save();ctx.translate(bhx,bhy);ctx.rotate(t*.0028);
+        const glow=ctx.createRadialGradient(0,0,br*.45,0,0,br*2.9);glow.addColorStop(0,'rgba(0,0,0,0)');glow.addColorStop(.48,'rgba(0,0,0,0)');glow.addColorStop(.63,'rgba(190,154,255,.13)');glow.addColorStop(.76,'rgba(119,84,210,.24)');glow.addColorStop(1,'rgba(60,35,120,0)');ctx.fillStyle=glow;ctx.beginPath();ctx.arc(0,0,br*2.9,0,Math.PI*2);ctx.fill();
+        for(let k=0;k<4;k++){ctx.beginPath();ctx.ellipse(0,0,br*(1.28+k*.18),br*(.38+k*.07),0,0,Math.PI*2);ctx.strokeStyle=k%2?'rgba(225,211,255,.28)':'rgba(164,125,255,.48)';ctx.lineWidth=2.5-k*.35;ctx.shadowColor='#a78bfa';ctx.shadowBlur=13;ctx.stroke();}
+        const hole=ctx.createRadialGradient(-br*.15,-br*.18,1,0,0,br*1.03);hole.addColorStop(0,'#000');hole.addColorStop(.78,'#010108');hole.addColorStop(1,'rgba(3,2,12,.92)');ctx.fillStyle=hole;ctx.beginPath();ctx.arc(0,0,br,0,Math.PI*2);ctx.fill();ctx.restore();
+        // Hành tinh xa gần, có bóng đêm, viền khí quyển và quỹ đạo mờ.
+        const planets=[{x:w*.20,y:h*.72,r:Math.min(w,h)*.075,c:'#b5a1d9',d:'#211a3d',a:.35},{x:w*.48,y:h*.17,r:Math.min(w,h)*.042,c:'#9ec7df',d:'#14253f',a:-.45},{x:w*.88,y:h*.77,r:Math.min(w,h)*.052,c:'#d4a6c9',d:'#30152f',a:.7}];
+        planets.forEach((p,i)=>{const ox=Math.sin(t*.0018+i*2)*8,oy=Math.cos(t*.0015+i)*6,px=p.x+ox,py=p.y+oy;
+          ctx.save();ctx.translate(px,py);ctx.rotate(p.a+t*.00035*(i%2?1:-1));ctx.strokeStyle='rgba(194,176,245,.13)';ctx.lineWidth=1;ctx.beginPath();ctx.ellipse(0,0,p.r*2.15,p.r*.62,0,0,Math.PI*2);ctx.stroke();
+          const pg=ctx.createRadialGradient(-p.r*.4,-p.r*.42,p.r*.04,0,0,p.r);pg.addColorStop(0,p.c);pg.addColorStop(.48,p.d);pg.addColorStop(1,'#02030b');ctx.fillStyle=pg;ctx.shadowColor=p.c;ctx.shadowBlur=13;ctx.beginPath();ctx.arc(0,0,p.r,0,Math.PI*2);ctx.fill();
+          ctx.globalAlpha=.34;ctx.strokeStyle='rgba(235,226,255,.72)';ctx.lineWidth=1.1;ctx.beginPath();ctx.arc(0,0,p.r*1.04,-1.1,.8);ctx.stroke();ctx.restore();
+        });
+        // Sao băng xuất hiện luân phiên, lướt chéo qua nền trời.
+        for(let j=0;j<3;j++){const phase=(t*(.0011+j*.00017)+j*.37)%1;if(phase<.22){const q=phase/.22,sx=((j*211+w*.12)+q*w*.62)%w,sy=h*(.08+j*.24)+q*h*.36;const tail=ctx.createLinearGradient(sx-48,sy-26,sx,sy);tail.addColorStop(0,'rgba(196,181,253,0)');tail.addColorStop(1,'rgba(245,243,255,.9)');ctx.strokeStyle=tail;ctx.lineWidth=1.5;ctx.shadowColor='#c4b5fd';ctx.shadowBlur=9;ctx.beginPath();ctx.moveTo(sx-48,sy-26);ctx.lineTo(sx,sy);ctx.stroke();}}
+        ctx.restore();
+        // Màn phủ tối nhẹ giúp Ball và hiệu ứng chiến đấu vẫn nổi bật trên phông vũ trụ.
+        const edge=ctx.createRadialGradient(cx,cy,Math.min(w,h)*.18,cx,cy,Math.max(w,h)*.76);edge.addColorStop(0,'rgba(0,0,0,0)');edge.addColorStop(1,'rgba(0,0,8,.30)');ctx.fillStyle=edge;ctx.fillRect(0,0,w,h);
       } else if (type === 'hell') {
         const g = ctx.createLinearGradient(0, 0, 0, canvas.height);
         g.addColorStop(0, 'rgba(25,8,7,0.58)'); g.addColorStop(0.52, 'rgba(82,16,10,0.35)'); g.addColorStop(1, 'rgba(150,35,9,0.48)');
@@ -1248,6 +1286,29 @@
         ctx.strokeStyle=`rgba(251,113,133,${.45+pulse*.35})`;ctx.shadowColor='#fb7185';ctx.shadowBlur=17;ctx.lineWidth=2;ctx.beginPath();ctx.arc(0,0,r+7+pulse*2,0,Math.PI*2);ctx.stroke();
         for(let i=0;i<5;i++){const a=i*Math.PI*2/5-t*.012;ctx.fillStyle='#f9a8d4';ctx.beginPath();ctx.ellipse(Math.cos(a)*(r+10),Math.sin(a)*(r+10),2.4,4.5,a,0,Math.PI*2);ctx.fill();}
         if(ball.bloomStacks>0){ctx.fillStyle='#fce7f3';ctx.font='bold 9px sans-serif';ctx.textAlign='center';ctx.fillText(`🌸${ball.bloomStacks}`,0,r+23);}
+      } else if (ball.typeKey === 'cosmos') {
+        // Bụi sao và đường sức từ: không dùng vòng tròn/đường viền khép kín quanh Ball.
+        ctx.save(); ctx.translate(x,y);
+        const pulse=.5+.5*Math.sin(t*.055);
+        const haze=ctx.createRadialGradient(0,0,r*.2,0,0,r+28);
+        haze.addColorStop(0,'rgba(196,181,253,.24)'); haze.addColorStop(.42,'rgba(109,40,217,.20)'); haze.addColorStop(.78,'rgba(30,20,65,.14)'); haze.addColorStop(1,'rgba(20,10,45,0)');
+        ctx.fillStyle=haze;ctx.beginPath();ctx.arc(0,0,r+28,0,Math.PI*2);ctx.fill();
+        // Hai đường sức từ cong mở, như plasma bị bẻ cong quanh thiên thể.
+        ctx.globalCompositeOperation='lighter';
+        for(let k=0;k<5;k++){
+          const side=k%2?1:-1, phase=t*.012+k*1.17, reach=r+12+(k%3)*7;
+          ctx.beginPath();ctx.moveTo(-reach*.8,side*(r*.25));
+          ctx.bezierCurveTo(-reach*.65,side*(r+12)+Math.sin(phase)*5,reach*.45,side*(r+18)+Math.cos(phase)*6,reach*.92,side*(r*.18));
+          ctx.strokeStyle=k%2?'rgba(221,214,254,.30)':'rgba(167,139,250,.42)';ctx.lineWidth=1.1+(k%2)*.45;ctx.shadowColor='#a78bfa';ctx.shadowBlur=10;ctx.stroke();
+        }
+        for(let i=0;i<22;i++){
+          const a=i*2.399+t*(i%2?.018:-.014),rr=r+5+((i*17+Math.floor(t*.7))%25),tw=.35+.65*Math.pow(Math.sin(t*.07+i*2.1),2);
+          const sx=Math.cos(a)*rr,sy=Math.sin(a)*rr;
+          ctx.globalAlpha=.22+tw*.68;ctx.fillStyle=i%4===0?'#fff':'#c4b5fd';ctx.shadowColor=ctx.fillStyle;ctx.shadowBlur=5+tw*8;
+          ctx.beginPath();ctx.arc(sx,sy,.65+(i%3)*.42,0,Math.PI*2);ctx.fill();
+          if(i%6===0)drawSpark(ctx,sx,sy,1.7+tw*1.4,'#f5f3ff',.45+tw*.45);
+        }
+        ctx.globalAlpha=1;ctx.restore();
       } else if (ball.typeKey === 'pyke') {
         ctx.translate(x,y);ctx.rotate(-t*0.012);const pulse=0.5+Math.sin(t*0.09)*0.5;
         const g=ctx.createRadialGradient(0,0,r*0.2,0,0,r+25);g.addColorStop(0,'rgba(26,112,107,0.32)');g.addColorStop(0.62,'rgba(7,55,63,0.25)');g.addColorStop(1,'rgba(1,13,19,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(0,0,r+25,0,Math.PI*2);ctx.fill();
@@ -3405,13 +3466,14 @@
         // Thân Ball chính
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-        const grad = ctx.createRadialGradient(this.x - 5, this.y - 5, 2, this.x, this.y, this.radius);
-        grad.addColorStop(0, this.typeKey === 'hades' ? '#7c2d12' : (this.typeKey === 'dragon' ? '#fbbf24' : '#ffffff'));
-        grad.addColorStop(0.4, this.color);
-        grad.addColorStop(1, this.secondaryColor);
+        const grad = ctx.createRadialGradient(this.x - 6, this.y - 7, 1, this.x, this.y, this.radius);
+        grad.addColorStop(0, this.typeKey === 'cosmos' ? 'rgba(255,255,255,.96)' : (this.typeKey === 'hades' ? '#7c2d12' : (this.typeKey === 'dragon' ? '#fbbf24' : '#ffffff')));
+        grad.addColorStop(this.typeKey === 'cosmos' ? 0.27 : 0.4, this.typeKey === 'cosmos' ? '#b9a4f7' : this.color);
+        grad.addColorStop(this.typeKey === 'cosmos' ? 0.63 : 1, this.typeKey === 'cosmos' ? '#45228d' : this.secondaryColor);
+        if(this.typeKey==='cosmos')grad.addColorStop(1,'#120d28');
         ctx.fillStyle = grad;
-        ctx.shadowColor = this.color;
-        ctx.shadowBlur = 12;
+        ctx.shadowColor = this.typeKey==='cosmos' ? '#b8a4ff' : this.color;
+        ctx.shadowBlur = this.typeKey==='cosmos' ? 20 : 12;
         ctx.fill();
         ctx.strokeStyle = 'rgba(255,255,255,0.65)';
         ctx.lineWidth = 1.5;
@@ -3921,7 +3983,7 @@
       const now = simulationTimeMs;
 
       // 1. Môi trường Đại Dương
-      if (oceanEnvironmentTimer > 0) {
+      if (activeEnvironment.type !== 'cosmos' && oceanEnvironmentTimer > 0) {
         oceanEnvironmentTimer -= FIXED_STEP_SECONDS;
         ctx.save();
         const oceanGrad = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
