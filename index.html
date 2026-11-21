@@ -151,6 +151,7 @@
               <option value="pyke">🗡️ Pyke Ball</option>
               <option value="bloom">🌹 Bloom Ball</option>
               <option value="cosmos">🌌 Cosmos Ball</option>
+              <option value="ruby">💎 Ruby Ball</option>
             </select>
           </div>
 
@@ -183,6 +184,7 @@
               <option value="pyke">🗡️ Pyke Ball</option>
               <option value="bloom">🌹 Bloom Ball</option>
               <option value="cosmos">🌌 Cosmos Ball</option>
+              <option value="ruby">💎 Ruby Ball</option>
             </select>
           </div>
 
@@ -589,6 +591,7 @@
       // Pyke Ball – sát thủ Biển Sâu Thẳm, tích HP xám và biến mất khỏi nhận diện của đối thủ.
       bloom: { name: 'Bloom Ball', color: '#f472b6', secondaryColor: '#7f1d4e', hp: 96, maxHp: 96, radius: 18, speed: BASE_SPEED, contactDmg: 1, icon: '🌹' },
       cosmos: { name: 'Cosmos Ball', color: '#6d28d9', secondaryColor: '#17112f', hp: 111, maxHp: 111, radius: 18, speed: BASE_SPEED * 1.1, contactDmg: 1, icon: '🌌' },
+      ruby: { name: 'Ruby Ball', color: '#e11d65', secondaryColor: '#4c0828', hp: 90, maxHp: 90, radius: 18, speed: BASE_SPEED * 1.25, contactDmg: 1, icon: '💎' },
       pyke: {
         name: 'Pyke Ball', color: '#0f766e', secondaryColor: '#071b22',
         hp: 95, maxHp: 95, radius: 18, speed: BASE_SPEED * 1.25, contactDmg: 5, icon: '🗡️'
@@ -951,7 +954,8 @@
       gamber:{role:'Xạ Thủ',desc:'Xúc xắc định mệnh và bài phép tạo chuỗi hiệu ứng khó đoán.'},
       moonshot:{role:'Xạ Thủ',desc:'Bốn vũ khí luân phiên, tự động nhắm mục tiêu và giữ khoảng cách.'},
       bloom:{role:'Hỗ Trợ',desc:'Gieo Hoa Hồng, tích Vạn Hoa để bảo vệ đồng minh và mở khóa những mốc sức mạnh vĩnh viễn.'},
-      cosmos:{role:'Pháp Sư',desc:'Tinh Vân gây Câm Lặng; nếu vụ nổ hụt, Cosmos áp đặt Vũ Trụ và Quá Tải lên toàn bộ kẻ địch.'},
+      cosmos:{role:'Hỗ Trợ',desc:'Áp đặt Vũ Trụ và Quá Tải; trong Vũ Trụ, hồi 2 HP mỗi 3 giây cho đồng minh.'},
+      ruby:{role:'Hỗ Trợ',desc:'Hào Quang Pha Lê bảo hộ bản thân, Trung Bình Cộng HP và khắc dấu Vụn Vỡ lên kẻ địch.'},
       aegis:{role:'Đỡ Đòn',desc:'Chuyển toàn bộ sát thương nhận vào thành thiêu đốt cộng dồn; phản chế kẻ khống chế, thanh tẩy trạng thái khi va chạm và quét kiếm thần thánh để cấm hồi máu, tước khiên.'},
       pyke:{role:'Sát Thủ',desc:'Tích trữ HP xám rồi biến mất trong Biển Sâu Thẳm; móc kéo mục tiêu, phóng dao và săn đuổi kẻ địch thấp máu từ trạng thái không thể bị nhận diện.'}
     };
@@ -1066,6 +1070,19 @@
           const pg=ctx.createRadialGradient(-p.r*.4,-p.r*.42,p.r*.04,0,0,p.r);pg.addColorStop(0,p.c);pg.addColorStop(.48,p.d);pg.addColorStop(1,'#02030b');ctx.fillStyle=pg;ctx.shadowColor=p.c;ctx.shadowBlur=13;ctx.beginPath();ctx.arc(0,0,p.r,0,Math.PI*2);ctx.fill();
           ctx.globalAlpha=.34;ctx.strokeStyle='rgba(235,226,255,.72)';ctx.lineWidth=1.1;ctx.beginPath();ctx.arc(0,0,p.r*1.04,-1.1,.8);ctx.stroke();ctx.restore();
         });
+        // Vũ trụ đa sắc: các dải tinh vân lam ngọc, hồng cực quang, vàng sao và tím hoàng gia.
+        const rainbowNebulae=[{x:w*.16,y:h*.43,c:'#ff4fa3',r:.27},{x:w*.57,y:h*.72,c:'#22d3ee',r:.25},{x:w*.83,y:h*.53,c:'#f59e0b',r:.22},{x:w*.39,y:h*.28,c:'#8b5cf6',r:.24},{x:w*.68,y:h*.12,c:'#34d399',r:.19}];
+        rainbowNebulae.forEach((n,i)=>{const px=n.x*w+Math.sin(t*.0014+i*2)*w*.025,py=n.y*h+Math.cos(t*.0012+i)*h*.025,rad=Math.max(w,h)*n.r;const rg=ctx.createRadialGradient(px,py,2,px,py,rad);rg.addColorStop(0,n.c+'44');rg.addColorStop(.34,n.c+'22');rg.addColorStop(1,n.c+'00');ctx.fillStyle=rg;ctx.fillRect(0,0,w,h);});
+        // Sao Thổ khổng lồ: khí quyển phân tầng, bóng đổ và hệ vành đai nghiêng nhiều lớp.
+        {const sx=w*.24+Math.sin(t*.0007)*5,sy=h*.22+Math.cos(t*.0008)*3,sr=Math.min(w,h)*.115;ctx.save();ctx.translate(sx,sy);ctx.rotate(-.24+t*.00012);ctx.globalCompositeOperation='screen';
+          const atm=ctx.createRadialGradient(0,0,sr*.55,0,0,sr*2.1);atm.addColorStop(0,'rgba(255,218,164,0)');atm.addColorStop(.72,'rgba(255,190,125,.16)');atm.addColorStop(1,'rgba(255,190,125,0)');ctx.fillStyle=atm;ctx.beginPath();ctx.arc(0,0,sr*2.1,0,Math.PI*2);ctx.fill();
+          for(let k=0;k<7;k++){ctx.beginPath();ctx.ellipse(0,0,sr*(1.42+k*.12),sr*(.38+k*.035),0,Math.PI*.04,Math.PI*.96);ctx.strokeStyle=['rgba(255,225,177,.78)','rgba(186,137,91,.66)','rgba(247,209,158,.62)','rgba(120,91,91,.58)'][k%4];ctx.lineWidth=2.2+(k%3)*1.1;ctx.shadowColor='#f7c98c';ctx.shadowBlur=12;ctx.stroke();}
+          const body=ctx.createRadialGradient(-sr*.38,-sr*.48,sr*.06,sr*.12,sr*.12,sr);body.addColorStop(0,'#fff0ce');body.addColorStop(.22,'#dcb98d');body.addColorStop(.43,'#a8795d');body.addColorStop(.58,'#e6c69b');body.addColorStop(.74,'#8b6658');body.addColorStop(1,'#211827');ctx.globalCompositeOperation='source-over';ctx.fillStyle=body;ctx.shadowColor='#f3c995';ctx.shadowBlur=24;ctx.beginPath();ctx.arc(0,0,sr,0,Math.PI*2);ctx.fill();
+          ctx.save();ctx.beginPath();ctx.arc(0,0,sr,0,Math.PI*2);ctx.clip();for(let band=0;band<9;band++){const yy=-sr+band*sr*.25;ctx.fillStyle=band%2?'rgba(255,229,190,.16)':'rgba(91,58,53,.17)';ctx.fillRect(-sr,yy,sr*2,sr*.12);}ctx.restore();
+          ctx.globalAlpha=.72;ctx.strokeStyle='rgba(255,239,210,.85)';ctx.lineWidth=1.4;ctx.beginPath();ctx.ellipse(0,0,sr*1.9,sr*.52,0,Math.PI*1.08,Math.PI*1.92);ctx.stroke();ctx.restore();}
+        // Cụm sao lấp lánh nhiều màu tạo cảm giác không gian sâu và bao la.
+        for(let i=0;i<42;i++){const x=(i*83.7+t*(.012+(i%4)*.004))%(w+20)-10,y=(i*47.3+Math.sin(t*.012+i)*12)%(h+20)-10,alpha=.28+.5*Math.pow(Math.sin(t*.025+i),2);ctx.globalAlpha=alpha;ctx.fillStyle=['#fda4af','#67e8f9','#fde68a','#c4b5fd','#86efac'][i%5];ctx.shadowColor=ctx.fillStyle;ctx.shadowBlur=8;drawSpark(ctx,x,y,1.6+(i%3)*.5,ctx.fillStyle,alpha);}
+        ctx.globalAlpha=1;
         // Sao băng xuất hiện luân phiên, lướt chéo qua nền trời.
         for(let j=0;j<3;j++){const phase=(t*(.0011+j*.00017)+j*.37)%1;if(phase<.22){const q=phase/.22,sx=((j*211+w*.12)+q*w*.62)%w,sy=h*(.08+j*.24)+q*h*.36;const tail=ctx.createLinearGradient(sx-48,sy-26,sx,sy);tail.addColorStop(0,'rgba(196,181,253,0)');tail.addColorStop(1,'rgba(245,243,255,.9)');ctx.strokeStyle=tail;ctx.lineWidth=1.5;ctx.shadowColor='#c4b5fd';ctx.shadowBlur=9;ctx.beginPath();ctx.moveTo(sx-48,sy-26);ctx.lineTo(sx,sy);ctx.stroke();}}
         ctx.restore();
@@ -1670,7 +1687,8 @@
         this.shenGraceTimer = 0;
 
         this.blessingMarks = 0;
-        this.cosmosCycleTimer = 4.15; this.cosmosCastTimer = 0; this.cosmosSilenceTimer = 0; this.cosmosOverloaded = false; this.cosmosChargePulse = 0;
+        this.cosmosCycleTimer = 4.15; this.cosmosCastTimer = 0; this.cosmosSilenceTimer = 0; this.cosmosOverloaded = false; this.cosmosChargePulse = 0; this.cosmosAllyHealTimer = 3;
+        this.rubyAuraTimer = 3; this.rubyAllyAverageTimer = 0; this.rubyDamageImmuneTimer = 0; this.rubyFirstDeathUsed = false; this.rubyShattered = false; this.rubyAuraPulse = 0;
         this.angelHealTimer = 0;
         this.angelReviveUsed = false;
 
@@ -1806,6 +1824,7 @@
         if(this.cosmosOverloaded)return;
         if(this.cosmosSilenceTimer>0){this.burnStacks=0;this.burnTimer=0;this.burnTickTimer=0;this.slowTimer=0;this.slowFactor=1;this.stunTimer=0;this.drownedTimer=0;this.aegisFearedTimer=0;this.viperPoisonStacks=0;this.viperPoisonTimer=0;this.viperPoisonTickTimer=0;this.oceanicMarks=0;this.blessingMarks=0;this.soundHasteStacks=0;this.soundHasteTimer=0;this.roninStacks=0;this.vx*=0.985;this.vy*=0.985;this.x+=this.vx;this.y+=this.vy;this.x=Math.max(this.radius,Math.min(canvas.width-this.radius,this.x));this.y=Math.max(this.radius,Math.min(canvas.height-this.radius,this.y));return;}
         if(this.aegisHealBlockTimer>0) this.aegisHealBlockTimer=Math.max(0,this.aegisHealBlockTimer-FIXED_STEP_SECONDS);
+        if(this.rubyDamageImmuneTimer>0)this.rubyDamageImmuneTimer=Math.max(0,this.rubyDamageImmuneTimer-FIXED_STEP_SECONDS);
         if(this.bloomImmuneTimer>0)this.bloomImmuneTimer=Math.max(0,this.bloomImmuneTimer-FIXED_STEP_SECONDS);
         if(this.bloomReviveShieldTimer>0){this.bloomReviveShieldTimer=Math.max(0,this.bloomReviveShieldTimer-FIXED_STEP_SECONDS);if(this.bloomReviveShieldTimer<=0&&this.bloomReviveShield>0){this.shield=Math.max(0,this.shield-this.bloomReviveShield);this.bloomReviveShield=0;this.shieldTimer=0;}}
         if(this.shenGraceTimer>0) this.shenGraceTimer=Math.max(0,this.shenGraceTimer-FIXED_STEP_SECONDS);
@@ -2900,12 +2919,14 @@
           if (this.moonshotSwitchTimer <= 0) this.moonshotSwitching = false;
           return;
         }
-        if (!enemy || enemy.hp <= 0) return;
+        if (!enemy || enemy.hp <= 0 || enemy.isDead || enemy.team===this.team) enemy=getNearestEnemy(this);
+        if (!enemy || enemy.hp <= 0 || enemy.isDead) return;
         if (this.moonshotGun === 3) this.moonshotControlGuardTimer = cfg.gun4GuardRefresh;
         const range = this.radius * 2 * cfg.rangeDiameters * (this.moonshotGun === 0 ? cfg.gun1RangeBonus : 1);
         const dist = Math.hypot(enemy.x - this.x, enemy.y - this.y);
         if (dist > range) return;
         this.moonshotFacingAngle = Math.atan2(enemy.y - this.y, enemy.x - this.x);
+        if (this.moonshotGun === 2 && this.moonshotShurikenReturning && !moonshotShots.some(s=>s.owner===this&&s.gun===2)) { this.moonshotShurikenReturning=false; this.moonshotShuriken=null; }
         if (this.moonshotGun === 2 && this.moonshotShurikenReturning) return;
         this.moonshotFireTimer -= FIXED_STEP_SECONDS;
         if (this.moonshotFireTimer > 0) return;
@@ -3156,6 +3177,7 @@
       }
 
       takeDamage(amount, source) {
+        if(this.typeKey==='ruby'&&this.rubyDamageImmuneTimer>0)return;
         if((gameMode==='2v2' && this.shenAllyImmortalTimer>0) || this.bloomImmuneTimer>0 || (this.typeKey==='pyke' && this.pykeInDeepSea)) return;
         const enemy = getNearestEnemy(this);
         const attackerHadPoison = !!(enemy && (enemy.viperPoisonStacks || 0) > 0);
@@ -3174,6 +3196,7 @@
         if (this.typeKey === 'shen') {
           if (Math.hypot(this.x - this.spiritBladeX, this.y - this.spiritBladeY) <= this.radius * SKILL_CONFIG.shen.zoneRadiusMult) return;
         }
+        if(this.rubyShattered)amount*=1.2;
         // Vạn Hoa giảm sát thương nhận vào; Khinh Thường Kẻ Yếu cộng thêm sát thương theo HP đã mất của mục tiêu.
         if(enemy && enemy.bloomContempt && enemy.team!==this.team && enemy!==this){const missing=Math.max(0,this.maxHp-this.hp);amount+=Math.min(missing,Math.max(0,amount)*0.4);}
         if(this.bloomStacks>0){amount*=1-Math.min(75,this.bloomStacks*1.3)/100;}
@@ -3261,6 +3284,7 @@
           }
         }
 
+        if (this.hp <= 0 && this.typeKey === 'ruby' && !this.rubyFirstDeathUsed) { rubyFirstDeath(this); updateHUD(); return; }
         if (this.hp <= 0 && this.typeKey === 'demon' && this.demonReviveCount < SKILL_CONFIG.demon.maxRevives) {
           this.demonReviveCount++;
           this.maxHp = Math.max(1, this.maxHp);
@@ -3796,7 +3820,7 @@
       for (let i=moonshotShots.length-1;i>=0;i--) {
         const shot=moonshotShots[i], owner=shot.owner, target=shot.target;
         shot.life -= FIXED_STEP_SECONDS; shot.age += FIXED_STEP_SECONDS;
-        if (!owner || !target || target.hp<=0 || shot.life<=0) { moonshotShots.splice(i,1); continue; }
+        if (!owner || !target || target.hp<=0 || target.isDead || shot.life<=0) { if(owner&&shot.gun===2&&owner.moonshotShuriken===shot){owner.moonshotShurikenReturning=false;owner.moonshotShuriken=null;} moonshotShots.splice(i,1); continue; }
         if (shot.gun===2 && shot.phase==='return') {
           const dx=owner.x-shot.x, dy=owner.y-shot.y, d=Math.hypot(dx,dy)||1;
           shot.vx=dx/d*shot.speed*cfg.gun3ReturnSpeed; shot.vy=dy/d*shot.speed*cfg.gun3ReturnSpeed;
@@ -3965,10 +3989,75 @@
       if(owner&&owner.hp>0){owner.hp=Math.min(owner.maxHp,owner.hp+3);createFloatingText(owner.x,owner.y-owner.radius-24,'+3 HP · VŨ TRỤ TAN','#ddd6fe');createParticles(owner.x,owner.y,'#c4b5fd',22,1.4);}
       cosmosNebula=null;updateHUD();
     }
+    function rubyFirstDeath(ruby){
+      if(!ruby||ruby.rubyFirstDeathUsed)return;
+      ruby.rubyFirstDeathUsed=true;
+      const target=getOpponents(ruby).filter(e=>e.hp>0&&!e.isDead).sort((a,b)=>b.hp-a.hp)[0];
+      if(target)rubyAverageHealth(ruby,target,'RUBY · TỬ QUANG');
+      // Ruby remains on the field at exactly 0 HP after the one-time death effect.
+      ruby.hp=0;
+      getAllies(ruby).forEach(ally=>{ally.shield=(ally.shield||0)+10;ally.shieldTimer=0;createFloatingText(ally.x,ally.y-ally.radius-20,'+10 KHIÊN VĨNH VIỄN','#f9a8d4');createParticles(ally.x,ally.y,'#f9a8d4',18,1.2);});
+      createShockwave(ruby.x,ruby.y,150,'#fb7185',7);createParticles(ruby.x,ruby.y,'#fff1f2',55,2.1);createFloatingText(ruby.x,ruby.y-ruby.radius-26,'💎 VỤN VỠ · 0 HP','#fda4af');
+      logMessage('💎 Ruby Ball kích hoạt lần chết đầu: Trung Bình Cộng HP và ban 10 khiên vĩnh viễn cho đồng minh!','ruby');
+      updateHUD();
+    }
+    function rubyAverageHealth(ruby,target,source='HÀO QUANG PHA LÊ'){
+      if(!ruby||!target||ruby.hp<0||target.hp<=0||target.isDead)return {delta:0};
+      const beforeRuby=ruby.hp,beforeTarget=target.hp,average=(beforeRuby+beforeTarget)/2;
+      ruby.hp=Math.min(ruby.maxHp,average);target.hp=Math.min(target.maxHp,average);
+      const targetDelta=target.hp-beforeTarget;
+      if(target.team!==ruby.team&&targetDelta<0&&!target.rubyShattered){target.rubyShattered=true;createShockwave(target.x,target.y,68,'#fb7185',4);createParticles(target.x,target.y,'#fda4af',24,1.2);createFloatingText(target.x,target.y-target.radius-18,'VỤN VỠ · +20% DMG','#fda4af');logMessage(`💎 ${target.name} mang ấn Vụn Vỡ vĩnh viễn: nhận thêm 20% sát thương!`,'ruby');}
+      createParticles(ruby.x,ruby.y,'#f9a8d4',16,1.1);createParticles(target.x,target.y,'#fda4af',16,1.1);
+      createFloatingText(ruby.x,ruby.y-ruby.radius-16,`${ruby.hp.toFixed(1)} HP`,'#f9a8d4');createFloatingText(target.x,target.y-target.radius-16,`${target.hp.toFixed(1)} HP`,'#fda4af');
+      logMessage(`💎 Ruby: Trung Bình Cộng HP với ${target.name} (${average.toFixed(1)} HP)!`,'ruby');
+      return {delta:targetDelta,beforeRuby,beforeTarget,average};
+    }
+    function rubyHealAfterAverage(ruby,amount,allAllies=false){
+      const allies=getAllBalls().filter(b=>b.hp>0&&!b.isDead&&b.team===ruby.team&&(allAllies||b!==ruby));
+      if(!allies.length&& !allAllies && ruby.hp>=0)allies.push(ruby);
+      allies.forEach(ally=>{if(ally.aegisHealBlockTimer>0)return;const before=ally.hp;ally.hp=Math.min(ally.maxHp,ally.hp+amount);if(ally.hp>before){createFloatingText(ally.x,ally.y-ally.radius-13,`+${(ally.hp-before).toFixed(1)} HP · RUBY`,'#f9a8d4');createParticles(ally.x,ally.y,'#f9a8d4',7,.8);}});
+      updateHUD();
+    }
+    function triggerRubyAura(ruby,allowImmediateRepeat=true){
+      if(!ruby||ruby.hp<=0||ruby.isDead)return;
+      const cost=Math.min(12,Math.max(0,ruby.hp-1));ruby.hp=Math.max(1,ruby.hp-cost);
+      ruby.rubyDamageImmuneTimer=1;ruby.rubyAuraPulse=.65;
+      createShockwave(ruby.x,ruby.y,110,'#fb7185',5);createShockwave(ruby.x,ruby.y,72,'#f9a8d4',3);createParticles(ruby.x,ruby.y,'#fda4af',42,1.8);createParticles(ruby.x,ruby.y,'#fff1f2',20,1.3);
+      createFloatingText(ruby.x,ruby.y-ruby.radius-24,'💎 HÀO QUANG PHA LÊ · MIỄN DMG 1s','#fda4af');
+      const target=getOpponents(ruby).filter(e=>e.hp>0&&!e.isDead).sort((a,b)=>b.hp-a.hp)[0];
+      if(!target){rubyHealAfterAverage(ruby,4,false);return;}
+      const result=rubyAverageHealth(ruby,target);
+      rubyHealAfterAverage(ruby,4,false);
+      if(result.delta>0){
+        ruby.hp=Math.max(0,ruby.hp-20);createFloatingText(ruby.x,ruby.y-ruby.radius-42,'−20 HP · PHẢN CHẤN','#fb7185');createParticles(ruby.x,ruby.y,'#fb7185',24,1.4);
+        if(ruby.hp<=0){ruby.hp=0;if(!ruby.rubyFirstDeathUsed)rubyFirstDeath(ruby);else endGame(ruby);return;}
+        if(allowImmediateRepeat)triggerRubyAura(ruby,false);
+      }
+      updateHUD();
+    }
+    function updateRubySkills(){
+      for(const ruby of getAllBalls()){
+        if(!ruby||ruby.typeKey!=='ruby'||ruby.hp<=0||ruby.isDead)continue;
+        if(ruby.rubyDamageImmuneTimer>0)ruby.rubyAuraPulse=Math.max(0,ruby.rubyAuraPulse-FIXED_STEP_SECONDS);
+        ruby.rubyAllyAverageTimer=Math.max(0,(ruby.rubyAllyAverageTimer||0)-FIXED_STEP_SECONDS);
+        if(ruby.rubyAllyAverageTimer<=0){
+          const weakerAlly=getAllies(ruby).filter(a=>a.hp>0&&!a.isDead&&a.hp<ruby.hp).sort((a,b)=>a.hp-b.hp)[0];
+          if(weakerAlly){rubyAverageHealth(ruby,weakerAlly,'LIÊN KẾT PHA LÊ');rubyHealAfterAverage(ruby,3,true);ruby.rubyAllyAverageTimer=.12;}
+        }
+        ruby.rubyAuraTimer-=FIXED_STEP_SECONDS;
+        if(ruby.rubyAuraTimer<=0){ruby.rubyAuraTimer+=3;triggerRubyAura(ruby,true);}
+        if(ruby.rubyDamageImmuneTimer>0){const q=Math.min(1,ruby.rubyDamageImmuneTimer);ctx.save();ctx.globalCompositeOperation='lighter';const r=ruby.radius*(1.5+.16*Math.sin(globalTick*.4));const g=ctx.createRadialGradient(ruby.x,ruby.y,3,ruby.x,ruby.y,r*1.5);g.addColorStop(0,'rgba(255,220,235,.18)');g.addColorStop(.55,`rgba(244,63,112,${.18*q})`);g.addColorStop(1,'rgba(244,63,112,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(ruby.x,ruby.y,r*1.5,0,Math.PI*2);ctx.fill();for(let k=0;k<8;k++){const a=globalTick*.045+k*Math.PI/4;drawSpark(ctx,ruby.x+Math.cos(a)*r,ruby.y+Math.sin(a)*r,2.4,'#ffe4ec',q);}ctx.restore();}
+      }
+    }
+
     function updateCosmosSkills(){
       for(const b of getAllBalls()){
         if(!b||b.hp<=0||b.isDead||b.typeKey!=='cosmos'||b.cosmosOverloaded||b.cosmosSilenceTimer>0)continue;
-        if(activeEnvironment.type==='cosmos')continue;
+        if(activeEnvironment.type==='cosmos'){
+          b.cosmosAllyHealTimer-=FIXED_STEP_SECONDS;
+          if(b.cosmosAllyHealTimer<=0){b.cosmosAllyHealTimer+=3;getAllies(b).forEach(ally=>{if(ally.hp>0&&!ally.isDead&&ally.aegisHealBlockTimer<=0){const before=ally.hp;ally.hp=Math.min(ally.maxHp,ally.hp+2);if(ally.hp>before){createFloatingText(ally.x,ally.y-ally.radius-14,'+2 HP · VŨ TRỤ','#c4b5fd');createParticles(ally.x,ally.y,'#c4b5fd',8,0.8);}}});updateHUD();}
+          continue;
+        }
         if(b.cosmosCastTimer>0){b.cosmosCastTimer=Math.max(0,b.cosmosCastTimer-FIXED_STEP_SECONDS);b.cosmosChargePulse+=FIXED_STEP_SECONDS;const chargeQ=1-b.cosmosCastTimer;ctx.save();ctx.globalCompositeOperation='lighter';const haloR=b.radius*(1.7+chargeQ*1.25);const hg=ctx.createRadialGradient(b.x,b.y,b.radius*.5,b.x,b.y,haloR);hg.addColorStop(0,'rgba(196,181,253,.02)');hg.addColorStop(.65,`rgba(167,139,250,${.16+.12*Math.sin(globalTick*.3)})`);hg.addColorStop(1,'rgba(196,181,253,0)');ctx.fillStyle=hg;ctx.beginPath();ctx.arc(b.x,b.y,haloR,0,Math.PI*2);ctx.fill();ctx.strokeStyle='rgba(237,233,254,.85)';ctx.shadowColor='#c4b5fd';ctx.shadowBlur=24;ctx.lineWidth=2.2;ctx.beginPath();ctx.arc(b.x,b.y,haloR,globalTick*.04,globalTick*.04+Math.PI*1.7);ctx.stroke();for(let k=0;k<10;k++){const a=globalTick*.035+k*Math.PI/5,rr=haloR*(.72+.18*Math.sin(globalTick*.07+k));ctx.fillStyle=k%2?'#f5d0fe':'#fff';ctx.globalAlpha=.7;ctx.beginPath();ctx.arc(b.x+Math.cos(a)*rr,b.y+Math.sin(a)*rr,1.2+(k%3)*.5,0,Math.PI*2);ctx.fill();}ctx.restore(); if(b.cosmosCastTimer<=0){const radius=b.radius*6;const targets=getOpponents(b).filter(e=>Math.hypot(e.x-b.x,e.y-b.y)<=radius+e.radius);cosmosNebula={x:b.x,y:b.y,radius,timer:.42,max:.42,hit:targets.length>0};createShockwave(b.x,b.y,radius,'#c4b5fd',5);createShockwave(b.x,b.y,radius*.72,'#f5d0fe',3);createParticles(b.x,b.y,'#ddd6fe',70,2.1);if(targets.length){targets.forEach(e=>{e.takeDamage(5,'Cosmos • Tinh Vân');e.cosmosSilenceTimer=2.5;createFloatingText(e.x,e.y-e.radius-20,'CÂM LẶNG · 2,5s','#e9d5ff');});logMessage('🌌 Cosmos phát nổ Tinh Vân: kẻ địch trúng đòn nhận 5 sát thương và Câm Lặng 2,5 giây!','cosmos');}else{cosmosEnvironmentPrevious=activeEnvironment.type==='sky'?{type:'sky',timer:Infinity,owner:null}:{...activeEnvironment};cosmosPreviousOceanTimer=oceanEnvironmentTimer;oceanEnvironmentTimer=0;cosmosOverloadOwner=b;activeEnvironment={type:'cosmos',timer:Infinity,owner:b};getOpponents(b).forEach(e=>{e.cosmosOverloaded=true;e.vx=0;e.vy=0;});createShockwave(canvas.width/2,canvas.height/2,Math.max(canvas.width,canvas.height),'#a78bfa',8);logMessage('🌌 VŨ TRỤ ÁP ĐẢO: toàn bộ kẻ địch Quá Tải cho đến khi va chạm được giải!','cosmos');}updateHUD();}}
         else{b.cosmosCycleTimer-=FIXED_STEP_SECONDS;if(b.cosmosCycleTimer<=0){b.cosmosCycleTimer=4.15;b.cosmosCastTimer=1;createShockwave(b.x,b.y,b.radius*2.2,'#c4b5fd',3);createParticles(b.x,b.y,'#ddd6fe',24,1.2);createFloatingText(b.x,b.y-b.radius-22,'VẬN TINH VÂN','#ddd6fe');}}
       }
@@ -5561,7 +5650,9 @@
     }
 
     function endGame(loser) {
-      if(!loser||loser.isDead)return;loser.isDead=true;
+      if(!loser||loser.isDead)return;
+      if(loser.cosmosOverloaded){loser.cosmosOverloaded=false;createFloatingText(loser.x,loser.y-loser.radius-20,'QUÁ TẢI ĐƯỢC GIẢI · ĐÃ HẠ GỤC','#ddd6fe');if(!getAllBalls().some(b=>b.cosmosOverloaded))endCosmosOverload();}
+      loser.isDead=true;
       const c=loser.team===1?'#4ade80':'#fb7185';
       createShockwave(loser.x,loser.y,190,'#ffffff',10);createShockwave(loser.x,loser.y,145,c,8);createShockwave(loser.x,loser.y,88,'#fef3c7',6);createShockwave(loser.x,loser.y,52,c,4);
       createParticles(loser.x,loser.y,c,115,3.8);createParticles(loser.x,loser.y,'#ffffff',65,3.2);createParticles(loser.x,loser.y,'#fef3c7',42,2.6);
@@ -5667,6 +5758,7 @@
       }
 
       updateCosmosSkills();
+      updateRubySkills();
       updateAndDrawBloomRoses();
       updateAndDrawEntities();
       updateAndDrawViperEntities();
