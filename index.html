@@ -152,6 +152,8 @@
               <option value="bloom">🌹 Bloom Ball</option>
               <option value="cosmos">🌌 Cosmos Ball</option>
               <option value="ruby">💎 Ruby Ball</option>
+              <option value="normal">⚪ Normal Ball</option>
+              <option value="pistoleer">🤠 Pistoleer Ball</option>
             </select>
           </div>
 
@@ -185,6 +187,8 @@
               <option value="bloom">🌹 Bloom Ball</option>
               <option value="cosmos">🌌 Cosmos Ball</option>
               <option value="ruby">💎 Ruby Ball</option>
+              <option value="normal">⚪ Normal Ball</option>
+              <option value="pistoleer">🤠 Pistoleer Ball</option>
             </select>
           </div>
 
@@ -591,7 +595,9 @@
       // Pyke Ball – sát thủ Biển Sâu Thẳm, tích HP xám và biến mất khỏi nhận diện của đối thủ.
       bloom: { name: 'Bloom Ball', color: '#f472b6', secondaryColor: '#7f1d4e', hp: 96, maxHp: 96, radius: 18, speed: BASE_SPEED, contactDmg: 1, icon: '🌹' },
       cosmos: { name: 'Cosmos Ball', color: '#6d28d9', secondaryColor: '#17112f', hp: 111, maxHp: 111, radius: 18, speed: BASE_SPEED * 1.1, contactDmg: 1, icon: '🌌' },
-      ruby: { name: 'Ruby Ball', color: '#e11d65', secondaryColor: '#4c0828', hp: 90, maxHp: 90, radius: 18, speed: BASE_SPEED * 1.25, contactDmg: 1, icon: '💎' },
+      ruby: { name: 'Ruby Ball', color: '#e00046', secondaryColor: '#510018', hp: 105, maxHp: 105, radius: 18, speed: BASE_SPEED * 1.25, contactDmg: 1, icon: '💎' },
+      normal: { name: 'Normal Ball', color: '#d1d5db', secondaryColor: '#64748b', hp: 100, maxHp: 100, radius: 18, speed: BASE_SPEED, contactDmg: 5, icon: '⚪' },
+      pistoleer: { name: 'Pistoleer Ball', color: '#9b3d2e', secondaryColor: '#35130f', hp: 90, maxHp: 90, radius: 18, speed: BASE_SPEED * 1.15, contactDmg: 5, icon: '🤠' },
       pyke: {
         name: 'Pyke Ball', color: '#0f766e', secondaryColor: '#071b22',
         hp: 95, maxHp: 95, radius: 18, speed: BASE_SPEED * 1.25, contactDmg: 5, icon: '🗡️'
@@ -822,6 +828,7 @@
         collisionHealPerStack: 1.2
       },
       // Gamber Ball – xác suất xúc xắc, nhịp tung chiêu và hiệu ứng 3 lá bài.
+      pistoleer: { bulletSpeedMult:3, bulletDamage:2, burstInterval:3, burstDuration:2, bulletCount:12, bleedDuration:12, bleedBurstDamage:25, ultDuration:3, ultTicks:12, ultDamage:1.5, ultRangeDiameters:4.85, dashDiameters:4, ultSlowFactor:.25, postUltDelay:.75 },
       gamber: {
         skillInterval: 3.75,          // Chuỗi kỹ năng chính: mỗi 3.75 giây.
         diceRepeatDelay: 0.75,       // Khoảng nghỉ giữa các lần đổ xúc xắc bồi.
@@ -910,9 +917,11 @@
     let viperStrikes = [];
     let gamberCards = [];
     let moonshotShots = [];
+    let pistoleerShots = [];
+    let pistoleerUltEffects = [];
     let aegisSlashEffects = [];
     let bloomRoses = []; let bloomSpawnTimer = 0; let bloomRoseId = 0;
-    let cosmosNebula = null; let cosmosEnvironmentPrevious = null; let cosmosPreviousOceanTimer = 0; let cosmosOverloadOwner = null;
+    let cosmosNebula = null; let cosmosEnvironmentPrevious = null; let cosmosPreviousOceanTimer = 0; let cosmosOverloadOwner = null; let cosmosDeferredEnvironment = null;
     let pykeHooks = [];
     let gameOver = false;
     let gameEnding = false;
@@ -956,6 +965,8 @@
       bloom:{role:'Hỗ Trợ',desc:'Gieo Hoa Hồng, tích Vạn Hoa để bảo vệ đồng minh và mở khóa những mốc sức mạnh vĩnh viễn.'},
       cosmos:{role:'Hỗ Trợ',desc:'Áp đặt Vũ Trụ và Quá Tải; trong Vũ Trụ, hồi 2 HP mỗi 3 giây cho đồng minh.'},
       ruby:{role:'Hỗ Trợ',desc:'Hào Quang Pha Lê bảo hộ bản thân, Trung Bình Cộng HP và khắc dấu Vụn Vỡ lên kẻ địch.'},
+      normal:{role:null,desc:'Ball cơ bản dùng để kiểm thử cân bằng, không có nội tại và không thuộc phân loại vai trò nào.'},
+      pistoleer:{role:'Xạ Thủ',desc:'Xả loạt đạn kép kiểu cao bồi, tích Sĩ Gái và lướt vào vùng Hỏa Vũ liên hoàn.'},
       aegis:{role:'Đỡ Đòn',desc:'Chuyển toàn bộ sát thương nhận vào thành thiêu đốt cộng dồn; phản chế kẻ khống chế, thanh tẩy trạng thái khi va chạm và quét kiếm thần thánh để cấm hồi máu, tước khiên.'},
       pyke:{role:'Sát Thủ',desc:'Tích trữ HP xám rồi biến mất trong Biển Sâu Thẳm; móc kéo mục tiêu, phóng dao và săn đuổi kẻ địch thấp máu từ trạng thái không thể bị nhận diện.'}
     };
@@ -1010,7 +1021,9 @@
     }
 
     function setEnvironment(type, duration = 0, owner = null) {
-      if(activeEnvironment.type==='cosmos' && type!=='cosmos') return;
+      // Môi trường được phép được triệu hồi trong Vũ Trụ, nhưng bị treo hoàn toàn
+      // và chỉ được đưa lên sân sau khi Vũ Trụ kết thúc. Môi trường mới nhất được ưu tiên.
+      if(activeEnvironment.type==='cosmos' && type!=='cosmos') { if(type!=='ocean')oceanEnvironmentTimer=0;cosmosDeferredEnvironment={type,duration,owner}; return; }
       const previous = activeEnvironment;
       if (previous.type === 'hell' && previous.owner && type !== 'hell') endHadesHell(previous.owner, true);
       if (type !== 'ocean') oceanEnvironmentTimer = 0;
@@ -1303,6 +1316,18 @@
         ctx.strokeStyle=`rgba(251,113,133,${.45+pulse*.35})`;ctx.shadowColor='#fb7185';ctx.shadowBlur=17;ctx.lineWidth=2;ctx.beginPath();ctx.arc(0,0,r+7+pulse*2,0,Math.PI*2);ctx.stroke();
         for(let i=0;i<5;i++){const a=i*Math.PI*2/5-t*.012;ctx.fillStyle='#f9a8d4';ctx.beginPath();ctx.ellipse(Math.cos(a)*(r+10),Math.sin(a)*(r+10),2.4,4.5,a,0,Math.PI*2);ctx.fill();}
         if(ball.bloomStacks>0){ctx.fillStyle='#fce7f3';ctx.font='bold 9px sans-serif';ctx.textAlign='center';ctx.fillText(`🌸${ball.bloomStacks}`,0,r+23);}
+      } else if (ball.typeKey === 'ruby') {
+        ctx.translate(x,y);const pulse=.5+.5*Math.sin(t*.11);ctx.globalCompositeOperation='lighter';
+        const aura=ctx.createRadialGradient(0,0,r*.25,0,0,r+27);aura.addColorStop(0,'rgba(255,226,239,.22)');aura.addColorStop(.42,'rgba(224,0,70,.20)');aura.addColorStop(.78,'rgba(255,55,130,.12)');aura.addColorStop(1,'rgba(150,0,40,0)');ctx.fillStyle=aura;ctx.beginPath();ctx.arc(0,0,r+27,0,Math.PI*2);ctx.fill();
+        ctx.shadowColor='#ff1e62';ctx.shadowBlur=22;ctx.strokeStyle=`rgba(255,125,170,${.38+.42*pulse})`;ctx.lineWidth=1.45;ctx.beginPath();ctx.arc(0,0,r+6+pulse*2,globalTick*.014,globalTick*.014+Math.PI*1.72);ctx.stroke();
+        for(let i=0;i<9;i++){const a=t*.018+i*Math.PI*2/9,rr=r+11+Math.sin(t*.08+i)*2;drawSpark(ctx,Math.cos(a)*rr,Math.sin(a)*rr,2.1+pulse*1.7,i%3===0?'#fff':'#ff7aa8',.7+pulse*.25);}
+        // Những vệt phản quang nhỏ lướt trên mặt cầu như viên ruby được đánh bóng.
+        ctx.rotate(-.55);ctx.fillStyle=`rgba(255,255,255,${.16+.16*pulse})`;ctx.beginPath();ctx.ellipse(-r*.22,-r*.5,r*.38,r*.09,-.2,0,Math.PI*2);ctx.fill();
+      } else if (ball.typeKey === 'pistoleer') {
+        ctx.translate(x,y);const pulse=.5+.5*Math.sin(t*.07);ctx.rotate(Math.sin(t*.018)*.04);
+        ctx.strokeStyle=`rgba(185,92,62,${.25+.2*pulse})`;ctx.lineWidth=1.2;ctx.shadowColor='#8f3829';ctx.shadowBlur=11;ctx.beginPath();ctx.arc(0,0,r+7,Math.PI*.12,Math.PI*1.86);ctx.stroke();
+        for(let i=0;i<4;i++){const a=t*.012+i*Math.PI/2;drawSpark(ctx,Math.cos(a)*(r+10),Math.sin(a)*(r+9),1.5+pulse,'#e9a078',.5+pulse*.3);}
+        if(ball.pistoleerSigar>0){ctx.fillStyle='#f5c7a4';ctx.font='bold 9px sans-serif';ctx.textAlign='center';ctx.fillText(`✦${ball.pistoleerSigar}`,0,r+22);}
       } else if (ball.typeKey === 'cosmos') {
         // Bụi sao và đường sức từ: không dùng vòng tròn/đường viền khép kín quanh Ball.
         ctx.save(); ctx.translate(x,y);
@@ -1689,6 +1714,7 @@
         this.blessingMarks = 0;
         this.cosmosCycleTimer = 4.15; this.cosmosCastTimer = 0; this.cosmosSilenceTimer = 0; this.cosmosOverloaded = false; this.cosmosChargePulse = 0; this.cosmosAllyHealTimer = 3;
         this.rubyAuraTimer = 3; this.rubyAllyAverageTimer = 0; this.rubyDamageImmuneTimer = 0; this.rubyFirstDeathUsed = false; this.rubyShattered = false; this.rubyAuraPulse = 0;
+        this.pistoleerCycleTimer=3; this.pistoleerBurstShotsLeft=0; this.pistoleerBurstShotTimer=0; this.pistoleerSigar=0; this.pistoleerUltTimer=0; this.pistoleerUltTickTimer=0; this.pistoleerUltSlowTimer=0; this.pistoleerSlowTimer=0; this.pistoleerBleedStacks=0; this.pistoleerBleedTimer=0; this.pistoleerFacingAngle=side==='p1'?0:Math.PI;
         this.angelHealTimer = 0;
         this.angelReviveUsed = false;
 
@@ -1779,7 +1805,7 @@
         } else this.hadesCerberus = null;
       }
 
-      isHadesUntargetable() { return this.typeKey==='pyke' && this.pykeInDeepSea; }
+      isHadesUntargetable() { return this.typeKey==='pyke' && this.pykeInDeepSea && activeEnvironment.type!=='cosmos'; }
 
       isImmuneToDebuffs() {
         if (gameMode==='2v2' && this.shenAllyImmortalTimer>0) return true;
@@ -1806,8 +1832,9 @@
           if (this.moonshotSwitchTimer > 0) speed *= SKILL_CONFIG.moonshot.switchSpeed;
         }
         // Đã xóa nội tại tăng tốc khi thấp HP của Sound Ball theo yêu cầu
-        if(this.typeKey==='pyke' && this.pykeInDeepSea){const q=Math.max(0,Math.min(1,this.pykeSeaElapsed/SKILL_CONFIG.pyke.environmentDuration));speed*=1+(SKILL_CONFIG.pyke.speedStartBonus+(SKILL_CONFIG.pyke.speedEndBonus-SKILL_CONFIG.pyke.speedStartBonus)*q);}
+        if(this.typeKey==='pyke' && this.isHadesUntargetable()){const q=Math.max(0,Math.min(1,this.pykeSeaElapsed/SKILL_CONFIG.pyke.environmentDuration));speed*=1+(SKILL_CONFIG.pyke.speedStartBonus+(SKILL_CONFIG.pyke.speedEndBonus-SKILL_CONFIG.pyke.speedStartBonus)*q);}
         if(this.soundHasteTimer>0)speed*=1+(this.soundHasteStacks||1)*.1;
+        if(this.pistoleerUltSlowTimer>0||this.pistoleerSlowTimer>0)speed*=0.25;
         speed *= this.slowFactor;
         if (this.typeKey === 'reaper' && this.reaperSpeedBoostTimer > 0) speed *= SKILL_CONFIG.reaper.speedBoostMult;
         if (this.typeKey === 'wukong' && this.wukongSweepTimer > 0) speed *= SKILL_CONFIG.wukong.sweepSpeedBonus;
@@ -1820,6 +1847,9 @@
       update(enemy) {
         if(this.hp<=0 || this.isDead) return;
         if(this.cosmosSilenceTimer>0)this.cosmosSilenceTimer=Math.max(0,this.cosmosSilenceTimer-FIXED_STEP_SECONDS);
+        if(this.pistoleerBleedTimer>0){this.pistoleerBleedTimer=Math.max(0,this.pistoleerBleedTimer-FIXED_STEP_SECONDS);if(this.pistoleerBleedTimer<=0)this.pistoleerBleedStacks=0;}
+        if(this.pistoleerUltSlowTimer>0)this.pistoleerUltSlowTimer=Math.max(0,this.pistoleerUltSlowTimer-FIXED_STEP_SECONDS);
+        if(this.pistoleerSlowTimer>0)this.pistoleerSlowTimer=Math.max(0,this.pistoleerSlowTimer-FIXED_STEP_SECONDS);
         if(this.typeKey==='cosmos'){this.stunTimer=0;this.drownedTimer=0;this.slowTimer=0;this.slowFactor=1;}
         if(this.cosmosOverloaded)return;
         if(this.cosmosSilenceTimer>0){this.burnStacks=0;this.burnTimer=0;this.burnTickTimer=0;this.slowTimer=0;this.slowFactor=1;this.stunTimer=0;this.drownedTimer=0;this.aegisFearedTimer=0;this.viperPoisonStacks=0;this.viperPoisonTimer=0;this.viperPoisonTickTimer=0;this.oceanicMarks=0;this.blessingMarks=0;this.soundHasteStacks=0;this.soundHasteTimer=0;this.roninStacks=0;this.vx*=0.985;this.vy*=0.985;this.x+=this.vx;this.y+=this.vy;this.x=Math.max(this.radius,Math.min(canvas.width-this.radius,this.x));this.y=Math.max(this.radius,Math.min(canvas.height-this.radius,this.y));return;}
@@ -1835,7 +1865,7 @@
         if (this.typeKey === 'aegis' && this.updateAegis(enemy)) return;
         if (this.typeKey === 'pyke') {
           this.updatePyke(enemy);
-          if(this.pykeInDeepSea){this.slowTimer=0;this.slowFactor=1;this.stunTimer=0;this.drownedTimer=0;this.burnStacks=0;this.burnTimer=0;this.burnTickTimer=0;this.viperPoisonStacks=0;this.viperPoisonTimer=0;this.viperPoisonTickTimer=0;}
+          if(this.isHadesUntargetable()){this.slowTimer=0;this.slowFactor=1;this.stunTimer=0;this.drownedTimer=0;this.burnStacks=0;this.burnTimer=0;this.burnTickTimer=0;this.viperPoisonStacks=0;this.viperPoisonTimer=0;this.viperPoisonTickTimer=0;}
         }
         const aegisFeared = this.aegisFearedTimer > 0;
         if (aegisFeared) {
@@ -2542,6 +2572,7 @@
         }
       }
       updatePyke(enemy) {
+        if(activeEnvironment.type==='cosmos')return;
         const cfg=SKILL_CONFIG.pyke, dt=FIXED_STEP_SECONDS;
         // HP xám được giữ vĩnh viễn cho đến khi Pyke bước vào Biển Sâu Thẳm.
         this.pykePassCooldown=Math.max(0,this.pykePassCooldown-dt);
@@ -3135,7 +3166,7 @@
       }
 
       applyBurn() {
-        if(this.typeKey==='pyke' && this.pykeInDeepSea)return;
+        if(this.typeKey==='pyke' && this.isHadesUntargetable())return;
         if(this.typeKey==='cosmos'||this.cosmosSilenceTimer>0)return;
         const attacker = getNearestEnemy(this);
         const attackerHadPoison = !!(attacker && (attacker.viperPoisonStacks || 0) > 0);
@@ -3149,7 +3180,7 @@
       }
 
       applySlow(duration, factor = 0.7) {
-        if(this.typeKey==='pyke' && this.pykeInDeepSea)return;
+        if(this.typeKey==='pyke' && this.isHadesUntargetable())return;
         if(this.typeKey==='cosmos'||this.cosmosSilenceTimer>0)return;
         const attacker = getNearestEnemy(this);
         const attackerHadPoison = !!(attacker && (attacker.viperPoisonStacks || 0) > 0);
@@ -3163,7 +3194,7 @@
       }
 
       applyStun(duration) {
-        if(this.typeKey==='pyke' && this.pykeInDeepSea)return;
+        if(this.typeKey==='pyke' && this.isHadesUntargetable())return;
         if(this.typeKey==='cosmos'||this.cosmosSilenceTimer>0)return;
         const attacker = getNearestEnemy(this);
         const attackerHadPoison = !!(attacker && (attacker.viperPoisonStacks || 0) > 0);
@@ -3178,7 +3209,7 @@
 
       takeDamage(amount, source) {
         if(this.typeKey==='ruby'&&this.rubyDamageImmuneTimer>0)return;
-        if((gameMode==='2v2' && this.shenAllyImmortalTimer>0) || this.bloomImmuneTimer>0 || (this.typeKey==='pyke' && this.pykeInDeepSea)) return;
+        if((gameMode==='2v2' && this.shenAllyImmortalTimer>0) || this.bloomImmuneTimer>0 || (this.typeKey==='pyke' && this.isHadesUntargetable())) return;
         const enemy = getNearestEnemy(this);
         const attackerHadPoison = !!(enemy && (enemy.viperPoisonStacks || 0) > 0);
         // Đòn thường kích hoạt nội tại ngay khi đối thủ ra tay, kể cả khi bị né.
@@ -3491,14 +3522,21 @@
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
         const grad = ctx.createRadialGradient(this.x - 6, this.y - 7, 1, this.x, this.y, this.radius);
-        grad.addColorStop(0, this.typeKey === 'cosmos' ? 'rgba(255,255,255,.96)' : (this.typeKey === 'hades' ? '#7c2d12' : (this.typeKey === 'dragon' ? '#fbbf24' : '#ffffff')));
-        grad.addColorStop(this.typeKey === 'cosmos' ? 0.27 : 0.4, this.typeKey === 'cosmos' ? '#b9a4f7' : this.color);
-        grad.addColorStop(this.typeKey === 'cosmos' ? 0.63 : 1, this.typeKey === 'cosmos' ? '#45228d' : this.secondaryColor);
+        grad.addColorStop(0, this.typeKey === 'cosmos' ? 'rgba(255,255,255,.96)' : (this.typeKey === 'ruby' ? '#ffffff' : (this.typeKey === 'hades' ? '#7c2d12' : (this.typeKey === 'dragon' ? '#fbbf24' : '#ffffff'))));
+        grad.addColorStop(this.typeKey === 'cosmos' ? 0.27 : (this.typeKey==='ruby'?0.22:0.4), this.typeKey === 'cosmos' ? '#b9a4f7' : this.color);
+        grad.addColorStop(this.typeKey === 'cosmos' ? 0.63 : (this.typeKey==='ruby'?0.68:1), this.typeKey === 'cosmos' ? '#45228d' : this.secondaryColor);
         if(this.typeKey==='cosmos')grad.addColorStop(1,'#120d28');
+        if(this.typeKey==='ruby'){grad.addColorStop(.88,'#25000d');}
         ctx.fillStyle = grad;
-        ctx.shadowColor = this.typeKey==='cosmos' ? '#b8a4ff' : this.color;
-        ctx.shadowBlur = this.typeKey==='cosmos' ? 20 : 12;
+        ctx.shadowColor = this.typeKey==='cosmos' ? '#b8a4ff' : (this.typeKey==='ruby'?'#ff174f':this.color);
+        ctx.shadowBlur = this.typeKey==='cosmos' ? 20 : (this.typeKey==='ruby'?29:12);
         ctx.fill();
+        if(this.typeKey==='ruby'){
+          ctx.save();ctx.clip();ctx.globalCompositeOperation='screen';
+          const facet=ctx.createLinearGradient(this.x-this.radius,this.y-this.radius,this.x+this.radius,this.y+this.radius);facet.addColorStop(0,'rgba(255,255,255,.82)');facet.addColorStop(.22,'rgba(255,190,220,.28)');facet.addColorStop(.5,'rgba(255,20,95,.04)');facet.addColorStop(.78,'rgba(255,125,175,.24)');facet.addColorStop(1,'rgba(255,255,255,.52)');ctx.fillStyle=facet;ctx.fillRect(this.x-this.radius,this.y-this.radius,this.radius*2,this.radius*2);
+          ctx.strokeStyle='rgba(255,240,248,.58)';ctx.lineWidth=.85;ctx.beginPath();ctx.moveTo(this.x-this.radius*.72,this.y-this.radius*.55);ctx.lineTo(this.x+this.radius*.05,this.y-this.radius*.05);ctx.lineTo(this.x+this.radius*.7,this.y-this.radius*.72);ctx.moveTo(this.x-this.radius*.55,this.y+this.radius*.7);ctx.lineTo(this.x+.1*this.radius,this.y-.05*this.radius);ctx.lineTo(this.x+this.radius*.72,this.y+this.radius*.5);ctx.stroke();
+          const glint=.5+.5*Math.sin(globalTick*.31);ctx.fillStyle=`rgba(255,255,255,${.34+.42*glint})`;ctx.beginPath();ctx.ellipse(this.x-this.radius*.36,this.y-this.radius*.52,this.radius*.23,this.radius*.085,-.65,0,Math.PI*2);ctx.fill();ctx.restore();
+        }
         ctx.strokeStyle = 'rgba(255,255,255,0.65)';
         ctx.lineWidth = 1.5;
         ctx.stroke();
@@ -3912,7 +3950,7 @@
     function updateAndDrawAegisEntities() {
       // Biển Sâu Thẳm: vực nước gần như đen, cột sáng xanh lục lam và phù văn vàng chìm nổi.
       const pykeOwner=getAllBalls().find(b=>b&&b.typeKey==='pyke'&&b.pykeInDeepSea);
-      if(pykeOwner){
+      if(pykeOwner && activeEnvironment.type!=='cosmos'){
         ctx.save();const pulse=0.5+Math.sin(globalTick*0.035)*0.5;
         const deep=ctx.createLinearGradient(0,0,canvas.width,canvas.height);deep.addColorStop(0,'rgba(1,13,20,0.91)');deep.addColorStop(0.48,'rgba(3,35,43,0.88)');deep.addColorStop(1,'rgba(0,7,14,0.94)');ctx.fillStyle=deep;ctx.fillRect(0,0,canvas.width,canvas.height);
         ctx.globalCompositeOperation='lighter';
@@ -3984,8 +4022,10 @@
       if(owner){getOpponents(owner).forEach(e=>{e.cosmosOverloaded=false;});}
       getAllBalls().forEach(b=>{if(b.cosmosOverloaded)b.cosmosOverloaded=false;});
       if(activeEnvironment.type==='cosmos')activeEnvironment=cosmosEnvironmentPrevious||{type:null,timer:0,owner:null};
-      oceanEnvironmentTimer=cosmosPreviousOceanTimer;cosmosPreviousOceanTimer=0;
-      cosmosEnvironmentPrevious=null;cosmosOverloadOwner=null;
+      const deferred=cosmosDeferredEnvironment;cosmosDeferredEnvironment=null;
+      if(deferred){oceanEnvironmentTimer=deferred.type==='ocean'?oceanEnvironmentTimer:0;if(deferred.type==='sky')skyEnvironmentUnlocked=true;activeEnvironment={type:deferred.type,timer:deferred.type==='sky'?Infinity:deferred.duration,owner:deferred.owner};}
+      else oceanEnvironmentTimer=cosmosPreviousOceanTimer;
+      cosmosPreviousOceanTimer=0;cosmosEnvironmentPrevious=null;cosmosOverloadOwner=null;
       if(owner&&owner.hp>0){owner.hp=Math.min(owner.maxHp,owner.hp+3);createFloatingText(owner.x,owner.y-owner.radius-24,'+3 HP · VŨ TRỤ TAN','#ddd6fe');createParticles(owner.x,owner.y,'#c4b5fd',22,1.4);}
       cosmosNebula=null;updateHUD();
     }
@@ -4022,12 +4062,13 @@
       if(!ruby||ruby.hp<=0||ruby.isDead)return;
       const cost=Math.min(12,Math.max(0,ruby.hp-1));ruby.hp=Math.max(1,ruby.hp-cost);
       ruby.rubyDamageImmuneTimer=1;ruby.rubyAuraPulse=.65;
-      createShockwave(ruby.x,ruby.y,110,'#fb7185',5);createShockwave(ruby.x,ruby.y,72,'#f9a8d4',3);createParticles(ruby.x,ruby.y,'#fda4af',42,1.8);createParticles(ruby.x,ruby.y,'#fff1f2',20,1.3);
-      createFloatingText(ruby.x,ruby.y-ruby.radius-24,'💎 HÀO QUANG PHA LÊ · MIỄN DMG 1s','#fda4af');
+      createShockwave(ruby.x,ruby.y,128,'#e00046',6);createShockwave(ruby.x,ruby.y,96,'#ff4d8d',4);createShockwave(ruby.x,ruby.y,62,'#fff0f6',2.5);
+      for(let i=0;i<4;i++)createParticles(ruby.x,ruby.y,['#ff174f','#ff5c9a','#fff0f6','#d0003c'][i],i===2?22:28,2.2);
+      createFloatingText(ruby.x,ruby.y-ruby.radius-24,'💎 HÀO QUANG PHA LÊ · MIỄN DMG 1s','#ffe1ed');
       const target=getOpponents(ruby).filter(e=>e.hp>0&&!e.isDead).sort((a,b)=>b.hp-a.hp)[0];
-      if(!target){rubyHealAfterAverage(ruby,4,false);return;}
+      if(!target){rubyHealAfterAverage(ruby,6,false);return;}
       const result=rubyAverageHealth(ruby,target);
-      rubyHealAfterAverage(ruby,4,false);
+      rubyHealAfterAverage(ruby,6,false);
       if(result.delta>0){
         ruby.hp=Math.max(0,ruby.hp-20);createFloatingText(ruby.x,ruby.y-ruby.radius-42,'−20 HP · PHẢN CHẤN','#fb7185');createParticles(ruby.x,ruby.y,'#fb7185',24,1.4);
         if(ruby.hp<=0){ruby.hp=0;if(!ruby.rubyFirstDeathUsed)rubyFirstDeath(ruby);else endGame(ruby);return;}
@@ -4046,7 +4087,13 @@
         }
         ruby.rubyAuraTimer-=FIXED_STEP_SECONDS;
         if(ruby.rubyAuraTimer<=0){ruby.rubyAuraTimer+=3;triggerRubyAura(ruby,true);}
-        if(ruby.rubyDamageImmuneTimer>0){const q=Math.min(1,ruby.rubyDamageImmuneTimer);ctx.save();ctx.globalCompositeOperation='lighter';const r=ruby.radius*(1.5+.16*Math.sin(globalTick*.4));const g=ctx.createRadialGradient(ruby.x,ruby.y,3,ruby.x,ruby.y,r*1.5);g.addColorStop(0,'rgba(255,220,235,.18)');g.addColorStop(.55,`rgba(244,63,112,${.18*q})`);g.addColorStop(1,'rgba(244,63,112,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(ruby.x,ruby.y,r*1.5,0,Math.PI*2);ctx.fill();for(let k=0;k<8;k++){const a=globalTick*.045+k*Math.PI/4;drawSpark(ctx,ruby.x+Math.cos(a)*r,ruby.y+Math.sin(a)*r,2.4,'#ffe4ec',q);}ctx.restore();}
+        ruby.rubyAuraPulse=Math.max(0,(ruby.rubyAuraPulse||0)-FIXED_STEP_SECONDS);
+        if(ruby.rubyDamageImmuneTimer>0||ruby.rubyAuraPulse>0){const q=Math.max(ruby.rubyDamageImmuneTimer,Math.min(1,ruby.rubyAuraPulse/.65));ctx.save();ctx.translate(ruby.x,ruby.y);ctx.globalCompositeOperation='lighter';
+          const pulse=.5+.5*Math.sin(globalTick*.42),r=ruby.radius*(1.65+.24*pulse);
+          const g=ctx.createRadialGradient(0,0,2,0,0,r*1.9);g.addColorStop(0,`rgba(255,244,250,${.30*q})`);g.addColorStop(.24,`rgba(255,62,132,${.28*q})`);g.addColorStop(.58,`rgba(205,0,58,${.20*q})`);g.addColorStop(1,'rgba(205,0,58,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(0,0,r*1.9,0,Math.PI*2);ctx.fill();
+          for(let k=0;k<12;k++){const a=globalTick*.055+k*Math.PI/6,rr=r*(.74+.16*Math.sin(globalTick*.13+k));ctx.strokeStyle=k%3===0?`rgba(255,244,250,${.75*q})`:`rgba(255,70,140,${.55*q})`;ctx.lineWidth=k%3===0?2:1.1;ctx.shadowColor='#ff4d8d';ctx.shadowBlur=18;ctx.beginPath();ctx.moveTo(Math.cos(a)*rr*.72,Math.sin(a)*rr*.72);ctx.lineTo(Math.cos(a)*rr*1.28,Math.sin(a)*rr*1.28);ctx.stroke();drawSpark(ctx,Math.cos(a)*rr*1.3,Math.sin(a)*rr*1.3,2.4+pulse*1.4,k%2?'#fff1f7':'#ff6b9f',q);}
+          for(let k=0;k<18;k++){const a=k*2.399+globalTick*.025,rr=r*(.35+((k*7)%13)/18);drawSpark(ctx,Math.cos(a)*rr,Math.sin(a)*rr,1.4+(k%4)*.45,k%4===0?'#ffffff':k%2?'#ffb5d0':'#ff245f',.55*q);}
+          ctx.restore();}
       }
     }
 
@@ -4058,10 +4105,58 @@
           if(b.cosmosAllyHealTimer<=0){b.cosmosAllyHealTimer+=3;getAllies(b).forEach(ally=>{if(ally.hp>0&&!ally.isDead&&ally.aegisHealBlockTimer<=0){const before=ally.hp;ally.hp=Math.min(ally.maxHp,ally.hp+2);if(ally.hp>before){createFloatingText(ally.x,ally.y-ally.radius-14,'+2 HP · VŨ TRỤ','#c4b5fd');createParticles(ally.x,ally.y,'#c4b5fd',8,0.8);}}});updateHUD();}
           continue;
         }
-        if(b.cosmosCastTimer>0){b.cosmosCastTimer=Math.max(0,b.cosmosCastTimer-FIXED_STEP_SECONDS);b.cosmosChargePulse+=FIXED_STEP_SECONDS;const chargeQ=1-b.cosmosCastTimer;ctx.save();ctx.globalCompositeOperation='lighter';const haloR=b.radius*(1.7+chargeQ*1.25);const hg=ctx.createRadialGradient(b.x,b.y,b.radius*.5,b.x,b.y,haloR);hg.addColorStop(0,'rgba(196,181,253,.02)');hg.addColorStop(.65,`rgba(167,139,250,${.16+.12*Math.sin(globalTick*.3)})`);hg.addColorStop(1,'rgba(196,181,253,0)');ctx.fillStyle=hg;ctx.beginPath();ctx.arc(b.x,b.y,haloR,0,Math.PI*2);ctx.fill();ctx.strokeStyle='rgba(237,233,254,.85)';ctx.shadowColor='#c4b5fd';ctx.shadowBlur=24;ctx.lineWidth=2.2;ctx.beginPath();ctx.arc(b.x,b.y,haloR,globalTick*.04,globalTick*.04+Math.PI*1.7);ctx.stroke();for(let k=0;k<10;k++){const a=globalTick*.035+k*Math.PI/5,rr=haloR*(.72+.18*Math.sin(globalTick*.07+k));ctx.fillStyle=k%2?'#f5d0fe':'#fff';ctx.globalAlpha=.7;ctx.beginPath();ctx.arc(b.x+Math.cos(a)*rr,b.y+Math.sin(a)*rr,1.2+(k%3)*.5,0,Math.PI*2);ctx.fill();}ctx.restore(); if(b.cosmosCastTimer<=0){const radius=b.radius*6;const targets=getOpponents(b).filter(e=>Math.hypot(e.x-b.x,e.y-b.y)<=radius+e.radius);cosmosNebula={x:b.x,y:b.y,radius,timer:.42,max:.42,hit:targets.length>0};createShockwave(b.x,b.y,radius,'#c4b5fd',5);createShockwave(b.x,b.y,radius*.72,'#f5d0fe',3);createParticles(b.x,b.y,'#ddd6fe',70,2.1);if(targets.length){targets.forEach(e=>{e.takeDamage(5,'Cosmos • Tinh Vân');e.cosmosSilenceTimer=2.5;createFloatingText(e.x,e.y-e.radius-20,'CÂM LẶNG · 2,5s','#e9d5ff');});logMessage('🌌 Cosmos phát nổ Tinh Vân: kẻ địch trúng đòn nhận 5 sát thương và Câm Lặng 2,5 giây!','cosmos');}else{cosmosEnvironmentPrevious=activeEnvironment.type==='sky'?{type:'sky',timer:Infinity,owner:null}:{...activeEnvironment};cosmosPreviousOceanTimer=oceanEnvironmentTimer;oceanEnvironmentTimer=0;cosmosOverloadOwner=b;activeEnvironment={type:'cosmos',timer:Infinity,owner:b};getOpponents(b).forEach(e=>{e.cosmosOverloaded=true;e.vx=0;e.vy=0;});createShockwave(canvas.width/2,canvas.height/2,Math.max(canvas.width,canvas.height),'#a78bfa',8);logMessage('🌌 VŨ TRỤ ÁP ĐẢO: toàn bộ kẻ địch Quá Tải cho đến khi va chạm được giải!','cosmos');}updateHUD();}}
+        if(b.cosmosCastTimer>0){b.cosmosCastTimer=Math.max(0,b.cosmosCastTimer-FIXED_STEP_SECONDS);b.cosmosChargePulse+=FIXED_STEP_SECONDS;const chargeQ=1-b.cosmosCastTimer;ctx.save();ctx.globalCompositeOperation='lighter';const haloR=b.radius*(1.7+chargeQ*1.25);const hg=ctx.createRadialGradient(b.x,b.y,b.radius*.5,b.x,b.y,haloR);hg.addColorStop(0,'rgba(196,181,253,.02)');hg.addColorStop(.65,`rgba(167,139,250,${.16+.12*Math.sin(globalTick*.3)})`);hg.addColorStop(1,'rgba(196,181,253,0)');ctx.fillStyle=hg;ctx.beginPath();ctx.arc(b.x,b.y,haloR,0,Math.PI*2);ctx.fill();ctx.strokeStyle='rgba(237,233,254,.85)';ctx.shadowColor='#c4b5fd';ctx.shadowBlur=24;ctx.lineWidth=2.2;ctx.beginPath();ctx.arc(b.x,b.y,haloR,globalTick*.04,globalTick*.04+Math.PI*1.7);ctx.stroke();for(let k=0;k<10;k++){const a=globalTick*.035+k*Math.PI/5,rr=haloR*(.72+.18*Math.sin(globalTick*.07+k));ctx.fillStyle=k%2?'#f5d0fe':'#fff';ctx.globalAlpha=.7;ctx.beginPath();ctx.arc(b.x+Math.cos(a)*rr,b.y+Math.sin(a)*rr,1.2+(k%3)*.5,0,Math.PI*2);ctx.fill();}ctx.restore(); if(b.cosmosCastTimer<=0){const radius=b.radius*6;const targets=getOpponents(b).filter(e=>Math.hypot(e.x-b.x,e.y-b.y)<=radius+e.radius);cosmosNebula={x:b.x,y:b.y,radius,timer:.42,max:.42,hit:targets.length>0};createShockwave(b.x,b.y,radius,'#c4b5fd',5);createShockwave(b.x,b.y,radius*.72,'#f5d0fe',3);createParticles(b.x,b.y,'#ddd6fe',70,2.1);if(targets.length){targets.forEach(e=>{e.takeDamage(5,'Cosmos • Tinh Vân');e.cosmosSilenceTimer=2.5;createFloatingText(e.x,e.y-e.radius-20,'CÂM LẶNG · 2,5s','#e9d5ff');});logMessage('🌌 Cosmos phát nổ Tinh Vân: kẻ địch trúng đòn nhận 5 sát thương và Câm Lặng 2,5 giây!','cosmos');}else{cosmosEnvironmentPrevious=activeEnvironment.type==='sky'?{type:'sky',timer:Infinity,owner:null}:{...activeEnvironment};cosmosPreviousOceanTimer=oceanEnvironmentTimer;oceanEnvironmentTimer=0;cosmosDeferredEnvironment=null;cosmosOverloadOwner=b;activeEnvironment={type:'cosmos',timer:Infinity,owner:b};getOpponents(b).forEach(e=>{e.cosmosOverloaded=true;e.vx=0;e.vy=0;});createShockwave(canvas.width/2,canvas.height/2,Math.max(canvas.width,canvas.height),'#a78bfa',8);logMessage('🌌 VŨ TRỤ ÁP ĐẢO: toàn bộ kẻ địch Quá Tải cho đến khi va chạm được giải!','cosmos');}updateHUD();}}
         else{b.cosmosCycleTimer-=FIXED_STEP_SECONDS;if(b.cosmosCycleTimer<=0){b.cosmosCycleTimer=4.15;b.cosmosCastTimer=1;createShockwave(b.x,b.y,b.radius*2.2,'#c4b5fd',3);createParticles(b.x,b.y,'#ddd6fe',24,1.2);createFloatingText(b.x,b.y-b.radius-22,'VẬN TINH VÂN','#ddd6fe');}}
       }
       if(cosmosNebula){cosmosNebula.timer-=FIXED_STEP_SECONDS;const q=Math.max(0,cosmosNebula.timer/cosmosNebula.max);ctx.save();ctx.globalCompositeOperation='lighter';const g=ctx.createRadialGradient(cosmosNebula.x,cosmosNebula.y,5,cosmosNebula.x,cosmosNebula.y,cosmosNebula.radius);g.addColorStop(0,`rgba(221,214,254,${.22*q})`);g.addColorStop(.55,`rgba(167,139,250,${.16*q})`);g.addColorStop(1,'rgba(196,181,253,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(cosmosNebula.x,cosmosNebula.y,cosmosNebula.radius,0,Math.PI*2);ctx.fill();for(let i=0;i<26;i++){const a=i*2.399+globalTick*.018,r=cosmosNebula.radius*(.2+.75*((i%7)/7));ctx.fillStyle=i%3?'#ddd6fe':'#f5d0fe';ctx.globalAlpha=.55*q;ctx.beginPath();ctx.arc(cosmosNebula.x+Math.cos(a)*r,cosmosNebula.y+Math.sin(a)*r,1.2+(i%3),0,Math.PI*2);ctx.fill();}ctx.restore();if(cosmosNebula.timer<=0)cosmosNebula=null;}
+    }
+
+    function addPistoleerBleed(target,owner){
+      if(!target)return;
+      if(target.hp>0&&!target.isDead){
+        target.pistoleerBleedStacks=(target.pistoleerBleedStacks||0)+1;target.pistoleerBleedTimer=12;
+        createParticles(target.x,target.y,'#9f3328',5,.9);
+        if(target.pistoleerBleedStacks>=12){
+          target.pistoleerBleedStacks=0;target.pistoleerBleedTimer=0;
+          const savedShield=target.shield||0;target.shield=0;target.takeDamage(25,'Pistoleer • Xuất Huyết 12 tầng');
+          if(target.hp>0)target.shield=savedShield;
+          createShockwave(target.x,target.y,76,'#a33a2c',4);createParticles(target.x,target.y,'#d97757',26,1.4);
+          createFloatingText(target.x,target.y-target.radius-20,'−25 · XUẤT HUYẾT','#f3a58c');
+          logMessage(`🤠 Xuất Huyết trên ${target.name} đủ 12 tầng: bùng nổ 25 sát thương bỏ qua khiên!`,'pistoleer');
+        }
+      }
+      // Viên đạn vẫn cộng Sĩ Gái nếu nó vừa kết liễu mục tiêu.
+      if(owner&&owner.hp>0){owner.pistoleerSigar=(owner.pistoleerSigar||0)+1;createFloatingText(owner.x,owner.y-owner.radius-18,`+1 SĨ GÁI · ${owner.pistoleerSigar}/10`,'#e9b08d');if(owner.pistoleerSigar>=10)beginPistoleerUltimate(owner);}
+      updateHUD();
+    }
+    function beginPistoleerUltimate(owner){
+      if(!owner||owner.hp<=0||owner.pistoleerUltTimer>0)return;
+      const cfg=SKILL_CONFIG.pistoleer,enemy=getNearestEnemy(owner);owner.pistoleerSigar=0;owner.pistoleerBurstShotsLeft=0;owner.pistoleerUltTimer=cfg.ultDuration;owner.pistoleerUltTickTimer=0;owner.pistoleerUltSlowTimer=cfg.ultDuration;
+      if(enemy){const dx=enemy.x-owner.x,dy=enemy.y-owner.y,d=Math.hypot(dx,dy)||1,step=owner.radius*2*cfg.dashDiameters;const move=Math.min(step,Math.max(0,d-owner.radius-enemy.radius-2));owner.x=Math.max(owner.radius,Math.min(canvas.width-owner.radius,owner.x+dx/d*move));owner.y=Math.max(owner.radius,Math.min(canvas.height-owner.radius,owner.y+dy/d*move));owner.pistoleerFacingAngle=Math.atan2(dy,dx);}
+      pistoleerUltEffects.push({owner,timer:cfg.ultDuration,max:cfg.ultDuration});createShockwave(owner.x,owner.y,owner.radius*7,'#9f3a25',6);createParticles(owner.x,owner.y,'#e58a61',42,2.2);createFloatingText(owner.x,owner.y-owner.radius-25,'🤠 ULTI · HỎA VŨ CAO BỒI','#f0b18c');logMessage('🤠 Pistoleer tích đủ 10 Sĩ Gái: lướt áp sát và khai hỏa Hỏa Vũ liên hoàn trong 3 giây!','pistoleer');
+    }
+    function updatePistoleerSkills(){
+      const cfg=SKILL_CONFIG.pistoleer;
+      for(const owner of getAllBalls()){
+        if(!owner||owner.typeKey!=='pistoleer'||owner.hp<=0||owner.isDead)continue;
+        if(owner.cosmosOverloaded||owner.cosmosSilenceTimer>0)continue;
+        if(owner.pistoleerUltTimer>0){
+          owner.pistoleerUltTimer=Math.max(0,owner.pistoleerUltTimer-FIXED_STEP_SECONDS);owner.pistoleerUltSlowTimer=owner.pistoleerUltTimer;owner.pistoleerUltTickTimer-=FIXED_STEP_SECONDS;
+          while(owner.pistoleerUltTickTimer<=0&&owner.pistoleerUltTimer>0){owner.pistoleerUltTickTimer+=cfg.ultDuration/cfg.ultTicks;const range=owner.radius*2*cfg.ultRangeDiameters;for(const target of getOpponents(owner)){if(Math.hypot(target.x-owner.x,target.y-owner.y)<=range+target.radius){target.takeDamage(cfg.ultDamage,'Pistoleer • Hỏa Vũ');target.pistoleerSlowTimer=Math.max(target.pistoleerSlowTimer||0,.34);addPistoleerBleed(target,null);createParticles(target.x,target.y,'#b84a30',4,1.1);}}pistoleerUltEffects.push({owner,timer:.24,max:.24,burst:true});}
+          if(owner.pistoleerUltTimer<=0){owner.pistoleerUltSlowTimer=0;owner.pistoleerCycleTimer=cfg.postUltDelay;owner.pistoleerBurstShotsLeft=0;}
+          continue;
+        }
+        if(owner.pistoleerBurstShotsLeft>0){owner.pistoleerCycleTimer=Math.max(0,owner.pistoleerCycleTimer-FIXED_STEP_SECONDS);owner.pistoleerBurstShotTimer-=FIXED_STEP_SECONDS;if(owner.pistoleerBurstShotTimer<=0){const enemy=getNearestEnemy(owner);if(enemy){const angle=Math.atan2(enemy.y-owner.y,enemy.x-owner.x);owner.pistoleerFacingAngle=angle;const side=owner.pistoleerBurstShotsLeft%2===0?-1:1,perp=angle+Math.PI/2,offset=owner.radius*.65+2.2;const sx=owner.x+Math.cos(angle)*(owner.radius+3)+Math.cos(perp)*offset*side,sy=owner.y+Math.sin(angle)*(owner.radius+3)+Math.sin(perp)*offset*side;const sp=BASE_SPEED*cfg.bulletSpeedMult;pistoleerShots.push({owner,x:sx,y:sy,prevX:sx,prevY:sy,vx:Math.cos(angle)*sp,vy:Math.sin(angle)*sp,angle,life:1.65,trail:[],hit:false});}
+            owner.pistoleerBurstShotsLeft--;owner.pistoleerBurstShotTimer=cfg.burstDuration/cfg.bulletCount;
+          }}else{owner.pistoleerCycleTimer-=FIXED_STEP_SECONDS;if(owner.pistoleerCycleTimer<=0&&getNearestEnemy(owner)){owner.pistoleerBurstShotsLeft=cfg.bulletCount;owner.pistoleerBurstShotTimer=0;owner.pistoleerCycleTimer=cfg.burstInterval;}}
+      }
+      for(let i=pistoleerShots.length-1;i>=0;i--){const shot=pistoleerShots[i],owner=shot.owner;shot.life-=FIXED_STEP_SECONDS;shot.prevX=shot.x;shot.prevY=shot.y;shot.x+=shot.vx;shot.y+=shot.vy;shot.trail.push({x:shot.x,y:shot.y});if(shot.trail.length>7)shot.trail.shift();
+        ctx.save();for(let k=0;k<shot.trail.length;k++){const q=(k+1)/shot.trail.length;ctx.globalAlpha=q*.42;ctx.strokeStyle=k%2?'#9b3829':'#d28a65';ctx.lineWidth=q*2.8;ctx.beginPath();ctx.moveTo(shot.trail[Math.max(0,k-1)].x,shot.trail[Math.max(0,k-1)].y);ctx.lineTo(shot.trail[k].x,shot.trail[k].y);ctx.stroke();}ctx.translate(shot.x,shot.y);ctx.rotate(shot.angle);ctx.shadowColor='#c15b3b';ctx.shadowBlur=10;const bullet=ctx.createLinearGradient(-8,0,7,0);bullet.addColorStop(0,'#3b1713');bullet.addColorStop(.48,'#9e3e2b');bullet.addColorStop(.82,'#e6a17c');bullet.addColorStop(1,'#fff0df');ctx.fillStyle=bullet;ctx.beginPath();ctx.moveTo(8,0);ctx.lineTo(-2,-2.2);ctx.lineTo(-7,0);ctx.lineTo(-2,2.2);ctx.closePath();ctx.fill();ctx.strokeStyle='#f1c0a1';ctx.lineWidth=.7;ctx.stroke();for(let k=0;k<3;k++){const a=globalTick*.3+k*2.1;ctx.fillStyle=k%2?'#ffbd80':'#e36b3f';ctx.globalAlpha=.7;ctx.beginPath();ctx.arc(-5+Math.cos(a)*5,Math.sin(a)*3,1.1,0,Math.PI*2);ctx.fill();}ctx.restore();
+        let first=null,best=Infinity;for(const target of getOpponents(owner)){const dx=shot.x-shot.prevX,dy=shot.y-shot.prevY,l2=dx*dx+dy*dy||1,t=Math.max(0,Math.min(1,((target.x-shot.prevX)*dx+(target.y-shot.prevY)*dy)/l2)),px=shot.prevX+t*dx,py=shot.prevY+t*dy,d=Math.hypot(target.x-px,target.y-py);if(d<=target.radius+3&&t<best){first=target;best=t;}}
+        if(first){shot.hit=true;first.takeDamage(cfg.bulletDamage,'Pistoleer • Đạn Cao Bồi');addPistoleerBleed(first,owner);createParticles(shot.x,shot.y,'#d97757',8,1.2);createParticles(shot.x,shot.y,'#ffd0a8',4,.8);}
+        if(shot.life<=0||shot.hit||shot.x< -20||shot.x>canvas.width+20||shot.y< -20||shot.y>canvas.height+20)pistoleerShots.splice(i,1);
+      }
+      for(let i=pistoleerUltEffects.length-1;i>=0;i--){const fx=pistoleerUltEffects[i];fx.timer-=FIXED_STEP_SECONDS;const owner=fx.owner;if(!owner){pistoleerUltEffects.splice(i,1);continue;}const q=Math.max(0,fx.timer/fx.max);ctx.save();ctx.globalCompositeOperation='lighter';if(fx.burst){const range=owner.radius*2*cfg.ultRangeDiameters;const g=ctx.createRadialGradient(owner.x,owner.y,owner.radius,owner.x,owner.y,range);g.addColorStop(0,`rgba(151,47,29,${.15*q})`);g.addColorStop(.48,`rgba(181,63,34,${.12*q})`);g.addColorStop(1,'rgba(100,24,17,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(owner.x,owner.y,range,0,Math.PI*2);ctx.fill();for(let k=0;k<24;k++){const a=k*2.399+globalTick*.08,rr=range*(.28+((k*7)%11)/14),len=18+(k%5)*9;ctx.strokeStyle=k%3?'rgba(177,67,40,.44)':'rgba(255,158,99,.62)';ctx.lineWidth=k%4===0?2.4:1.15;ctx.shadowColor='#c45a36';ctx.shadowBlur=10;ctx.beginPath();ctx.moveTo(owner.x+Math.cos(a)*rr,owner.y+Math.sin(a)*rr);ctx.lineTo(owner.x+Math.cos(a)*(rr+len),owner.y+Math.sin(a)*(rr+len));ctx.stroke();}}else{const range=owner.radius*2*cfg.ultRangeDiameters;for(let k=0;k<28;k++){const a=k*2.399+globalTick*.13,rr=range*(.2+((k*5)%13)/16);ctx.strokeStyle=k%2?'rgba(174,59,34,.55)':'rgba(255,163,111,.75)';ctx.lineWidth=k%4===0?2.8:1.35;ctx.beginPath();ctx.moveTo(owner.x+Math.cos(a)*rr,owner.y+Math.sin(a)*rr);ctx.lineTo(owner.x+Math.cos(a)*(rr+18+(k%4)*10),owner.y+Math.sin(a)*(rr+18+(k%4)*10));ctx.stroke();}}ctx.restore();if(fx.timer<=0)pistoleerUltEffects.splice(i,1);}
     }
 
     function addBloomStack(ball,count){
@@ -5446,7 +5541,9 @@
       if (ball.burnTimer > 0) badges.innerHTML += `<span class="bg-amber-950 text-amber-400 border border-amber-500/40 px-1 rounded">🔥 Cháy (${ball.burnStacks})</span>`;
       if ((ball.viperPoisonStacks || 0) > 0) badges.innerHTML += `<span class="bg-emerald-950 text-emerald-300 border border-emerald-500/40 px-1 rounded">☠ Độc Chướng: ${ball.viperPoisonStacks}</span>`;
       if (ball.shield > 0) badges.innerHTML += `<span class="bg-cyan-950 text-cyan-300 border border-cyan-500/40 px-1 rounded">🛡️ Khiên (${Math.round(ball.shield)})</span>`;
-      if(ball.typeKey==='pyke'){if(ball.pykeGrayHp>0)badges.innerHTML+=`<span class="bg-teal-950 text-teal-200 border border-teal-400/50 px-1 rounded">◈ HP Xám ${ball.pykeGrayHp.toFixed(1)}</span>`;if(ball.pykeInDeepSea)badges.innerHTML+=`<span class="bg-slate-950 text-cyan-100 border border-teal-300/60 px-1 rounded animate-pulse">🌑 Biển Sâu ${ball.pykePermanentSea?'Vĩnh Viễn':ball.pykeSeaTimer.toFixed(1)+'s'}</span>`;}
+      if(ball.pistoleerBleedStacks>0)badges.innerHTML+=`<span class="bg-red-950 text-orange-200 border border-red-500/50 px-1 rounded">Xuất Huyết ${ball.pistoleerBleedStacks}/12</span>`;
+      if(ball.typeKey==='pistoleer'&&ball.pistoleerSigar>0)badges.innerHTML+=`<span class="bg-amber-950 text-orange-100 border border-amber-500/50 px-1 rounded">Sĩ Gái ${ball.pistoleerSigar}/10</span>`;
+      if(ball.typeKey==='pyke'){if(ball.pykeGrayHp>0)badges.innerHTML+=`<span class="bg-teal-950 text-teal-200 border border-teal-400/50 px-1 rounded">◈ HP Xám ${ball.pykeGrayHp.toFixed(1)}</span>`;if(ball.pykeInDeepSea&&activeEnvironment.type!=='cosmos')badges.innerHTML+=`<span class="bg-slate-950 text-cyan-100 border border-teal-300/60 px-1 rounded animate-pulse">🌑 Biển Sâu ${ball.pykePermanentSea?'Vĩnh Viễn':ball.pykeSeaTimer.toFixed(1)+'s'}</span>`;}
       if (ball.typeKey==='aegis') {
         const burnDps=(ball.aegisBurnLayers||[]).length; if(burnDps>0) badges.innerHTML+=`<span class="bg-orange-950 text-orange-300 border border-orange-500/40 px-1 rounded">🔥 Tự thiêu: ${burnDps} DPS</span>`;
         if(ball.aegisBarrier>0) badges.innerHTML+=`<span class="bg-yellow-950 text-yellow-200 border border-yellow-400/50 px-1 rounded">✦ Khiên Thánh ${Math.ceil(ball.aegisBarrierTimer)}s · ${Math.round(ball.aegisBarrier)}</span>`;
@@ -5496,7 +5593,7 @@
     function renderSelectedBallInfo(key) {
       const cfg=BALL_TYPES[key], meta=BALL_LIBRARY[key] || {role:'Đấu Sĩ',desc:'Chiến binh mới gia nhập đấu trường.'};
       if(!cfg) return;
-      document.getElementById('selected-ball-title').textContent=`${cfg.icon} ${cfg.name} · ${meta.role}`;
+      document.getElementById('selected-ball-title').textContent=`${cfg.icon} ${cfg.name}${meta.role?' · '+meta.role:''}`;
       document.getElementById('selected-ball-stats').textContent=`HP ${cfg.maxHp}  ·  Tốc độ ${(cfg.speed/BASE_SPEED).toFixed(2)}×  ·  Va chạm ${cfg.contactDmg} dmg`;
       document.getElementById('selected-ball-desc').textContent=meta.desc;
     }
@@ -5511,7 +5608,7 @@
       });
       libraryGrid.innerHTML=filtered.map(key=>{
         const cfg=BALL_TYPES[key],meta=BALL_LIBRARY[key]||{role:'Đấu Sĩ'};
-        return `<button class="library-card ${librarySelectedKey===key?'selected':''}" data-ball="${key}"><span class="library-orb" style="--orb:${cfg.color};--orb2:${cfg.secondaryColor}">${cfg.icon}</span><span class="min-w-0 text-left"><b>${cfg.name}</b><small>${meta.role} · ${cfg.maxHp} HP</small></span><span class="ml-auto text-[#bda98d]">›</span></button>`;
+        return `<button class="library-card ${librarySelectedKey===key?'selected':''}" data-ball="${key}"><span class="library-orb" style="--orb:${cfg.color};--orb2:${cfg.secondaryColor}">${cfg.icon}</span><span class="min-w-0 text-left"><b>${cfg.name}</b><small>${meta.role?meta.role+' · ':''}${cfg.maxHp} HP</small></span><span class="ml-auto text-[#bda98d]">›</span></button>`;
       }).join('') || (libraryRoleFilter==='Hỗ Trợ' ? '<div class="text-xs text-[#c7b397] p-3 leading-relaxed">Chưa có chiến binh Hỗ Trợ trong phiên bản hiện tại. Vai trò này sẽ được bổ sung khi game có chế độ đấu đội.</div>' : '<div class="text-xs text-[#b6a38b] p-3">Không tìm thấy chiến binh.</div>');
       renderLibraryDetail(librarySelectedKey);
     }
@@ -5542,6 +5639,8 @@
       aegis:'Chuyển sát thương nhận vào thành các lớp tự thiêu 1 DPS; lớp kéo dài theo lượng sát thương đã chuyển. Khống chế cứng kích hoạt Khiếp Đảm. Thánh Kiếm có tầm quét 6 đường kính Ball, góc chém rộng, gây 5 sát thương, cấm hồi HP và tước khiên; nếu va chạm khi chiêu sẵn sàng, Thánh Kiếm được kích hoạt ngay để tránh bỏ lỡ đòn. Hiệu ứng chém vàng-trắng kéo dài 0,82 giây.',
       bloom:'Hoa Hồng sinh ra mỗi 0,9 giây. Sau 5 giây, hoa có 50% cơ hội thức tỉnh; nếu thất bại sẽ thử lại sau 5 giây, thất bại lần hai thì biến mất. Hoa thường hồi 1 HP và +1 tầng Vạn Hoa; hoa thức tỉnh hồi 3 HP và +2 tầng. Mỗi tầng giảm 1,3% sát thương nhận vào, tối đa 75%. Mốc 15%, 30%, 45% lần lượt mở Khinh Thường Kẻ Yếu, miễn nhiễm 2,25 giây + làm chậm địch 70% trong 1 giây, và một lần hồi sinh với 1 HP + 100 khiên trong 2 giây.',
       cosmos:'HP 111, tốc độ 1,1×, va chạm 1. Miễn nhiễm khống chế cứng, làm chậm, tước HP tối đa và tăng HP tối đa; không thể hồi HP. Mỗi 4,15 giây vận 1 giây rồi phát nổ Tinh Vân bán kính 3 đường kính Ball. Địch trúng vụ nổ nhận 5 sát thương và Câm Lặng 2,5 giây. Nếu vụ nổ hụt, Cosmos dựng môi trường Vũ Trụ vĩnh viễn, tạm vô hiệu môi trường khác và Quá Tải toàn bộ địch. Quá Tải kết thúc khi địch va chạm với Cosmos hoặc đồng minh. Trong 2v2, Cosmos chỉ tự giải Quá Tải bằng va chạm khi đồng minh đã chết/không còn đồng minh sống hoặc đồng minh còn sống là Ghost Ball; nếu đồng minh sống là Ball khác Ghost, Cosmos không thể tự giải và cần đồng minh giải. Ball vừa được giải Quá Tải không gây hiệu ứng hay sát thương va chạm trong chính lần va chạm giải hiệu ứng, nhưng Ball va vào để giải vẫn gây sát thương bình thường. Khi Vũ Trụ tan, Cosmos hồi 3 HP.',
+      normal:'Không có nội tại. Ball cơ bản được tạo riêng để thử nghiệm, kiểm tra va chạm và cân bằng thông số.',
+      pistoleer:'Mỗi 3 giây bắn 12 viên đạn trong 2 giây, xen kẽ hai hàng súng. Mỗi viên gây 2 sát thương và đặt 1 tầng Xuất Huyết trong 12 giây. Đủ 12 tầng Xuất Huyết sẽ tiêu thụ toàn bộ tầng để gây 25 sát thương bỏ qua khiên. Mỗi viên trúng đích tích 1 tầng Sĩ Gái; đủ 10 tầng lập tức kích hoạt Ulti: lướt 4 đường kính về phía địch gần nhất, rồi xả 12 nhịp đạn trong 3 giây, mỗi nhịp gây 1,5 sát thương trong vùng 4,85 đường kính và làm chậm bản thân cùng địch 75%. Sau Ulti, chờ 0,75 giây mới bắn loạt tiếp theo.',
       pyke:'Mỗi đòn nhận vào chuyển 35% sát thương thành HP xám, hoặc 50% khi HP dưới 50. HP xám không tự mất và chỉ được chuyển thành hồi phục khi Pyke vào Biển Sâu. Mỗi lần vào Biển Sâu hồi thêm 3 HP; trong vùng Pyke ẩn khỏi nhận diện. Móc kéo gây 10 sát thương + 25% HP đã mất; dao phóng gây 15 sát thương. Khi mục tiêu còn ≤3% HP tối đa, đòn tấn công của Pyke có thể kết liễu bằng 9999 sát thương. Dao có dây nối và được thu hồi bằng cú giật dây.'
     };
 
@@ -5551,7 +5650,7 @@
       const speed=(cfg.speed/BASE_SPEED).toFixed(2);
       const skin=getBallSkin(key);
       libraryDetail.innerHTML=`
-        <div class="flex items-center gap-3 mb-4"><div class="library-hero-orb" style="--orb:${cfg.color};--orb2:${cfg.secondaryColor}">${cfg.icon}</div><div><div class="text-[10px] tracking-[.2em] text-[#b69c7a]">${meta.role.toUpperCase()}</div><h3 class="text-xl font-black text-[#f1e2cb]">${cfg.name}</h3><div class="text-[11px] text-[#bca98e]">Bộ sưu tập chiến binh</div></div></div>
+        <div class="flex items-center gap-3 mb-4"><div class="library-hero-orb" style="--orb:${cfg.color};--orb2:${cfg.secondaryColor}">${cfg.icon}</div><div><div class="text-[10px] tracking-[.2em] text-[#b69c7a]">${(meta.role||'').toUpperCase()}</div><h3 class="text-xl font-black text-[#f1e2cb]">${cfg.name}</h3><div class="text-[11px] text-[#bca98e]">Bộ sưu tập chiến binh</div></div></div>
         <div class="grid grid-cols-3 gap-2 mb-4"><div class="library-stat"><b>${cfg.maxHp}</b><small>HP tối đa</small></div><div class="library-stat"><b>${speed}×</b><small>Tốc độ</small></div><div class="library-stat"><b>${cfg.contactDmg}</b><small>Va chạm</small></div></div>
         <div class="text-[10px] tracking-[.2em] text-[#b69c7a] mb-1">NỘI TẠI & LỐI CHƠI</div><p class="text-xs leading-relaxed text-[#d3c2aa] mb-2">${meta.desc}</p>
         <button class="arena-btn w-full mb-4" data-notebook="${key}">📖 CHI TIẾT BỘ KỸ NĂNG</button>
@@ -5633,7 +5732,8 @@
       const startBalls=getAllBalls();
       startBalls.forEach((b)=>{let a;if(gameMode==='2v2'){a=b.team===1?(-Math.PI/2+Math.random()*Math.PI):(Math.PI/2+Math.random()*Math.PI);}else a=Math.random()*Math.PI*2;b.vx=Math.cos(a)*b.baseSpeed;b.vy=Math.sin(a)*b.baseSpeed;});
 
-      bloomRoses=[];bloomSpawnTimer=0;cosmosNebula=null;cosmosEnvironmentPrevious=null;cosmosPreviousOceanTimer=0;cosmosOverloadOwner=null;
+      bloomRoses=[];bloomSpawnTimer=0;cosmosNebula=null;cosmosEnvironmentPrevious=null;cosmosPreviousOceanTimer=0;cosmosOverloadOwner=null;cosmosDeferredEnvironment=null;
+      pistoleerShots=[];pistoleerUltEffects=[];
       fireTrails = []; assassinShurikens = []; lightningZones = []; lightningBolts = [];
       soulOrbs = []; activeSoulBeams = []; marksmanTraps = []; marksmanBullets = [];
       ninjaProjectiles = []; reaperIllusions = []; reaperSlashes = []; soundWaves = [];
@@ -5759,6 +5859,7 @@
 
       updateCosmosSkills();
       updateRubySkills();
+      updatePistoleerSkills();
       updateAndDrawBloomRoses();
       updateAndDrawEntities();
       updateAndDrawViperEntities();
@@ -5818,7 +5919,7 @@
     document.getElementById('library-filters').addEventListener('click',e=>{const b=e.target.closest('[data-role]');if(!b)return;libraryRoleFilter=b.dataset.role;renderBallLibrary();});
     libraryGrid.addEventListener('click',e=>{const b=e.target.closest('[data-ball]');if(!b)return;librarySelectedKey=b.dataset.ball;renderBallLibrary();});
     libraryDetail.addEventListener('click',e=>{
-      const notebook=e.target.closest('[data-notebook]'); if(notebook){const key=notebook.dataset.notebook,cfg=BALL_TYPES[key],meta=BALL_LIBRARY[key]||{role:'Đấu Sĩ'};libraryDetail.innerHTML=`<div class="notebook-page"><div class="text-[10px] tracking-[.25em] text-amber-700 font-bold">SỔ TAY CHIẾN BINH · ${meta.role.toUpperCase()}</div><h2 class="text-2xl font-black text-[#3d2b1b] mt-2 mb-1">${cfg.icon} ${cfg.name}</h2><div class="text-[11px] text-[#806344] mb-4">Hồ sơ nội tại & kỹ năng</div><div class="notebook-rule"></div><p class="text-sm leading-7 text-[#493724] whitespace-pre-line">${BALL_SKILL_DETAILS[key]||meta.desc}</p><div class="notebook-rule mt-5 mb-4"></div><div class="text-[10px] tracking-[.2em] font-bold text-amber-800 mb-2">THÔNG SỐ VẬN HÀNH</div><div class="grid grid-cols-2 gap-2 mb-4"><div class="rounded border border-[#c7ad83] bg-[#fff7e7]/50 p-2"><b class="text-lg">${cfg.maxHp}</b><small class="block text-[10px]">HP tối đa</small></div><div class="rounded border border-[#c7ad83] bg-[#fff7e7]/50 p-2"><b class="text-lg">${(cfg.speed/BASE_SPEED).toFixed(2)}×</b><small class="block text-[10px]">Tốc độ</small></div><div class="rounded border border-[#c7ad83] bg-[#fff7e7]/50 p-2"><b class="text-lg">${cfg.contactDmg}</b><small class="block text-[10px]">Sát thương va chạm</small></div><div class="rounded border border-[#c7ad83] bg-[#fff7e7]/50 p-2"><b class="text-lg">${cfg.radius}</b><small class="block text-[10px]">Bán kính</small></div></div><div class="text-[10px] tracking-[.2em] font-bold text-amber-800 mb-2">THAM SỐ KỸ NĂNG</div><div class="grid grid-cols-1 sm:grid-cols-2 gap-2">${Object.entries(SKILL_CONFIG[key]||{}).map(([name,value])=>`<div class="flex justify-between gap-3 border-b border-[#c7ad83]/70 py-1 text-[11px]"><span class="text-[#70563a]">${name.replace(/([A-Z])/g,' $1')}</span><b class="text-[#3d2b1b]">${value}</b></div>`).join('')||'<div class="text-xs">Không có tham số cấu hình riêng.</div>'}</div><div class="notebook-rule mt-5"></div><button class="arena-btn mt-4" data-back-notebook="${key}">← QUAY LẠI HỒ SƠ</button></div>`;return;}
+      const notebook=e.target.closest('[data-notebook]'); if(notebook){const key=notebook.dataset.notebook,cfg=BALL_TYPES[key],meta=BALL_LIBRARY[key]||{role:'Đấu Sĩ'};libraryDetail.innerHTML=`<div class="notebook-page"><div class="text-[10px] tracking-[.25em] text-amber-700 font-bold">SỔ TAY CHIẾN BINH · ${(meta.role||'').toUpperCase()}</div><h2 class="text-2xl font-black text-[#3d2b1b] mt-2 mb-1">${cfg.icon} ${cfg.name}</h2><div class="text-[11px] text-[#806344] mb-4">Hồ sơ nội tại & kỹ năng</div><div class="notebook-rule"></div><p class="text-sm leading-7 text-[#493724] whitespace-pre-line">${BALL_SKILL_DETAILS[key]||meta.desc}</p><div class="notebook-rule mt-5 mb-4"></div><div class="text-[10px] tracking-[.2em] font-bold text-amber-800 mb-2">THÔNG SỐ VẬN HÀNH</div><div class="grid grid-cols-2 gap-2 mb-4"><div class="rounded border border-[#c7ad83] bg-[#fff7e7]/50 p-2"><b class="text-lg">${cfg.maxHp}</b><small class="block text-[10px]">HP tối đa</small></div><div class="rounded border border-[#c7ad83] bg-[#fff7e7]/50 p-2"><b class="text-lg">${(cfg.speed/BASE_SPEED).toFixed(2)}×</b><small class="block text-[10px]">Tốc độ</small></div><div class="rounded border border-[#c7ad83] bg-[#fff7e7]/50 p-2"><b class="text-lg">${cfg.contactDmg}</b><small class="block text-[10px]">Sát thương va chạm</small></div><div class="rounded border border-[#c7ad83] bg-[#fff7e7]/50 p-2"><b class="text-lg">${cfg.radius}</b><small class="block text-[10px]">Bán kính</small></div></div><div class="text-[10px] tracking-[.2em] font-bold text-amber-800 mb-2">THAM SỐ KỸ NĂNG</div><div class="grid grid-cols-1 sm:grid-cols-2 gap-2">${Object.entries(SKILL_CONFIG[key]||{}).map(([name,value])=>`<div class="flex justify-between gap-3 border-b border-[#c7ad83]/70 py-1 text-[11px]"><span class="text-[#70563a]">${name.replace(/([A-Z])/g,' $1')}</span><b class="text-[#3d2b1b]">${value}</b></div>`).join('')||'<div class="text-xs">Không có tham số cấu hình riêng.</div>'}</div><div class="notebook-rule mt-5"></div><button class="arena-btn mt-4" data-back-notebook="${key}">← QUAY LẠI HỒ SƠ</button></div>`;return;}
       const back=e.target.closest('[data-back-notebook]');if(back){renderLibraryDetail(back.dataset.backNotebook);return;}
       const skin=e.target.closest('[data-skin]'); if(skin){setBallSkin(librarySelectedKey,skin.dataset.skin);return;}
       const pick=e.target.closest('[data-pick]'); if(pick){const key=librarySelectedKey,select=pick.dataset.pick==='p1'?p1Select:p2Select;select.value=key;renderSelectedBallInfo(key);initGame();closeBallLibrary();}
