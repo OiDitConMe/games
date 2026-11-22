@@ -315,7 +315,14 @@
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
 
-    const BASE_SPEED = 3.99; // Tốc độ tính theo pixel/bước mô phỏng 1/60 giây.
+    // ================================================================
+    // CẤU HÌNH CHUNG
+    // Chỉnh chỉ số nền của mọi Ball trong BALL_TYPES bên dưới:
+    // hp/maxHp = máu, radius = bán kính, speed = tốc độ, contactDmg = sát thương va chạm.
+    // BASE_SPEED là tốc độ chuẩn; speed có thể nhân hệ số riêng từng Ball.
+    // SKILL_CONFIG chứa thông số nội tại/kỹ năng, tách biệt để không lẫn với chỉ số nền.
+    // ================================================================
+    const BASE_SPEED = 3.99; // Pixel mỗi bước mô phỏng 1/60 giây.
 
     // HỆ THỐNG THỜI GIAN: mô phỏng cố định 60 bước/giây, không phụ thuộc FPS màn hình.
     const FIXED_STEP_SECONDS = 1 / 60;
@@ -327,9 +334,32 @@
     let simulationTimeMs = 0;       // Đồng hồ nội bộ, dùng cho timer/hiệu ứng thay Date.now().
 
     const ARENA_DIAGONAL = Math.hypot(canvas.width, canvas.height);
+    // Nền lưới tĩnh được vẽ một lần vào canvas đệm, tránh dựng lại từng đường lưới
+    // ở mọi bước mô phỏng. Các lớp VFX động vẫn được render nguyên chất lượng.
+    let arenaBackground = document.createElement('canvas');
+    let arenaBackgroundCtx = arenaBackground.getContext('2d');
+    function rebuildArenaBackground() {
+      arenaBackground.width = canvas.width;
+      arenaBackground.height = canvas.height;
+      const bg = arenaBackgroundCtx;
+      bg.fillStyle = '#030712';
+      bg.fillRect(0, 0, arenaBackground.width, arenaBackground.height);
+      bg.strokeStyle = 'rgba(30, 41, 59, 0.4)';
+      bg.lineWidth = 1;
+      bg.beginPath();
+      for (let x = 0; x <= arenaBackground.width; x += 40) {
+        bg.moveTo(x, 0); bg.lineTo(x, arenaBackground.height);
+      }
+      for (let y = 0; y <= arenaBackground.height; y += 40) {
+        bg.moveTo(0, y); bg.lineTo(arenaBackground.width, y);
+      }
+      bg.stroke();
+    }
+    rebuildArenaBackground();
 
     const BALL_TYPES = {
-      // Chỉnh HP/tốc độ/sát thương va chạm cơ bản của từng Ball tại đây.
+      // ===== BẢNG CHỈ SỐ NỀN DUY NHẤT CỦA TẤT CẢ BALL =====
+      // Giữ nguyên các giá trị hiện tại để không thay đổi cân bằng/gameplay.
       // Fire Ball – HP, tốc độ và sát thương va chạm
       fire: {
         name: 'Fire Ball',
@@ -604,6 +634,8 @@
       }
     };
 
+    // ===== CẤU HÌNH NỘI TẠI =====
+    // Mỗi mục tương ứng với typeKey; chú thích mô tả nhóm cơ chế được cấu hình.
     const SKILL_CONFIG = {
       // Fire Ball – sát thương đốt, thời gian cháy và vệt lửa
       fire: {
@@ -689,7 +721,7 @@
       // Shen Ball – vùng Kiếm Hồn, khiên và hoán đổi
       shen: {
         zoneRadiusMult: 4.0,
-        shieldAmount: 5, entryHeal: 4, graceAfterExit: 1.15, entryHeal: 4, graceAfterExit: 1.15,
+        shieldAmount: 5, entryHeal: 4, graceAfterExit: 1.15,
         shieldDuration: 2,
         pullBladeInterval: 7,
         swapCooldown: 4.0,
@@ -827,8 +859,9 @@
         strikeBonusStackChance: 0.5,
         collisionHealPerStack: 1.2
       },
-      // Gamber Ball – xác suất xúc xắc, nhịp tung chiêu và hiệu ứng 3 lá bài.
+      // Pistoleer Ball – tốc độ đạn, loạt bắn, xuất huyết và Hỏa Vũ.
       pistoleer: { bulletSpeedMult:4, bulletDamage:2, burstInterval:3, burstDuration:1.7, bulletCount:12, bleedDuration:12, bleedBurstDamage:25, ultDuration:3, ultTicks:12, ultDamage:2, ultRangeDiameters:4.85, dashDiameters:4, ultSlowFactor:.20, postUltDelay:.75 },
+      // Gamber Ball – xác suất xúc xắc, nhịp tung chiêu và hiệu ứng 3 lá bài.
       gamber: {
         skillInterval: 3.75,          // Chuỗi kỹ năng chính: mỗi 3.75 giây.
         diceRepeatDelay: 0.75,       // Khoảng nghỉ giữa các lần đổ xúc xắc bồi.
@@ -877,7 +910,7 @@
     function getNearestEnemy(ball){ const list=getOpponents(ball); if(!list.length)return null; return list.reduce((a,b)=>Math.hypot(a.x-ball.x,a.y-ball.y)<=Math.hypot(b.x-ball.x,b.y-ball.y)?a:b); }
     function getSkillTarget(ball){ const list=getOpponents(ball); if(!list.length)return null; if((BALL_LIBRARY[ball.typeKey]?.role)==='Sát Thủ') return list.reduce((a,b)=>{const ra=a.hp/a.maxHp,rb=b.hp/b.maxHp;if(Math.abs(ra-rb)<1e-6)return Math.hypot(a.x-ball.x,a.y-ball.y)<=Math.hypot(b.x-ball.x,b.y-ball.y)?a:b;return ra<rb?a:b;}); return getNearestEnemy(ball); }
     function isAlly(a,b){ return !!a && !!b && a.team===b.team; }
-    function setArenaSize(){const w=gameMode==='2v2'?616:440,h=gameMode==='2v2'?484:440;canvas.width=w;canvas.height=h;canvas.style.width=`min(${w}px, calc(100vw - 24px))`;const hud=document.getElementById('p1-hp-container')?.parentElement?.parentElement?.parentElement;const state=document.getElementById('match-state')?.parentElement;if(hud)hud.style.width=`min(${w}px, calc(100vw - 24px))`;if(state)state.style.width=`min(${w}px, calc(100vw - 24px))`;const extra=document.getElementById('team-hud-extra');if(extra)extra.style.width=`min(${w}px, calc(100vw - 24px))`; }
+    function setArenaSize(){const w=gameMode==='2v2'?616:440,h=gameMode==='2v2'?484:440;canvas.width=w;canvas.height=h;rebuildArenaBackground();canvas.style.width=`min(${w}px, calc(100vw - 24px))`;const hud=document.getElementById('p1-hp-container')?.parentElement?.parentElement?.parentElement;const state=document.getElementById('match-state')?.parentElement;if(hud)hud.style.width=`min(${w}px, calc(100vw - 24px))`;if(state)state.style.width=`min(${w}px, calc(100vw - 24px))`;const extra=document.getElementById('team-hud-extra');if(extra)extra.style.width=`min(${w}px, calc(100vw - 24px))`; }
     let fireTrails = [];
     let assassinShurikens = [];
     let lightningZones = [];
@@ -939,6 +972,8 @@
     let globalTick = 0; // Số bước mô phỏng 1/60 giây đã chạy.
 
     // Thư viện chiến binh: mô tả, phân loại và skin dùng chung cho mọi Ball hiện tại/tương lai.
+    // ===== DANH MỤC NỘI TẠI / GIẢI THÍCH CƠ CHẾ =====
+    // role dùng cho phân loại; desc là mô tả ngắn hiển thị trong hồ sơ chiến binh.
     const BALL_LIBRARY = {
       fire:{role:'Xạ Thủ',desc:'Duy trì sát thương bằng những đợt đốt liên tục, ép đối thủ phải giữ khoảng cách.'},
       ghost:{role:'Sát Thủ',desc:'Hóa hồn, áp sát và gây một đòn bùng nổ kèm làm chậm.'},
@@ -1286,6 +1321,39 @@
     // Dấu ấn thị giác riêng cho từng chiến binh. Không thay đổi thông số chiến đấu.
     function drawBallSignatureVFX(ball) {
       const x = ball.x, y = ball.y, r = ball.radius, t = globalTick;
+      // Khói Ninja: hạt nhỏ, mờ, trôi ngược hướng di chuyển; chỉ là VFX, không va chạm.
+      if (ball.typeKey === 'ninja') {
+        if (!ball.ninjaSmokeParticles) ball.ninjaSmokeParticles = [];
+        const smoke = ball.ninjaSmokeParticles;
+        const vx = Number.isFinite(ball.vx) ? ball.vx : 0;
+        const vy = Number.isFinite(ball.vy) ? ball.vy : 0;
+        if (t % 2 === 0) {
+          smoke.push({
+            x: x - vx * 1.8 + (Math.random() - 0.5) * 5,
+            y: y - vy * 1.8 + (Math.random() - 0.5) * 5,
+            vx: -vx * 0.10 + (Math.random() - 0.5) * 0.34,
+            vy: -vy * 0.10 - 0.12 + (Math.random() - 0.5) * 0.28,
+            life: 1, size: 3.5 + Math.random() * 5
+          });
+        }
+        for (let i = smoke.length - 1; i >= 0; i--) {
+          const p = smoke[i];
+          p.x += p.vx; p.y += p.vy;
+          p.vx *= 0.985; p.vy *= 0.985;
+          p.life -= 0.022;
+          p.size += 0.055;
+          if (p.life <= 0) { smoke.splice(i, 1); continue; }
+          ctx.save();
+          ctx.globalAlpha = p.life * 0.22;
+          ctx.fillStyle = '#94a3b8';
+          ctx.shadowColor = '#cbd5e1';
+          ctx.shadowBlur = 11;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        }
+      }
       ctx.save();
       if (ball.typeKey === 'gamber') {
         ctx.translate(x, y);
@@ -5523,12 +5591,23 @@
     }
 
     function updateHUDForPlayer(ball, prefix) {
+      if (!ball) {
+        const name=document.getElementById(`${prefix}-name`);
+        const hpText=document.getElementById(`${prefix}-hp-text`);
+        const hpBar=document.getElementById(`${prefix}-hp-bar`);
+        const badges=document.getElementById(`${prefix}-badges`);
+        if(name) name.innerText='—';
+        if(hpText) hpText.innerText='0/0';
+        if(hpBar) hpBar.style.width='0%';
+        if(badges) badges.innerHTML='';
+        return;
+      }
       let shieldText = (ball.shield > 0 || ball.aegisBarrier>0) ? ` (🛡️${Math.round((ball.shield||0)+(ball.aegisBarrier||0))})` : '';
       if (ball.typeKey === 'demon') shieldText = ` (🛡️${Math.round(ball.shield)} | Phản: +${Math.round(ball.shield * 6)}%)`;
       
       document.getElementById(`${prefix}-name`).innerText = `${ball.icon} ${ball.name}`;
       const pykeGray=ball.typeKey==='pyke' && ball.pykeGrayHp>0?` (◈${ball.pykeGrayHp.toFixed(1)})`:'';
-      document.getElementById(`${prefix}-hp-text`).innerText = `${Math.ceil(ball.hp)}/${ball.maxHp}${shieldText}${pykeGray}`;
+      document.getElementById(`${prefix}-hp-text`).innerText = `${Math.ceil(Math.max(0,ball.hp))}/${ball.maxHp}${ball.hp<=0?' · ĐÃ GỤC':''}${shieldText}${pykeGray}`;
       document.getElementById(`${prefix}-hp-bar`).style.width = `${Math.max(0, ball.maxHp > 0 ? (ball.hp / ball.maxHp) * 100 : 0)}%`;
 
       const badges = document.getElementById(`${prefix}-badges`);
@@ -5585,9 +5664,25 @@
       updateHUDForPlayer(p1, 'p1');
       updateHUDForPlayer(p2, 'p2');
       let extra=document.getElementById('team-hud-extra');
-      if(!extra){extra=document.createElement('div');extra.id='team-hud-extra';extra.className='grid grid-cols-2 gap-1 w-full text-[10px] mt-1';const hud=document.getElementById('p1-hp-container').parentElement.parentElement.parentElement;hud.insertAdjacentElement('afterend',extra);}
+      if(!extra){
+        extra=document.createElement('div');
+        extra.id='team-hud-extra';
+        extra.className='grid grid-cols-2 gap-2 w-full text-[10px] mt-2';
+        const hud=document.getElementById('p1-hp-container').parentElement.parentElement;
+        hud.insertAdjacentElement('afterend',extra);
+      }
       extra.classList.toggle('hidden',gameMode!=='2v2');
-      if(gameMode==='2v2')extra.innerHTML=[p3,p4].map((b,i)=>`<div class="rounded px-2 py-1 border ${i===0?'border-emerald-500/40 text-emerald-200':'border-rose-500/40 text-rose-200'} bg-slate-950/80">${i===0?'🟢':'🔴'} ${b?.name||'—'} · ${b?Math.ceil(b.hp):0}/${b?.maxHp||0} HP</div>`).join('');
+      if(gameMode==='2v2'){
+        if(!document.getElementById('p3-hp-bar')){
+          extra.innerHTML=[3,4].map((n,i)=>`<div class="bg-slate-900/90 border ${i===0?'border-emerald-700/60':'border-rose-700/60'} rounded-lg p-2 min-w-0">
+            <div class="flex justify-between items-center mb-1 gap-2"><span id="p${n}-name" class="text-xs font-bold font-orbitron ${i===0?'text-emerald-300':'text-rose-300'} truncate">P${n}</span><span id="p${n}-hp-text" class="text-xs font-mono font-bold text-slate-300 whitespace-nowrap">0/0</span></div>
+            <div class="w-full bg-slate-950 h-2.5 rounded-full overflow-hidden border border-slate-800"><div id="p${n}-hp-bar" class="h-full ${i===0?'bg-gradient-to-r from-emerald-500 to-lime-400':'bg-gradient-to-r from-orange-500 to-rose-400'} transition-all duration-150" style="width:0%"></div></div>
+            <div id="p${n}-badges" class="flex flex-wrap gap-1 mt-1 min-h-[16px] text-[10px]"></div>
+          </div>`).join('');
+        }
+        updateHUDForPlayer(p3,'p3');
+        updateHUDForPlayer(p4,'p4');
+      }
     }
 
     function renderSelectedBallInfo(key) {
@@ -5771,17 +5866,15 @@
       logMessage(gameMode==='2v2'?`TRẬN ĐẤU KẾT THÚC! TEAM ${winnerTeam} GIÀNH CHIẾN THẮNG!`:`TRẬN ĐẤU KẾT THÚC! ${(defeatedBall===p1?p2:p1).name} giành chiến thắng!`,winnerTeam===1?'p1':'p2');
     }
 
+    // Một bước mô phỏng: giữ nguyên thứ tự cập nhật kỹ năng, vật lý và VFX.
+    // Tối ưu ở đây chỉ thay nền lưới tĩnh bằng ảnh cache, không bỏ qua hiệu ứng.
     function gameStep() {
       if(aimStage){drawAimFrame();aimCountdown-=FIXED_STEP_SECONDS;if(aimCountdown<=0)launchMatchAfterAim();return;}
       globalTick++;
       simulationTimeMs += FIXED_STEP_MS;
       updateEnvironmentState();
-      ctx.fillStyle = '#030712';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      ctx.strokeStyle = 'rgba(30, 41, 59, 0.4)'; ctx.lineWidth = 1;
-      for (let x = 0; x < canvas.width; x += 40) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke(); }
-      for (let y = 0; y < canvas.height; y += 40) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke(); }
+      // Blit nền đã cache; không ảnh hưởng vật lý hay bất kỳ lớp hiệu ứng động nào.
+      ctx.drawImage(arenaBackground, 0, 0);
       drawEnvironmentEffects();
 
       // Vẽ Vùng Kiếm Hồn & Dây Liên Kết Phát Quang của Shen Ball
