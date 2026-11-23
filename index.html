@@ -955,7 +955,7 @@
     }
     function splitSalamander(parent){
       if(!parent||parent.typeKey!=='salamander'||parent.hp<=0||parent.isDead||parent.salamanderGeneration>=5)return;
-      const inherited=Math.max(1,parent.hp*.65),generation=parent.salamanderGeneration+1;
+      const inherited=Math.max(1,parent.hp*.55),generation=parent.salamanderGeneration+1;
       const childRadius=generation===1?parent.radius:parent.radius*.9;
       const baseAngle=Math.random()*Math.PI*2,offset=Math.max(8,childRadius*.9);
       const groupId=parent.salamanderGroupId||parent.id;
