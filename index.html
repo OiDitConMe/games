@@ -154,6 +154,7 @@
               <option value="ruby">💎 Ruby Ball</option>
               <option value="normal">⚪ Normal Ball</option>
               <option value="pistoleer">🤠 Pistoleer Ball</option>
+              <option value="salamander">🦎 Salamander Ball</option>
             </select>
           </div>
 
@@ -189,6 +190,7 @@
               <option value="ruby">💎 Ruby Ball</option>
               <option value="normal">⚪ Normal Ball</option>
               <option value="pistoleer">🤠 Pistoleer Ball</option>
+              <option value="salamander">🦎 Salamander Ball</option>
             </select>
           </div>
 
@@ -269,7 +271,7 @@
       <div class="relative">
         <canvas id="gameCanvas" width="440" height="440" style="width:min(616px, calc(100vw - 24px));height:auto" class="bg-slate-950 border-2 border-slate-800 rounded-2xl block"></canvas>
         <div id="winner-overlay" class="absolute inset-0 bg-slate-950/80 backdrop-blur-sm rounded-2xl flex flex-col items-center justify-center gap-3 hidden">
-          <div class="text-[10px] tracking-[.45em] text-amber-200/80 font-bold">ARENA CHAMPIONSHIP</div><div id="winner-text" class="winner-title text-2xl sm:text-3xl font-black text-amber-300 text-center px-4"></div><div class="text-xs tracking-[.3em] text-slate-300">VICTORY · MATCH COMPLETE</div>
+          <div class="text-[10px] tracking-[.45em] text-amber-200/80 font-bold">ARENA CHAMPIONSHIP</div><div id="winner-text" class="winner-title text-2xl sm:text-3xl font-black text-amber-300 text-center px-4"></div><div id="match-stats" class="w-[92%] max-h-44 overflow-y-auto text-left text-[10px] text-amber-100/90 rounded-lg border border-amber-200/20 bg-black/30 p-2"></div><div class="text-xs tracking-[.3em] text-slate-300">VICTORY · MATCH COMPLETE</div>
           <button id="btn-restart" class="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-black py-2 px-6 rounded-lg font-orbitron text-sm shadow-lg shadow-amber-500/20 active:scale-95">
             REMATCH
           </button>
@@ -631,6 +633,10 @@
       pyke: {
         name: 'Pyke Ball', color: '#0f766e', secondaryColor: '#071b22',
         hp: 95, maxHp: 95, radius: 18, speed: BASE_SPEED * 1.25, contactDmg: 5, icon: '🗡️'
+      },
+      salamander: {
+        name: 'Salamander Ball', color: '#f97316', secondaryColor: '#7c2d12',
+        hp: 95, maxHp: 95, radius: 18, speed: BASE_SPEED, contactDmg: 5, icon: '🦎'
       }
     };
 
@@ -903,8 +909,100 @@
     };
 
     let p1, p2, p3, p4;
+    let salamanderBodies = [];
+    let salamanderSerial = 0;
+    let matchStats = {};
+    let frameStatsSnapshot = null;
     let gameMode = '1v1';
-    function getAllBalls(){ return [p1,p2,p3,p4].filter(Boolean); }
+    function getAllBalls(){ return [p1,p2,p3,p4,...salamanderBodies].filter(Boolean); }
+    function statsFor(ball){
+      const key=ball.salamanderGroupId||ball.id;
+      if(!matchStats[key])matchStats[key]={id:key,name:ball.typeKey==='salamander'?'🦎 Salamander Ball':ball.name,team:ball.team,damage:0,healing:0,shielding:0};
+      return matchStats[key];
+    }
+    function beginFrameStats(){
+      frameStatsSnapshot=new Map(getAllBalls().map(b=>[b.id,{hp:b.hp,shield:(b.shield||0)+(b.aegisBarrier||0)}]));
+    }
+    function finishFrameStats(){
+      if(!frameStatsSnapshot)return;
+      for(const b of getAllBalls()){
+        const before=frameStatsSnapshot.get(b.id); if(!before)continue;
+        const st=statsFor(b), hpDelta=b.hp-before.hp, shieldDelta=(b.shield||0)+(b.aegisBarrier||0)-before.shield;
+        if(hpDelta<0){
+          const lost=-hpDelta;
+          const attacker=getAllBalls().filter(x=>x.team!==b.team&&x.hp>0&&!x.isDead).sort((a,c)=>Math.hypot(a.x-b.x,a.y-b.y)-Math.hypot(c.x-b.x,c.y-b.y))[0];
+          if(attacker)statsFor(attacker).damage+=lost;
+        }else if(hpDelta>0)st.healing+=hpDelta;
+        if(shieldDelta>0)st.shielding+=shieldDelta;
+      }
+      frameStatsSnapshot=null;
+    }
+    function grantFireShield(ball,amount){
+      if(!ball||ball.hp<=0||ball.isDead||amount<=0)return;
+      ball.shield=(ball.shield||0)+amount;
+      ball.fireShield=(ball.fireShield||0)+amount;
+      ball.shieldTimer=0;
+      createFloatingText(ball.x,ball.y-ball.radius-18,`🔥 +${amount} HỎA THUẪN`,'#fdba74');
+    }
+    function addInfernoStack(target,attacker){
+      if(!target||target.typeKey!=='salamander'||!attacker||attacker.hp<=0||attacker.isDead)return;
+      if(!attacker.infernoStacks)attacker.infernoStacks=[];
+      attacker.infernoStacks.push({remaining:3});
+      createParticles(attacker.x,attacker.y,'#fb923c',10,1.2);
+      createFloatingText(attacker.x,attacker.y-attacker.radius-15,'🔥 INFERNO +1','#fdba74');
+      logMessage(`🦎 ${target.name} phản Hỏa Thuẫn: ${attacker.name} nhận 1 tầng Inferno!`,'salamander');
+      updateHUD();
+    }
+    function splitSalamander(parent){
+      if(!parent||parent.typeKey!=='salamander'||parent.hp<=0||parent.isDead||parent.salamanderGeneration>=5)return;
+      const inherited=Math.max(1,parent.hp*.65),generation=parent.salamanderGeneration+1;
+      const childRadius=generation===1?parent.radius:parent.radius*.9;
+      const baseAngle=Math.random()*Math.PI*2,offset=Math.max(8,childRadius*.9);
+      const groupId=parent.salamanderGroupId||parent.id;
+      for(let i=0;i<2;i++){
+        const a=baseAngle+i*Math.PI;
+        const child=new Ball(`salamander-${++salamanderSerial}`,'salamander',
+          Math.max(childRadius,Math.min(canvas.width-childRadius,parent.x+Math.cos(a)*offset)),
+          Math.max(childRadius,Math.min(canvas.height-childRadius,parent.y+Math.sin(a)*offset)),
+          parent.team===1?'p1':'p2');
+        child.hp=inherited; child.maxHp=inherited; child.radius=childRadius;
+        child.baseSpeed=BASE_SPEED; child.vx=Math.cos(a)*BASE_SPEED; child.vy=Math.sin(a)*BASE_SPEED;
+        child.contactDmg=parent.contactDmg; child.salamanderGeneration=generation;
+        child.salamanderGroupId=groupId; child.salamanderSplitTimer=6;
+        child.shield=parent.shield||0; child.fireShield=parent.fireShield||0; child.shieldTimer=0;
+        child.infernoStacks=[];
+        salamanderBodies.push(child);
+      }
+      parent.hp=0; parent.isDead=true;
+      for(const ally of getAllBalls().filter(b=>b.team===parent.team&&b.hp>0&&!b.isDead))grantFireShield(ally,12);
+      createShockwave(parent.x,parent.y,90,'#fb923c',5);createParticles(parent.x,parent.y,'#fdba74',34,2);
+      createFloatingText(parent.x,parent.y-parent.radius-24,`🦎 PHÂN TÁCH · THẾ HỆ ${generation}`,'#fed7aa');
+      logMessage(`🦎 Salamander phân tách thành 2 cá thể thế hệ ${generation}; mỗi cá thể kế thừa 65% HP hiện tại.`,'salamander');
+      updateHUD();
+    }
+    function updateSalamanderMechanics(){
+      for(const b of getAllBalls()){
+        if(!b||b.typeKey!=='salamander'||b.hp<=0||b.isDead)continue;
+        b.salamanderSplitTimer=Math.max(0,(b.salamanderSplitTimer||0)-FIXED_STEP_SECONDS);
+        if(b.salamanderSplitTimer<=0&&b.salamanderGeneration<5){splitSalamander(b);continue;}
+      }
+      for(const target of getAllBalls()){
+        if(!target||!target.infernoStacks?.length||target.hp<=0||target.isDead)continue;
+        const pending=target.infernoStacks.reduce((sum,x)=>sum+2*x.remaining,0);
+        if(pending>=target.hp){
+          const burst=pending;target.infernoStacks=[];target.hp=0;
+          createShockwave(target.x,target.y,100,'#f97316',5);createParticles(target.x,target.y,'#fb923c',34,2);
+          logMessage(`🔥 Inferno bùng nổ ${burst.toFixed(1)} sát thương và kết liễu ${target.name}!`,'salamander');
+          endGame(target);continue;
+        }
+        const damage=target.infernoStacks.reduce((sum,x)=>sum+2*Math.min(FIXED_STEP_SECONDS,x.remaining),0);
+        target.hp=Math.max(0,target.hp-damage);
+        for(const stack of target.infernoStacks)stack.remaining=Math.max(0,stack.remaining-FIXED_STEP_SECONDS);
+        target.infernoStacks=target.infernoStacks.filter(x=>x.remaining>1e-6);
+        if(target.hp<=0)endGame(target);
+      }
+      updateHUD();
+    }
     function getOpponents(ball){ if(ball&&(ball.cosmosOverloaded||ball.cosmosSilenceTimer>0))return []; return getAllBalls().filter(b=>b!==ball && b.hp>0 && !b.isDead && b.team!==ball.team && !(b.isHadesUntargetable&&b.isHadesUntargetable()) && !(gameMode==='2v2'&&b.shenAllyImmortalTimer>0)); }
     function getAllies(ball){ return getAllBalls().filter(b=>b!==ball && b.hp>0 && b.team===ball.team); }
     function getNearestEnemy(ball){ const list=getOpponents(ball); if(!list.length)return null; return list.reduce((a,b)=>Math.hypot(a.x-ball.x,a.y-ball.y)<=Math.hypot(b.x-ball.x,b.y-ball.y)?a:b); }
@@ -1003,7 +1101,8 @@
       normal:{role:null,desc:'Ball cơ bản dùng để kiểm thử cân bằng, không có nội tại và không thuộc phân loại vai trò nào.'},
       pistoleer:{role:'Xạ Thủ',desc:'Xả loạt đạn kép kiểu cao bồi, tích Sĩ Gái và lướt vào vùng Hỏa Vũ liên hoàn.'},
       aegis:{role:'Đỡ Đòn',desc:'Chuyển toàn bộ sát thương nhận vào thành thiêu đốt cộng dồn; phản chế kẻ khống chế, thanh tẩy trạng thái khi va chạm và quét kiếm thần thánh để cấm hồi máu, tước khiên.'},
-      pyke:{role:'Sát Thủ',desc:'Tích trữ HP xám rồi biến mất trong Biển Sâu Thẳm; móc kéo mục tiêu, phóng dao và săn đuổi kẻ địch thấp máu từ trạng thái không thể bị nhận diện.'}
+      pyke:{role:'Sát Thủ',desc:'Tích trữ HP xám rồi biến mất trong Biển Sâu Thẳm; móc kéo mục tiêu, phóng dao và săn đuổi kẻ địch thấp máu từ trạng thái không thể bị nhận diện.'},
+      salamander:{role:'Đấu Sĩ',desc:'Trao Hỏa Thuẫn vĩnh viễn cho đồng minh, phân tách thành nhiều cá thể và thiêu đốt kẻ tấn công bằng Inferno.'}
     };
     const BALL_SKINS = [
       {id:'brutal',name:'Bạo Liệt',tag:'Thô bạo • Lực • Tàn bạo',desc:'Vòng gai, vệt năng lượng mạnh và những tia va đập dứt khoát.'},
@@ -1321,6 +1420,15 @@
     // Dấu ấn thị giác riêng cho từng chiến binh. Không thay đổi thông số chiến đấu.
     function drawBallSignatureVFX(ball) {
       const x = ball.x, y = ball.y, r = ball.radius, t = globalTick;
+      if(ball.typeKey==='salamander'){
+        const pulse=.5+.5*Math.sin(t*.12+(ball.salamanderGeneration||0));
+        ctx.save();ctx.globalCompositeOperation='lighter';
+        const g=ctx.createRadialGradient(x,y,2,x,y,r*1.8);g.addColorStop(0,'rgba(255,225,150,.20)');g.addColorStop(.55,`rgba(249,115,22,${.22+.12*pulse})`);g.addColorStop(1,'rgba(124,45,18,0)');
+        ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,y,r*1.8,0,Math.PI*2);ctx.fill();
+        ctx.strokeStyle=`rgba(253,186,116,${.55+.3*pulse})`;ctx.lineWidth=1.8;ctx.shadowColor='#f97316';ctx.shadowBlur=14;ctx.beginPath();ctx.arc(x,y,r+4+2*pulse,t*.035,t*.035+Math.PI*1.65);ctx.stroke();
+        for(let k=0;k<5;k++){const a=t*.025+k*Math.PI*2/5;drawSpark(ctx,x+Math.cos(a)*(r+5),y+Math.sin(a)*(r+5),1.8+pulse,'#fed7aa',.75);}
+        ctx.restore();
+      }
       // Khói Ninja: hạt nhỏ, mờ, trôi ngược hướng di chuyển; chỉ là VFX, không va chạm.
       if (ball.typeKey === 'ninja') {
         if (!ball.ninjaSmokeParticles) ball.ninjaSmokeParticles = [];
@@ -1725,6 +1833,11 @@
         this.hp = cfg.hp;
         this.shield = 0;
         this.shieldTimer = 0;
+        this.fireShield = 0;
+        this.infernoStacks = [];
+        this.salamanderGeneration = 0;
+        this.salamanderGroupId = typeKey==='salamander'?id:null;
+        this.salamanderSplitTimer = typeKey==='salamander'?(side==='p1'||side==='p2'?5.5:6):0;
         this.baseSpeed = cfg.speed;
         this.contactDmg = cfg.contactDmg;
         
@@ -2409,6 +2522,15 @@
       }
 
       updateReaper(enemy) {
+        if(this.reaperTargetId){
+          const current=getOpponents(this).find(b=>b.id===this.reaperTargetId);
+          if(current)enemy=current;
+          else{
+            const replacements=getOpponents(this).filter(b=>b.typeKey==='salamander'&&b.salamanderGroupId===this.reaperTargetGroupId);
+            if(replacements.length)enemy=replacements[Math.floor(Math.random()*replacements.length)];
+            this.reaperTargetId=enemy?.id||null;
+          }
+        }
         if (!enemy) return;
         const now = simulationTimeMs;
         this.illusionSpawnTimer += FIXED_STEP_SECONDS;
@@ -2438,7 +2560,7 @@
 
         if (this.reaperSpeedBoostTimer > 0) {
           if(this.reaperTargetId){const locked=getOpponents(this).find(b=>b.id===this.reaperTargetId);if(locked)enemy=locked;}
-          else this.reaperTargetId=enemy.id;
+          else {this.reaperTargetId=enemy.id;this.reaperTargetGroupId=enemy.typeKey==='salamander'?enemy.salamanderGroupId:null;}
           const angle = Math.atan2(enemy.y - this.y, enemy.x - this.x);
           const chaseSpd = this.baseSpeed * SKILL_CONFIG.reaper.speedBoostMult;
           this.vx = Math.cos(angle) * chaseSpd;
@@ -2900,7 +3022,18 @@
         // Phần 2: xúc xắc của địch quyết định thời gian choáng.
         const enemyRoll = 1 + Math.floor(Math.random() * 6);
         const stunDuration = enemyRoll / 2;
-        enemy.takeDamage(cfg.enemyDiceDamage, 'Xúc Xắc Định Mệnh');
+        let diceTargets=[enemy];
+        if(enemy.typeKey==='salamander'){
+          const teammates=getAllBalls().filter(b=>b.team===enemy.team&&b.hp>0&&!b.isDead);
+          const preferred=teammates.filter(b=>b.typeKey!=='salamander');
+          if(preferred.length)diceTargets=[preferred[0]];
+          else{
+            const salamanders=teammates.filter(b=>b.typeKey==='salamander');
+            if(salamanders.length)diceTargets=salamanders;
+          }
+        }
+        const splitDamage=cfg.enemyDiceDamage/diceTargets.length;
+        diceTargets.forEach(target=>target.takeDamage(splitDamage,'Xúc Xắc Định Mệnh'));
         enemy.applyStun(stunDuration);
         createFloatingText(enemy.x, enemy.y - 28, `🎲 ${enemyRoll} • CHOÁNG ${stunDuration.toFixed(1)}s`, '#f8df9b');
         createShockwave(enemy.x, enemy.y, 52 + enemyRoll * 3, '#d4a64d', 2.5);
@@ -3196,7 +3329,7 @@
           this.hadesDrainTimer += FIXED_STEP_SECONDS;
           if(this.hadesDrainTimer>=SKILL_CONFIG.hades.drainInterval){
             this.hadesDrainTimer-=SKILL_CONFIG.hades.drainInterval;
-            enemies.forEach(target=>{if(target.hp<=0||target.isHadesUntargetable()||target.typeKey==='cosmos')return;const oldMax=target.maxHp;target.maxHp=Math.max(1,target.maxHp-SKILL_CONFIG.hades.drainHp);target.hp=Math.max(0,Math.min(target.hp-SKILL_CONFIG.hades.drainHp,target.maxHp));target.shield+=1;if(target.typeKey==='ronin')target.roninPermanentShield=(target.roninPermanentShield||0)+1;hadesSiphonEffects.push({x1:target.x,y1:target.y,x2:this.x,y2:this.y,timer:.42,maxTimer:.42});createParticles(target.x,target.y,'#991b1b',7,1);createFloatingText(target.x,target.y-18,'−1 HP TỐI ĐA','#fca5a5');if(target.hp<=0){if(target.typeKey==='demon'&&target.demonReviveCount<SKILL_CONFIG.demon.maxRevives){target.demonReviveCount++;target.hp=target.maxHp;logMessage(`👿 Demon chống lại lời nguyền Hades bằng lần hồi sinh ${target.demonReviveCount}/7!`,'demon');}else endGame(target);}logMessage(`👑 Hades rút 1 HP tối đa từ ${target.name}; mục tiêu nhận 1 lá chắn vĩnh viễn.`,'hades');});updateHUD();
+            enemies.forEach(target=>{if(target.hp<=0||target.isHadesUntargetable()||target.typeKey==='cosmos')return;target.hadesShieldDrainThisTick=false;if(target.typeKey==='salamander'&&(target.fireShield||0)>0){const drain=Math.min(1,target.shield);target.shield-=drain;target.fireShield=Math.max(0,(target.fireShield||0)-drain);target.hadesShieldDrainThisTick=true;addInfernoStack(target,this);}else{target.maxHp=Math.max(1,target.maxHp-1);target.hp=Math.max(0,Math.min(target.hp-1,target.maxHp));target.shield+=1;}if(target.typeKey==='ronin')target.roninPermanentShield=(target.roninPermanentShield||0)+1;hadesSiphonEffects.push({x1:target.x,y1:target.y,x2:this.x,y2:this.y,timer:.42,maxTimer:.42});createParticles(target.x,target.y,'#991b1b',7,1);createFloatingText(target.x,target.y-18,target.hadesShieldDrainThisTick?'−1 HỎA THUẪN':'−1 HP TỐI ĐA','#fca5a5');if(target.hp<=0){if(target.typeKey==='demon'&&target.demonReviveCount<SKILL_CONFIG.demon.maxRevives){target.demonReviveCount++;target.hp=target.maxHp;logMessage(`👿 Demon chống lại lời nguyền Hades bằng lần hồi sinh ${target.demonReviveCount}/7!`,'demon');}else endGame(target);}logMessage(target.hadesShieldDrainThisTick?`👑 Hades tiêu hao 1 Hỏa Thuẫn của ${target.name}, không rút HP tối đa.`:`👑 Hades rút 1 HP tối đa từ ${target.name}; mục tiêu nhận 1 lá chắn vĩnh viễn.`,'hades');});updateHUD();
           }
         }
 
@@ -3343,6 +3476,12 @@
         let remainingDmg = finalIncomingDmg;
         if (this.shield > 0) {
           const absorbed = Math.min(this.shield, remainingDmg);
+          if(this.typeKey==='salamander'&&absorbed>0){
+            const fireAbsorbed=Math.min(this.fireShield||0,absorbed);
+            this.fireShield=Math.max(0,(this.fireShield||0)-fireAbsorbed);
+            const attacker=getNearestEnemy(this);
+            if(fireAbsorbed>0&&attacker)addInfernoStack(this,attacker);
+          }
           this.shield -= absorbed;
           remainingDmg -= absorbed;
           // Với Ronin, sát thương tiêu hao khiên tạm trước; khiên vĩnh viễn không bị trừ nhầm khi hết 3 giây.
@@ -4112,7 +4251,7 @@
     function rubyAverageHealth(ruby,target,source='HÀO QUANG PHA LÊ'){
       if(!ruby||!target||ruby.hp<0||target.hp<=0||target.isDead)return {delta:0};
       const beforeRuby=ruby.hp,beforeTarget=target.hp,average=(beforeRuby+beforeTarget)/2;
-      ruby.hp=Math.min(ruby.maxHp,average);target.hp=Math.min(target.maxHp,average);
+      ruby.hp=Math.max(3,Math.min(ruby.maxHp,average));target.hp=Math.min(target.maxHp,average);
       const targetDelta=target.hp-beforeTarget;
       if(target.team!==ruby.team&&targetDelta<0&&!target.rubyShattered){target.rubyShattered=true;createShockwave(target.x,target.y,68,'#fb7185',4);createParticles(target.x,target.y,'#fda4af',24,1.2);createFloatingText(target.x,target.y-target.radius-18,'VỤN VỠ · +20% DMG','#fda4af');logMessage(`💎 ${target.name} mang ấn Vụn Vỡ vĩnh viễn: nhận thêm 20% sát thương!`,'ruby');}
       createParticles(ruby.x,ruby.y,'#f9a8d4',16,1.1);createParticles(target.x,target.y,'#fda4af',16,1.1);
@@ -4128,7 +4267,7 @@
     }
     function triggerRubyAura(ruby,allowImmediateRepeat=true){
       if(!ruby||ruby.hp<=0||ruby.isDead)return;
-      const cost=Math.min(12,Math.max(0,ruby.hp-1));ruby.hp=Math.max(1,ruby.hp-cost);
+      const cost=Math.min(12,Math.max(0,ruby.hp-3));ruby.hp=Math.max(3,ruby.hp-cost);
       ruby.rubyDamageImmuneTimer=1;ruby.rubyAuraPulse=.65;
       createShockwave(ruby.x,ruby.y,128,'#e00046',6);createShockwave(ruby.x,ruby.y,96,'#ff4d8d',4);createShockwave(ruby.x,ruby.y,62,'#fff0f6',2.5);
       for(let i=0;i<4;i++)createParticles(ruby.x,ruby.y,['#ff174f','#ff5c9a','#fff0f6','#d0003c'][i],i===2?22:28,2.2);
@@ -4138,7 +4277,7 @@
       const result=rubyAverageHealth(ruby,target);
       rubyHealAfterAverage(ruby,6,false);
       if(result.delta>0){
-        ruby.hp=Math.max(0,ruby.hp-20);createFloatingText(ruby.x,ruby.y-ruby.radius-42,'−20 HP · PHẢN CHẤN','#fb7185');createParticles(ruby.x,ruby.y,'#fb7185',24,1.4);
+        ruby.hp=Math.max(3,ruby.hp-20);createFloatingText(ruby.x,ruby.y-ruby.radius-42,'−20 HP · PHẢN CHẤN','#fb7185');createParticles(ruby.x,ruby.y,'#fb7185',24,1.4);
         if(ruby.hp<=0){ruby.hp=0;if(!ruby.rubyFirstDeathUsed)rubyFirstDeath(ruby);else endGame(ruby);return;}
         if(allowImmediateRepeat)triggerRubyAura(ruby,false);
       }
@@ -5602,17 +5741,35 @@
         if(badges) badges.innerHTML='';
         return;
       }
+      const salamanderGroup=ball.typeKey==='salamander'?getAllBalls().filter(b=>b.typeKey==='salamander'&&b.team===ball.team&&b.salamanderGroupId===(ball.salamanderGroupId||ball.id)):null;
+      const groupHp=salamanderGroup?.reduce((v,b)=>v+Math.max(0,b.hp),0);
+      const groupMax=salamanderGroup?.reduce((v,b)=>v+b.maxHp,0);
       let shieldText = (ball.shield > 0 || ball.aegisBarrier>0) ? ` (🛡️${Math.round((ball.shield||0)+(ball.aegisBarrier||0))})` : '';
       if (ball.typeKey === 'demon') shieldText = ` (🛡️${Math.round(ball.shield)} | Phản: +${Math.round(ball.shield * 6)}%)`;
       
       document.getElementById(`${prefix}-name`).innerText = `${ball.icon} ${ball.name}`;
       const pykeGray=ball.typeKey==='pyke' && ball.pykeGrayHp>0?` (◈${ball.pykeGrayHp.toFixed(1)})`:'';
-      document.getElementById(`${prefix}-hp-text`).innerText = `${Math.ceil(Math.max(0,ball.hp))}/${ball.maxHp}${ball.hp<=0?' · ĐÃ GỤC':''}${shieldText}${pykeGray}`;
-      document.getElementById(`${prefix}-hp-bar`).style.width = `${Math.max(0, ball.maxHp > 0 ? (ball.hp / ball.maxHp) * 100 : 0)}%`;
+      if(ball.typeKey==='salamander'){
+        document.getElementById(`${prefix}-hp-text`).innerText=`${Math.ceil(groupHp||0)}/${Math.ceil(groupMax||0)} · ${salamanderGroup.filter(b=>b.hp>0&&!b.isDead).length} cá thể${shieldText}`;
+        document.getElementById(`${prefix}-hp-bar`).style.width=`${Math.max(0,groupMax>0?groupHp/groupMax*100:0)}%`;
+      }else{
+        document.getElementById(`${prefix}-hp-text`).innerText = `${Math.ceil(Math.max(0,ball.hp))}/${ball.maxHp}${ball.hp<=0?' · ĐÃ GỤC':''}${shieldText}${pykeGray}`;
+        document.getElementById(`${prefix}-hp-bar`).style.width = `${Math.max(0, ball.maxHp > 0 ? (ball.hp / ball.maxHp) * 100 : 0)}%`;
+      }
 
       const badges = document.getElementById(`${prefix}-badges`);
       badges.innerHTML = '';
 
+      if(ball.typeKey==='salamander'){
+        const alive=salamanderGroup.filter(b=>b.hp>0&&!b.isDead);
+        const totalInferno=alive.reduce((n,b)=>n+(b.infernoStacks?.length||0),0);
+        const totalShield=alive.reduce((n,b)=>n+(b.fireShield||0),0);
+        badges.innerHTML+=`<span class="bg-orange-950 text-orange-200 border border-orange-500/50 px-1 rounded">🔥 Hỏa Thuẫn ${Math.round(totalShield)}</span><span class="bg-red-950 text-red-200 border border-red-500/50 px-1 rounded">Inferno ${totalInferno}</span><span class="bg-amber-950 text-amber-100 border border-amber-500/50 px-1 rounded">Thế hệ cao nhất ${Math.max(0,...alive.map(b=>b.salamanderGeneration))}/5</span>`;
+        for(const body of alive){
+          const states=[body.stunTimer>0?'Choáng':null,body.slowTimer>0?'Chậm':null,body.cosmosOverloaded?'Quá Tải':null,body.burnTimer>0?'Cháy':null,(body.viperPoisonStacks||0)>0?`Độc ${body.viperPoisonStacks}`:null,(body.infernoStacks?.length||0)>0?`Inferno ${body.infernoStacks.length}`:null].filter(Boolean).join(' · ')||'Không hiệu ứng';
+          badges.innerHTML+=`<span class="bg-slate-900 text-slate-200 border border-slate-600 px-1 rounded">Cá thể ${body.salamanderGeneration}: ${Math.ceil(body.hp)}/${Math.ceil(body.maxHp)} HP · Khiên ${Math.round(body.fireShield||0)} · ${states}</span>`;
+        }
+      }
       if (ball.drownedTimer > 0) badges.innerHTML += `<span class="bg-sky-950 text-cyan-300 border border-cyan-400 px-1 rounded animate-pulse">🌊 Đuối Nước</span>`;
       if (ball.oceanicMarks > 0) badges.innerHTML += `<span class="bg-blue-950 text-blue-300 border border-blue-400 px-1 rounded">🔱 Ấn: ${ball.oceanicMarks}/4</span>`;
       if (ball.stunTimer > 0) badges.innerHTML += `<span class="bg-yellow-950 text-yellow-400 border border-yellow-500/40 px-1 rounded">💫 Choáng</span>`;
@@ -5736,6 +5893,7 @@
       cosmos:'HP 111, tốc độ 1,1×, va chạm 1. Miễn nhiễm khống chế cứng, làm chậm, tước HP tối đa và tăng HP tối đa; không thể hồi HP. Mỗi 4,15 giây vận 1 giây rồi phát nổ Tinh Vân bán kính 3 đường kính Ball. Địch trúng vụ nổ nhận 5 sát thương và Câm Lặng 2,5 giây. Nếu vụ nổ hụt, Cosmos dựng môi trường Vũ Trụ vĩnh viễn, tạm vô hiệu môi trường khác và Quá Tải toàn bộ địch. Quá Tải kết thúc khi địch va chạm với Cosmos hoặc đồng minh. Trong 2v2, Cosmos chỉ tự giải Quá Tải bằng va chạm khi đồng minh đã chết/không còn đồng minh sống hoặc đồng minh còn sống là Ghost Ball; nếu đồng minh sống là Ball khác Ghost, Cosmos không thể tự giải và cần đồng minh giải. Ball vừa được giải Quá Tải không gây hiệu ứng hay sát thương va chạm trong chính lần va chạm giải hiệu ứng, nhưng Ball va vào để giải vẫn gây sát thương bình thường. Khi Vũ Trụ tan, Cosmos hồi 3 HP.',
       normal:'Không có nội tại. Ball cơ bản được tạo riêng để thử nghiệm, kiểm tra va chạm và cân bằng thông số.',
       pistoleer:'Mỗi 3 giây bắn 12 viên đạn trong 2 giây, xen kẽ hai hàng súng. Mỗi viên gây 2 sát thương và đặt 1 tầng Xuất Huyết trong 12 giây. Đủ 12 tầng Xuất Huyết sẽ tiêu thụ toàn bộ tầng để gây 25 sát thương bỏ qua khiên. Mỗi viên trúng đích tích 1 tầng Sĩ Gái; đủ 10 tầng lập tức kích hoạt Ulti: lướt 4 đường kính về phía địch gần nhất, rồi xả 12 nhịp đạn trong 3 giây, mỗi nhịp gây 1,5 sát thương trong vùng 4,85 đường kính và làm chậm bản thân cùng địch 75%. Sau Ulti, chờ 0,75 giây mới bắn loạt tiếp theo.',
+      salamander:'Khi vào trận, trao 20 Hỏa Thuẫn vĩnh viễn cho bản thân và đồng minh. Mỗi đòn đánh chạm Hỏa Thuẫn khiến kẻ tấn công nhận 1 tầng Inferno (2 sát thương/giây trong 3 giây, xuyên khiên). Sau 5,5 giây, cá thể gốc phân tách thành hai cá thể; cá thể con tiếp tục phân tách sau mỗi 6 giây. Mỗi lần phân tách tạo hai cá thể mang 65% HP hiện tại của cha, cộng 12 Hỏa Thuẫn cho toàn đội và giới hạn tối đa 5 thế hệ.',
       pyke:'Mỗi đòn nhận vào chuyển 35% sát thương thành HP xám, hoặc 50% khi HP dưới 50. HP xám không tự mất và chỉ được chuyển thành hồi phục khi Pyke vào Biển Sâu. Mỗi lần vào Biển Sâu hồi thêm 3 HP; trong vùng Pyke ẩn khỏi nhận diện. Móc kéo gây 10 sát thương + 25% HP đã mất; dao phóng gây 15 sát thương. Khi mục tiêu còn ≤3% HP tối đa, đòn tấn công của Pyke có thể kết liễu bằng 9999 sát thương. Dao có dây nối và được thu hồi bằng cú giật dây.'
     };
 
@@ -5819,6 +5977,7 @@
       winnerOverlay.classList.add('hidden');
 
       gameMode=gameModeSelect.value;
+      salamanderBodies=[];salamanderSerial=0;matchStats={};frameStatsSnapshot=null;
       setArenaSize();
       p1 = new Ball('p1', p1Select.value, gameMode==='2v2'?92:80, gameMode==='2v2'?canvas.height*.34:canvas.height/2, 'p1');
       p2 = new Ball('p2', p2Select.value, canvas.width-(gameMode==='2v2'?92:80), gameMode==='2v2'?canvas.height*.34:canvas.height/2, 'p2');
@@ -5827,6 +5986,10 @@
       const startBalls=getAllBalls();
       startBalls.forEach((b)=>{let a;if(gameMode==='2v2'){a=b.team===1?(-Math.PI/2+Math.random()*Math.PI):(Math.PI/2+Math.random()*Math.PI);}else a=Math.random()*Math.PI*2;b.vx=Math.cos(a)*b.baseSpeed;b.vy=Math.sin(a)*b.baseSpeed;});
 
+      for(const salamander of startBalls.filter(b=>b.typeKey==='salamander')){
+        salamander.salamanderSplitTimer=5.5;salamander.salamanderGeneration=0;salamander.salamanderGroupId=salamander.id;
+        for(const ally of startBalls.filter(b=>b.team===salamander.team))grantFireShield(ally,20);
+      }
       bloomRoses=[];bloomSpawnTimer=0;cosmosNebula=null;cosmosEnvironmentPrevious=null;cosmosPreviousOceanTimer=0;cosmosOverloadOwner=null;cosmosDeferredEnvironment=null;
       pistoleerShots=[];pistoleerUltEffects=[];
       fireTrails = []; assassinShurikens = []; lightningZones = []; lightningBolts = [];
@@ -5848,6 +6011,7 @@
       if(!loser||loser.isDead)return;
       if(loser.cosmosOverloaded){loser.cosmosOverloaded=false;createFloatingText(loser.x,loser.y-loser.radius-20,'QUÁ TẢI ĐƯỢC GIẢI · ĐÃ HẠ GỤC','#ddd6fe');if(!getAllBalls().some(b=>b.cosmosOverloaded))endCosmosOverload();}
       loser.isDead=true;
+      if(loser.typeKey==='salamander'&&getAllBalls().some(b=>b.typeKey==='salamander'&&b.team===loser.team&&b.hp>0&&!b.isDead)){updateHUD();return;}
       const c=loser.team===1?'#4ade80':'#fb7185';
       createShockwave(loser.x,loser.y,190,'#ffffff',10);createShockwave(loser.x,loser.y,145,c,8);createShockwave(loser.x,loser.y,88,'#fef3c7',6);createShockwave(loser.x,loser.y,52,c,4);
       createParticles(loser.x,loser.y,c,115,3.8);createParticles(loser.x,loser.y,'#ffffff',65,3.2);createParticles(loser.x,loser.y,'#fef3c7',42,2.6);
@@ -5862,6 +6026,11 @@
       const winnerTeam=defeatedBall?.team===1?2:1;const winners=getAllBalls().filter(b=>b.team===winnerTeam);
       document.getElementById('match-state').textContent='TRẬN ĐẤU KẾT THÚC';
       winnerText.innerText=gameMode==='2v2'?`🏆 TEAM ${winnerTeam} CHIẾN THẮNG!\n${winners.map(b=>b.name).join('  +  ')}`:`🏆 ${(defeatedBall===p1?p2:p1).name.toUpperCase()} CHIẾN THẮNG!`;
+      const statsEl=document.getElementById('match-stats');
+      if(statsEl){
+        const rows=Object.values(matchStats).sort((a,b)=>b.damage-a.damage);
+        statsEl.innerHTML=`<div class="font-black tracking-widest text-amber-200 mb-2">SỔ THỐNG KÊ TRẬN ĐẤU</div><div class="grid grid-cols-[1.4fr_repeat(3,1fr)] gap-1 font-bold text-amber-300 border-b border-amber-100/20 pb-1"><span>CHIẾN BINH</span><span>DMG GÂY RA</span><span>HP NHẬN</span><span>KHIÊN NHẬN</span></div>${rows.map(r=>`<div class="grid grid-cols-[1.4fr_repeat(3,1fr)] gap-1 py-1 border-b border-white/5"><span class="truncate">${r.team===winnerTeam?'🟢':'🔴'} ${r.name}</span><span>${r.damage.toFixed(1)}</span><span>${r.healing.toFixed(1)}</span><span>${r.shielding.toFixed(1)}</span></div>`).join('')||'<div>Chưa có dữ liệu.</div>'}`;
+      }
       winnerOverlay.classList.remove('hidden');
       logMessage(gameMode==='2v2'?`TRẬN ĐẤU KẾT THÚC! TEAM ${winnerTeam} GIÀNH CHIẾN THẮNG!`:`TRẬN ĐẤU KẾT THÚC! ${(defeatedBall===p1?p2:p1).name} giành chiến thắng!`,winnerTeam===1?'p1':'p2');
     }
@@ -5870,6 +6039,7 @@
     // Tối ưu ở đây chỉ thay nền lưới tĩnh bằng ảnh cache, không bỏ qua hiệu ứng.
     function gameStep() {
       if(aimStage){drawAimFrame();aimCountdown-=FIXED_STEP_SECONDS;if(aimCountdown<=0)launchMatchAfterAim();return;}
+      beginFrameStats();
       globalTick++;
       simulationTimeMs += FIXED_STEP_MS;
       updateEnvironmentState();
@@ -5951,6 +6121,7 @@
       }
 
       updateCosmosSkills();
+      updateSalamanderMechanics();
       updateRubySkills();
       updatePistoleerSkills();
       updateAndDrawBloomRoses();
@@ -5963,6 +6134,7 @@
 
       getAllBalls().forEach(ball=>{drawTeamAura(ball);ball.draw();});
       updateAndDrawRoninHadesEntities();
+      finishFrameStats();
 
     }
 
