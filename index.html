@@ -200,6 +200,16 @@
             </select>
           </div>
 
+
+          <!-- Rune picker: nhấn trực tiếp vào ô Ball để chọn Rune cho Ball đó. -->
+          <div id="rune-loadout" class="border-t border-amber-500/20 pt-3 space-y-2">
+            <div class="text-[10px] font-black tracking-widest text-amber-200">RUNE LOADOUT · CHỌN RIÊNG TỪNG BALL</div>
+            <div id="rune-ball-cards" class="grid grid-cols-2 gap-2"></div>
+            <div id="rune-options" class="hidden rounded-lg border border-[#806345] bg-[#17110c] p-2">
+              <div class="flex items-center justify-between mb-2"><b id="rune-picker-title" class="text-[10px] text-amber-100">CHỌN RUNE</b><button id="rune-picker-close" type="button" class="arena-btn">✕</button></div>
+              <div id="rune-option-list" class="grid grid-cols-1 gap-1"></div>
+            </div>
+          </div>
           <div id="team-extra-selects" class="hidden space-y-3 border-t border-emerald-500/20 pt-3">
             <div><label class="block text-xs font-semibold text-emerald-300 mb-1">TEAM 1 · BALL B</label><select id="p3-select" class="w-full bg-slate-950 border border-emerald-500/30 rounded-lg px-3 py-2 text-sm text-emerald-100"></select></div>
             <div><label class="block text-xs font-semibold text-rose-300 mb-1">TEAM 2 · BALL B</label><select id="p4-select" class="w-full bg-slate-950 border border-rose-500/30 rounded-lg px-3 py-2 text-sm text-rose-100"></select></div>
@@ -337,6 +347,44 @@
     // SKILL_CONFIG chứa thông số nội tại/kỹ năng, tách biệt để không lẫn với chỉ số nền.
     // ================================================================
     const BASE_SPEED = 3.99; // Pixel mỗi bước mô phỏng 1/60 giây.
+
+    // ================================================================
+    // HỆ THỐNG RUNE — CHỈNH SỬA TẬP TRUNG TẠI ĐÂY
+    // Mỗi Ball dùng đúng 1 Rune. runeSelections lưu lựa chọn theo slot.
+    // 4 nhóm × 3 Rune = 12 Rune chính; không có nhánh phụ.
+    // ================================================================
+    const RUNE_GROUPS = {
+      burst:   { name:'BURST',   color:'#ef4444', symbol:'✦', desc:'Sát thương bùng nổ' },
+      sustain: { name:'SUSTAIN', color:'#f59e0b', symbol:'⚔', desc:'Hồi phục và duy trì' },
+      support: { name:'SUPPORT', color:'#22c55e', symbol:'✚', desc:'Hỗ trợ đồng đội' },
+      defense: { name:'DEFENSE', color:'#7dd3fc', symbol:'🛡', desc:'Phòng thủ và sống sót' }
+    };
+    const RUNE_CONFIG = {
+      burst: {
+        execute: { group:'burst', index:1, name:'Execute', desc:'Khi một đòn đánh khiến HP mục tiêu xuống dưới 16%, gây 9999 sát thương kết liễu đặc biệt.' },
+        firstStrike: { group:'burst', index:2, name:'First Strike', desc:'Đòn sát thương đầu tiên gây thêm 55% sát thương và làm chậm 99% trong 0,25 giây.' },
+        openingSpeed: { group:'burst', index:3, name:'Opening Speed', desc:'Tăng 85% tốc độ di chuyển lúc bắt đầu, giảm tuyến tính trong 5 giây.' }
+      },
+      sustain: {
+        lifesteal: { group:'sustain', index:1, name:'Lifesteal', desc:'Hồi 20% lượng HP thực tế đã trừ khỏi mục tiêu; hồi dư chuyển thành khiên vĩnh viễn ×150%.' },
+        erosion: { group:'sustain', index:2, name:'Erosion', desc:'Mỗi lần gây sát thương giảm 1 HP tối đa của mục tiêu, tối đa 40 HP mỗi mục tiêu.' },
+        growth: { group:'sustain', index:3, name:'Growth', desc:'Mỗi 3 giây, đòn đánh kế tiếp tăng 30% tốc độ trong 1 giây, +2 HP tối đa vĩnh viễn và hồi 2 HP.' }
+      },
+      support: {
+        aura: { group:'support', index:1, name:'Aura', desc:'Bán kính 4 đường kính Ball; hồi 1 HP/giây cho đồng minh. Mỗi 5 giây chặn một đòn chủ động nhắm đồng minh và nhận 20 khiên trong 1 giây.' },
+        unyielding: { group:'support', index:2, name:'Unyielding', desc:'Chỉ lớp Support: khi có đồng minh sống, đòn chí mạng kích hoạt Bất Khuất ở 1 HP; không tăng/giảm HP, chuyển 50% sát thương sang đồng minh.' },
+        teamBuff: { group:'support', index:3, name:'Team Buff', desc:'Đồng minh +15% sát thương, -15% sát thương nhận. Khi chủ sở hữu bị hạ: +30% sát thương 4 giây, miễn sát thương 3 giây; nếu đồng minh đã bị hạ hết, hồi sinh một đồng minh 15 HP.' }
+      },
+      defense: {
+        deathPrevention: { group:'defense', index:1, name:'Death Prevention', desc:'Mỗi 6 giây, nếu sắp bị hạ gục, giữ lại 1 HP.' },
+        ccResistance: { group:'defense', index:2, name:'CC Resistance', desc:'Khi bị khống chế cứng và không thể di chuyển, giảm 100% sát thương; đổi lại khống chế cứng kéo dài thêm 50%.' },
+        openingSacrifice: { group:'defense', index:3, name:'Opening Sacrifice', desc:'Mất 20 HP lúc bắt đầu (không thấp hơn 1 HP), đổi lấy bất tử 6,5 giây.' }
+      }
+    };
+    const RUNE_LOOKUP = Object.values(RUNE_CONFIG).reduce((all,group)=>Object.assign(all,group),{});
+    const runeSelections = { p1:'', p2:'', p3:'', p4:'' };
+    const RUNE_SUPPORT_ROLES = ['Hỗ Trợ','Hỗ trợ','Support'];
+
 
     // HỆ THỐNG THỜI GIAN: mô phỏng cố định 60 bước/giây, không phụ thuộc FPS màn hình.
     const FIXED_STEP_SECONDS = 1 / 60;
@@ -943,6 +991,175 @@
       qi: { wallSpeedBonus:.30, speedBonusDuration:2.25, maxSpeedStacks:2, dashDelay:.35, dashDiam:4, dashHitDiam:1, dashDamage:7, slowDuration:.5, slowFactor:.25, ringRadiusDiam:.6, ringDistanceDiam:4, ringDamage:14, burnDamage:1, burnDuration:5, ultStacks:4, ultDashUnits:4, ultDashDamage:7, ultShield:100, ultShieldDuration:3, windWidthDiam:3.25, windLengthDiam:4.5, windSpeedMult:1.75, wallStun:2, wallDamage:18 }
     };
 
+
+    // ================================================================
+    // RUNE RUNTIME — mọi cơ chế Rune được gom tại một khu vực riêng.
+    // ================================================================
+    let runePickerSlot = null;
+    function getRune(slot){
+      const normalized=slot==='p1b'?'p3':slot==='p2b'?'p4':slot;
+      return RUNE_LOOKUP[runeSelections[normalized]||'']||null;
+    }
+    function runeBadge(slot){
+      const rune=getRune(slot); if(!rune)return '';
+      const g=RUNE_GROUPS[rune.group];
+      return `<span class="absolute -top-1 -right-1 z-10 rounded-md px-1 py-0.5 text-[9px] font-black shadow" style="background:${g.color};color:#130e09">${rune.index}${g.symbol}</span>`;
+    }
+    function renderRuneLoadout(){
+      const root=document.getElementById('rune-ball-cards'); if(!root)return;
+      const slots=[['p1','TEAM 1 · BALL A',p1Select.value],['p2','TEAM 2 · BALL A',p2Select.value]];
+      if(gameModeSelect.value==='2v2'){
+        slots.push(['p3','TEAM 1 · BALL B',p3Select.value],['p4','TEAM 2 · BALL B',p4Select.value]);
+      }
+      root.innerHTML=slots.map(([slot,label,key])=>{
+        const cfg=BALL_TYPES[key],r=getRune(slot);
+        const group=r?RUNE_GROUPS[r.group]:null;
+        return `<button type="button" data-rune-slot="${slot}" class="relative min-w-0 rounded-lg border p-2 text-left ${r?'border-amber-300 bg-[#3b2a19]':'border-[#59452f] bg-[#211810]'}">
+          ${runeBadge(slot)}<span class="block text-lg">${cfg.icon}</span><b class="block truncate text-[10px] text-[#f0dfc6]">${cfg.name}</b>
+          <small class="block truncate text-[9px]" style="color:${group?group.color:'#ae9b81'}">${r?`${r.name} · ${group.name}`:'Nhấn để chọn Rune'}</small>
+        </button>`;
+      }).join('');
+    }
+    function openRunePicker(slot){
+      runePickerSlot=slot;
+      const options=document.getElementById('rune-options');
+      document.getElementById('rune-picker-title').textContent=`CHỌN RUNE · ${slot.toUpperCase()}`;
+      document.getElementById('rune-option-list').innerHTML=Object.entries(RUNE_CONFIG).map(([groupKey,group])=>
+        Object.entries(group).map(([key,rune])=>{
+          const g=RUNE_GROUPS[groupKey],active=runeSelections[slot]===key;
+          return `<button type="button" data-rune-choice="${key}" class="rounded-md border p-2 text-left ${active?'border-amber-200 bg-[#493622]':'border-[#59452f] bg-[#211810]'}">
+            <span class="font-black text-[10px]" style="color:${g.color}">${rune.index} ${g.symbol} ${rune.name}</span>
+            <span class="block mt-1 text-[9px] leading-relaxed text-[#cbb99f]">${rune.desc}</span>
+          </button>`;
+        }).join('')
+      ).join('');
+      options.classList.remove('hidden');
+    }
+    function renderRuneUi(){
+      renderRuneLoadout();
+      document.getElementById('rune-options')?.classList.add('hidden');
+      runePickerSlot=null;
+    }
+    function runeIsSupport(ball){
+      const role=(BALL_LIBRARY[ball.typeKey]?.role)||'';
+      return RUNE_SUPPORT_ROLES.some(name=>role.includes(name));
+    }
+    function runeAllies(ball){
+      return getAllBalls().filter(other=>other&&other!==ball&&other.team===ball.team&&other.hp>0&&!other.isDead);
+    }
+    function applyRuneOpening(ball){
+      const rune=getRune(ball.side);
+      if(!rune)return;
+      if(rune.name==='Opening Sacrifice'){
+        ball.hp=Math.max(1,ball.hp-20);
+        ball.runeOpeningInvuln=6.5;
+        createFloatingText(ball.x,ball.y-ball.radius-18,'OPENING SACRIFICE · BẤT TỬ','#9bdcff');
+      }
+    }
+    function updateRuneMechanics(){
+      const dt=FIXED_STEP_SECONDS;
+      getAllBalls().forEach(ball=>{
+        if(!ball||ball.hp<=0||ball.isDead)return;
+        const rune=getRune(ball.side);
+        if(!rune)return;
+        ball.runeOpeningInvuln=Math.max(0,(ball.runeOpeningInvuln||0)-dt);
+        ball.runeOpeningSpeed=Math.max(0,(ball.runeOpeningSpeed||0)-dt);
+        ball.runeGrowthSpeed=Math.max(0,(ball.runeGrowthSpeed||0)-dt);
+        ball.runeAuraBlockCooldown=Math.max(0,(ball.runeAuraBlockCooldown||0)-dt);
+        ball.runeDeathCooldown=Math.max(0,(ball.runeDeathCooldown||0)-dt);
+        ball.runeFirstStrikeReady=ball.runeFirstStrikeReady!==false;
+        ball.runeGrowthTimer=(ball.runeGrowthTimer??3)-dt;
+        if(ball.runeGrowthTimer<=0){ball.runeGrowthTimer+=3;ball.runeGrowthReady=true;}
+        if(rune.name==='Opening Speed' && ball.runeOpeningSpeed>0){} 
+        if(rune.name==='Aura'){
+          ball.runeAuraHealTimer=(ball.runeAuraHealTimer||0)+dt;
+          if(ball.runeAuraHealTimer>=1){
+            ball.runeAuraHealTimer-=1;
+            const radius=ball.radius*2*4;
+            getAllBalls().filter(a=>a&&a.team===ball.team&&a.hp>0&&!a.isDead&&Math.hypot(a.x-ball.x,a.y-ball.y)<=radius).forEach(a=>{
+              const before=a.hp;a.hp=Math.min(a.maxHp,a.hp+1);
+              if(a.hp>before)createFloatingText(a.x,a.y-a.radius-10,'+1 · AURA','#8ee6a2');
+            });
+          }
+        }
+        if(rune.name==='Team Buff' && runeAllies(ball).length){
+          // Buff chủ động được áp dụng trong hàm tính sát thương; timer chỉ quản lý buff sau khi chủ sở hữu bị hạ.
+        }
+      });
+    }
+    function runeDamageOutgoing(attacker,target,amount,source){
+      if(!attacker||!target||attacker.team===target.team)return amount;
+      const rune=getRune(attacker.side);
+      let result=amount;
+      if(rune?.name==='First Strike'&&attacker.runeFirstStrikeReady){
+        attacker.runeFirstStrikeReady=false;
+        result*=1.55;
+        target.applySlow?.(.25,.01);
+        createFloatingText(target.x,target.y-target.radius-14,'FIRST STRIKE · 55%','#ff7777');
+      }
+      if(rune?.name==='Growth'&&attacker.runeGrowthReady){
+        attacker.runeGrowthReady=false;attacker.runeGrowthSpeed=1;
+        attacker.maxHp+=2;attacker.hp=Math.min(attacker.maxHp,attacker.hp+2);
+        createFloatingText(attacker.x,attacker.y-attacker.radius-16,'GROWTH · +2 HP','#f5c46a');
+      }
+      const buffs=getAllBalls().filter(b=>b&&b.team===attacker.team&&b.hp>0&&!b.isDead);
+      if(buffs.some(b=>getRune(b.side)?.name==='Team Buff'&&b!==attacker))result*=1.15;
+      buffs.forEach(b=>{if(b.runeTeamDamageTimer>0)result*=1.30;});
+      return result;
+    }
+    function runeDamageIncoming(target,attacker,amount,source){
+      if(!target)return amount;
+      if((target.runeOpeningInvuln||0)>0)return 0;
+      if(target.runeUnyieldingActive){
+        const allies=runeAllies(target);
+        const share=amount*.5;
+        if(allies.length){allies[0].takeDamage(share,'Unyielding · Chuyển sát thương');}
+        return 0;
+      }
+      if(target.stunTimer>0||target.drownedTimer>0||Math.hypot(target.vx||0,target.vy||0)<0.05){
+        if(getRune(target.side)?.name==='CC Resistance')return 0;
+      }
+      const allies=getAllBalls().filter(b=>b&&b.team===target.team&&b.hp>0&&!b.isDead);
+      const sourceText=String(source||'').toLowerCase();
+      const isPeriodicDamage=['cháy','độc','long hỏa','hỏa vực','thiêu đốt','xuất huyết','bleed','poison','burn'].some(tag=>sourceText.includes(tag));
+      const auraOwner=!isPeriodicDamage&&allies.find(b=>getRune(b.side)?.name==='Aura'&&b.runeAuraBlockCooldown<=0&&Math.hypot(b.x-target.x,b.y-target.y)<=b.radius*2*4);
+      if(auraOwner&&source!=='Aura · Chặn đòn'){
+        auraOwner.runeAuraBlockCooldown=5;
+        auraOwner.shield=(auraOwner.shield||0)+20;auraOwner.shieldTimer=1;
+        createShockwave(target.x,target.y,48,'#86efac',3);
+        createFloatingText(target.x,target.y-target.radius-14,'AURA · BLOCK','#9ee6a9');
+        createFloatingText(auraOwner.x,auraOwner.y-auraOwner.radius-14,'+20 KHIÊN','#9ee6a9');
+        return 0;
+      }
+      if(allies.some(b=>getRune(b.side)?.name==='Team Buff'&&b!==target))amount*=.85;
+      if(target.runeTeamInvulnTimer>0) return 0;
+      return amount;
+    }
+    function runeAfterDamage(attacker,target,actualHpLoss,source){
+      if(!attacker||!target||actualHpLoss<=0)return;
+      const rune=getRune(attacker.side);
+      if(rune?.name==='Lifesteal'){
+        const heal=actualHpLoss*.20,missing=Math.max(0,attacker.maxHp-attacker.hp),actual=Math.min(missing,heal);
+        attacker.hp+=actual;
+        const overflow=Math.max(0,heal-actual)*1.5;
+        if(overflow>0){attacker.shield=(attacker.shield||0)+overflow;attacker.shieldTimer=0;}
+        if(actual>0||overflow>0)createFloatingText(attacker.x,attacker.y-attacker.radius-13,`+${actual.toFixed(1)} HP${overflow>0?` · +${overflow.toFixed(1)} KHIÊN`:''}`,'#f6c65b');
+      }
+      if(rune?.name==='Execute'&&target.hp>0&&target.hp/Math.max(1,target.maxHp)<.16&&source!=='Rune Execute'){
+        const targetRune=getRune(target.side);
+        const protectedByRune=(targetRune?.name==='Unyielding'&&runeIsSupport(target)&&runeAllies(target).length>0)
+          ||(targetRune?.name==='Death Prevention'&&(target.runeDeathCooldown||0)<=0);
+        if(!protectedByRune){
+          // Execute là sát thương đặc biệt: không gọi takeDamage để tránh phản đòn Demon,
+          // không cộng thống kê và không bị miễn nhiễm/bất tử thông thường.
+          target.hp=0;
+          createShockwave(target.x,target.y,72,'#f87171',4);
+          logMessage(`✦ EXECUTE kích hoạt lên ${target.name}!`,'wrath');
+          endGame(target);
+        }
+      }
+    }
+
     let p1, p2, p3, p4;
     let salamanderBodies = [];
     let salamanderSerial = 0;
@@ -954,6 +1171,7 @@
     function getAllBalls(){ return [p1,p2,p3,p4,...salamanderBodies].filter(Boolean); }
     function wrathHealingScale(target){
       if(!target)return 1;
+      if(target.runeUnyieldingActive)return 0;
       let scale=1;
       if((target.wrathAntiHealTimer||0)>0)scale*=target.wrathAntiHealFactor||SKILL_CONFIG.wrath.antiHealFactor;
       if(target.typeKey==='wrath'&&(target.wrathGodFormActive||0)>0)scale*=1+SKILL_CONFIG.wrath.godFormHealEffect;
@@ -1579,6 +1797,10 @@
         ctx.fillStyle=aura;ctx.beginPath();ctx.arc(x,y,r*2.05,0,Math.PI*2);ctx.fill();
         if((ball.wrathAxeVisualTimer||0)>0){
           const q=Math.min(1,ball.wrathAxeVisualTimer/.42);
+          // [FIX WRATH VISIBILITY] Tách transform của rìu khỏi toàn bộ VFX còn lại.
+          // Trước đây translate/rotate bị giữ đến ctx.restore() cuối hàm, khiến
+          // vòng Hóa Thần và cả Ball/đối thủ tiếp theo bị vẽ lệch khỏi Canvas.
+          ctx.save();
           ctx.translate(x,y);ctx.rotate((ball.wrathAxeAngle||0)+t*.42);
           const axeR=r*2*SKILL_CONFIG.wrath.axeRangeDiameters;
           ctx.lineCap='square';ctx.strokeStyle=`rgba(105,34,22,${.92*q})`;ctx.shadowColor='#8b2418';ctx.shadowBlur=8;ctx.lineWidth=10;
@@ -1592,6 +1814,7 @@
           ctx.beginPath();ctx.moveTo(-5,-r*.62);ctx.quadraticCurveTo(r*.92,-r*1.02,r*1.02,-r*.28);ctx.quadraticCurveTo(r*.94,r*.30,r*.20,r*.67);ctx.quadraticCurveTo(r*.44,r*.16,r*.22,-r*.06);ctx.quadraticCurveTo(r*.03,r*.17,-5,r*.30);ctx.closePath();ctx.fill();ctx.stroke();
           ctx.strokeStyle=`rgba(255,232,190,${.8*q})`;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(r*.08,-r*.45);ctx.quadraticCurveTo(r*.75,-r*.75,r*.88,-r*.25);ctx.stroke();ctx.restore();
           for(let k=0;k<7;k++){const a=t*.17+k*Math.PI*2/7;const px=Math.cos(a)*axeR,py=Math.sin(a)*axeR;ctx.strokeStyle=k%2?'#ffb15c':'#ffd18a';ctx.lineWidth=1.2;ctx.beginPath();ctx.moveTo(px,py);ctx.lineTo(px+Math.cos(a+.6)*5,py+Math.sin(a+.6)*5);ctx.stroke();}
+          ctx.restore(); // Khôi phục tọa độ thế giới ngay sau khi vẽ rìu.
         }
         if((ball.wrathGodFormActive||0)>0){ctx.strokeStyle='rgba(255,115,65,.85)';ctx.lineWidth=2.5;ctx.shadowColor='#ff4b2b';ctx.shadowBlur=20;ctx.beginPath();ctx.arc(x,y,r+8+Math.sin(t*.25)*3,t*.04,t*.04+Math.PI*1.75);ctx.stroke();}
         ctx.restore();
@@ -2093,6 +2316,13 @@
         this.wrathAntiHealTimer = 0;
         this.wrathAxeAngle = 0;
         this.wrathAxeVisualTimer = 0;
+        // Trạng thái Rune được reset cùng Ball khi khởi tạo/reset round.
+        this.runeFirstStrikeReady=true;this.runeGrowthTimer=3;this.runeGrowthReady=false;
+        this.runeOpeningInvuln=0;this.runeOpeningSpeed=0;this.runeGrowthSpeed=0;
+        this.runeAuraHealTimer=0;this.runeAuraBlockCooldown=0;this.runeDeathCooldown=0;
+        this.runeUnyieldingActive=false;this.runeTeamDamageTimer=0;this.runeTeamInvulnTimer=0;
+        this.runeErosionStacks={};
+
         this.wardenGuardTimer=0; this.wardenFirstCastTimer=SKILL_CONFIG.warden.firstCastDelay; this.wardenHookCooldown=0; this.wardenHook=null; this.wardenTetherTimer=0; this.wardenDash=null; this.wardenDashLastVx=0; this.wardenSuppressTimer=0; this.wardenShieldLockValue=0; this.wardenAegisLockValue=0;
         this.qiSpeedStacks=0; this.qiSpeedTimer=0; this.qiWallDashTimer=0; this.qiWallDashPending=false; this.qiRing=null; this.qiUltStacks=0; this.qiUltDash=null; this.qiWind=null; this.qiBurnTimer=0; this.qiBurnTick=0;
 
@@ -2198,6 +2428,8 @@
         if (this.typeKey === 'moonshot' && this.moonshotGun === 3 && this.moonshotControlGuardTimer > 0) { /* khẩu 4 không thể bị khống chế */ }
         else if (this.drownedTimer > 0 || this.stunTimer > 0 || this.cosmosOverloaded) return 0;
         let speed = this.baseSpeed;
+        if(this.runeOpeningSpeed>0)speed*=1+.85*Math.max(0,Math.min(1,this.runeOpeningSpeed/5));
+        if(this.runeGrowthSpeed>0)speed*=1.30;
         if(this.typeKey==='qi'&&this.qiWindPushTimer>0)return Math.hypot(this.vx,this.vy);
         if (this.typeKey === 'moonshot') {
           if (this.moonshotGun === 1) speed *= SKILL_CONFIG.moonshot.gun2SpeedBonus;
@@ -3658,6 +3890,7 @@
         if (this.isHadesUntargetable() || this.isImmuneToDebuffs()) return;
         if (this.typeKey==='aegis') applyAegisFear(attacker,duration);
         spreadViperPoison(this, attackerHadPoison, 'Choáng');
+        if(getRune(this.side)?.name==='CC Resistance')duration*=1.5;
         this.stunTimer = Math.max(this.stunTimer, duration);
         updateHUD();
       }
@@ -3667,6 +3900,9 @@
         if((gameMode==='2v2' && this.shenAllyImmortalTimer>0) || this.wardenGuardTimer>0 || this.bloomImmuneTimer>0 || (this.typeKey==='pyke' && this.isHadesUntargetable())) return;
         const enemy = getNearestEnemy(this);
         const attackerHadPoison = !!(enemy && (enemy.viperPoisonStacks || 0) > 0);
+        amount=runeDamageIncoming(this,enemy,amount,source);
+        if(amount<=0){updateHUD();return;}
+        if(enemy)amount=runeDamageOutgoing(enemy,this,amount,source);
         // Đòn thường kích hoạt nội tại ngay khi đối thủ ra tay, kể cả khi bị né.
         // Riêng sát thương đốt chỉ cộng tầng nếu tick đó thật sự không bị Trượt.
         const isBurnTick = ['Cháy', 'Long Hỏa', 'Hỏa Vực Thiên Không'].includes(String(source));
@@ -3754,6 +3990,11 @@
         }
 
         let actualHpLoss = 0;
+        if(remainingDmg>0&&enemy&&getRune(enemy.side)?.name==='Erosion'){
+          this.runeErosionStacks=this.runeErosionStacks||{};
+          const erosionKey=enemy.id,used=this.runeErosionStacks[erosionKey]||0;
+          if(used<40){this.runeErosionStacks[erosionKey]=used+1;this.maxHp=Math.max(1,this.maxHp-1);this.hp=Math.min(this.hp,this.maxHp);}
+        }
         if (remainingDmg > 0 && this.typeKey==='pyke') {
           const ratio=this.hp<SKILL_CONFIG.pyke.lowHpThreshold?SKILL_CONFIG.pyke.lowHpGrayRatio:SKILL_CONFIG.pyke.grayRatio;
           const proposedGray=remainingDmg*ratio,realDmg=remainingDmg-proposedGray,oldHp=this.hp;
@@ -3768,6 +4009,7 @@
           this.hp = Math.max(0, this.hp - remainingDmg);
           actualHpLoss = oldHp - this.hp;
         }
+        if(actualHpLoss>0&&enemy)runeAfterDamage(enemy,this,actualHpLoss,source);
         if(actualHpLoss>0&&enemy&&enemy.typeKey==='wrath'){
           const rageGain=Math.min(SKILL_CONFIG.wrath.rageDamageCap,Math.ceil(actualHpLoss*SKILL_CONFIG.wrath.rageDamageRatio));
           enemy.wrathRage=Math.min(SKILL_CONFIG.wrath.rageMax,(enemy.wrathRage||0)+rageGain);
@@ -3794,12 +4036,24 @@
         }
 
         updateHUD();
-        if (this.hp <= 0 && !gameOver) {
+        if(this.hp<=0&&!gameOver){
+          const rune=getRune(this.side),allies=runeAllies(this);
+          if(rune?.name==='Unyielding'&&runeIsSupport(this)&&allies.length){
+            this.hp=1;this.runeUnyieldingActive=true;
+            createFloatingText(this.x,this.y-this.radius-20,'UNYIELDING · 1 HP','#86efac');
+            updateHUD();return;
+          }
+          if(rune?.name==='Death Prevention'&&(this.runeDeathCooldown||0)<=0){
+            this.hp=1;this.runeDeathCooldown=6;
+            createFloatingText(this.x,this.y-this.radius-20,'DEATH PREVENTION · 1 HP','#9bdcff');
+            updateHUD();return;
+          }
           endGame(this);
         }
       }
 
       receiveHealingFromAngel(baseAmount, angelHealer) {
+        if (this.runeUnyieldingActive) { createFloatingText(this.x,this.y-this.radius-10,'BẤT KHUẤT · KHÔNG THỂ HỒI HP','#86efac'); return 0; }
         if (this.typeKey==='cosmos' || this.aegisHealBlockTimer>0) { createFloatingText(this.x,this.y-this.radius-10,'CẤM HỒI HP','#f5d58d'); return; }
         const missingAngelHp = Math.max(0, angelHealer.maxHp - angelHealer.hp);
         const healMultiplier = 1 + (missingAngelHp * SKILL_CONFIG.angel.healBonusPerMissingHp);
@@ -3851,6 +4105,13 @@
         if (this.hp<=0 || this.isDead || this.isHadesUntargetable()) return;
         ctx.save();
         drawBallSignatureVFX(this);
+        const activeRune=getRune(this.side);
+        if(activeRune){
+          const runeGroup=RUNE_GROUPS[activeRune.group];
+          ctx.save();ctx.font='bold 9px Inter,system-ui';ctx.textAlign='center';ctx.textBaseline='middle';
+          ctx.fillStyle=runeGroup.color;ctx.shadowColor=runeGroup.color;ctx.shadowBlur=8;
+          ctx.fillText(`${activeRune.index}${runeGroup.symbol}`,this.x+this.radius*.82,this.y-this.radius*.82);ctx.restore();
+        }
         if(this.aegisFearedTimer>0){ctx.save();ctx.translate(this.x,this.y);ctx.rotate(globalTick*0.025);ctx.strokeStyle='rgba(255,232,174,0.85)';ctx.shadowColor='#f5d58d';ctx.shadowBlur=14;ctx.lineWidth=1.6;ctx.beginPath();ctx.arc(0,0,this.radius+13,0,Math.PI*2);ctx.stroke();for(let k=0;k<4;k++){const a=k*Math.PI/2;drawSpark(ctx,Math.cos(a)*(this.radius+14),Math.sin(a)*(this.radius+14),3,'#fff0bf',0.9);}ctx.restore();}
         if(this.typeKey==='aegis' && this.aegisBurnLayers.length){ctx.save();ctx.globalAlpha=0.35;ctx.strokeStyle='#ffad65';ctx.shadowColor='#ff873f';ctx.shadowBlur=12;ctx.lineWidth=2;ctx.beginPath();ctx.arc(this.x,this.y,this.radius+3+Math.sin(globalTick*0.22)*2,0,Math.PI*2);ctx.stroke();ctx.restore();}
 
@@ -6268,7 +6529,13 @@
       p3 = gameMode==='2v2'?new Ball('p3',p3Select.value,92,canvas.height*.68,'p1b'):null;
       p4 = gameMode==='2v2'?new Ball('p4',p4Select.value,canvas.width-92,canvas.height*.68,'p2b'):null;
       const startBalls=getAllBalls();
-      startBalls.forEach((b)=>{let a;if(gameMode==='2v2'){a=b.team===1?(-Math.PI/2+Math.random()*Math.PI):(Math.PI/2+Math.random()*Math.PI);}else a=Math.random()*Math.PI*2;b.vx=Math.cos(a)*b.baseSpeed;b.vy=Math.sin(a)*b.baseSpeed;});
+      startBalls.forEach((b)=>{
+        let a;if(gameMode==='2v2'){a=b.team===1?(-Math.PI/2+Math.random()*Math.PI):(Math.PI/2+Math.random()*Math.PI);}else a=Math.random()*Math.PI*2;
+        b.vx=Math.cos(a)*b.baseSpeed;b.vy=Math.sin(a)*b.baseSpeed;
+        const selectedRune=getRune(b.side);
+        if(selectedRune?.name==='Opening Speed')b.runeOpeningSpeed=5;
+        applyRuneOpening(b);
+      });
 
       for(const salamander of startBalls.filter(b=>b.typeKey==='salamander')){
         salamander.salamanderSplitTimer=5.5;salamander.salamanderGeneration=0;salamander.salamanderGroupId=salamander.id;
@@ -6301,6 +6568,18 @@
         updateHUD();return;
       }
       if(loser.cosmosOverloaded){loser.cosmosOverloaded=false;createFloatingText(loser.x,loser.y-loser.radius-20,'QUÁ TẢI ĐƯỢC GIẢI · ĐÃ HẠ GỤC','#ddd6fe');if(!getAllBalls().some(b=>b.cosmosOverloaded))endCosmosOverload();}
+      // Rune Support: hiệu ứng khi chủ sở hữu Team Buff bị hạ.
+      const defeatedRune=getRune(loser.side);
+      if(defeatedRune?.name==='Team Buff'){
+        const livingAllies=runeAllies(loser);
+        if(livingAllies.length){
+          livingAllies.forEach(ally=>{ally.runeTeamDamageTimer=4;ally.runeTeamInvulnTimer=3;});
+          logMessage(`✚ TEAM BUFF: đồng minh +30% sát thương trong 4 giây và miễn sát thương trong 3 giây!`,'angel');
+        }else{
+          const fallen=getAllBalls().find(b=>b&&b.team===loser.team&&b!==loser&&b.isDead);
+          if(fallen){fallen.isDead=false;fallen.hp=15;fallen.runeTeamInvulnTimer=2;createShockwave(fallen.x,fallen.y,75,'#86efac',4);logMessage(`✚ TEAM BUFF hồi sinh ${fallen.name} với 15 HP!`,'angel');}
+        }
+      }
       loser.isDead=true;
       const wrathKiller=getAllBalls().filter(b=>b.typeKey==='wrath'&&b.team!==loser.team&&b.hp>0&&!b.isDead).sort((a,b)=>Math.hypot(a.x-loser.x,a.y-loser.y)-Math.hypot(b.x-loser.x,b.y-loser.y))[0];
       if(wrathKiller)wrathKiller.wrathRage=Math.min(SKILL_CONFIG.wrath.rageMax,(wrathKiller.wrathRage||0)+SKILL_CONFIG.wrath.rageKill);
@@ -6342,6 +6621,12 @@
       globalTick++;
       simulationTimeMs += FIXED_STEP_MS;
       updateEnvironmentState();
+      updateRuneMechanics();
+      getAllBalls().forEach(ball=>{
+        if(!ball)return;
+        ball.runeTeamDamageTimer=Math.max(0,(ball.runeTeamDamageTimer||0)-FIXED_STEP_SECONDS);
+        ball.runeTeamInvulnTimer=Math.max(0,(ball.runeTeamInvulnTimer||0)-FIXED_STEP_SECONDS);
+      });
       // Blit nền đã cache; không ảnh hưởng vật lý hay bất kỳ lớp hiệu ứng động nào.
       ctx.drawImage(arenaBackground, 0, 0);
       drawEnvironmentEffects();
@@ -6491,10 +6776,22 @@
       const skin=e.target.closest('[data-skin]'); if(skin){setBallSkin(librarySelectedKey,skin.dataset.skin);return;}
       const pick=e.target.closest('[data-pick]'); if(pick){const key=librarySelectedKey,select=pick.dataset.pick==='p1'?p1Select:p2Select;select.value=key;renderSelectedBallInfo(key);initGame();closeBallLibrary();}
     });
-    p1Select.addEventListener('change',()=>renderSelectedBallInfo(p1Select.value));
-    p2Select.addEventListener('change',()=>renderSelectedBallInfo(p2Select.value));
+    p1Select.addEventListener('change',()=>{renderSelectedBallInfo(p1Select.value);renderRuneUi();});
+    p2Select.addEventListener('change',()=>{renderSelectedBallInfo(p2Select.value);renderRuneUi();});
+    p3Select.addEventListener('change',renderRuneUi);
+    p4Select.addEventListener('change',renderRuneUi);
+    gameModeSelect.addEventListener('change',renderRuneUi);
+    document.getElementById('rune-ball-cards').addEventListener('click',e=>{
+      const card=e.target.closest('[data-rune-slot]');if(card)openRunePicker(card.dataset.runeSlot);
+    });
+    document.getElementById('rune-option-list').addEventListener('click',e=>{
+      const choice=e.target.closest('[data-rune-choice]');if(!choice||!runePickerSlot)return;
+      runeSelections[runePickerSlot]=choice.dataset.runeChoice;renderRuneUi();
+    });
+    document.getElementById('rune-picker-close').addEventListener('click',()=>document.getElementById('rune-options').classList.add('hidden'));
 
     renderSelectedBallInfo(p1Select.value);
+    renderRuneUi();
     matchStarted=false;
     drawIdleFrame();
     document.getElementById('match-state').textContent='SẴN SÀNG';
